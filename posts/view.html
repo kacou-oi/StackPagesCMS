@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Article</title>
+</head>
+<body>
+  <main>
+    <h1 id="title">Chargement...</h1>
+    <p><em id="date"></em></p>
+    <p id="description"></p>
+    <p><a id="original-link" href="#" target="_blank">Voir l'article sur Substack</a></p>
+  </main>
+
+  <script>
+    const pathParts = window.location.pathname.split('/');
+    const slug = pathParts[pathParts.length - 1];
+
+    if (slug) {
+      fetch(`/api/post/${slug}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Article introuvable");
+          return res.json();
+        })
+        .then(article => {
+          document.title = article.title;
+          document.getElementById('title').textContent = article.title;
+          document.getElementById('date').textContent = new Date(article.pubDate).toLocaleString('fr-FR');
+          document.getElementById('description').innerHTML = article.description;
+          document.getElementById('original-link').href = article.link;
+        })
+        .catch(err => {
+          document.getElementById('title').textContent = "Article non trouvé.";
+          document.getElementById('description').textContent = err.message;
+        });
+    } else {
+      document.getElementById('title').textContent = "Aucun article spécifié.";
+    }
+  </script>
+</body>
+</html>
