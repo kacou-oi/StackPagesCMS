@@ -6,8 +6,8 @@ StackPages est un starter kit pour créer un site personnel statique hébergé s
 
 - `index.html` → page d'accueil
 - `contact.html` → page de contact
-- `blog/index.html` → liste des articles
-- `blog/article.html` → modèle d'article
+- `posts/index.html` → liste des articles
+- `posts/article.html` → modèle d'article
 - `_worker.js` → Worker Cloudflare pour exposer l'API RSS
 - `README.md` → documentation
 
