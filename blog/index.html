@@ -3,45 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blog – StackPages</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
- <script>
-async function loadPosts() {
-  const res = await fetch('/api/posts');
-  const posts = await res.json();
-  let html = '';
-  posts.forEach(post => {
-  html += `
-    <li>
-      <a href="/blog/${post.slug}" class="text-blue-600 hover:underline">${post.title}</a>
-      - <em>${new Date(post.pubDate).toLocaleDateString()}</em>
-      <p>${post.description}</p>
-    </li>
-  `;
-});
+  <title>Blog</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
 
-  document.getElementById('posts').innerHTML = html;
-}
-window.onload = loadPosts;
-</script>
+    h1 {
+      margin-bottom: 1rem;
+    }
 
+    ul#posts {
+      list-style: none;
+      padding: 0;
+    }
+
+    li.post-item {
+      margin-bottom: 2rem;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    li.post-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    li.post-item h2 {
+      margin: 0.5rem 0;
+    }
+
+    li.post-item a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .date {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .excerpt {
+      margin-top: 0.5rem;
+      color: #444;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
+  <h1>Nos derniers articles</h1>
+  <ul id="posts"></ul>
 
-  <header class="bg-white shadow p-4">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <h1 class="text-xl font-bold text-indigo-600">📚 StackPages Blog</h1>
-      <a href="index.html" class="text-indigo-500 hover:underline">← Accueil</a>
-    </div>
-  </header>
+  <script>
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        const posts = await res.json();
 
-  <main class="max-w-6xl mx-auto p-4">
-    <div id="posts" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-      <!-- Articles Substack injectés ici -->
-      les articles
-    </div>
-  </main>
+        let html = '';
+        posts.forEach(post => {
+          html += `
+            <li class="post-item">
+              ${post.image ? `<img src="${post.image}" alt="Image de ${post.title}" />` : ''}
+              <h2><a href="/blog/${post.slug}">${post.title}</a></h2>
+              <div class="date">${new Date(post.pubDate).toLocaleDateString()}</div>
+              ${post.excerpt ? `<p class="excerpt">${post.excerpt}</p>` : ''}
+            </li>
+          `;
+        });
 
+        document.getElementById('posts').innerHTML = html;
+      } catch (e) {
+        console.error('Erreur de chargement des articles :', e);
+        document.getElementById('posts').innerHTML = "<li>Impossible de charger les articles.</li>";
+      }
+    }
+
+    window.onload = loadPosts;
+  </script>
 </body>
 </html>
