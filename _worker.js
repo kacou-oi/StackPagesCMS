@@ -15,16 +15,15 @@ function decodeHTMLEntities(str) {
     "gt": ">",
     "#39": "'"
   };
-  return str
-    .replace(/&(#?\w+);/g, (match, entity) => {
-      if (entity.startsWith('#')) {
-        const code = entity.startsWith('#x')
-          ? parseInt(entity.slice(2), 16)
-          : parseInt(entity.slice(1), 10);
-        return String.fromCharCode(code);
-      }
-      return map[entity] || match;
-    });
+  return str.replace(/&(#?\w+);/g, (match, entity) => {
+    if (entity.startsWith('#')) {
+      const code = entity.startsWith('#x')
+        ? parseInt(entity.slice(2), 16)
+        : parseInt(entity.slice(1), 10);
+      return String.fromCharCode(code);
+    }
+    return map[entity] || match;
+  });
 }
 
 async function fetchAndParseRSS(feedUrl) {
@@ -36,7 +35,7 @@ async function fetchAndParseRSS(feedUrl) {
   while ((m = itemRe.exec(xml)) !== null) {
     const block = m[1];
     const getTag = (tag) => {
-      const re = new RegExp(`<${tag}[^>]*>((.|[\\r\\n])*?)<\\/${tag}>`, 'i');
+      const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
       const found = block.match(re);
       if (!found) return "";
       let content = found[1].trim();
@@ -61,15 +60,18 @@ export default {
     const url = new URL(req.url);
     const path = url.pathname;
     const FEED = env.FEED_URL;
+
     if (!FEED) {
       return new Response("Erreur : FEED_URL non configurée", { status: 500 });
     }
 
+    // API: /api/posts
     if (path === "/api/posts") {
       const posts = await fetchAndParseRSS(FEED);
       return Response.json(posts);
     }
 
+    // API: /api/post/:slug
     if (path.startsWith("/api/post/")) {
       const slug = path.split("/").pop();
       const posts = await fetchAndParseRSS(FEED);
@@ -78,6 +80,12 @@ export default {
       return Response.json(post);
     }
 
+    // 👉 Serve view.html for /posts/:slug
+    if (/^\/posts\/[^\/]+$/.test(path)) {
+      return env.ASSETS.fetch(new Request(`${url.origin}/posts/view.html`, req));
+    }
+
+    // Default static asset
     return env.ASSETS.fetch(req);
   }
 };
