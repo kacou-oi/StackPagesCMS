@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <script>
+    async function loadPosts() {
+        const res = await fetch('/api/posts');
+        const posts = await res.json();
+        let html = '';
+        posts.forEach(post => {
+            html += `<li><a href="/blog/${post.slug}">${post.title}</a> - <em>${post.pubDate}</em></li>`;
+        });
+        document.getElementById('posts').innerHTML = html;
+    }
+    window.onload = loadPosts;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Blog</h1>
+        <nav>
+            <a href="/">Accueil</a> |
+            <a href="/blog">Blog</a> |
+            <a href="/contact">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <ul id="posts"></ul>
+    </main>
+</body>
+</html>
