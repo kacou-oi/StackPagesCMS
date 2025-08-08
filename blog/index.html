@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
-    <script>
-    async function loadPosts() {
-        const res = await fetch('/api/posts');
-        const posts = await res.json();
-        let html = '';
-        posts.forEach(post => {
-            html += `<li><a href="/blog/${post.slug}">${post.title}</a> - <em>${post.pubDate}</em></li>`;
-        });
-        document.getElementById('posts').innerHTML = html;
-    }
-    window.onload = loadPosts;
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog - StackPages</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>Blog</h1>
-        <nav>
-            <a href="/">Accueil</a> |
-            <a href="/blog">Blog</a> |
-            <a href="/contact">Contact</a>
-        </nav>
-    </header>
-    <main>
-        <ul id="posts"></ul>
-    </main>
+<body class="bg-gray-100 text-gray-800">
+
+  <header class="bg-white shadow-md p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">StackPages</h1>
+      <nav>
+        <a href="index.html" class="mx-2">Accueil</a>
+        <a href="blog.html" class="mx-2">Blog</a>
+        <a href="contact.html" class="mx-2">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">Articles récents</h2>
+    <div id="blog-posts" class="space-y-4">
+      <p>Chargement...</p>
+    </div>
+  </main>
+
+  <footer class="bg-white text-center p-4 mt-10 shadow-inner">
+    <p>&copy; 2025 StackPages</p>
+  </footer>
+
+  <script src="blog.js"></script>
 </body>
 </html>
