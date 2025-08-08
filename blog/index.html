@@ -12,8 +12,15 @@ async function loadPosts() {
   const posts = await res.json();
   let html = '';
   posts.forEach(post => {
-    html += `<li><a href="${post.link}" target="_blank" rel="noopener" class="text-blue-600 hover:underline">${post.title}</a> - <em>${new Date(post.pubDate).toLocaleDateString()}</em></li>`;
-  });
+  html += `
+    <li>
+      <a href="/blog/${post.slug}" class="text-blue-600 hover:underline">${post.title}</a>
+      - <em>${new Date(post.pubDate).toLocaleDateString()}</em>
+      <p>${post.description}</p>
+    </li>
+  `;
+});
+
   document.getElementById('posts').innerHTML = html;
 }
 window.onload = loadPosts;
