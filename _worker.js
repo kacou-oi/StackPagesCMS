@@ -118,9 +118,9 @@ export default {
     }
 
     // Serve view.html for /posts/:slug URLs
-    if (/^\/posts\/[^\/]+$/.test(path)) {
-      return env.ASSETS.fetch(new Request(`${url.origin}/posts/view.html`, req));
-    }
+    //if (/^\/posts\/[^\/]+$/.test(path)) {
+     // return env.ASSETS.fetch(new Request(`${url.origin}/posts/view.html`, req));
+  //  }
 
     // Default static assets
     return env.ASSETS.fetch(req);
