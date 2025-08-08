@@ -26,12 +26,20 @@ function decodeHTMLEntities(str) {
   });
 }
 
+// Fonction pour extraire la première image dans un contenu HTML
+function extractFirstImage(html) {
+  const imgRe = /<img[^>]+src=["']([^"']+)["']/i;
+  const match = html.match(imgRe);
+  return match ? match[1] : null;
+}
+
 async function fetchAndParseRSS(feedUrl) {
   const res = await fetch(feedUrl);
   const xml = await res.text();
   const items = [];
   const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
   let m;
+
   while ((m = itemRe.exec(xml)) !== null) {
     const block = m[1];
     const getTag = (tag) => {
@@ -45,12 +53,41 @@ async function fetchAndParseRSS(feedUrl) {
       content = decodeHTMLEntities(content);
       return content;
     };
+
     const title = getTag('title');
     const link = getTag('link');
     const pubDate = getTag('pubDate');
     const description = getTag('description');
+
+    // récupère le contenu complet depuis <content:encoded> si présent
+    let contentFull = "";
+    const contentEncodedRe = /<content:encoded[^>]*>((.|[\r\n])*?)<\/content:encoded>/i;
+    const contentEncodedMatch = block.match(contentEncodedRe);
+    if (contentEncodedMatch) {
+      contentFull = contentEncodedMatch[1].trim();
+      if (contentFull.startsWith('<![CDATA[')) {
+        contentFull = contentFull.slice(9, -3).trim();
+      }
+      contentFull = decodeHTMLEntities(contentFull);
+    } else {
+      // si pas de content:encoded, on peut fallback sur description
+      contentFull = description;
+    }
+
+    // Extraire la première image du contenu complet
+    const image = extractFirstImage(contentFull);
+
     const slug = slugify(title);
-    items.push({ title, link, pubDate, description, slug });
+
+    items.push({ 
+      title, 
+      link, 
+      pubDate, 
+      description, 
+      slug, 
+      content: contentFull,
+      image 
+    });
   }
   return items;
 }
@@ -80,12 +117,12 @@ export default {
       return Response.json(post);
     }
 
-    // 👉 Serve view.html for /posts/:slug
+    // Serve view.html for /posts/:slug URLs
     if (/^\/posts\/[^\/]+$/.test(path)) {
       return env.ASSETS.fetch(new Request(`${url.origin}/posts/view.html`, req));
     }
 
-    // Default static asset
+    // Default static assets
     return env.ASSETS.fetch(req);
   }
 };
