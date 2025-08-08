@@ -1,7 +1,30 @@
 function slugify(text) {
   return text.toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+    .replace(/(^-|-$)/g, '')
+    .trim();
+}
+
+function decodeHTMLEntities(str) {
+  if (!str) return "";
+  const map = {
+    "nbsp": " ",
+    "amp": "&",
+    "quot": "\"",
+    "lt": "<",
+    "gt": ">",
+    "#39": "'"
+  };
+  return str
+    .replace(/&(#?\w+);/g, (match, entity) => {
+      if (entity.startsWith('#')) {
+        const code = entity.startsWith('#x')
+          ? parseInt(entity.slice(2), 16)
+          : parseInt(entity.slice(1), 10);
+        return String.fromCharCode(code);
+      }
+      return map[entity] || match;
+    });
 }
 
 async function fetchAndParseRSS(feedUrl) {
@@ -13,9 +36,15 @@ async function fetchAndParseRSS(feedUrl) {
   while ((m = itemRe.exec(xml)) !== null) {
     const block = m[1];
     const getTag = (tag) => {
-      const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
+      const re = new RegExp(`<${tag}[^>]*>((.|[\\r\\n])*?)<\\/${tag}>`, 'i');
       const found = block.match(re);
-      return found ? found[1].trim() : "";
+      if (!found) return "";
+      let content = found[1].trim();
+      if (content.startsWith('<![CDATA[')) {
+        content = content.slice(9, -3).trim();
+      }
+      content = decodeHTMLEntities(content);
+      return content;
     };
     const title = getTag('title');
     const link = getTag('link');
@@ -28,25 +57,20 @@ async function fetchAndParseRSS(feedUrl) {
 }
 
 export default {
-  async fetch(req, env, ctx) {
+  async fetch(req, env) {
     const url = new URL(req.url);
     const path = url.pathname;
     const FEED = env.FEED_URL;
+    if (!FEED) {
+      return new Response("Erreur : FEED_URL non configurée", { status: 500 });
+    }
 
-    // API: /api/posts
     if (path === "/api/posts") {
-      if (!FEED) {
-        return new Response("Erreur : FEED_URL non configurée", { status: 500 });
-      }
       const posts = await fetchAndParseRSS(FEED);
       return Response.json(posts);
     }
 
-    // API: /api/post/:slug
     if (path.startsWith("/api/post/")) {
-      if (!FEED) {
-        return new Response("Erreur : FEED_URL non configurée", { status: 500 });
-      }
       const slug = path.split("/").pop();
       const posts = await fetchAndParseRSS(FEED);
       const post = posts.find(p => p.slug === slug);
@@ -54,7 +78,6 @@ export default {
       return Response.json(post);
     }
 
-    // Laisser passer toutes les autres requêtes (site statique)
     return env.ASSETS.fetch(req);
   }
-}
+};
