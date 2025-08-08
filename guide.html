@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide de démarrage - StackPages</title>
+    <!-- On charge Tailwind CSS pour un style moderne et responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- On charge Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- On charge notre fichier de style CSS externe -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Menu de navigation, identique à la page d'accueil -->
+    <nav class="bg-white shadow-lg p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Nom du projet avec une icône -->
+            <a href="/index.html" class="text-2xl font-bold text-gray-800 hover:text-orange-500 transition duration-300">
+                <i class="fas fa-layer-group text-orange-500 mr-2"></i> StackPages
+            </a>
+            <!-- Liens de navigation -->
+            <div class="space-x-4 hidden md:flex items-center">
+                <a href="/index.html" class="text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Accueil</a>
+                <a href="/posts/index.html" class="text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Substack Blog</a>
+                <a href="/guide.html" class="text-orange-500 font-semibold transition duration-300">Guide</a>
+                <!-- Bouton d'action dans la nav -->
+                <a href="https://github.com/kacou-oi/Demo-stackpages" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                    <i class="fab fa-github mr-2"></i> Voir sur GitHub
+                </a>
+            </div>
+            <!-- Bouton de menu mobile (pour les écrans plus petits) -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <!-- Menu mobile déroulant -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 text-center">
+            <a href="/index.html" class="block text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Accueil</a>
+            <a href="/posts/index.html" class="block text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Substack Blog</a>
+            <a href="/guide.html" class="block text-orange-500 font-semibold transition duration-300">Guide</a>
+            <a href="https://github.com/kacou-oi/Demo-stackpages" target="_blank" class="block bg-orange-500 hover:bg-orange-600 text-white text-center font-bold py-2 px-4 rounded-full transition duration-300">
+                <i class="fab fa-github mr-2"></i> Voir sur GitHub
+            </a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal de la page du guide -->
+    <div class="container mx-auto p-6 my-10 bg-white rounded-xl shadow-xl">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
+            <i class="fas fa-book-open text-orange-500 mr-2"></i> Guide de démarrage de StackPages
+        </h1>
+        <p class="text-lg text-gray-600 mb-8 text-center">
+            Suivez ces étapes pour lancer votre site web personnel et blog Substack en un rien de temps.
+        </p>
+
+        <!-- Étape 1 -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">1</span> Clonez le dépôt GitHub
+            </h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                La première étape consiste à obtenir une copie du code sur votre machine ou votre compte GitHub.
+            </p>
+            <div class="bg-gray-100 p-4 rounded-lg font-mono text-sm text-gray-800">
+                <p>
+                    <span class="text-green-600">$</span> git clone https://github.com/kacou-oi/Demo-stackpages.git
+                </p>
+            </div>
+        </div>
+
+        <!-- Étape 2 -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">2</span> Configurez votre flux RSS Substack
+            </h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Vous devez trouver l'URL de votre flux RSS Substack pour que votre blog puisse se synchroniser.
+                Généralement, l'URL est de la forme suivante : <code>https://&lt;votre-substack&gt;.substack.com/feed</code>.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+                Par exemple, si l'URL de votre Substack est <code>https://monblog.substack.com</code>, l'URL du flux RSS sera <code>https://monblog.substack.com/feed</code>.
+            </p>
+        </div>
+
+        <!-- Étape 3 -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">3</span> Déployez sur Cloudflare Pages
+            </h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Maintenant, connectez votre dépôt GitHub à Cloudflare Pages.
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                <li>Connectez-vous à votre tableau de bord Cloudflare.</li>
+                <li>Allez dans la section "Pages" et cliquez sur "Créer un projet".</li>
+                <li>Connectez-vous à votre compte GitHub et sélectionnez le dépôt <code>Demo-stackpages</code> que vous venez de cloner.</li>
+                <li>Dans la configuration de build, ajoutez une variable d'environnement nommée <code>FEED_URL</code>.</li>
+                <li>Collez l'URL de votre flux RSS Substack que vous avez trouvée à l'étape 2.</li>
+                <li>Cliquez sur "Déployer le site". Cloudflare se chargera du reste !</li>
+            </ul>
+        </div>
+
+        <!-- Section de conclusion -->
+        <div class="mt-12 text-center p-6 bg-gray-100 rounded-lg">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Félicitations !</h3>
+            <p class="text-lg text-gray-600 mb-4">
+                Votre site web est maintenant en ligne, synchronisé avec votre blog Substack.
+            </p>
+            <a href="/index.html" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300">
+                <i class="fas fa-home mr-2"></i> Retour à la page d'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Pied de page uniforme -->
+    <footer class="bg-gray-800 text-white p-6 text-center">
+        <p class="text-sm">&copy; 2025 StackPages. Un projet de Kacou Oi.</p>
+    </footer>
+
+    <!-- Script pour le menu mobile -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
