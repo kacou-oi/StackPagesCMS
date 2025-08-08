@@ -1,68 +1,62 @@
 // On s'assure que le script s'exécute après le chargement complet du DOM
 document.addEventListener('DOMContentLoaded', async () => {
-    // Récupérer le paramètre 'id' de l'URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const postId = urlParams.get('id');
-
+    // La div où les articles seront insérés
+    const postsContainer = document.getElementById('posts-container');
+    // L'élément pour afficher l'état de chargement
     const loadingIndicator = document.getElementById('loading-indicator');
-    const postTitle = document.getElementById('post-title');
-    const postDate = document.getElementById('post-date');
-    const postContent = document.getElementById('post-content');
-
-    if (!postId) {
-        // Si aucun ID n'est fourni, on affiche un message d'erreur
-        postContent.innerHTML = '<p class="text-center text-red-500">Erreur : Aucun article spécifié.</p>';
-        return;
-    }
 
     try {
-        // L'URL du Cloudflare Worker pour récupérer le flux RSS complet
-        const workerUrl = '/cf-worker/worker.js';
+        // L'URL du Cloudflare Worker qui va récupérer le flux RSS.
+        // Le chemin a été mis à jour pour pointer vers le fichier à la racine.
+        const workerUrl = '/_worker.js';
 
         // Afficher l'indicateur de chargement
         loadingIndicator.classList.remove('hidden');
 
+        // On va chercher le flux RSS via le worker
         const response = await fetch(workerUrl);
         if (!response.ok) {
             throw new Error(`Erreur HTTP: ${response.status}`);
         }
-
+        
+        // On convertit la réponse en texte pour la parser
         const xmlText = await response.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
-        // Trouver l'article correspondant à l'ID
-        const item = Array.from(xmlDoc.querySelectorAll('item')).find(
-            item => item.querySelector('guid')?.textContent === postId
-        );
+        // On trouve tous les éléments <item> qui représentent les articles
+        const items = xmlDoc.querySelectorAll('item');
 
-        if (item) {
-            // On masque l'indicateur de chargement
-            loadingIndicator.classList.add('hidden');
-            
-            // On extrait les informations de l'article
-            const title = item.querySelector('title')?.textContent;
-            const description = item.querySelector('description')?.textContent;
-            const pubDate = item.querySelector('pubDate')?.textContent;
-            const author = item.querySelector('author')?.textContent || 'Kacou Oi';
-
-            // Mettre à jour le titre de la page
-            document.title = `${title} - StackPages`;
-            
-            // Remplir les éléments de la page avec les données de l'article
-            postTitle.textContent = title;
-            postDate.innerHTML = `Publié le ${new Date(pubDate).toLocaleDateString('fr-FR', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            })} par ${author}`;
-            postContent.innerHTML = description; // On utilise innerHTML car le contenu est en HTML
+        // Si aucun article n'est trouvé
+        if (items.length === 0) {
+            postsContainer.innerHTML = '<p class="text-center text-gray-500">Aucun article n\'a été trouvé.</p>';
         } else {
+            // On masque l'indicateur de chargement une fois les données reçues
             loadingIndicator.classList.add('hidden');
-            postContent.innerHTML = '<p class="text-center text-red-500">Article non trouvé.</p>';
+            
+            // On itère sur chaque article pour l'afficher
+            items.forEach(item => {
+                const title = item.querySelector('title')?.textContent;
+                const link = item.querySelector('link')?.textContent;
+                const description = item.querySelector('description')?.textContent;
+
+                // On crée une carte pour l'article
+                const postCard = document.createElement('div');
+                postCard.className = 'bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1';
+                postCard.innerHTML = `
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-orange-600 mb-2">${title}</h3>
+                        <p class="text-gray-600 text-sm mb-4">${description}</p>
+                        <a href="${link}" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
+                    </div>
+                `;
+                postsContainer.appendChild(postCard);
+            });
         }
 
     } catch (error) {
-        console.error("Erreur lors de la récupération de l'article:", error);
+        console.error("Erreur lors de la récupération des articles:", error);
         loadingIndicator.classList.add('hidden');
-        postContent.innerHTML = '<p class="text-center text-red-500">Impossible de charger l\'article.</p>';
+        postsContainer.innerHTML = '<p class="text-center text-red-500">Impossible de charger les articles. Veuillez vérifier l\'URL du flux RSS et le Cloudflare Worker.</p>';
     }
 });
