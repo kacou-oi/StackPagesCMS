@@ -12,7 +12,7 @@
         const posts = await res.json();
         let html = '';
         posts.forEach(post => {
-            html += `<li><a href="/blog/${post.slug}">${post.title}</a> - <em>${post.pubDate}</em></li>`;
+            html += `<li><a href="/blog/${post.slug}">${post.title}</a> - ${post.title} <em>${post.pubDate}</em></li>`;
         });
         document.getElementById('posts').innerHTML = html;
     }
@@ -34,28 +34,6 @@
       les articles
     </div>
   </main>
-
-  <script>
-    fetch('/api/posts')  // Appelle le Worker via Pages Functions ou Workers
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('posts');
-        data.items.forEach(post => {
-          const card = document.createElement('div');
-          card.className = "bg-white rounded-lg shadow-md overflow-hidden";
-          card.innerHTML = `
-            <img src="${post.image || 'https://via.placeholder.com/600x300?text=StackPages'}" alt="${post.title}" class="w-full h-48 object-cover">
-            <div class="p-4">
-              <h2 class="text-lg font-semibold">${post.title}</h2>
-              <p class="text-sm text-gray-500 mb-2">${new Date(post.pubDate).toLocaleDateString()}</p>
-              <p class="text-gray-600 text-sm">${post.description.slice(0, 120)}...</p>
-              <a href="post.html?url=${encodeURIComponent(post.link)}" class="mt-2 inline-block text-indigo-500 hover:underline">Lire la suite →</a>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      });
-  </script>
 
 </body>
 </html>
