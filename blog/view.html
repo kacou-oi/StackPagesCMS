@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Article</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Titre de votre article - StackPages</title>
+    <!-- On charge Tailwind CSS pour un style moderne et responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- On charge Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- On charge notre fichier de style CSS externe -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-  <main>
-    <h1 id="title">Chargement...</h1>
-    <p><em id="date"></em></p>
-    <p id="description"></p>
-    <p><a id="original-link" href="#" target="_blank">Voir l'article sur Substack</a></p>
-  </main>
+<body class="bg-gray-50 text-gray-800">
 
-  <script>
-    const pathParts = window.location.pathname.split('/');
-    const slug = pathParts[pathParts.length - 1];
+    <!-- Espace réservé pour le menu de navigation -->
+    <div id="header-placeholder"></div>
 
-    if (slug) {
-      fetch(`/api/post/${slug}`)
-        .then(res => {
-          if (!res.ok) throw new Error("Article introuvable");
-          return res.json();
-        })
-        .then(article => {
-          document.title = article.title;
-          document.getElementById('title').textContent = article.title;
-          document.getElementById('date').textContent = new Date(article.pubDate).toLocaleString('fr-FR');
-          document.getElementById('description').innerHTML = article.description;
-          document.getElementById('original-link').href = article.link;
-        })
-        .catch(err => {
-          document.getElementById('title').textContent = "Article non trouvé.";
-          document.getElementById('description').textContent = err.message;
-        });
-    } else {
-      document.getElementById('title').textContent = "Aucun article spécifié.";
-    }
-  </script>
+    <!-- Contenu principal de l'article -->
+    <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-10">
+        <!-- Indicateur de chargement -->
+        <div id="loading-indicator" class="text-center text-gray-500">
+            <i class="fas fa-spinner fa-spin text-4xl text-orange-500"></i>
+            <p class="mt-2">Chargement de l'article...</p>
+        </div>
+        
+        <!-- Titre de l'article -->
+        <h1 id="post-title" class="text-4xl font-bold text-gray-800 text-center mb-2"></h1>
+        <!-- Méta-informations de l'article (auteur, date) -->
+        <div id="post-date" class="text-center text-sm italic text-gray-400 mb-8"></div>
+        
+        <!-- Contenu de l'article -->
+        <div id="post-content" class="article-content font-serif-georgia text-lg text-gray-700 leading-relaxed">
+            <!-- Le contenu de l'article sera inséré ici par le script -->
+        </div>
+    </div>
+    
+    <!-- Espace réservé pour le pied de page -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Script pour charger le header et le footer -->
+    <script src="/js/utils.js"></script>
+    <!-- On charge notre script pour l'article -->
+    <script src="/js/post.js"></script>
 </body>
 </html>
