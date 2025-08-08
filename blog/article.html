@@ -1,29 +1,81 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article</title>
-    <script>
-    async function loadPost() {
-        const slug = window.location.pathname.split('/').pop();
-        const res = await fetch('/api/post/' + slug);
-        const post = await res.json();
-        document.getElementById('title').innerText = post.title;
-        document.getElementById('content').innerHTML = post.description;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+      color: #333;
     }
-    window.onload = loadPost;
-    </script>
+
+    h1 {
+      margin-bottom: 1.5rem;
+    }
+
+    ul#posts {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul#posts li {
+      background: white;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    ul#posts li a {
+      color: #1a73e8;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+
+    ul#posts li a:hover {
+      text-decoration: underline;
+    }
+
+    .post-date {
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1 id="title"></h1>
-        <nav>
-            <a href="/">Accueil</a> |
-            <a href="/blog">Blog</a> |
-            <a href="/contact">Contact</a>
-        </nav>
-    </header>
-    <main id="content"></main>
+  <h1>Nos derniers articles</h1>
+  <ul id="posts">
+    <!-- Les articles seront insérés ici -->
+  </ul>
+
+  <script>
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        const posts = await res.json();
+
+        if (!Array.isArray(posts)) throw new Error("Format inattendu");
+
+        let html = '';
+        posts.forEach(post => {
+          html += `
+            <li>
+              <a href="/blog/${post.slug}">${post.title}</a>
+              <div class="post-date">Publié le ${new Date(post.pubDate).toLocaleDateString()}</div>
+            </li>`;
+        });
+
+        document.getElementById('posts').innerHTML = html;
+      } catch (e) {
+        console.error('Erreur lors du chargement des articles:', e);
+        document.getElementById('posts').innerHTML = "<li>Impossible de charger les articles pour le moment.</li>";
+      }
+    }
+
+    window.onload = loadPosts;
+  </script>
 </body>
 </html>
