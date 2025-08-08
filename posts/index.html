@@ -1,80 +1,101 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blog</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
-
-    h1 {
-      margin-bottom: 1rem;
-    }
-
-    ul#posts {
-      list-style: none;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-
-    li.post-item {
-      background-color: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    li.post-item img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 4px;
-      margin-bottom: 1rem;
-    }
-
-    li.post-item h2 {
-      margin: 0.5rem 0;
-    }
-
-    li.post-item a {
-      text-decoration: none;
-      color: #333;
-    }
-
-    .date {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 1rem;
-    }
-
-    .content {
-      margin-top: 1rem;
-      color: #444;
-    }
-
-    @media (max-width: 900px) {
-      ul#posts {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      ul#posts {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substack Blog - StackPages</title>
+    <!-- On charge Tailwind CSS pour un style moderne et responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- On charge Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- On charge notre fichier de style CSS externe -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-  <h1>Nos derniers articles</h1>
-  <ul id="posts"></ul>
+<body class="bg-gray-50 text-gray-800">
 
-  <script>
+    <!-- Menu de navigation -->
+    <nav class="bg-white shadow-lg p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Nom du projet avec une icône -->
+            <a href="/index.html" class="text-2xl font-bold text-gray-800 hover:text-orange-500 transition duration-300">
+                <i class="fas fa-layer-group text-orange-500 mr-2"></i> StackPages
+            </a>
+            <!-- Liens de navigation -->
+            <div class="space-x-4 hidden md:flex items-center">
+                <a href="/index.html" class="text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Accueil</a>
+                <a href="/posts/index.html" class="text-orange-500 font-semibold transition duration-300">Substack Blog</a>
+                <a href="/guide.html" class="text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Guide</a>
+                <!-- Bouton d'action dans la nav -->
+                <a href="https://github.com/kacou-oi/Demo-stackpages" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                    <i class="fab fa-github mr-2"></i> Voir sur GitHub
+                </a>
+            </div>
+            <!-- Bouton de menu mobile (pour les écrans plus petits) -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <!-- Menu mobile déroulant -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 text-center">
+            <a href="/index.html" class="block text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Accueil</a>
+            <a href="/posts/index.html" class="block text-orange-500 font-semibold transition duration-300">Substack Blog</a>
+            <a href="/guide.html" class="block text-gray-600 hover:text-orange-500 font-semibold transition duration-300">Guide</a>
+            <a href="https://github.com/kacou-oi/Demo-stackpages" target="_blank" class="block bg-orange-500 hover:bg-orange-600 text-white text-center font-bold py-2 px-4 rounded-full transition duration-300">
+                <i class="fab fa-github mr-2"></i> Voir sur GitHub
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Contenu principal de la page du blog -->
+    <header class="bg-gray-800 text-white p-12 text-center shadow-lg rounded-b-3xl">
+        <h1 class="text-4xl font-bold"><i class="fas fa-rss-square mr-2"></i> Substack Blog</h1>
+    </header>
+
+    <!-- Grille des articles -->
+    <div class="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
+        <!-- Début de la carte d'un article, à répéter pour chaque post -->
+        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
+                <!-- Titre de l'article -->
+                <h3 class="text-xl font-semibold text-orange-600 mb-2">Titre du premier article</h3>
+                <!-- Résumé de l'article -->
+                <p class="text-gray-600 text-sm mb-4">Ceci est un bref résumé de votre article. Il donne un aperçu du contenu pour inciter à la lecture.</p>
+                <!-- Lien pour lire l'article en entier -->
+                <a href="/posts/article.html" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
+                <!-- Titre de l'article -->
+                <h3 class="text-xl font-semibold text-orange-600 mb-2">Titre du deuxième article</h3>
+                <!-- Résumé de l'article -->
+                <p class="text-gray-600 text-sm mb-4">Un autre résumé pour un autre article de votre blog. Le format carte rend la navigation agréable.</p>
+                <!-- Lien pour lire l'article en entier -->
+                <a href="/posts/article.html" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
+            </div>
+        </div>
+        <!-- Fin de la carte d'un article -->
+    </div>
+    
+    <!-- Pied de page uniforme -->
+    <footer class="bg-gray-800 text-white p-6 text-center">
+        <p class="text-sm">&copy; 2025 StackPages. Un projet de Kacou Oi.</p>
+    </footer>
+
+    <!-- Script pour le menu mobile -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+    <!-- Sccript wokers-->
+    <script>
     async function loadPosts() {
       try {
         const res = await fetch('/api/posts');
