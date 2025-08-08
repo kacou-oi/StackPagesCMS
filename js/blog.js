@@ -1,62 +1,47 @@
-// On s'assure que le script s'exécute après le chargement complet du DOM
+// Ce script gère l'affichage de la liste des articles du blog
 document.addEventListener('DOMContentLoaded', async () => {
-    // La div où les articles seront insérés
+    // Sélectionne les éléments du DOM
     const postsContainer = document.getElementById('posts-container');
-    // L'élément pour afficher l'état de chargement
     const loadingIndicator = document.getElementById('loading-indicator');
-
+    
     try {
-        // L'URL du Cloudflare Worker qui va récupérer le flux RSS.
-        // Le chemin a été mis à jour pour pointer vers le fichier à la racine.
-        const workerUrl = './_worker.js';
+        // Appelle l'API de notre Cloudflare Worker pour obtenir tous les articles
+        const response = await fetch('/api/posts');
+        const posts = await response.json();
 
-        // Afficher l'indicateur de chargement
-        loadingIndicator.classList.remove('hidden');
+        // Une fois les données reçues, on cache l'indicateur de chargement
+        loadingIndicator.style.display = 'none';
 
-        // On va chercher le flux RSS via le worker
-        const response = await fetch(workerUrl);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
+        // S'il n'y a pas d'articles, on affiche un message
+        if (posts.length === 0) {
+            postsContainer.innerHTML = '<p class="text-center text-gray-500 text-lg">Aucun article trouvé pour le moment.</p>';
+            return;
         }
-        
-        // On convertit la réponse en texte pour la parser
-        const xmlText = await response.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
-        // On trouve tous les éléments <item> qui représentent les articles
-        const items = xmlDoc.querySelectorAll('item');
-
-        // Si aucun article n'est trouvé
-        if (items.length === 0) {
-            postsContainer.innerHTML = '<p class="text-center text-gray-500">Aucun article n\'a été trouvé.</p>';
-        } else {
-            // On masque l'indicateur de chargement une fois les données reçues
-            loadingIndicator.classList.add('hidden');
+        // On génère une carte HTML pour chaque article
+        posts.forEach(post => {
+            const postCard = document.createElement('a');
+            // Le lien utilise le slug pour pointer vers la page de l'article
+            postCard.href = `/blog/article.html?slug=${post.slug}`;
+            postCard.className = 'block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden';
             
-            // On itère sur chaque article pour l'afficher
-            items.forEach(item => {
-                const title = item.querySelector('title')?.textContent;
-                const link = item.querySelector('link')?.textContent;
-                const description = item.querySelector('description')?.textContent;
+            // On s'assure que la description est un texte simple pour l'aperçu
+            const snippet = post.description.replace(/(<([^>]+)>)/gi, "").substring(0, 150) + '...';
 
-                // On crée une carte pour l'article
-                const postCard = document.createElement('div');
-                postCard.className = 'bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1';
-                postCard.innerHTML = `
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-orange-600 mb-2">${title}</h3>
-                        <p class="text-gray-600 text-sm mb-4">${description}</p>
-                        <a href="${link}" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
-                    </div>
-                `;
-                postsContainer.appendChild(postCard);
-            });
-        }
+            postCard.innerHTML = `
+                ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover">` : ''}
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2">${post.title}</h2>
+                    <p class="text-gray-600 text-sm mb-4">${snippet}</p>
+                    <span class="text-orange-500 font-semibold">Lire la suite <i class="fas fa-arrow-right ml-1"></i></span>
+                </div>
+            `;
+            postsContainer.appendChild(postCard);
+        });
 
     } catch (error) {
-        console.error("Erreur lors de la récupération des articles:", error);
-        loadingIndicator.classList.add('hidden');
-        postsContainer.innerHTML = '<p class="text-center text-red-500">Impossible de charger les articles. Veuillez vérifier l\'URL du flux RSS et le Cloudflare Worker.</p>';
+        console.error('Erreur lors du chargement des articles:', error);
+        loadingIndicator.style.display = 'none';
+        postsContainer.innerHTML = '<p class="text-center text-red-500 text-lg">Erreur lors du chargement des articles. Veuillez réessayer plus tard.</p>';
     }
 });
