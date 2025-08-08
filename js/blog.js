@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // L'URL du Cloudflare Worker qui va récupérer le flux RSS.
         // Le chemin a été mis à jour pour pointer vers le fichier à la racine.
-        const workerUrl = '/_worker.js';
+        const workerUrl = './_worker.js';
 
         // Afficher l'indicateur de chargement
         loadingIndicator.classList.remove('hidden');
