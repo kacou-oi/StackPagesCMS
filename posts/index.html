@@ -32,6 +32,7 @@
       max-width: 100%;
       height: auto;
       border-radius: 4px;
+      margin-bottom: 1rem;
     }
 
     li.post-item h2 {
@@ -46,10 +47,11 @@
     .date {
       font-size: 0.9rem;
       color: #666;
+      margin-bottom: 1rem;
     }
 
-    .excerpt {
-      margin-top: 0.5rem;
+    .content {
+      margin-top: 1rem;
       color: #444;
     }
   </style>
@@ -70,8 +72,8 @@
             <li class="post-item">
               ${post.image ? `<img src="${post.image}" alt="Image de ${post.title}" />` : ''}
               <h2><a href="/posts/${post.slug}">${post.title}</a></h2>
-              <div class="date">${new Date(post.pubDate).toLocaleDateString()}</div>
-              ${post.excerpt ? `<p class="excerpt">${post.excerpt}</p>` : ''}
+              <div class="date">${new Date(post.pubDate).toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' })}</div>
+              <div class="content">${post.content}</div>
             </li>
           `;
         });
