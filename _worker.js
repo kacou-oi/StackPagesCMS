@@ -28,24 +28,33 @@ async function fetchAndParseRSS(feedUrl) {
 }
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const path = url.pathname;
     const FEED = env.FEED_URL;
-    if (!FEED) {
-      return new Response("Erreur : FEED_URL non configurée", { status: 500 });
-    }
+
+    // API: /api/posts
     if (path === "/api/posts") {
+      if (!FEED) {
+        return new Response("Erreur : FEED_URL non configurée", { status: 500 });
+      }
       const posts = await fetchAndParseRSS(FEED);
       return Response.json(posts);
     }
+
+    // API: /api/post/:slug
     if (path.startsWith("/api/post/")) {
+      if (!FEED) {
+        return new Response("Erreur : FEED_URL non configurée", { status: 500 });
+      }
       const slug = path.split("/").pop();
       const posts = await fetchAndParseRSS(FEED);
       const post = posts.find(p => p.slug === slug);
       if (!post) return new Response("Not found", { status: 404 });
       return Response.json(post);
     }
-    return new Response("StackPages API en ligne", { status: 200 });
+
+    // Laisser passer toutes les autres requêtes (site statique)
+    return env.ASSETS.fetch(req);
   }
 }
