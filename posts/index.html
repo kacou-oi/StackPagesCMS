@@ -53,31 +53,18 @@
         <h1 class="text-4xl font-bold"><i class="fas fa-rss-square mr-2"></i> Substack Blog</h1>
     </header>
 
-    <!-- Grille des articles -->
-    <div class="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
-        <!-- Début de la carte d'un article, à répéter pour chaque post -->
-        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
-            <div class="p-6">
-                <!-- Titre de l'article -->
-                <h3 class="text-xl font-semibold text-orange-600 mb-2">Titre du premier article</h3>
-                <!-- Résumé de l'article -->
-                <p class="text-gray-600 text-sm mb-4">Ceci est un bref résumé de votre article. Il donne un aperçu du contenu pour inciter à la lecture.</p>
-                <!-- Lien pour lire l'article en entier -->
-                <a href="/posts/article.html" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
-            </div>
+    <!-- Zone pour les articles dynamiques -->
+    <div class="max-w-4xl mx-auto p-6 my-10">
+        <!-- Indicateur de chargement -->
+        <div id="loading-indicator" class="text-center text-gray-500">
+            <i class="fas fa-spinner fa-spin text-4xl text-orange-500"></i>
+            <p class="mt-2">Chargement des articles...</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
-            <div class="p-6">
-                <!-- Titre de l'article -->
-                <h3 class="text-xl font-semibold text-orange-600 mb-2">Titre du deuxième article</h3>
-                <!-- Résumé de l'article -->
-                <p class="text-gray-600 text-sm mb-4">Un autre résumé pour un autre article de votre blog. Le format carte rend la navigation agréable.</p>
-                <!-- Lien pour lire l'article en entier -->
-                <a href="/posts/article.html" class="text-orange-500 font-bold hover:underline">Lire la suite →</a>
-            </div>
+        <!-- Grille où les articles seront injectés par le script -->
+        <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Les articles seront insérés ici par le fichier js/blog.js -->
         </div>
-        <!-- Fin de la carte d'un article -->
     </div>
     
     <!-- Pied de page uniforme -->
@@ -94,33 +81,8 @@
             mobileMenu.classList.toggle('hidden');
         });
     </script>
-    <!-- Sccript wokers-->
-    <script>
-    async function loadPosts() {
-      try {
-        const res = await fetch('/api/posts');
-        const posts = await res.json();
 
-        let html = '';
-        posts.forEach(post => {
-          html += `
-            <li class="post-item">
-              ${post.image ? `<img src="${post.image}" alt="Image de ${post.title}" />` : ''}
-              <h2><a href="/posts/${post.slug}">${post.title}</a></h2>
-              <div class="date">${new Date(post.pubDate).toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' })}</div>
-              <div class="content">${post.content}</div>
-            </li>
-          `;
-        });
-
-        document.getElementById('posts').innerHTML = html;
-      } catch (e) {
-        console.error('Erreur de chargement des articles :', e);
-        document.getElementById('posts').innerHTML = "<li>Impossible de charger les articles.</li>";
-      }
-    }
-
-    window.onload = loadPosts;
-  </script>
+    <!-- On charge notre script pour les articles -->
+    <script src="/js/blog.js"></script>
 </body>
 </html>
