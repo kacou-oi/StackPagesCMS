@@ -1,61 +1,3 @@
-function slugify(text) {
-  return text.toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-    .trim();
-}
-
-function decodeHTMLEntities(str) {
-  if (!str) return "";
-  const map = {
-    "nbsp": " ",
-    "amp": "&",
-    "quot": "\"",
-    "lt": "<",
-    "gt": ">",
-    "#39": "'"
-  };
-  return str
-    .replace(/&(#?\w+);/g, (match, entity) => {
-      if (entity.startsWith('#')) {
-        const code = entity.startsWith('#x')
-          ? parseInt(entity.slice(2), 16)
-          : parseInt(entity.slice(1), 10);
-        return String.fromCharCode(code);
-      }
-      return map[entity] || match;
-    });
-}
-
-async function fetchAndParseRSS(feedUrl) {
-  const res = await fetch(feedUrl);
-  const xml = await res.text();
-  const items = [];
-  const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
-  let m;
-  while ((m = itemRe.exec(xml)) !== null) {
-    const block = m[1];
-    const getTag = (tag) => {
-      const re = new RegExp(`<${tag}[^>]*>((.|[\\r\\n])*?)<\\/${tag}>`, 'i');
-      const found = block.match(re);
-      if (!found) return "";
-      let content = found[1].trim();
-      if (content.startsWith('<![CDATA[')) {
-        content = content.slice(9, -3).trim();
-      }
-      content = decodeHTMLEntities(content);
-      return content;
-    };
-    const title = getTag('title');
-    const link = getTag('link');
-    const pubDate = getTag('pubDate');
-    const description = getTag('description');
-    const slug = slugify(title);
-    items.push({ title, link, pubDate, description, slug });
-  }
-  return items;
-}
-
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -65,11 +7,13 @@ export default {
       return new Response("Erreur : FEED_URL non configurée", { status: 500 });
     }
 
+    // API liste articles
     if (path === "/api/posts") {
       const posts = await fetchAndParseRSS(FEED);
       return Response.json(posts);
     }
 
+    // API article unique par slug
     if (path.startsWith("/api/post/")) {
       const slug = path.split("/").pop();
       const posts = await fetchAndParseRSS(FEED);
@@ -78,6 +22,18 @@ export default {
       return Response.json(post);
     }
 
+    // Gestion des routes dynamiques /posts/slug
+    if (path.startsWith("/posts/")) {
+      // S'il s'agit précisément de /posts/ ou /posts/view.html, on sert normalement
+      if (path === "/posts/" || path === "/posts/view.html") {
+        return env.ASSETS.fetch(req);
+      }
+      // Sinon, pour toutes les URLs /posts/slug, on sert /posts/view.html
+      const newReq = new Request(new URL("/posts/view.html", req.url), req);
+      return env.ASSETS.fetch(newReq);
+    }
+
+    // Toutes les autres requêtes, fichiers statiques
     return env.ASSETS.fetch(req);
   }
 };
