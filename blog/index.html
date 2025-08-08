@@ -12,7 +12,7 @@
         const posts = await res.json();
         let html = '';
         posts.forEach(post => {
-            html += `<li><a href="/blog/${post.slug}">${post.title}</a> - ${post.title} <em>${post.pubDate}</em></li>`;
+            html += `<li><a href="/blog/${post.slug}">${post.title}</a> -<em>${post.pubDate}</em></li>`;
         });
         document.getElementById('posts').innerHTML = html;
     }
