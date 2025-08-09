@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackPages - Un projet de Kacou Oi</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    
+    <div id="header-placeholder"></div>
+
+    <main class="container mx-auto p-4 md:p-8 max-w-4xl text-center">
+        <section class="mt-16 mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                StackPages 🚀
+            </h1>
+            <p class="text-xl text-gray-500 mt-4 max-w-2xl mx-auto">
+                Un kit de démarrage pour créer un site web personnel élégant avec un blog dynamique, propulsé par Cloudflare Pages et un flux Substack.
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="/blog/index.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 shadow-lg">
+                    Découvrir le blog
+                </a>
+            </div>
+        </section>
+        
+        <section class="border-t border-gray-200 pt-16">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">À propos du projet</h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+                StackPages est conçu pour les développeurs et les créateurs de contenu qui souhaitent une solution simple et performante. Il combine la flexibilité d'un Worker Cloudflare avec la simplicité de gestion de contenu de Substack.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-bolt text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Performances</h3>
+                    <p class="text-gray-600 mt-2">Profitez d'un site ultra-rapide grâce à l'infrastructure de Cloudflare.</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-code-branch text-4xl text-orange-500 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Personnalisation</h3>
+                    <p class="text-gray-600 mt-2">Modifiez facilement le design avec Tailwind CSS.</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-pen-nib text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Contenu</h3>
+                    <p class="text-gray-600 mt-2">Gérez vos articles directement depuis Substack.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/backend/functions/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPartial('header-placeholder', 'header.html');
+            loadPartial('footer-placeholder', 'footer.html');
+        });
+    </script>
+</body>
+</html>
