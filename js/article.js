@@ -1,56 +1,57 @@
-// Ce script gère l'affichage d'un article unique
+// js/article.js
+
+// Le script s'exécute une fois que le DOM est complètement chargé
 document.addEventListener('DOMContentLoaded', async () => {
-    // Sélectionne les éléments du DOM
-    const postTitle = document.getElementById('post-title');
-    const postDate = document.getElementById('post-date');
-    const postContent = document.getElementById('post-content');
+    // Récupérer les éléments du DOM
+    const articleContainer = document.getElementById('article-container');
     const loadingIndicator = document.getElementById('loading-indicator');
-    const pageTitle = document.getElementById('page-title');
-
-    // Récupère le slug de l'URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const slug = urlParams.get('slug');
-
-    if (!slug) {
-        // Si aucun slug n'est trouvé, on affiche un message d'erreur
-        postContent.innerHTML = '<p class="text-center text-red-500 text-lg">Article non spécifié.</p>';
-        loadingIndicator.style.display = 'none';
-        return;
-    }
+    const articleTitleTag = document.getElementById('article-title-tag');
 
     try {
-        // Appelle l'API de notre Cloudflare Worker pour obtenir l'article spécifique
+        // Obtenir le "slug" de l'URL
+        // On récupère le paramètre 'slug' de l'URL (e.g. ?slug=mon-super-article)
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+
+        if (!slug) {
+            throw new Error("Slug de l'article introuvable dans l'URL.");
+        }
+
+        // On fait une requête à l'API pour récupérer l'article spécifique
         const response = await fetch(`/api/post/${slug}`);
+        
         if (!response.ok) {
             if (response.status === 404) {
-                postContent.innerHTML = '<p class="text-center text-red-500 text-lg">Article non trouvé.</p>';
-            } else {
-                postContent.innerHTML = '<p class="text-center text-red-500 text-lg">Erreur lors de la récupération de l\'article.</p>';
+                throw new Error("Article introuvable. Veuillez vérifier l'URL.");
             }
-            loadingIndicator.style.display = 'none';
-            return;
+            throw new Error(`Erreur HTTP: ${response.status}`);
         }
         
-        const post = await response.json();
+        const article = await response.json();
 
-        // Une fois les données reçues, on cache l'indicateur de chargement
+        // On masque l'indicateur de chargement
         loadingIndicator.style.display = 'none';
-        
-        // Met à jour le contenu de la page avec les données de l'article
-        pageTitle.textContent = `${post.title} - StackPages`;
-        postTitle.textContent = post.title;
-        
-        // Formatte la date
-        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = new Date(post.pubDate).toLocaleDateString('fr-FR', dateOptions);
-        postDate.textContent = `Publié le ${formattedDate}`;
 
-        // Insère le contenu de l'article tel quel (il s'agit d'HTML)
-        postContent.innerHTML = post.content;
+        // On met à jour le titre de la page
+        articleTitleTag.textContent = article.title;
+
+        // On crée le contenu HTML de l'article
+        articleContainer.innerHTML = `
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">${article.title}</h1>
+            <p class="text-gray-500 text-sm mb-6">
+                Par <span class="font-semibold">${article.author}</span> le ${new Date(article.published).toLocaleDateString('fr-FR')}
+            </p>
+            <div class="prose max-w-none">
+                <p>${article.content.replace(/\n/g, '<br>')}</p>
+            </div>
+        `;
 
     } catch (error) {
-        console.error('Erreur lors du chargement de l\'article:', error);
         loadingIndicator.style.display = 'none';
-        postContent.innerHTML = '<p class="text-center text-red-500 text-lg">Erreur lors du chargement de l\'article. Veuillez réessayer plus tard.</p>';
+        articleContainer.innerHTML = `<div class="text-center text-red-500 p-8">
+            <p class="text-xl font-semibold mb-2">Erreur de chargement :</p>
+            <p>${error.message}</p>
+        </div>`;
+        console.error('Erreur lors du chargement de l\'article:', error);
     }
 });
