@@ -1,3 +1,5 @@
+// _worker.js
+
 // Les fonctions utilitaires sont définies ici pour être utilisées par le worker
 // Cette fonction nettoie une chaîne de caractères pour en faire un slug d'URL
 function slugify(text) {
@@ -86,15 +88,19 @@ async function fetchAndParseRSS(feedUrl) {
 
         // Crée un slug à partir du titre pour les URL d'articles
         const slug = slugify(title);
+        
+        // Extrait un résumé à partir de la description ou du contenu
+        const summary = description || contentFull.split('.')[0] + '.';
 
         items.push({
             title,
             link,
-            pubDate,
+            published: pubDate, // Utilisez "published" pour correspondre au script client
             description,
             slug,
             content: contentFull,
-            image
+            image,
+            summary
         });
     }
     return items;
@@ -107,49 +113,79 @@ export default {
         const path = url.pathname;
         const FEED = env.FEED_URL;
 
-        // Vérifie si la variable d'environnement FEED_URL est configurée
         if (!FEED) {
             return new Response("Erreur : FEED_URL non configurée", { status: 500 });
         }
 
-        // Nouvelle logique SSR pour les articles
-        if (path.startsWith("/blog/")) {
-            const slug = path.split("/").pop();
+        // ---------- NOUVELLE LOGIQUE POUR L'API JSON (API endpoints) ----------
+        // Cette logique supporte le rendu côté client de vos scripts JS
+        if (path === "/api/posts") {
             try {
-                // On récupère et parse tous les articles du flux RSS
                 const posts = await fetchAndParseRSS(FEED);
-                // On trouve l'article qui correspond au slug
+                // On retourne la liste de tous les articles au format JSON
+                return new Response(JSON.stringify(posts), {
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                });
+            } catch (error) {
+                console.error("Erreur API /api/posts:", error);
+                return new Response("Erreur lors de la récupération des articles.", { status: 500 });
+            }
+        }
+        
+        if (path.startsWith("/api/post/")) {
+            try {
+                const slug = path.split("/").pop();
+                const posts = await fetchAndParseRSS(FEED);
                 const post = posts.find(p => p.slug === slug);
 
                 if (!post) {
                     return new Response("Article non trouvé", { status: 404 });
                 }
 
-                // On récupère le modèle HTML de l'article depuis les assets
+                // On retourne l'article unique au format JSON
+                return new Response(JSON.stringify(post), {
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                });
+            } catch (error) {
+                console.error("Erreur API /api/post/:slug:", error);
+                return new Response("Erreur lors de la récupération de l'article.", { status: 500 });
+            }
+        }
+        // ---------------------------------------------------------------------
+
+        // LOGIQUE ORIGINALE DE VOS SCRIPTS POUR LE SSR
+        // Ce bloc de code prend le dessus sur le client JS pour fournir
+        // directement une page HTML complète d'article.
+        if (path.startsWith("/blog/") && path !== "/blog/index.html") {
+            const slug = path.split("/").pop();
+            try {
+                const posts = await fetchAndParseRSS(FEED);
+                const post = posts.find(p => p.slug === slug);
+                if (!post) {
+                    return new Response("Article non trouvé", { status: 404 });
+                }
+
                 const articleTemplate = await env.ASSETS.get('article.html', 'text');
                 if (!articleTemplate) {
                     return new Response('Modèle d\'article non trouvé', { status: 500 });
                 }
-
-                // On remplace les placeholders dans le modèle avec les données de l'article
+                
                 let html = articleTemplate
                     .replace('{{title}}', post.title)
-                    .replace('{{pubDate}}', post.pubDate)
+                    .replace('{{pubDate}}', post.published)
                     .replace('{{content}}', post.content)
                     .replace('{{image}}', post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-auto object-cover rounded-lg mb-6">` : '')
                     .replace('{{currentYear}}', new Date().getFullYear());
-
-                // On retourne la page HTML complète au navigateur
+                
                 return new Response(html, {
                     headers: { 'Content-Type': 'text/html; charset=utf-8' },
                 });
-
             } catch (error) {
                 console.error(error);
                 return new Response(`Erreur lors du rendu de l'article: ${error.message}`, { status: 500 });
             }
         }
-        
+
         // Si la route ne correspond pas à notre logique, on laisse Cloudflare Pages servir le reste
         // C'est la ligne qui gère tous les autres fichiers (index.html, CSS, JS, etc.)
         return env.ASSETS.fetch(req);
