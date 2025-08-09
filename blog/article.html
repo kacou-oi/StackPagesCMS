@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - StackPages</title>
+    <title>{{title}}</title>
     <!-- On charge Tailwind CSS pour un style moderne et responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- On charge Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Styles pour le contenu de l'article */
-        .article-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
-    <!-- En-tête (simple pour cet exemple) -->
+    <!-- En-tête -->
     <header class="bg-white shadow-md py-4">
         <div class="max-w-3xl mx-auto px-6">
             <a href="/" class="text-2xl font-bold text-orange-500 hover:text-orange-600 transition-colors">StackPages</a>
@@ -29,22 +23,21 @@
     </header>
 
     <!-- Contenu principal de l'article -->
-    <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-xl mt-10">
-        <!-- Titre de l'article injecté par le serveur -->
-        <h1 class="text-4xl font-bold text-gray-800 text-center mb-2">{{title}}</h1>
-        <!-- Méta-informations de l'article injectées par le serveur -->
-        <div class="text-center text-sm italic text-gray-400 mb-8">{{pubDate}}</div>
-        
-        <!-- Contenu de l'article injecté par le serveur -->
-        <div class="article-content font-serif-georgia text-lg text-gray-700 leading-relaxed">
-            {{content}}
-        </div>
-    </div>
-    
-    <!-- Pied de page (simple pour cet exemple) -->
+    <main class="max-w-3xl mx-auto p-6 mt-10">
+        <article class="bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{title}}</h1>
+            <p class="text-sm text-gray-500 mb-6">Publié le {{pubDate}}</p>
+            {{image}}
+            <div class="prose prose-lg">
+                {{content}}
+            </div>
+        </article>
+    </main>
+
+    <!-- Pied de page -->
     <footer class="text-center text-sm text-gray-400 mt-10 p-6">
         &copy; {{currentYear}} StackPages. Tous droits réservés.
     </footer>
-
+    
 </body>
 </html>
