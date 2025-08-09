@@ -57,7 +57,7 @@ async function fetchAndParseRSS(feedUrl) {
         if (contentEncodedMatch) {
             contentFull = contentEncodedMatch[1].trim();
             if (contentFull.startsWith('<![CDATA[')) {
-                contentFull = contentFull.slice(9, -3).trim();
+                contentFull = contentEncodedMatch[1].slice(9, -3).trim();
             }
             contentFull = decodeHTMLEntities(contentFull);
         } else {
@@ -74,7 +74,24 @@ async function fetchAndParseRSS(feedUrl) {
     return items;
 }
 
-// Fonction principale qui gère toutes les requêtes (API et statiques)
+// Fonction pour charger et injecter le template HTML (SSR)
+async function renderPostPage(post, env) {
+    const template = await env.ASSETS.fetch(new Request(`${new URL(env.URL).origin}/frontend/blog/article.html`)).then(res => res.text());
+    
+    // Remplacement des placeholders
+    const renderedHtml = template
+        .replace(/{{ title }}/g, post.title)
+        .replace(/{{ description }}/g, post.description)
+        .replace(/{{ content }}/g, post.content)
+        .replace(/{{ image }}/g, post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-auto rounded-lg shadow-md mb-6">` : '')
+        .replace(/{{ pubDate }}/g, new Date(post.pubDate).toLocaleDateString());
+
+    return new Response(renderedHtml, {
+        headers: { 'Content-Type': 'text/html' },
+    });
+}
+
+// Fonction principale qui gère toutes les requêtes
 async function handleRequest(req, env) {
     const url = new URL(req.url);
     const path = url.pathname;
@@ -84,19 +101,32 @@ async function handleRequest(req, env) {
         return new Response("Erreur : FEED_URL non configurée", { status: 500 });
     }
 
+    // Nouvelle logique SSR pour les articles uniques
+    if (path.startsWith("/blog/") && path !== "/blog/" && !path.includes(".")) {
+        const slug = path.split("/").pop();
+        try {
+            const posts = await fetchAndParseRSS(FEED);
+            const post = posts.find(p => p.slug === slug);
+            if (!post) {
+                // Si l'article n'est pas trouvé, on sert une page 404
+                return new Response("Article non trouvé", { status: 404 });
+            }
+            return renderPostPage(post, env); // On génère la page HTML avec l'article
+        } catch (error) {
+            return new Response(`Erreur lors du traitement de l'article: ${error.message}`, { status: 500 });
+        }
+    }
+    
     // Gère la requête pour le formulaire de contact
     if (path === "/api/contact" && req.method === "POST") {
         try {
             const data = await req.json();
             const { name, email, message } = data;
-
-            // Logique d'envoi d'email ici. Pour l'instant on simule le succès.
             console.log(`Nouveau message de ${name} (${email}): ${message}`);
             return new Response(JSON.stringify({ message: 'Message envoyé avec succès !' }), {
                 headers: { 'Content-Type': 'application/json' },
                 status: 200
             });
-
         } catch (error) {
             console.error('Erreur lors de la soumission du formulaire de contact:', error);
             return new Response(JSON.stringify({ error: 'Erreur interne du serveur.' }), {
@@ -106,7 +136,7 @@ async function handleRequest(req, env) {
         }
     }
 
-    // Gère la requête pour obtenir tous les articles
+    // Gère la requête pour obtenir tous les articles (API pour le blog index)
     if (path === "/api/posts") {
         try {
             const posts = await fetchAndParseRSS(FEED);
@@ -115,24 +145,16 @@ async function handleRequest(req, env) {
             return new Response(`Erreur lors du traitement des articles: ${error.message}`, { status: 500 });
         }
     }
-
-    // Gère la requête pour obtenir un article unique
-    if (path.startsWith("/api/post/")) {
-        const slug = path.split("/").pop();
-        try {
-            const posts = await fetchAndParseRSS(FEED);
-            const post = posts.find(p => p.slug === slug);
-            if (!post) {
-                return new Response("Article non trouvé", { status: 404 });
-            }
-            return Response.json(post);
-        } catch (error) {
-            return new Response(`Erreur lors du traitement de l'article: ${error.message}`, { status: 500 });
-        }
-    }
-
+    
     // Gère les requêtes pour les fichiers statiques (le frontend)
-    const newRequest = new Request(`${url.origin}/frontend${path}`, req);
+    let assetPath;
+    if (path.startsWith('/functions/')) {
+        assetPath = `/backend${path}`;
+    } else {
+        assetPath = `/frontend${path}`;
+    }
+    
+    const newRequest = new Request(`${url.origin}${assetPath}`, req);
     return env.ASSETS.fetch(newRequest);
 }
 
