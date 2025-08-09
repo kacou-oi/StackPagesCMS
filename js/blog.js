@@ -1,47 +1,76 @@
-// Ce script gère l'affichage de la liste des articles du blog
-document.addEventListener('DOMContentLoaded', async () => {
-    // Sélectionne les éléments du DOM
-    const postsContainer = document.getElementById('posts-container');
-    const loadingIndicator = document.getElementById('loading-indicator');
-    
+// blog.js
+
+// Cette fonction est une copie exacte de la fonction slugify de notre Cloudflare Worker
+function slugify(text) {
+    return text.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+        .trim();
+}
+
+// Fonction pour formater la date
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+}
+
+// Fonction asynchrone principale pour charger les articles
+async function loadPosts() {
+    const postList = document.getElementById('post-list');
+
+    // Afficher un message de chargement
+    postList.innerHTML = '<p class="text-center text-gray-500">Chargement des articles...</p>';
+
     try {
-        // Appelle l'API de notre Cloudflare Worker pour obtenir tous les articles
+        // Fetch les articles depuis notre API endpoint
         const response = await fetch('/api/posts');
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
         const posts = await response.json();
 
-        // Une fois les données reçues, on cache l'indicateur de chargement
-        loadingIndicator.style.display = 'none';
-
-        // S'il n'y a pas d'articles, on affiche un message
+        // Si aucun article n'est trouvé
         if (posts.length === 0) {
-            postsContainer.innerHTML = '<p class="text-center text-gray-500 text-lg">Aucun article trouvé pour le moment.</p>';
+            postList.innerHTML = '<p class="text-center text-gray-500">Aucun article trouvé.</p>';
             return;
         }
 
-        // On génère une carte HTML pour chaque article
-        posts.forEach(post => {
-            const postCard = document.createElement('a');
-            // Le lien utilise le slug pour pointer vers la page de l'article
-            postCard.href = `/blog/article.html?slug=${post.slug}`;
-            postCard.className = 'block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden';
-            
-            // On s'assure que la description est un texte simple pour l'aperçu
-            const snippet = post.description.replace(/(<([^>]+)>)/gi, "").substring(0, 150) + '...';
+        // Nettoyer la liste
+        postList.innerHTML = '';
 
-            postCard.innerHTML = `
-                ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover">` : ''}
-                <div class="p-6">
-                    <h2 class="text-xl font-bold mb-2">${post.title}</h2>
-                    <p class="text-gray-600 text-sm mb-4">${snippet}</p>
-                    <span class="text-orange-500 font-semibold">Lire la suite <i class="fas fa-arrow-right ml-1"></i></span>
-                </div>
+        // Créer l'HTML pour chaque article
+        posts.forEach(post => {
+            const articleElement = document.createElement('article');
+            articleElement.className = 'bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300';
+
+            const formattedDate = formatDate(post.published);
+
+            // Important: Le lien est généré ici en utilisant la même fonction slugify
+            const postUrl = `/blog/${slugify(post.title)}`;
+
+            const imageHtml = post.image ? 
+                `<a href="${postUrl}" class="block mb-4"><img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover rounded-lg"></a>` : '';
+
+            articleElement.innerHTML = `
+                ${imageHtml}
+                <div class="mb-2 text-sm text-gray-500">${formattedDate}</div>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-2">
+                    <a href="${postUrl}" class="hover:text-blue-600 transition-colors duration-200">${post.title}</a>
+                </h2>
+                <p class="text-gray-700 mb-4">${post.summary}</p>
+                <a href="${postUrl}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    Lire l'article
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
             `;
-            postsContainer.appendChild(postCard);
+            postList.appendChild(articleElement);
         });
 
     } catch (error) {
-        console.error('Erreur lors du chargement des articles:', error);
-        loadingIndicator.style.display = 'none';
-        postsContainer.innerHTML = '<p class="text-center text-red-500 text-lg">Erreur lors du chargement des articles. Veuillez réessayer plus tard.</p>';
+        console.error("Erreur lors du chargement des articles:", error);
+        postList.innerHTML = `<p class="text-center text-red-500">Une erreur est survenue lors du chargement des articles.</p>`;
     }
-});
+}
+
+// Exécuter la fonction lorsque le DOM est chargé
+document.addEventListener('DOMContentLoaded', loadPosts);
