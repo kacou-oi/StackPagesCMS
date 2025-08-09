@@ -1,5 +1,4 @@
-// Les fonctions utilitaires sont définies ici pour être utilisées par le worker
-// Cette fonction nettoie une chaîne de caractères pour en faire un slug d'URL
+// Les fonctions utilitaires sont conservées
 function slugify(text) {
     return text.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -7,7 +6,6 @@ function slugify(text) {
         .trim();
 }
 
-// Cette fonction décode les entités HTML (ex: &amp; en &) dans une chaîne
 function decodeHTMLEntities(str) {
     if (!str) return "";
     const map = {
@@ -27,28 +25,21 @@ function decodeHTMLEntities(str) {
     });
 }
 
-// Cette fonction extrait l'URL de la première image dans un contenu HTML
 function extractFirstImage(html) {
     const imgRe = /<img[^>]+src=["']([^"']+)["']/i;
     const match = html.match(imgRe);
     return match ? match[1] : null;
 }
 
-// Fonction principale pour aller chercher et analyser le flux RSS
 async function fetchAndParseRSS(feedUrl) {
-    // Fait une requête au flux RSS
     const res = await fetch(feedUrl);
-    // Convertit la réponse en texte XML
     const xml = await res.text();
     const items = [];
-    // Expression régulière pour trouver chaque <item> dans le XML
     const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
     let m;
 
-    // Boucle à travers chaque article trouvé
     while ((m = itemRe.exec(xml)) !== null) {
         const block = m[1];
-        // Fonction utilitaire pour trouver le contenu d'une balise spécifique
         const getTag = (tag) => {
             const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
             const found = block.match(re);
@@ -65,8 +56,7 @@ async function fetchAndParseRSS(feedUrl) {
         const link = getTag('link');
         const pubDate = getTag('pubDate');
         const description = getTag('description');
-
-        // Récupère le contenu complet depuis <content:encoded> si disponible
+        
         let contentFull = "";
         const contentEncodedRe = /<content:encoded[^>]*>((.|[\r\n])*?)<\/content:encoded>/i;
         const contentEncodedMatch = block.match(contentEncodedRe);
@@ -77,14 +67,10 @@ async function fetchAndParseRSS(feedUrl) {
             }
             contentFull = decodeHTMLEntities(contentFull);
         } else {
-            // Sinon, utilise la description comme solution de secours
             contentFull = description;
         }
 
-        // Extrait la première image du contenu complet pour l'affichage
         const image = extractFirstImage(contentFull);
-
-        // Crée un slug à partir du titre pour les URL d'articles
         const slug = slugify(title);
 
         items.push({
@@ -100,48 +86,62 @@ async function fetchAndParseRSS(feedUrl) {
     return items;
 }
 
-// Le gestionnaire principal du worker
+// Nouveau gestionnaire principal pour la logique SSR
 export default {
     async fetch(req, env) {
         const url = new URL(req.url);
         const path = url.pathname;
         const FEED = env.FEED_URL;
 
-        // Vérifie si la variable d'environnement FEED_URL est configurée
         if (!FEED) {
             return new Response("Erreur : FEED_URL non configurée", { status: 500 });
         }
 
-        // Gère l'API pour récupérer tous les articles
-        if (path === "/api/posts") {
+        // On cherche une route de type /blog/<slug>
+        const articlePathMatch = path.match(/^\/blog\/(.*)$/);
+        if (articlePathMatch) {
+            const articleSlug = articlePathMatch[1];
             try {
+                // Récupérer tous les articles depuis le flux RSS
                 const posts = await fetchAndParseRSS(FEED);
-                // Retourne la liste des articles au format JSON
-                return Response.json(posts);
-            } catch (error) {
-                return new Response(`Erreur lors du traitement des articles: ${error.message}`, { status: 500 });
-            }
-        }
+                // Chercher l'article correspondant au slug
+                const post = posts.find(p => p.slug === articleSlug);
 
-        // Gère l'API pour un article spécifique basé sur son slug
-        if (path.startsWith("/api/post/")) {
-            const slug = path.split("/").pop();
-            try {
-                const posts = await fetchAndParseRSS(FEED);
-                // Cherche l'article correspondant au slug
-                const post = posts.find(p => p.slug === slug);
                 if (!post) {
                     return new Response("Article non trouvé", { status: 404 });
                 }
-                // Retourne l'article au format JSON
-                return Response.json(post);
+
+                // Récupérer le fichier article.html depuis les assets du worker
+                const templateResponse = await env.ASSETS.fetch(new URL('/article.html', req.url));
+                let htmlContent = await templateResponse.text();
+
+                // Formatter la date pour un affichage plus lisible
+                const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Remplacer les placeholders dans le modèle HTML par les données de l'article
+                htmlContent = htmlContent.replace('{{title}}', post.title);
+                htmlContent = htmlContent.replace('{{pubDate}}', postDate);
+                htmlContent = htmlContent.replace('{{content}}', post.content);
+                htmlContent = htmlContent.replace('{{currentYear}}', new Date().getFullYear());
+
+
+                // Renvoyer la réponse HTML finale
+                return new Response(htmlContent, {
+                    headers: {
+                        "Content-Type": "text/html; charset=utf-8",
+                    },
+                });
+
             } catch (error) {
-                return new Response(`Erreur lors du traitement de l'article: ${error.message}`, { status: 500 });
+                return new Response(`Erreur serveur : ${error.message}`, { status: 500 });
             }
         }
 
-        // Gère les requêtes pour les fichiers statiques (HTML, CSS, JS, etc.)
-        // C'est ce qui permet de servir le reste du site
+        // Si la requête ne correspond pas à un article, servir les assets statiques
         return env.ASSETS.fetch(req);
     }
 };
