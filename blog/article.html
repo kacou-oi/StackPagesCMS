@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title>StackPages - Article</title>
     <!-- On charge Tailwind CSS pour un style moderne et responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -17,27 +17,105 @@
 
     <!-- En-tête -->
     <header class="bg-white shadow-md py-4">
-        <div class="max-w-3xl mx-auto px-6">
+        <div class="max-w-3xl mx-auto px-6 flex justify-between items-center">
             <a href="/" class="text-2xl font-bold text-orange-500 hover:text-orange-600 transition-colors">StackPages</a>
+            <!-- Bouton de retour -->
+            <button onclick="history.back()" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                Retour
+            </button>
         </div>
     </header>
 
     <!-- Contenu principal de l'article -->
     <main class="max-w-3xl mx-auto p-6 mt-10">
-        <article class="bg-white rounded-xl shadow-lg p-8">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{title}}</h1>
-            <p class="text-sm text-gray-500 mb-6">Publié le {{pubDate}}</p>
-            {{image}}
-            <div class="prose prose-lg">
-                {{content}}
-            </div>
+        <article id="article-content" class="bg-white rounded-xl shadow-lg p-8">
+            <!-- Le contenu de l'article sera injecté ici par JavaScript -->
         </article>
     </main>
 
     <!-- Pied de page -->
     <footer class="text-center text-sm text-gray-400 mt-10 p-6">
-        &copy; {{currentYear}} StackPages. Tous droits réservés.
+        &copy; <span id="currentYear"></span> StackPages. Tous droits réservés.
     </footer>
-    
+
+    <script>
+        // On récupère le conteneur principal de l'article.
+        const articleContainer = document.getElementById('article-content');
+
+        // On définit les données de nos articles (simulées ici, elles pourraient venir d'une API).
+        const posts = [
+            {
+                id: 1,
+                title: "Les fondations du développement web moderne",
+                pubDate: "10 août 2025",
+                image: "https://placehold.co/600x400/F97316/ffffff?text=Web+Moderne",
+                content: `
+                    <p>Le développement web a parcouru un long chemin, et les technologies modernes ont rendu la création de sites web dynamiques plus accessible que jamais. De nos jours, des frameworks comme React, Vue, et Angular dominent le marché en offrant des solutions puissantes pour construire des interfaces utilisateur complexes et réactives.</p>
+                    <p>L'utilisation de systèmes de gestion de contenu (CMS) comme WordPress ou de générateurs de sites statiques comme Astro ou Next.js, a également révolutionné la manière dont les blogs et les sites d'actualités sont construits et maintenus. Ces outils permettent de séparer le contenu de la présentation, offrant une grande flexibilité aux développeurs.</p>
+                    <p>La performance est une priorité absolue. Les développeurs se concentrent sur l'optimisation des images, la réduction des temps de chargement et l'utilisation de techniques comme le *lazy loading* pour garantir une expérience utilisateur fluide sur tous les appareils.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Découvrir Tailwind CSS pour un style rapide",
+                pubDate: "05 août 2025",
+                image: "https://placehold.co/600x400/38B2AC/ffffff?text=Tailwind+CSS",
+                content: `
+                    <p>Tailwind CSS est un framework CSS utilitaire qui permet de construire des designs personnalisés sans quitter votre HTML. Au lieu d'écrire du CSS traditionnel, vous appliquez des classes prédéfinies directement à vos éléments. C'est une approche qui peut être très productive.</p>
+                    <p>L'un des principaux avantages de Tailwind est son caractère hautement personnalisable. Vous pouvez configurer chaque aspect de votre design, des couleurs aux espacements, en passant par les polices, en modifiant simplement un fichier de configuration. Cela permet de créer des designs uniques pour chaque projet.</p>
+                    <p>La communauté autour de Tailwind est très active et a créé de nombreuses ressources, des templates aux plugins, qui facilitent encore plus le développement. L'intégration avec des frameworks JavaScript comme React est également très fluide.</p>
+                `
+            },
+            {
+                id: 3,
+                title: "Les meilleures pratiques pour un blog SEO-friendly",
+                pubDate: "01 août 2025",
+                image: "https://placehold.co/600x400/9B59B6/ffffff?text=SEO",
+                content: `
+                    <p>Le référencement naturel (SEO) est crucial pour attirer du trafic sur votre blog. Cela commence par une bonne structure de site, avec des URL claires et des balises de titre optimisées.</p>
+                    <p>La qualité du contenu est le facteur le plus important. Écrivez des articles longs, bien documentés et qui apportent une réelle valeur ajoutée à vos lecteurs. L'utilisation de mots-clés pertinents de manière naturelle est également essentielle.</p>
+                    <p>Enfin, n'oubliez pas les aspects techniques : la vitesse de chargement de votre page, l'optimisation mobile, et l'utilisation de balises sémantiques. Tous ces éléments contribuent à améliorer votre classement dans les moteurs de recherche.</p>
+                `
+            }
+        ];
+
+        // Fonction pour obtenir les paramètres de l'URL.
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // On récupère l'identifiant de l'article depuis l'URL.
+        const articleId = parseInt(getUrlParameter('id'));
+
+        // On recherche l'article correspondant dans notre tableau de données.
+        const articleData = posts.find(post => post.id === articleId);
+
+        // Si l'article est trouvé, on injecte le contenu dans la page.
+        if (articleData) {
+            const currentYear = new Date().getFullYear();
+            document.title = `StackPages - ${articleData.title}`;
+            document.getElementById('currentYear').textContent = currentYear;
+            articleContainer.innerHTML = `
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-4">${articleData.title}</h1>
+                <p class="text-sm text-gray-500 mb-6">Publié le ${articleData.pubDate}</p>
+                <img src="${articleData.image}" alt="Image pour l'article: ${articleData.title}" class="w-full h-auto rounded-lg mb-6 shadow-md" onerror="this.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+non+disponible'">
+                <div class="prose prose-lg">
+                    ${articleData.content}
+                </div>
+            `;
+        } else {
+            // Si l'article n'est pas trouvé, on affiche un message d'erreur.
+            articleContainer.innerHTML = `
+                <div class="text-center p-10">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">Article non trouvé</h1>
+                    <p class="text-gray-600">Désolé, l'article que vous cherchez n'existe pas.</p>
+                </div>
+            `;
+            document.title = `StackPages - Article non trouvé`;
+        }
+    </script>
 </body>
 </html>
