@@ -27,7 +27,7 @@ StackPages est un template de site web statique conçu pour les créateurs de co
 │   └── style.css       # Styles CSS partagés
 ├── js/
 │   ├── blog.js         # Script pour la page de blog
-│   ├── post.js         # Script pour la page de chaque article
+│   ├── article.js         # Script pour la page de chaque article
 │   └── utils.js        # Fonctions utilitaires pour charger les parties
 ├── partials/
 │   ├── header.html     # Le header commun à toutes les pages
