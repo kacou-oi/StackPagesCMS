@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+/* Base Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles personnalisés pour le projet */
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    background-color: #f4f5f7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Styles pour les titres */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+/* Styles pour les liens */
+a {
+    transition: color 0.3s ease-in-out;
+}
+
+/* Styles pour le contenu généré par Markdown (prose) */
+/* C'est un polyfill simple pour les classes de `prose` de Tailwind */
+.prose h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 0.5em;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.3em;
+}
+.prose h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.prose p {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    margin-bottom: 1.5em;
+}
+.prose ul, .prose ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5em;
+}
+.prose li {
+    margin-bottom: 0.5em;
+}
+.prose code {
+    background-color: #f3f4f6;
+    color: #ef4444;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+}
+.prose blockquote {
+    border-left: 4px solid #f97316;
+    padding-left: 1rem;
+    color: #6b7280;
+    font-style: italic;
+    margin: 2rem 0;
+}
+.prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
