@@ -188,8 +188,9 @@ export default {
         // Protection des routes de l'admin
         if (path.startsWith('/admin') && path !== '/admin/login.html') {
             if (!cookie.includes('auth_token=valid')) {
-                // Redirige vers la page de connexion si non authentifié
-                return Response.redirect(new URL('/admin/login.html', req.url), 302);
+                // On sert le contenu de la page de login sans changer l'URL (rewrite)
+                const loginPageUrl = new URL('/admin/login.html', req.url);
+                return env.ASSETS.fetch(new Request(loginPageUrl));
             }
         }
 
