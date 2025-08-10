@@ -69,6 +69,40 @@
         </div>
     </section>
 
+    <!-- Section des derniers articles de blog -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">
+                Derniers articles du blog
+            </h2>
+            <div id="latest-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Les articles seront injectés ici -->
+            </div>
+            <div class="text-center mt-12">
+                <a href="/blog/index.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
+                    Voir tous les articles
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section de la dernière vidéo -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">
+                Dernière vidéo
+            </h2>
+            <div id="latest-video-container" class="max-w-2xl mx-auto">
+                <!-- La vidéo sera injectée ici -->
+            </div>
+            <div class="text-center mt-12">
+                <a href="/videos/index.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
+                    Voir toutes les vidéos
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Section sur l'auteur -->
     <section class="py-20">
         <div class="container mx-auto px-6 text-center">
@@ -109,5 +143,7 @@
 
     <!-- Script pour charger le header et le footer -->
     <script src="/js/utils.js"></script>
+    <!-- Script pour charger le contenu dynamique de la page d'accueil -->
+    <script src="/js/home.js"></script>
 </body>
 </html>
