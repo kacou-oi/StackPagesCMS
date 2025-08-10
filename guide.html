@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guide de démarrage - StackPages</title>
+    <title>Guide de Démarrage - StackPages CMS</title>
     <!-- On charge Tailwind CSS pour un style moderne et responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- On charge Font Awesome pour les icônes -->
@@ -19,19 +19,19 @@
     <!-- Contenu principal de la page du guide -->
     <div class="container mx-auto p-6 my-10 bg-white rounded-xl shadow-xl">
         <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
-            <i class="fas fa-book-open text-orange-500 mr-2"></i> Guide de démarrage de StackPages
+            <i class="fas fa-rocket text-orange-500 mr-2"></i> Guide de Démarrage Rapide
         </h1>
-        <p class="text-lg text-gray-600 mb-8 text-center">
-            Suivez ces étapes pour lancer votre site web personnel et blog Substack en un rien de temps.
+        <p class="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+            Déployez votre propre CMS Jamstack en quelques minutes. Suivez ces étapes simples pour mettre votre site en ligne avec Cloudflare Pages.
         </p>
 
         <!-- Étape 1 -->
         <div class="mb-10">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">1</span> Clonez le dépôt GitHub
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">1</span> Clonez le Dépôt
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                La première étape consiste à obtenir une copie du code sur votre machine ou votre compte GitHub.
+                Commencez par obtenir une copie du projet. Vous pouvez le cloner directement sur votre machine ou créer une copie sur votre compte GitHub ("Use this template").
             </p>
             <div class="bg-gray-100 p-4 rounded-lg font-mono text-sm text-gray-800">
                 <p>
@@ -43,43 +43,46 @@
         <!-- Étape 2 -->
         <div class="mb-10">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">2</span> Configurez votre flux RSS Substack
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">2</span> Déployez sur Cloudflare Pages
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                Vous devez trouver l'URL de votre flux RSS Substack pour que votre blog puisse se synchroniser.
-                Généralement, l'URL est de la forme suivante : <code>https://&lt;votre-substack&gt;.substack.com/feed</code>.
+                Connectez votre dépôt à Cloudflare pour un déploiement automatique.
             </p>
-            <p class="text-gray-700 leading-relaxed">
-                Par exemple, si l'URL de votre Substack est <code>https://monblog.substack.com</code>, l'URL du flux RSS sera <code>https://monblog.substack.com/feed</code>.
-            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                <li>Connectez-vous à votre tableau de bord Cloudflare et allez dans "Pages".</li>
+                <li>Cliquez sur "Créer un projet" et connectez votre compte GitHub.</li>
+                <li>Sélectionnez le dépôt que vous venez de cloner.</li>
+                <li>Dans la section "Environment Variables", ajoutez une variable pour sécuriser votre admin :
+                    <ul>
+                        <li><strong>Nom :</strong> `ADMIN_PASSWORD`</li>
+                        <li><strong>Valeur :</strong> `votre_mot_de_passe_secret`</li>
+                    </ul>
+                </li>
+                <li>Cliquez sur "Save and Deploy". Cloudflare s'occupe du reste !</li>
+            </ul>
         </div>
 
         <!-- Étape 3 -->
         <div class="mb-10">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">3</span> Déployez sur Cloudflare Pages
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">3</span> Configurez votre Contenu
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                Maintenant, connectez votre dépôt GitHub à Cloudflare Pages.
+                Une fois le site déployé, rendez-vous sur `https://votre-site.pages.dev/admin/` pour configurer vos flux RSS et les paramètres SEO.
             </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Connectez-vous à votre tableau de bord Cloudflare.</li>
-                <li>Allez dans la section "Pages" et cliquez sur "Créer un projet".</li>
-                <li>Connectez-vous à votre compte GitHub et sélectionnez le dépôt <code>Demo-stackpages</code> que vous venez de cloner.</li>
-                <li>Dans la configuration de build, ajoutez une variable d'environnement nommée <code>FEED_URL</code>.</li>
-                <li>Collez l'URL de votre flux RSS Substack que vous avez trouvée à l'étape 2.</li>
-                <li>Cliquez sur "Déployer le site". Cloudflare se chargera du reste !</li>
-            </ul>
+            <p class="text-gray-700 leading-relaxed">
+                Le panneau d'administration vous permet de gérer la configuration de manière simple, que ce soit via le fichier `config.json` (par défaut) ou en activant le mode avancé avec Cloudflare KV pour des mises à jour instantanées.
+            </p>
         </div>
 
         <!-- Section de conclusion -->
         <div class="mt-12 text-center p-6 bg-gray-100 rounded-lg">
             <h3 class="text-2xl font-bold text-gray-800 mb-4">Félicitations !</h3>
             <p class="text-lg text-gray-600 mb-4">
-                Votre site web est maintenant en ligne, synchronisé avec votre blog Substack.
+                Votre CMS Jamstack est en ligne. Commencez à créer !
             </p>
             <a href="/index.html" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300">
-                <i class="fas fa-home mr-2"></i> Retour à la page d'accueil
+                <i class="fas fa-home mr-2"></i> Retour à l'accueil
             </a>
         </div>
     </div>
