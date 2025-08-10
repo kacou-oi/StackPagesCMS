@@ -49,31 +49,35 @@ async function loadLatestVideo() {
         const response = await fetch('/api/videos');
         const videos = await response.json();
 
-        // On prend la première vidéo
-        const latestVideo = videos[0];
+        // On prend les 2 dernières vidéos
+        const latestVideos = videos.slice(0, 2);
 
-        if (!latestVideo) {
-            container.innerHTML = '<p class="text-center text-gray-500">Aucune vidéo à afficher.</p>';
+        if (latestVideos.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-500 col-span-2">Aucune vidéo à afficher.</p>';
             return;
         }
 
-        container.innerHTML = `
-            <a href="/videos/player.html?id=${latestVideo.id}" class="block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden group">
-                <div class="relative">
-                    <img src="${latestVideo.thumbnail}" alt="${latestVideo.title}" class="w-full h-auto object-cover">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <i class="fab fa-youtube text-white text-6xl"></i>
+        let html = '';
+        latestVideos.forEach(video => {
+            html += `
+                <a href="/videos/player.html?id=${video.id}" class="block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden group">
+                    <div class="relative">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i class="fab fa-youtube text-white text-6xl"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="p-6 text-center">
-                    <h3 class="text-2xl font-bold mb-2">${latestVideo.title}</h3>
-                    <p class="text-gray-600 text-sm mb-3">${new Date(latestVideo.pubDate).toLocaleDateString('fr-FR')}</p>
-                </div>
-            </a>
-        `;
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">${video.title}</h3>
+                        <p class="text-gray-600 text-sm mb-3">${new Date(video.pubDate).toLocaleDateString('fr-FR')}</p>
+                    </div>
+                </a>
+            `;
+        });
+        container.innerHTML = html;
 
     } catch (error) {
-        console.error('Erreur lors du chargement de la vidéo:', error);
-        container.innerHTML = '<p class="text-center text-red-500">Erreur lors du chargement de la vidéo.</p>';
+        console.error('Erreur lors du chargement des vidéos:', error);
+        container.innerHTML = '<p class="text-center text-red-500 col-span-2">Erreur lors du chargement des vidéos.</p>';
     }
 }
