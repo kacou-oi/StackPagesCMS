@@ -1,0 +1,12 @@
+{
+  "siteName": "StackPages",
+  "siteDescription": "Votre site web personnel et blog.",
+  "author": "Kacou Oi",
+  "substackRssUrl": "https://kacou-oi.substack.com/feed",
+  "youtubeRssUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC6-p_ch3JM3Lg1A-3g4rXFA",
+  "seo": {
+    "metaTitle": "StackPages - Accueil",
+    "metaDescription": "Un site personnel et un blog propulsé par Substack.",
+    "metaKeywords": "blog, substack, portfolio, tech"
+  }
+}

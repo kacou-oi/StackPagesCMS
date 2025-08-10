@@ -141,12 +141,24 @@ export default {
     async fetch(req, env) {
         const url = new URL(req.url);
         const path = url.pathname;
-        const SUBSTACK_FEED = env.FEED_URL;
-        const YOUTUBE_FEED = env.YOUTUBE_FEED_URL;
+
+        // Récupérer la configuration
+        let config;
+        try {
+            const configUrl = new URL('/config.json', url.origin);
+            const configRes = await fetch(configUrl);
+            if (!configRes.ok) throw new Error('config.json non trouvé');
+            config = await configRes.json();
+        } catch (e) {
+            return new Response("Erreur critique : Impossible de charger config.json", { status: 500 });
+        }
+
+        const SUBSTACK_FEED = config.substackRssUrl;
+        const YOUTUBE_FEED = config.youtubeRssUrl;
 
         // Gère l'API pour les articles de blog
         if (path === "/api/posts") {
-            if (!SUBSTACK_FEED) return new Response("Erreur : FEED_URL non configurée", { status: 500 });
+            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré dans config.json", { status: 500 });
             try {
                 const posts = await fetchAndParseRSS(SUBSTACK_FEED);
                 return Response.json(posts);
@@ -156,7 +168,7 @@ export default {
         }
 
         if (path.startsWith("/api/post/")) {
-            if (!SUBSTACK_FEED) return new Response("Erreur : FEED_URL non configurée", { status: 500 });
+            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré dans config.json", { status: 500 });
             const slug = path.split("/").pop();
             try {
                 const posts = await fetchAndParseRSS(SUBSTACK_FEED);
@@ -170,7 +182,7 @@ export default {
 
         // Gère l'API pour les vidéos YouTube
         if (path === "/api/videos") {
-            if (!YOUTUBE_FEED) return new Response("Erreur : YOUTUBE_FEED_URL non configurée", { status: 500 });
+            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré dans config.json", { status: 500 });
             try {
                 const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);
                 return Response.json(videos);
@@ -180,7 +192,7 @@ export default {
         }
 
         if (path.startsWith("/api/video/")) {
-            if (!YOUTUBE_FEED) return new Response("Erreur : YOUTUBE_FEED_URL non configurée", { status: 500 });
+            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré dans config.json", { status: 500 });
             const videoId = path.split("/").pop();
             try {
                 const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);

@@ -41,6 +41,17 @@ StackPages est un template de site web statique conçu pour les créateurs de co
 
 Suivez ces étapes pour lancer votre site web personnel et blog en un rien de temps.
 
+### Gérer la Configuration
+
+Ce projet inclut un petit panneau d'administration pour gérer les configurations du site sans avoir à modifier le code directement.
+
+1.  Ouvrez le fichier `admin/index.html` dans votre navigateur.
+2.  La page chargera la configuration actuelle depuis `config.json`.
+3.  Modifiez les champs souhaités (URL des flux RSS, informations SEO, etc.).
+4.  Cliquez sur "Générer et Télécharger config.json".
+5.  Remplacez l'ancien `config.json` à la racine de votre projet par celui que vous venez de télécharger.
+6.  Faites un `commit` et un `push` de vos changements sur GitHub. Cloudflare redéploiera automatiquement votre site avec la nouvelle configuration.
+
 ### Étape 1 : Clonez ce dépôt
 
 Commencez par cloner ce projet sur votre machine ou via l'interface de GitHub.
@@ -55,21 +66,16 @@ Le cœur de la synchronisation réside dans le Cloudflare Worker. Vous devez cr�
 
 *Placez le code de votre worker dans le fichier **`_worker.js`** à la racine de votre projet.*
 
-### Étape 3 : Configurez votre variable d'environnement
+### Étape 3 : Déploiement
 
 Connectez-vous à votre tableau de bord Cloudflare et rendez-vous dans la section "Pages".
 
 1.  Créez un nouveau projet.
-
 2.  Connectez-vous à votre compte GitHub et sélectionnez le dépôt que vous venez de cloner.
+3.  Pour la configuration de build, vous pouvez laisser les paramètres par défaut.
+4.  Cliquez sur "Déployer le site".
 
-3.  Dans les **"Variables d'environnement"**, ajoutez une nouvelle variable :
-
-    * **Nom :** `FEED_URL`
-
-    * **Valeur :** L'URL de votre flux RSS Substack (ex : `https://votrenom.substack.com/feed`).
-
-### Étape 4 : Déploiement
+La configuration des flux RSS se fait maintenant via le fichier `config.json` et le panneau d'administration.
 
 Cloudflare détectera automatiquement votre code et déploiera le site. Chaque fois que vous ferez une modification sur votre Substack, le Cloudflare Worker rafraîchira le contenu de votre site.
 
