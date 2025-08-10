@@ -143,6 +143,52 @@ export default {
         const url = new URL(req.url);
         const path = url.pathname;
 
+        // --- Gestion de l'authentification ---
+        const ADMIN_PASSWORD = env.ADMIN_PASSWORD;
+        const cookie = req.headers.get('Cookie') || "";
+
+        // Endpoint de connexion
+        if (path === '/api/login' && req.method === 'POST') {
+            if (!ADMIN_PASSWORD) {
+                return new Response('Le mot de passe administrateur n\'est pas configuré.', { status: 500 });
+            }
+            try {
+                const { password } = await req.json();
+                if (password === ADMIN_PASSWORD) {
+                    const expiry = new Date();
+                    expiry.setDate(expiry.getDate() + 1); // Cookie valide pour 1 jour
+                    return new Response('Connexion réussie', {
+                        status: 200,
+                        headers: {
+                            'Set-Cookie': `auth_token=valid; Expires=${expiry.toUTCString()}; Path=/; HttpOnly; Secure; SameSite=Strict`,
+                        },
+                    });
+                } else {
+                    return new Response('Mot de passe incorrect', { status: 401 });
+                }
+            } catch (e) {
+                return new Response('Requête invalide', { status: 400 });
+            }
+        }
+        
+        // Endpoint de déconnexion
+        if (path === '/api/logout') {
+            return new Response('Déconnexion', {
+                status: 200,
+                headers: {
+                    'Set-Cookie': 'auth_token=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; HttpOnly; Secure; SameSite=Strict',
+                },
+            });
+        }
+
+        // Protection des routes de l'admin
+        if (path.startsWith('/admin/') && path !== '/admin/login.html') {
+            if (!cookie.includes('auth_token=valid')) {
+                return Response.redirect(new URL('/admin/login.html', req.url), 302);
+            }
+        }
+
+
         const SUBSTACK_FEED = config.substackRssUrl;
         const YOUTUBE_FEED = config.youtubeRssUrl;
 

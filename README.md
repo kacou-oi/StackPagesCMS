@@ -27,7 +27,7 @@ StackPages est un template de site web statique conçu pour les créateurs de co
 │   └── style.css       # Styles CSS partagés
 ├── js/
 │   ├── blog.js         # Script pour la page de blog
-│   ├── article.js         # Script pour la page de chaque article
+│   ├── article.js      # Script pour la page de chaque article
 │   └── utils.js        # Fonctions utilitaires pour charger les parties
 ├── partials/
 │   ├── header.html     # Le header commun à toutes les pages
@@ -43,10 +43,17 @@ Suivez ces étapes pour lancer votre site web personnel et blog en un rien de te
 
 ### Gérer la Configuration
 
-Ce projet inclut un petit panneau d'administration pour gérer les configurations du site sans avoir à modifier le code directement.
+Ce projet inclut un panneau d'administration protégé par mot de passe pour gérer les configurations du site.
 
-1.  Ouvrez le fichier `admin/index.html` dans votre navigateur.
-2.  La page chargera la configuration actuelle depuis `config.json`.
+**Sécurisation :**
+Avant tout, vous devez définir un mot de passe pour l'accès à l'administration. Allez dans les paramètres de votre projet sur Cloudflare Pages, puis dans "Environment Variables" et ajoutez une nouvelle variable :
+*   **Nom :** `ADMIN_PASSWORD`
+*   **Valeur :** `votre_mot_de_passe_secret`
+
+**Utilisation :**
+1.  Rendez-vous sur `/admin/` sur votre site. Vous serez redirigé vers une page de connexion.
+2.  Entrez le mot de passe que vous avez défini.
+3.  Une fois connecté, la page chargera la configuration actuelle depuis `config.json`.
 3.  Modifiez les champs souhaités (URL des flux RSS, informations SEO, etc.).
 4.  Cliquez sur "Générer et Télécharger config.json".
 5.  Remplacez l'ancien `config.json` à la racine de votre projet par celui que vous venez de télécharger.
@@ -72,7 +79,7 @@ Connectez-vous à votre tableau de bord Cloudflare et rendez-vous dans la sectio
 
 1.  Créez un nouveau projet.
 2.  Connectez-vous à votre compte GitHub et sélectionnez le dépôt que vous venez de cloner.
-3.  Pour la configuration de build, vous pouvez laisser les paramètres par défaut.
+3.  Pour la configuration de build, vous pouvez laisser les paramètres par défaut. N'oubliez pas d'ajouter la variable d'environnement `ADMIN_PASSWORD` comme décrit ci-dessus.
 4.  Cliquez sur "Déployer le site".
 
 La configuration des flux RSS se fait maintenant via le fichier `config.json` et le panneau d'administration.
