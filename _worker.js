@@ -1,4 +1,4 @@
-import config from './config.json';
+import configFromFile from './config.json';
 
 // Les fonctions utilitaires sont définies ici pour être utilisées par le worker
 // Cette fonction nettoie une chaîne de caractères pour en faire un slug d'URL
@@ -147,6 +147,22 @@ export default {
             path = path.slice(0, -1);
         }
 
+        // --- Déterminer la configuration à utiliser (KV ou fichier) ---
+        let config;
+        let configMode = 'file';
+        const CONFIG_KV = env.CONFIG_KV;
+
+        if (CONFIG_KV) {
+            const kvConfig = await CONFIG_KV.get('siteConfig', { type: 'json' });
+            if (kvConfig) {
+                config = kvConfig;
+                configMode = 'kv';
+            }
+        }
+        if (!config) {
+            config = configFromFile;
+        }
+
         // --- Gestion de l'authentification ---
         const ADMIN_PASSWORD = env.ADMIN_PASSWORD;
         const cookie = req.headers.get('Cookie') || "";
@@ -199,13 +215,55 @@ export default {
             return Response.redirect(new URL('/admin/index.html', req.url), 302);
         }
 
+        // --- API pour le formulaire de contact ---
+        if (path === '/api/form' && req.method === 'POST') {
+            try {
+                const data = await req.json();
+                // TODO: Ici, vous intégreriez un service d'envoi d'e-mails (Mailgun, SendGrid, etc.)
+                // Pour la démo, nous allons juste simuler un succès.
+                console.log("Données du formulaire reçues :", data);
+                return new Response(JSON.stringify({ message: 'Message envoyé avec succès !' }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            } catch (e) {
+                return new Response('Erreur lors du traitement du formulaire.', { status: 500 });
+            }
+        }
+
+        // --- API de Configuration ---
+        if (path === '/api/config') {
+            // GET pour lire la config
+            if (req.method === 'GET') {
+                return Response.json({
+                    configMode,
+                    config,
+                });
+            }
+            // POST pour écrire la config (seulement en mode KV)
+            if (req.method === 'POST') {
+                if (!cookie.includes('auth_token=valid')) {
+                    return new Response('Non autorisé', { status: 401 });
+                }
+                if (configMode !== 'kv') {
+                    return new Response('Le mode KV n\'est pas activé.', { status: 400 });
+                }
+                try {
+                    const newConfig = await req.json();
+                    await CONFIG_KV.put('siteConfig', JSON.stringify(newConfig));
+                    return new Response('Configuration sauvegardée.', { status: 200 });
+                } catch (e) {
+                    return new Response('Données invalides.', { status: 400 });
+                }
+            }
+        }
 
         const SUBSTACK_FEED = config.substackRssUrl;
         const YOUTUBE_FEED = config.youtubeRssUrl;
 
         // Gère l'API pour les articles de blog
         if (path === "/api/posts") {
-            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré dans config.json", { status: 500 });
+            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré", { status: 500 });
             try {
                 const posts = await fetchAndParseRSS(SUBSTACK_FEED);
                 return Response.json(posts);
@@ -215,7 +273,7 @@ export default {
         }
 
         if (path.startsWith("/api/post/")) {
-            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré dans config.json", { status: 500 });
+            if (!SUBSTACK_FEED) return new Response("Erreur : substackRssUrl non configuré", { status: 500 });
             const slug = path.split("/").pop();
             try {
                 const posts = await fetchAndParseRSS(SUBSTACK_FEED);
@@ -229,7 +287,7 @@ export default {
 
         // Gère l'API pour les vidéos YouTube
         if (path === "/api/videos") {
-            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré dans config.json", { status: 500 });
+            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré", { status: 500 });
             try {
                 const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);
                 return Response.json(videos);
@@ -239,7 +297,7 @@ export default {
         }
 
         if (path.startsWith("/api/video/")) {
-            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré dans config.json", { status: 500 });
+            if (!YOUTUBE_FEED) return new Response("Erreur : youtubeRssUrl non configuré", { status: 500 });
             const videoId = path.split("/").pop();
             try {
                 const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);

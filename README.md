@@ -1,90 +1,73 @@
-# StackPages : Site web personnel et blog Substack propulsé par Cloudflare Pages
+# StackPages CMS : Le CMS Jamstack pour les Créateurs de Contenu Modernes
 
-StackPages est un template de site web statique conçu pour les créateurs de contenu souhaitant avoir un site web simple et élégant avec un blog dynamique. Il est particulièrement adapté aux utilisateurs de **Substack**, car il se synchronise automatiquement avec leur flux RSS pour afficher les articles. L'ensemble est hébergé gratuitement sur **Cloudflare Pages**.
+**StackPages CMS** est un CMS (Content Management System) basé sur l'architecture Jamstack, conçu pour permettre aux créateurs de contenu de construire un site vitrine élégant et complet avec des fonctionnalités dynamiques, sans la complexité d'un backend traditionnel.
 
-## Fonctionnalités
+Propulsé par l'écosystème serverless de **Cloudflare**, StackPages offre la vitesse et la sécurité d'un site statique avec la puissance de fonctionnalités dynamiques gérées par un worker intelligent.
 
-* **Intégration Substack :** Récupère et affiche automatiquement les articles de votre blog Substack via son flux RSS.
+## Fonctionnalités Clés
 
-* **Hébergement gratuit et rapide :** Déploiement et hébergement sans frais sur Cloudflare Pages.
+*   **Architecture Jamstack Puissante :** Profitez d'un site pré-rendu ultra-rapide, sécurisé et scalable, servi depuis le réseau global de Cloudflare.
+*   **Contenu Dynamique "Headless" :**
+    *   **Blog :** Synchronisez automatiquement les articles de votre blog **Substack**.
+    *   **Vidéos :** Affichez les dernières vidéos de votre **chaîne YouTube**.
+    *   Le contenu est récupéré via des flux RSS et servi par une API interne, vous donnant un contrôle total sur la présentation.
+*   **Formulaires Dynamiques Intégrés :** Le formulaire de contact est géré par le worker Cloudflare, vous permettant de recevoir des soumissions sans backend. Le worker peut être facilement étendu pour envoyer des e-mails ou notifier d'autres services.
+*   **Panneau d'Administration Intuitif :**
+    *   Gérez les configurations de votre site (URL des flux, SEO, etc.) via une interface simple et protégée par mot de passe.
+    *   **Mode de Stockage Hybride :**
+        *   **Mode Fichier (par défaut) :** Simple et rapide à déployer.
+        *   **Mode KV (optionnel) :** Activez les mises à jour de configuration instantanées en liant un Namespace Cloudflare KV.
+*   **Design Moderne et Responsif :** Construit avec **Tailwind CSS** pour une apparence professionnelle et une adaptation parfaite à tous les appareils.
+*   **Hébergement Gratuit et Déploiement Continu :** Déployez et hébergez votre site gratuitement sur **Cloudflare Pages**, avec des mises à jour automatiques à chaque `git push`.
 
-* **Design moderne et responsif :** Construit avec **Tailwind CSS** pour un affichage parfait sur tous les appareils.
-
-* **Structure simple :** HTML, CSS et JavaScript pour une compréhension et une personnalisation faciles.
-
-* **Déploiement automatique :** Une fois configuré, votre blog se met à jour à chaque fois que vous publiez un nouvel article sur Substack.
-
-## Structure du projet
-
-```
-/
-├── .gitignore
-├── README.md
-├── index.html          # Page d'accueil
-├── guide.html          # Guide de démarrage
-├── _worker.js          # Cloudflare Worker à la racine
-├── css/
-│   └── style.css       # Styles CSS partagés
-├── js/
-│   ├── blog.js         # Script pour la page de blog
-│   ├── article.js      # Script pour la page de chaque article
-│   └── utils.js        # Fonctions utilitaires pour charger les parties
-├── partials/
-│   ├── header.html     # Le header commun à toutes les pages
-│   └── footer.html     # Le footer commun à toutes les pages
-└── blog/
-    ├── index.html      # Liste des articles du blog (Substack Blog)
-    └── article.html    # Modèle pour un article unique
-```
-
-## Guide de démarrage
-
-Suivez ces étapes pour lancer votre site web personnel et blog en un rien de temps.
+## Guide de Démarrage
 
 ### Gérer la Configuration
 
-Ce projet inclut un panneau d'administration protégé par mot de passe pour gérer les configurations du site.
+Ce projet utilise un système de configuration hybride. Par défaut, il lit un fichier `config.json`, mais il peut être mis à niveau pour utiliser Cloudflare KV pour des mises à jour instantanées.
 
 **Sécurisation :**
-Avant tout, vous devez définir un mot de passe pour l'accès à l'administration. Allez dans les paramètres de votre projet sur Cloudflare Pages, puis dans "Environment Variables" et ajoutez une nouvelle variable :
+L'accès à l'administration est protégé par un mot de passe. Allez dans les paramètres de votre projet sur Cloudflare Pages > "Environment Variables" et ajoutez :
 *   **Nom :** `ADMIN_PASSWORD`
 *   **Valeur :** `votre_mot_de_passe_secret`
 
-**Utilisation :**
-1.  Rendez-vous sur `/admin/` sur votre site. Vous serez redirigé vers une page de connexion.
-2.  Entrez le mot de passe que vous avez défini.
-3.  Une fois connecté, la page chargera la configuration actuelle depuis `config.json`.
-3.  Modifiez les champs souhaités (URL des flux RSS, informations SEO, etc.).
-4.  Cliquez sur "Générer et Télécharger config.json".
-5.  Remplacez l'ancien `config.json` à la racine de votre projet par celui que vous venez de télécharger.
-6.  Faites un `commit` et un `push` de vos changements sur GitHub. Cloudflare redéploiera automatiquement votre site avec la nouvelle configuration.
+---
 
-### Étape 1 : Clonez ce dépôt
+#### Mode 1 : Fichier `config.json` (par défaut)
 
-Commencez par cloner ce projet sur votre machine ou via l'interface de GitHub.
+Ce mode est activé par défaut et ne nécessite aucune configuration supplémentaire.
 
-```
-git clone [https://github.com/kacou-oi/Demo-stackpages.git](https://github.com/kacou-oi/Demo-stackpages.git)
-```
+1.  Rendez-vous sur `/admin/` sur votre site et connectez-vous.
+2.  Le panneau chargera la configuration depuis le fichier `config.json` du projet.
+3.  Après modification, cliquez sur "Générer et Télécharger config.json".
+4.  Remplacez l'ancien `config.json` à la racine de votre projet par le nouveau.
+5.  Faites un `commit` et un `push` sur GitHub pour que Cloudflare redéploie le site avec la nouvelle configuration.
 
-### Étape 2 : Créez le Cloudflare Worker
+---
 
-Le cœur de la synchronisation réside dans le Cloudflare Worker. Vous devez créer un Worker qui va récupérer le flux RSS de votre Substack.
+#### Mode 2 : Cloudflare KV (Optionnel, pour mises à jour instantanées)
 
-*Placez le code de votre worker dans le fichier **`_worker.js`** à la racine de votre projet.*
+Pour activer ce mode, vous devez lier un Namespace KV à votre projet.
 
-### Étape 3 : Déploiement
+1.  **Créez un Namespace KV :** Dans votre tableau de bord Cloudflare, allez dans "Workers & Pages" > "KV" et créez un nouveau namespace. Nommez-le `stackpages_config`.
+2.  **Liez le Namespace à votre projet :**
+    *   Allez dans les paramètres de votre projet Cloudflare Pages.
+    *   Allez dans "Functions" > "KV namespace bindings".
+    *   Cliquez sur "Add binding".
+    *   **Variable name :** `CONFIG_KV`
+    *   **KV namespace :** Sélectionnez le namespace `stackpages_config` que vous venez de créer.
+    *   Sauvegardez et redéployez votre projet.
+3.  **Utilisation :**
+    *   Retournez sur la page `/admin/`. Elle détectera automatiquement le mode KV.
+    *   Lorsque vous cliquerez sur "Sauvegarder", les modifications seront appliquées instantanément, sans avoir besoin de `git push`.
 
-Connectez-vous à votre tableau de bord Cloudflare et rendez-vous dans la section "Pages".
+### Déploiement
 
-1.  Créez un nouveau projet.
-2.  Connectez-vous à votre compte GitHub et sélectionnez le dépôt que vous venez de cloner.
-3.  Pour la configuration de build, vous pouvez laisser les paramètres par défaut. N'oubliez pas d'ajouter la variable d'environnement `ADMIN_PASSWORD` comme décrit ci-dessus.
-4.  Cliquez sur "Déployer le site".
-
-La configuration des flux RSS se fait maintenant via le fichier `config.json` et le panneau d'administration.
-
-Cloudflare détectera automatiquement votre code et déploiera le site. Chaque fois que vous ferez une modification sur votre Substack, le Cloudflare Worker rafraîchira le contenu de votre site.
+1.  Clonez ce dépôt.
+2.  Connectez-vous à votre tableau de bord Cloudflare et créez un nouveau projet "Pages".
+3.  Connectez votre compte GitHub et sélectionnez ce dépôt.
+4.  Ajoutez la variable d'environnement `ADMIN_PASSWORD`.
+5.  Cliquez sur "Déployer le site".
 
 ## Licence
 

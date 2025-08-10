@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('config-form');
     const statusDiv = document.getElementById('form-status');
+    let currentConfigMode = 'file';
 
     // Charger la configuration existante
     async function loadConfig() {
         try {
-            const response = await fetch('/config.json');
+            const response = await fetch('/api/config');
             if (!response.ok) {
-                throw new Error('Le fichier config.json est introuvable.');
+                throw new Error('Impossible de récupérer la configuration depuis l\'API.');
             }
-            const config = await response.json();
+            const { configMode, config } = await response.json();
+            currentConfigMode = configMode;
             
             // Remplir le formulaire
             document.getElementById('siteName').value = config.siteName || '';
@@ -23,18 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('metaKeywords').value = config.seo.metaKeywords || '';
             }
             
-            statusDiv.textContent = 'Configuration actuelle chargée.';
-            statusDiv.className = 'text-center mt-4 text-sm font-semibold text-green-600';
+            updateStatus(`Configuration chargée en mode : <strong>${configMode.toUpperCase()}</strong>.`, 'text-green-600');
 
         } catch (error) {
             console.error('Erreur lors du chargement de la config:', error);
-            statusDiv.textContent = `Erreur : ${error.message}`;
-            statusDiv.className = 'text-center mt-4 text-sm font-semibold text-red-600';
+            updateStatus(`Erreur : ${error.message}`, 'text-red-600');
         }
     }
 
     // Gérer la soumission du formulaire
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
         
         const newConfig = {
@@ -49,26 +49,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Créer un blob avec le nouveau contenu JSON
-        const blob = new Blob([JSON.stringify(newConfig, null, 2)], { type: 'application/json' });
-        
-        // Créer un lien de téléchargement
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'config.json';
-        
-        // Simuler un clic pour démarrer le téléchargement
-        document.body.appendChild(a);
-        a.click();
-        
-        // Nettoyer
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        statusDiv.textContent = 'Fichier config.json généré ! Remplacez l\'ancien fichier dans votre projet.';
-        statusDiv.className = 'text-center mt-4 text-sm font-semibold text-blue-600';
+        if (currentConfigMode === 'kv') {
+            // Mode KV : Sauvegarder via l'API
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newConfig),
+                });
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+                updateStatus('Configuration sauvegardée avec succès !', 'text-blue-600');
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde en mode KV:', error);
+                updateStatus(`Erreur : ${error.message}`, 'text-red-600');
+            }
+        } else {
+            // Mode Fichier : Télécharger le JSON
+            const blob = new Blob([JSON.stringify(newConfig, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            updateStatus('Fichier config.json généré ! Remplacez l\'ancien fichier dans votre projet.', 'text-blue-600');
+        }
     });
+
+    function updateStatus(message, colorClass) {
+        statusDiv.innerHTML = message;
+        statusDiv.className = `text-center mt-4 text-sm font-semibold ${colorClass}`;
+    }
 
     // Charger la config au démarrage
     loadConfig();
