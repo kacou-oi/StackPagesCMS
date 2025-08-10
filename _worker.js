@@ -1,3 +1,5 @@
+import config from './config.json';
+
 // Les fonctions utilitaires sont définies ici pour être utilisées par le worker
 // Cette fonction nettoie une chaîne de caractères pour en faire un slug d'URL
 function slugify(text) {
@@ -135,23 +137,11 @@ async function fetchAndParseYouTubeRSS(feedUrl) {
     return items;
 }
 
-
 // Le gestionnaire principal du worker
 export default {
     async fetch(req, env) {
         const url = new URL(req.url);
         const path = url.pathname;
-
-        // Récupérer la configuration
-        let config;
-        try {
-            const configUrl = new URL('/config.json', url.origin);
-            const configRes = await fetch(configUrl);
-            if (!configRes.ok) throw new Error('config.json non trouvé');
-            config = await configRes.json();
-        } catch (e) {
-            return new Response("Erreur critique : Impossible de charger config.json", { status: 500 });
-        }
 
         const SUBSTACK_FEED = config.substackRssUrl;
         const YOUTUBE_FEED = config.youtubeRssUrl;
