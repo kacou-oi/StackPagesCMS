@@ -7,7 +7,7 @@ function slugify(text) {
         .trim();
 }
 
-// Cette fonction décode les entités HTML (ex: &amp; en &) dans une chaîne
+// Cette fonction décode les entités HTML (ex: & en &) dans une chaîne
 function decodeHTMLEntities(str) {
     if (!str) return "";
     const map = {
@@ -34,21 +34,16 @@ function extractFirstImage(html) {
     return match ? match[1] : null;
 }
 
-// Fonction principale pour aller chercher et analyser le flux RSS
+// Fonction principale pour aller chercher et analyser le flux RSS de Substack
 async function fetchAndParseRSS(feedUrl) {
-    // Fait une requête au flux RSS
     const res = await fetch(feedUrl);
-    // Convertit la réponse en texte XML
     const xml = await res.text();
     const items = [];
-    // Expression régulière pour trouver chaque <item> dans le XML
     const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
     let m;
 
-    // Boucle à travers chaque article trouvé
     while ((m = itemRe.exec(xml)) !== null) {
         const block = m[1];
-        // Fonction utilitaire pour trouver le contenu d'une balise spécifique
         const getTag = (tag) => {
             const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
             const found = block.match(re);
@@ -66,7 +61,6 @@ async function fetchAndParseRSS(feedUrl) {
         const pubDate = getTag('pubDate');
         const description = getTag('description');
 
-        // Récupère le contenu complet depuis <content:encoded> si disponible
         let contentFull = "";
         const contentEncodedRe = /<content:encoded[^>]*>((.|[\r\n])*?)<\/content:encoded>/i;
         const contentEncodedMatch = block.match(contentEncodedRe);
@@ -77,14 +71,10 @@ async function fetchAndParseRSS(feedUrl) {
             }
             contentFull = decodeHTMLEntities(contentFull);
         } else {
-            // Sinon, utilise la description comme solution de secours
             contentFull = description;
         }
 
-        // Extrait la première image du contenu complet pour l'affichage
         const image = extractFirstImage(contentFull);
-
-        // Crée un slug à partir du titre pour les URL d'articles
         const slug = slugify(title);
 
         items.push({
@@ -100,48 +90,109 @@ async function fetchAndParseRSS(feedUrl) {
     return items;
 }
 
+// Nouvelle fonction pour le flux RSS de YouTube
+async function fetchAndParseYouTubeRSS(feedUrl) {
+    const res = await fetch(feedUrl);
+    const xml = await res.text();
+    const items = [];
+    const entryRe = /<entry[^>]*>((.|[\r\n])*?)<\/entry>/gi;
+    let m;
+
+    while ((m = entryRe.exec(xml)) !== null) {
+        const block = m[1];
+        const getTag = (tag, namespace = '') => {
+            const re = namespace
+                ? new RegExp(`<${namespace}:${tag}[^>]*>((.|[\r\n])*?)<\/${namespace}:${tag}>`, 'i')
+                : new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
+            const found = block.match(re);
+            if (!found) return "";
+            let content = found[1].trim();
+            return decodeHTMLEntities(content);
+        };
+
+        const getAttr = (tag, attr, namespace = '') => {
+            const re = namespace
+                ? new RegExp(`<${namespace}:${tag}[^>]*${attr}=["']([^"']+)["']`, 'i')
+                : new RegExp(`<${tag}[^>]*${attr}=["']([^"']+)["']`, 'i');
+            const found = block.match(re);
+            return found ? found[1] : "";
+        };
+
+        const id = getTag('videoId', 'yt');
+        const title = getTag('title');
+        const pubDate = getTag('published');
+        const description = getTag('description', 'media');
+        const thumbnail = getAttr('thumbnail', 'url', 'media');
+
+        items.push({
+            id,
+            title,
+            pubDate,
+            description,
+            thumbnail
+        });
+    }
+    return items;
+}
+
+
 // Le gestionnaire principal du worker
 export default {
     async fetch(req, env) {
         const url = new URL(req.url);
         const path = url.pathname;
-        const FEED = env.FEED_URL;
+        const SUBSTACK_FEED = env.FEED_URL;
+        const YOUTUBE_FEED = env.YOUTUBE_FEED_URL;
 
-        // Vérifie si la variable d'environnement FEED_URL est configurée
-        if (!FEED) {
-            return new Response("Erreur : FEED_URL non configurée", { status: 500 });
-        }
-
-        // Gère l'API pour récupérer tous les articles
+        // Gère l'API pour les articles de blog
         if (path === "/api/posts") {
+            if (!SUBSTACK_FEED) return new Response("Erreur : FEED_URL non configurée", { status: 500 });
             try {
-                const posts = await fetchAndParseRSS(FEED);
-                // Retourne la liste des articles au format JSON
+                const posts = await fetchAndParseRSS(SUBSTACK_FEED);
                 return Response.json(posts);
             } catch (error) {
                 return new Response(`Erreur lors du traitement des articles: ${error.message}`, { status: 500 });
             }
         }
 
-        // Gère l'API pour un article spécifique basé sur son slug
         if (path.startsWith("/api/post/")) {
+            if (!SUBSTACK_FEED) return new Response("Erreur : FEED_URL non configurée", { status: 500 });
             const slug = path.split("/").pop();
             try {
-                const posts = await fetchAndParseRSS(FEED);
-                // Cherche l'article correspondant au slug
+                const posts = await fetchAndParseRSS(SUBSTACK_FEED);
                 const post = posts.find(p => p.slug === slug);
-                if (!post) {
-                    return new Response("Article non trouvé", { status: 404 });
-                }
-                // Retourne l'article au format JSON
+                if (!post) return new Response("Article non trouvé", { status: 404 });
                 return Response.json(post);
             } catch (error) {
                 return new Response(`Erreur lors du traitement de l'article: ${error.message}`, { status: 500 });
             }
         }
 
-        // Gère les requêtes pour les fichiers statiques (HTML, CSS, JS, etc.)
-        // C'est ce qui permet de servir le reste du site
+        // Gère l'API pour les vidéos YouTube
+        if (path === "/api/videos") {
+            if (!YOUTUBE_FEED) return new Response("Erreur : YOUTUBE_FEED_URL non configurée", { status: 500 });
+            try {
+                const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);
+                return Response.json(videos);
+            } catch (error) {
+                return new Response(`Erreur lors du traitement des vidéos: ${error.message}`, { status: 500 });
+            }
+        }
+
+        if (path.startsWith("/api/video/")) {
+            if (!YOUTUBE_FEED) return new Response("Erreur : YOUTUBE_FEED_URL non configurée", { status: 500 });
+            const videoId = path.split("/").pop();
+            try {
+                const videos = await fetchAndParseYouTubeRSS(YOUTUBE_FEED);
+                const video = videos.find(v => v.id === videoId);
+                if (!video) return new Response("Vidéo non trouvée", { status: 404 });
+                return Response.json(video);
+            } catch (error) {
+                return new Response(`Erreur lors du traitement de la vidéo: ${error.message}`, { status: 500 });
+            }
+        }
+
+        // Gère les requêtes pour les fichiers statiques
         return env.ASSETS.fetch(req);
     }
 };
