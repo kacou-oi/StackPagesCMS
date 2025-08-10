@@ -61,13 +61,16 @@ Pour activer ce mode, vous devez lier un Namespace KV à votre projet.
     *   Retournez sur la page `/admin/`. Elle détectera automatiquement le mode KV.
     *   Lorsque vous cliquerez sur "Sauvegarder", les modifications seront appliquées instantanément, sans avoir besoin de `git push`.
 
-### Déploiement
+### Déploiement (Processus 100% en Ligne)
 
-1.  Clonez ce dépôt.
-2.  Connectez-vous à votre tableau de bord Cloudflare et créez un nouveau projet "Pages".
-3.  Connectez votre compte GitHub et sélectionnez ce dépôt.
-4.  Ajoutez la variable d'environnement `ADMIN_PASSWORD`.
-5.  Cliquez sur "Déployer le site".
+1.  **Forkez le Dépôt :** Cliquez sur le bouton "Use this template" > "Create a new repository" en haut de la page GitHub pour créer votre propre copie du projet.
+2.  **Déployez sur Cloudflare :**
+    *   Connectez-vous à votre tableau de bord Cloudflare.
+    *   Allez dans `Workers & Pages` > `Créer une application` > `Pages` > `Connecter à Git`.
+    *   Sélectionnez le dépôt que vous venez de créer.
+    *   Ajoutez la variable d'environnement `ADMIN_PASSWORD` pour sécuriser votre panneau d'administration.
+    *   Cliquez sur "Enregistrer et Déployer".
+3.  **Configurez :** Une fois le site déployé, allez sur `https://votre-site.pages.dev/admin` pour configurer vos flux et paramètres.
 
 ## Licence
 

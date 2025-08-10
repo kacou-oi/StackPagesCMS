@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guide de Démarrage - StackPages CMS</title>
-    <!-- On charge Tailwind CSS pour un style moderne et responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- On charge Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- On charge notre fichier de style CSS externe -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -19,46 +16,44 @@
     <!-- Contenu principal de la page du guide -->
     <div class="container mx-auto p-6 my-10 bg-white rounded-xl shadow-xl">
         <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
-            <i class="fas fa-rocket text-orange-500 mr-2"></i> Guide de Démarrage Rapide
+            <i class="fas fa-rocket text-orange-500 mr-2"></i> Déploiement 100% en Ligne
         </h1>
         <p class="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            Déployez votre propre CMS Jamstack en quelques minutes. Suivez ces étapes simples pour mettre votre site en ligne avec Cloudflare Pages.
+            Lancez votre propre CMS Jamstack en quelques clics, sans jamais quitter votre navigateur.
         </p>
 
         <!-- Étape 1 -->
         <div class="mb-10">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">1</span> Clonez le Dépôt
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">1</span> "Forkez" le Dépôt Starter sur GitHub
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                Commencez par obtenir une copie du projet. Vous pouvez le cloner directement sur votre machine ou créer une copie sur votre compte GitHub ("Use this template").
+                Commencez par créer votre propre copie du projet. Cliquez sur le bouton ci-dessous pour "forker" le dépôt STARTER directement sur votre compte GitHub.
             </p>
-            <div class="bg-gray-100 p-4 rounded-lg font-mono text-sm text-gray-800">
-                <p>
-                    <span class="text-green-600">$</span> git clone https://github.com/kacou-oi/Demo-stackpages.git
-                </p>
-            </div>
+            <a href="https://github.com/kacou-oi/Demo-stackpages/fork" target="_blank" class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                <i class="fab fa-github mr-2"></i> Forker le Dépôt Starter
+            </a>
         </div>
 
         <!-- Étape 2 -->
         <div class="mb-10">
             <h2 class="text-2xl font-bold text-orange-500 mb-4 flex items-center">
-                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">2</span> Déployez sur Cloudflare Pages
+                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">2</span> Connectez votre Dépôt à Cloudflare Pages
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                Connectez votre dépôt à Cloudflare pour un déploiement automatique.
+                Maintenant, déployez votre site en quelques clics sur la plateforme gratuite et ultra-rapide de Cloudflare.
             </p>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Connectez-vous à votre tableau de bord Cloudflare et allez dans "Pages".</li>
-                <li>Cliquez sur "Créer un projet" et connectez votre compte GitHub.</li>
-                <li>Sélectionnez le dépôt que vous venez de cloner.</li>
-                <li>Dans la section "Environment Variables", ajoutez une variable pour sécuriser votre admin :
-                    <ul>
-                        <li><strong>Nom :</strong> `ADMIN_PASSWORD`</li>
-                        <li><strong>Valeur :</strong> `votre_mot_de_passe_secret`</li>
+                <li>Connectez-vous à votre tableau de bord Cloudflare et allez dans "Workers & Pages".</li>
+                <li>Cliquez sur "Créer une application" > "Pages" > "Connecter à Git".</li>
+                <li>Sélectionnez le dépôt que vous venez de "forker".</li>
+                <li>Dans la section "Set up builds and deployments", ajoutez une variable d'environnement pour sécuriser votre panneau d'administration :
+                    <ul class="list-disc list-inside ml-6 mt-2 bg-gray-50 p-3 rounded-lg">
+                        <li><strong>Nom de la variable :</strong> `ADMIN_PASSWORD`</li>
+                        <li><strong>Valeur :</strong> `choisissez_un_mot_de_passe_solide`</li>
                     </ul>
                 </li>
-                <li>Cliquez sur "Save and Deploy". Cloudflare s'occupe du reste !</li>
+                <li>Cliquez sur "Enregistrer et Déployer". Cloudflare va construire et déployer votre site.</li>
             </ul>
         </div>
 
@@ -68,21 +63,21 @@
                 <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-lg font-bold">3</span> Configurez votre Contenu
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-                Une fois le site déployé, rendez-vous sur `https://votre-site.pages.dev/admin/` pour configurer vos flux RSS et les paramètres SEO.
+                Une fois le déploiement terminé, rendez-vous sur l'URL de votre nouveau site (ex: `https://votre-projet.pages.dev/admin/`) et connectez-vous avec le mot de passe que vous avez défini.
             </p>
             <p class="text-gray-700 leading-relaxed">
-                Le panneau d'administration vous permet de gérer la configuration de manière simple, que ce soit via le fichier `config.json` (par défaut) ou en activant le mode avancé avec Cloudflare KV pour des mises à jour instantanées.
+                Depuis le panneau d'administration, vous pouvez maintenant configurer vos flux RSS Substack et YouTube, ainsi que vos paramètres SEO. Pour une expérience optimale, vous pouvez activer le mode de sauvegarde instantanée en liant un Namespace KV (voir le `README.md` pour les détails).
             </p>
         </div>
 
         <!-- Section de conclusion -->
         <div class="mt-12 text-center p-6 bg-gray-100 rounded-lg">
-            <h3 class="text-2xl font-bold text-gray-800 mb-4">Félicitations !</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Votre site est en ligne !</h3>
             <p class="text-lg text-gray-600 mb-4">
-                Votre CMS Jamstack est en ligne. Commencez à créer !
+                Votre CMS Jamstack est prêt. Le contenu de votre blog et de votre chaîne YouTube se synchronisera automatiquement.
             </p>
             <a href="/index.html" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300">
-                <i class="fas fa-home mr-2"></i> Retour à l'accueil
+                <i class="fas fa-home mr-2"></i> Visiter votre site
             </a>
         </div>
     </div>
