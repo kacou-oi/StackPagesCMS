@@ -141,7 +141,11 @@ async function fetchAndParseYouTubeRSS(feedUrl) {
 export default {
     async fetch(req, env) {
         const url = new URL(req.url);
-        const path = url.pathname;
+        let path = url.pathname;
+        // Normaliser le chemin pour enlever le slash final s'il existe et n'est pas la racine
+        if (path.length > 1 && path.endsWith('/')) {
+            path = path.slice(0, -1);
+        }
 
         // --- Gestion de l'authentification ---
         const ADMIN_PASSWORD = env.ADMIN_PASSWORD;
@@ -182,10 +186,16 @@ export default {
         }
 
         // Protection des routes de l'admin
-        if (path.startsWith('/admin/') && path !== '/admin/login.html') {
+        if (path.startsWith('/admin') && path !== '/admin/login.html') {
             if (!cookie.includes('auth_token=valid')) {
+                // Redirige vers la page de connexion si non authentifié
                 return Response.redirect(new URL('/admin/login.html', req.url), 302);
             }
+        }
+
+        // Si l'utilisateur est authentifié et essaie d'accéder à la page de login, on le redirige vers le panel
+        if (path === '/admin/login.html' && cookie.includes('auth_token=valid')) {
+            return Response.redirect(new URL('/admin/index.html', req.url), 302);
         }
 
 
