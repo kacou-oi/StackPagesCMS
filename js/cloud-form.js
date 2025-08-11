@@ -35,50 +35,91 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        // Combine domain name and TLD
-        data.fullDomain = data.domainName + data.domainTld;
-
-        if (!data.email || !data.siteTitle) {
-            updateStatus('Veuillez remplir tous les champs requis.', 'text-red-600');
-            return;
-        }
-
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Envoi en cours...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Génération en cours...';
+        updateStatus('Préparation des fichiers...', 'text-gray-600');
 
         try {
-            const response = await fetch('/api/form', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
+            const zip = new JSZip();
+            
+            // 1. Définir la liste des fichiers à inclure
+            const fileList = [
+                'index.html', 'guide.html', 'contact.html', 'cloud.html',
+                'config.json', '_worker.js', '_redirects',
+                'admin/index.html', 'admin/login.html', 'admin/js/admin.js',
+                'blog/index.html', 'blog/article.html',
+                'videos/index.html', 'videos/player.html',
+                'js/article.js', 'js/blog.js', 'js/cloud-form.js', 'js/form.js', 'js/home.js', 'js/player.js', 'js/post.js', 'js/utils.js', 'js/videos.js',
+                'partials/header.html', 'partials/footer.html',
+                'img/author.jpg', 'img/favicon.png', 'img/logo.png'
+            ];
 
-            const result = await response.json();
+            // 2. Créer le nouveau config.json à partir du formulaire
+            const formData = new FormData(form);
+            const newConfig = {
+                siteName: formData.get('siteTitle'),
+                siteDescription: formData.get('tagline'),
+                author: "Mon Nom", // Placeholder, could be added to form
+                substackRssUrl: formData.get('substackRssUrl'),
+                youtubeRssUrl: formData.get('youtubeRssUrl'),
+                seo: {
+                    metaTitle: formData.get('siteTitle'),
+                    metaDescription: formData.get('tagline'),
+                    metaKeywords: "blog, portfolio, tech"
+                }
+            };
+            zip.file("config.json", JSON.stringify(newConfig, null, 2));
 
-            if (!response.ok) {
-                throw new Error(result.message || 'Une erreur est survenue.');
+            // 3. Récupérer et ajouter les autres fichiers
+            for (let i = 0; i < fileList.length; i++) {
+                const filePath = fileList[i];
+                if (filePath === 'config.json') continue; // Déjà géré
+
+                updateStatus(`Chargement : ${filePath} (${i + 1}/${fileList.length})`, 'text-gray-600');
+                
+                const response = await fetch(`/${filePath}`);
+                if (!response.ok) {
+                    console.warn(`Fichier non trouvé : ${filePath}, il sera ignoré.`);
+                    continue;
+                }
+                const content = await response.blob();
+                zip.file(filePath, content);
             }
 
-            updateStatus('Votre demande de déploiement a été envoyée avec succès ! Nous vous contacterons bientôt.', 'text-green-600');
-            form.reset();
-            currentStep = 0;
-            showStep(0);
+            // 4. Générer le ZIP et le télécharger
+            updateStatus('Compression de l\'archive...', 'text-gray-600');
+            const zipContent = await zip.generateAsync({ type: "blob" });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(zipContent);
+            link.download = `${slugify(newConfig.siteName || 'stackpages-site')}.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            updateStatus('Site généré avec succès !', 'text-green-600');
 
         } catch (error) {
-            console.error('Erreur lors de la soumission du formulaire:', error);
-            updateStatus(error.message, 'text-red-600');
+            console.error('Erreur lors de la génération du ZIP:', error);
+            updateStatus(`Erreur : ${error.message}`, 'text-red-600');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Lancer le Déploiement';
+            submitBtn.innerHTML = '<i class="fas fa-download mr-2"></i> Générer et Télécharger (.zip)';
         }
     });
 
     function updateStatus(message, colorClass) {
-        statusDiv.textContent = message;
+        statusDiv.innerHTML = message;
         statusDiv.className = `text-center text-sm font-semibold ${colorClass}`;
+    }
+    
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
     }
 
     // Show the first step initially

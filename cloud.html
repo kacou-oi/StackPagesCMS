@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurer Votre Site - StackPages CMS</title>
+    <title>Générateur de Site - StackPages CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -18,10 +18,10 @@
     <header class="relative bg-orange-50 text-center rounded-b-3xl py-20">
         <div class="container mx-auto px-6">
             <h1 class="text-5xl font-extrabold leading-tight text-gray-900 mb-4">
-                Configurez Votre Site en 3 Étapes Simples
+                Créez et Téléchargez Votre Site Personnalisé
             </h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Suivez notre assistant pour personnaliser votre site. Une fois terminé, nous nous occupons du déploiement complet.
+                Utilisez notre configurateur pour personnaliser votre site. Une fois terminé, téléchargez une archive ZIP complète, prête à être déployée sur Cloudflare Pages.
             </p>
         </div>
     </header>
@@ -56,48 +56,25 @@
                         <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 2: Contenu Externe</h2>
                         <div class="space-y-4">
                             <div>
-                                <label for="youtubeUrl" class="block text-sm font-medium text-gray-700">Lien de la chaîne YouTube (URL complète)</label>
-                                <input type="url" id="youtubeUrl" name="youtubeUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://www.youtube.com/channel/...">
+                                <label for="youtubeRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS YouTube</label>
+                                <input type="url" id="youtubeRssUrl" name="youtubeRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://www.youtube.com/feeds/videos.xml?channel_id=...">
                             </div>
                             <div>
-                                <label for="substackUrl" class="block text-sm font-medium text-gray-700">Lien du blog Substack (URL complète)</label>
-                                <input type="url" id="substackUrl" name="substackUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://votre-nom.substack.com">
-                            </div>
-                             <div>
-                                <label for="mediumUrl" class="block text-sm font-medium text-gray-700">Lien du blog Medium (optionnel)</label>
-                                <input type="url" id="mediumUrl" name="mediumUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://medium.com/@votre-nom">
+                                <label for="substackRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS Substack</label>
+                                <input type="url" id="substackRssUrl" name="substackRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://votre-nom.substack.com/feed">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Step 3: Déploiement -->
+                    <!-- Step 3: Finalisation -->
                     <div id="step-3" class="form-step hidden">
-                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 3: Déploiement</h2>
+                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 3: Finalisation</h2>
                         <div class="space-y-4">
-                            <div>
-                                <label for="domainName" class="block text-sm font-medium text-gray-700">Nom de domaine souhaité</label>
-                                <div class="flex items-center mt-1">
-                                    <input type="text" id="domainName" name="domainName" class="block w-full rounded-l-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="mon-super-site">
-                                    <select id="domainTld" name="domainTld" class="rounded-r-md border-gray-300 border-l-0 bg-gray-50 text-gray-700 focus:border-orange-500 focus:ring-orange-500">
-                                        <option>.com</option>
-                                        <option>.net</option>
-                                        <option>.org</option>
-                                        <option>.fr</option>
-                                        <option>.ci</option>
-                                        <option>.be</option>
-                                        <option>.us</option>
-                                        <option>.info</option>
-                                        <option>.biz</option>
-                                        <option>.pro</option>
-                                        <option>.me</option>
-                                        <option selected>.pages.dev</option>
-                                    </select>
-                                </div>
+                             <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Votre adresse e-mail (optionnel)</label>
+                                <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="pour vous envoyer le récapitulatif">
                             </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Votre adresse e-mail</label>
-                                <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required placeholder="pour vous contacter">
-                            </div>
+                            <p class="text-sm text-gray-600">Vous êtes prêt ! Cliquez sur le bouton ci-dessous pour générer et télécharger votre site web sous forme d'archive .zip.</p>
                         </div>
                     </div>
 
@@ -112,7 +89,7 @@
                             Suivant
                         </button>
                         <button type="submit" id="submit-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 text-lg hidden">
-                            <i class="fas fa-paper-plane mr-2"></i> Lancer le Déploiement
+                            <i class="fas fa-download mr-2"></i> Générer et Télécharger (.zip)
                         </button>
                     </div>
                 </form>
@@ -124,6 +101,7 @@
     <div id="footer-placeholder"></div>
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="/js/utils.js"></script>
     <script src="/js/cloud-form.js"></script>
 </body>
