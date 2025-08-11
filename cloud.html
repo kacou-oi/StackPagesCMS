@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offre Clé en Main - StackPages CMS</title>
+    <title>Configurer Votre Site - StackPages CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -15,99 +15,104 @@
     <div id="header-placeholder"></div>
 
     <!-- Section Héros -->
-    <header class="relative bg-orange-50 text-center rounded-b-3xl py-24">
+    <header class="relative bg-orange-50 text-center rounded-b-3xl py-20">
         <div class="container mx-auto px-6">
             <h1 class="text-5xl font-extrabold leading-tight text-gray-900 mb-4">
-                Passez de l'Idée au Site en Ligne, Sans Effort.
+                Configurez Votre Site en 3 Étapes Simples
             </h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                Concentrez-vous sur votre contenu. Nous nous occupons de toute la complexité technique : déploiement, configuration et maintenance de votre site StackPages CMS.
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Suivez notre assistant pour personnaliser votre site. Une fois terminé, nous nous occupons du déploiement complet.
             </p>
-            <a href="#contact-form-section" id="hero-cta-button" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300">
-                Obtenir mon Déploiement Clé en Main
-            </a>
         </div>
     </header>
 
-    <!-- Section "Comment ça marche ?" -->
-    <section class="py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 mb-12">
-                Un Processus Simple en 4 Étapes
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-comments"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">1. Prise de Contact</h3>
-                    <p class="text-gray-600">Vous nous parlez de votre projet et de vos besoins via le formulaire ci-dessous.</p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-cogs"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">2. Configuration</h3>
-                    <p class="text-gray-600">Nous configurons vos flux Substack, YouTube et vos informations de base.</p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-rocket"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">3. Déploiement</h3>
-                    <p class="text-gray-600">Nous déployons votre site sur le réseau ultra-rapide de Cloudflare.</p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-key"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">4. Remise des Clés</h3>
-                    <p class="text-gray-600">Vous recevez l'accès à votre admin pour gérer votre site en toute autonomie.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section "Ce qui est inclus" -->
-    <section class="py-20 bg-gray-100">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">
-                Une Offre Complète
-            </h2>
-            <div class="bg-white rounded-xl shadow-xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <ul class="space-y-4">
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Déploiement initial sur Cloudflare Pages</li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Configuration des flux RSS (Substack & YouTube)</li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Mise en place du panneau d'administration sécurisé</li>
-                </ul>
-                <ul class="space-y-4">
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Configuration du mode de stockage (Fichier ou KV)</li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Optimisation SEO de base</li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> Support par e-mail pendant 30 jours</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Formulaire de Contact -->
-    <section id="contact-form-section" class="py-20">
+    <!-- Section Formulaire de Configuration -->
+    <section id="config-form-section" class="py-20">
         <div class="container mx-auto px-6 max-w-3xl">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">
-                Prêt à Lancer Votre Site ?
-            </h2>
-            <p class="text-gray-600 mb-8 text-center">
-                Remplissez le formulaire ci-dessous pour démarrer. Nous vous répondrons sous 24 heures.
-            </p>
             <div class="bg-white rounded-xl shadow-xl p-8">
-                <form id="contact-form" class="space-y-6">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Votre nom</label>
-                        <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required>
+                <form id="contact-form" class="space-y-8">
+
+                    <!-- Step 1: Identité du Site -->
+                    <div id="step-1" class="form-step">
+                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 1: Identité du Site</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="siteTitle" class="block text-sm font-medium text-gray-700">Titre du site</label>
+                                <input type="text" id="siteTitle" name="siteTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required placeholder="Ex: Mon Super Blog">
+                            </div>
+                            <div>
+                                <label for="tagline" class="block text-sm font-medium text-gray-700">Tagline / Slogan</label>
+                                <input type="text" id="tagline" name="tagline" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="Ex: Les meilleures recettes de cuisine">
+                            </div>
+                            <div>
+                                <label for="logoUrl" class="block text-sm font-medium text-gray-700">URL de votre Logo</label>
+                                <input type="url" id="logoUrl" name="logoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://example.com/logo.png">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Votre adresse e-mail</label>
-                        <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required>
+
+                    <!-- Step 2: Contenu Externe -->
+                    <div id="step-2" class="form-step hidden">
+                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 2: Contenu Externe</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="youtubeUrl" class="block text-sm font-medium text-gray-700">Lien de la chaîne YouTube (URL complète)</label>
+                                <input type="url" id="youtubeUrl" name="youtubeUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://www.youtube.com/channel/...">
+                            </div>
+                            <div>
+                                <label for="substackUrl" class="block text-sm font-medium text-gray-700">Lien du blog Substack (URL complète)</label>
+                                <input type="url" id="substackUrl" name="substackUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://votre-nom.substack.com">
+                            </div>
+                             <div>
+                                <label for="mediumUrl" class="block text-sm font-medium text-gray-700">Lien du blog Medium (optionnel)</label>
+                                <input type="url" id="mediumUrl" name="mediumUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://medium.com/@votre-nom">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700">Parlez-nous de votre projet</label>
-                        <textarea id="message" name="message" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required></textarea>
+
+                    <!-- Step 3: Déploiement -->
+                    <div id="step-3" class="form-step hidden">
+                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 3: Déploiement</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="domainName" class="block text-sm font-medium text-gray-700">Nom de domaine souhaité</label>
+                                <div class="flex items-center mt-1">
+                                    <input type="text" id="domainName" name="domainName" class="block w-full rounded-l-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="mon-super-site">
+                                    <select id="domainTld" name="domainTld" class="rounded-r-md border-gray-300 border-l-0 bg-gray-50 text-gray-700 focus:border-orange-500 focus:ring-orange-500">
+                                        <option>.com</option>
+                                        <option>.net</option>
+                                        <option>.org</option>
+                                        <option>.fr</option>
+                                        <option>.ci</option>
+                                        <option>.be</option>
+                                        <option>.us</option>
+                                        <option>.info</option>
+                                        <option>.biz</option>
+                                        <option>.pro</option>
+                                        <option>.me</option>
+                                        <option selected>.pages.dev</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Votre adresse e-mail</label>
+                                <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" required placeholder="pour vous contacter">
+                            </div>
+                        </div>
                     </div>
+
                     <div id="form-status" class="text-center text-sm font-semibold"></div>
-                    <div class="text-center">
-                        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
-                            Démarrer mon Projet
+                    
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between pt-6">
+                        <button type="button" id="prev-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-full transition duration-300 hidden">
+                            Précédent
+                        </button>
+                        <button type="button" id="next-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ml-auto">
+                            Suivant
+                        </button>
+                        <button type="submit" id="submit-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 text-lg hidden">
+                            <i class="fas fa-paper-plane mr-2"></i> Lancer le Déploiement
                         </button>
                     </div>
                 </form>
@@ -120,13 +125,6 @@
 
     <!-- Scripts -->
     <script src="/js/utils.js"></script>
-    <script src="/js/form.js"></script>
-    <script>
-        // Smooth scroll for the hero CTA button
-        document.getElementById('hero-cta-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('contact-form-section').scrollIntoView({ behavior: 'smooth' });
-        });
-    </script>
+    <script src="/js/cloud-form.js"></script>
 </body>
 </html>
