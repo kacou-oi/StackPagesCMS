@@ -22,6 +22,10 @@ Propulsé par l'écosystème serverless de **Cloudflare**, StackPages offre la v
 
 ## Guide de Démarrage
 
+### Accéder à l'API Headless
+
+Ce projet expose une API "headless" pour accéder à votre contenu de manière flexible. Vous pouvez consulter la documentation de l'API sur la page dédiée : `/headless-api.html`.
+
 ### Gérer la Configuration
 
 Ce projet utilise un système de configuration hybride. Par défaut, il lit un fichier `config.json`, mais il peut être mis à niveau pour utiliser Cloudflare KV pour des mises à jour instantanées.
@@ -38,8 +42,8 @@ L'accès à l'administration est protégé par un mot de passe. Allez dans les p
 Ce mode est activé par défaut et ne nécessite aucune configuration supplémentaire.
 
 1.  Rendez-vous sur `/admin/` sur votre site et connectez-vous.
-2.  Le panneau chargera la configuration depuis le fichier `config.json` du projet.
-3.  Après modification, cliquez sur "Générer et Télécharger config.json".
+2.  Le panneau chargera la configuration actuelle depuis `config.json`.
+3.  Après modification, vous pourrez télécharger le fichier `config.json` mis à jour.
 4.  Remplacez l'ancien `config.json` à la racine de votre projet par le nouveau.
 5.  Faites un `commit` et un `push` sur GitHub pour que Cloudflare redéploie le site avec la nouvelle configuration.
 
@@ -70,7 +74,10 @@ Pour activer ce mode, vous devez lier un Namespace KV à votre projet.
     *   Sélectionnez le dépôt que vous venez de créer.
     *   Ajoutez la variable d'environnement `ADMIN_PASSWORD` pour sécuriser votre panneau d'administration.
     *   Cliquez sur "Enregistrer et Déployer".
-3.  **Configurez :** Une fois le site déployé, allez sur `https://votre-site.pages.dev/admin` pour configurer vos flux et paramètres.
+3.  **Configurez :** Une fois le site déployé, vous pouvez accéder à la page `/cloud.html` pour configurer votre site.
+    *   Remplissez le formulaire.
+    *   Téléchargez le fichier `config.json`.
+    *   Suivez les instructions pour le déployer.
 
 ## Licence
 
