@@ -57,18 +57,18 @@
                         <div class="space-y-4">
                             <div>
                                 <label for="youtubeRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS YouTube</label>
-                                <input type="url" id="youtubeRssUrl" name="youtubeRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://www.youtube.com/feeds/videos.xml?channel_id=...">
+                                <input type="url" id="youtubeRssUrl" name="youtubeUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://www.youtube.com/feeds/videos.xml?channel_id=...">
                             </div>
                             <div>
                                 <label for="substackRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS Substack</label>
-                                <input type="url" id="substackRssUrl" name="substackRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://votre-nom.substack.com/feed">
+                                <input type="url" id="substackRssUrl" name="substackUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500" placeholder="https://votre-nom.substack.com/feed">
                             </div>
                         </div>
                     </div>
 
                     <!-- Step 3: Finalisation -->
                     <div id="step-3" class="form-step hidden">
-                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 3: Finalisation</h2>
+                        <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-6">Étape 3: Déploiement</h2>
                         <div class="space-y-4">
                              <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700">Votre adresse e-mail (optionnel)</label>
@@ -89,10 +89,24 @@
                             Suivant
                         </button>
                         <button type="submit" id="submit-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 text-lg hidden">
-                            <i class="fas fa-download mr-2"></i> Générer et Télécharger (.zip)
+                            <i class="fas fa-download mr-2"></i> Lancer le Déploiement
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Logos des Plateformes de Déploiement -->
+    <section class="py-10 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Déployez Votre Site Facilement</h2>
+            <p class="text-gray-600 mb-8">StackPages est compatible avec les plateformes de déploiement les plus populaires :</p>
+            <div class="flex items-center justify-center space-x-8">
+                <img src="/img/cloudflare.png" alt="Cloudflare Pages" class="h-12">
+                <img src="/img/github.png" alt="GitHub Pages" class="h-12">
+                <img src="/img/gitlab.png" alt="GitLab Pages" class="h-12">
+                <img src="/img/netlify.png" alt="Netlify" class="h-12">
             </div>
         </div>
     </section>
