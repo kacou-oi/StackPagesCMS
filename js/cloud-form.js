@@ -33,13 +33,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     form.addEventListener('submit', async (event) => {
+        console.log("Form submission triggered!"); // Debugging
         event.preventDefault();
         
+        const formData = new FormData(form);
+        console.log("Form Data:", formData); // Debugging
+        const data = Object.fromEntries(formData.entries());
+
+        // Combine domain name and TLD
+        data.fullDomain = data.domainName + data.domainTld;
+
+        if (!data.email || !data.siteTitle) {
+            updateStatus('Veuillez remplir tous les champs requis.', 'text-red-600');
+            return;
+        }
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Génération en cours...';
         updateStatus('Préparation des fichiers...', 'text-gray-600');
 
         try {
+            console.log("Fetching files and creating ZIP..."); // Debugging
             const zip = new JSZip();
             
             // 1. Définir la liste des fichiers à inclure
@@ -77,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 updateStatus(`Chargement : ${filePath} (${i + 1}/${fileList.length})`, 'text-gray-600');
                 
+                console.log(`Fetching: /${filePath}`); // Debugging
                 const response = await fetch(`/${filePath}`);
                 if (!response.ok) {
                     console.warn(`Fichier non trouvé : ${filePath}, il sera ignoré.`);
@@ -87,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 4. Générer le ZIP et le télécharger
+            console.log("Generating ZIP..."); // Debugging
             updateStatus('Compression de l\'archive...', 'text-gray-600');
             const zipContent = await zip.generateAsync({ type: "blob" });
 
@@ -109,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateStatus(message, colorClass) {
-        statusDiv.innerHTML = message;
+        statusDiv.textContent = message;
         statusDiv.className = `text-center text-sm font-semibold ${colorClass}`;
     }
     
