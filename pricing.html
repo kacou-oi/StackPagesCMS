@@ -13,18 +13,29 @@
 
     <div id="header-placeholder"></div>
 
-    <section class="py-20">
-        <div class="container mx-auto px-6">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Choisissez l'offre qui vous convient</h1>
+    <div id="header-placeholder"></div>
 
-            <div class="mb-12">
-                <!-- Tableau comparatif des offres -->
+    <header class="relative bg-orange-50 text-center rounded-b-3xl py-24">
+        <div class="container mx-auto px-6">
+            <h1 class="text-5xl font-extrabold leading-tight text-gray-900 mb-4">
+                Choisissez l'offre qui vous convient
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                Comparez les différentes offres de StackPages.
+            </p>
+        </div>
+    </header>
+
+    <section class="py-10">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Comparaison des offres</h2>
+            <div class="overflow-x-auto">
                 <table class="table-auto w-full border-collapse border border-gray-300">
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="border border-gray-300 px-4 py-2">Fonctionnalités</th>
-                            <th class="border border-gray-300 px-4 py-2 text-center">Version Open Source (Gratuite)</th>
-                            <th class="border border-gray-300 px-4 py-2 text-center">Version Clé en main (65€/an)</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">Open Source (Gratuit)</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">Clé en main (65€/an)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,38 +72,35 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </section>
 
-            <section>
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Thèmes Premium</h2>
-                <p class="text-gray-600 mb-6">Donnez un style unique à votre site.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Exemple de thème -->
-                    <div class="border rounded-lg shadow-md overflow-hidden">
-                        <img src="/img/theme-preview-1.jpg" alt="Aperçu du thème" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold mb-2">Nom du thème</h3>
-                            <p class="text-gray-600 mb-2">30€</p>
-                            <div class="flex justify-between items-center">
-                                <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Voir la démo</a>
-                                <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Acheter</a>
-                            </div>
-                        </div>
+    <section class="py-10 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Thèmes Premium</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Thème Minimaliste -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <img src="/img/theme-preview-1.jpg" alt="Aperçu du thème Minimaliste" class="w-full h-48 object-cover mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Thème Minimaliste</h3>
+                    <p class="text-gray-600 mb-2">30€</p>
+                    <div class="flex justify-between items-center">
+                        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Voir la démo</a>
+                        <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Acheter</a>
                     </div>
-                    <!-- Exemple de thème -->
-                    <div class="border rounded-lg shadow-md overflow-hidden">
-                        <img src="/img/theme-preview-2.jpg" alt="Aperçu du thème" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold mb-2">Nom du thème</h3>
-                            <p class="text-gray-600 mb-2">50€</p>
-                            <div class="flex justify-between items-center">
-                                <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Voir la démo</a>
-                                <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Acheter</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Ajoutez d'autres exemples de thèmes ici -->
                 </div>
-            </section>
+                <!-- Thème Élegant -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <img src="/img/theme-preview-2.jpg" alt="Aperçu du thème Élegant" class="w-full h-48 object-cover mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Thème Élegant</h3>
+                    <p class="text-gray-600 mb-2">50€</p>
+                    <div class="flex justify-between items-center">
+                        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Voir la démo</a>
+                        <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Acheter</a>
+                    </div>
+                </div>
+                <!-- Ajoutez d'autres exemples de thèmes ici -->
+            </div>
         </div>
     </section>
 
