@@ -18,137 +18,86 @@
     <div id="header-placeholder"></div>
 
     <!-- Section "Hero" : la première chose que les utilisateurs voient -->
+    <!-- Bannière Principale (Hero Section) -->
     <header class="relative bg-orange-50 text-center rounded-b-3xl py-24">
         <div class="container mx-auto px-6">
-            <!-- Titre principal -->
             <img src="img/logo.png" alt="logo" style="width:60px; display:inline;">
             <h1 class="text-5xl font-extrabold leading-tight text-gray-900 mb-4">
-                Le CMS Jamstack pour les Créateurs modernes
+                StackPages. Votre Substack, votre identité.
             </h1>
-            <!-- Sous-titre descriptif -->
             <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                Construisez un site professionel complet avec votre design entièrement personnalisé et des fonctionalités dynamiques de blog, channels vidéo, encarts publicitaires, et des formulaires , le tout développé selon l'architecture Jamstack 100% OpenSource sur Github et Cloudflare CDN.
+                Le CMS open source qui transforme votre blog Substack en un site web professionnel.
             </p>
-            <!-- Bouton d'appel à l'action principal -->
-            <a href="/build.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300">
-                <i class="fas fa-rocket mr-2"></i> Créer Package
+            <a href="/pricing.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300">
+                Commencer maintenant
+            </a>
+            <a href="/docs.html" class="bg-transparent hover:bg-gray-200 text-orange-500 font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 ml-4 border border-orange-500">
+                Télécharger la version Open Source
             </a>
         </div>
     </header>
 
-    <!-- Section des fonctionnalités -->
-    <section class="py-20 bg-gray-100 rounded-3xl mt-12">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 mb-12">
-                Un CMS Jamstack Complet
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Fonctionnalité 1 : Contenu Dynamique -->
-                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-sync-alt"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Contenu Dynamique</h3>
-                    <p class="text-gray-600">
-                        Synchronisez vos articles de blog Medium ou vos newsletters Substack et votre chaîne YouTube automatiquement.
-                    </p>
-                </div>
-                <!-- Fonctionnalité 2 : Panneau d'Admin -->
-                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-cogs"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Administration Simple</h3>
-                    <p class="text-gray-600">
-                        Gérez les configurations de votre site (Flux, SEO, Clés, API) via une interface privée, claire, simple et intuitive.
-                    </p>
-                </div>
-                <!-- Fonctionnalité 3 : Rapide et Gratuit -->
-                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-rocket"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Rapide, Sécurisé et Gratuit</h3>
-                    <p class="text-gray-600">
-                        Profitez des performances et de la sécurité de l'architecture Jamstack, hébergée gratuitement par Github.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section des derniers articles de blog -->
+    <!-- Section Problématique -->
     <section class="py-20">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">
-                Derniers articles du blog
-            </h2>
-            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-                Voici une démonstration du contenu dynamique. Ces articles sont récupérés en direct depuis votre compte Médium ou Substack, démontrant la puissance du CMS.
-            </p>
-            <div id="latest-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Les articles seront injectés ici -->
-            </div>
-            <div class="text-center mt-12">
-                <a href="/blog/index.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
-                    Voir tous les articles
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section de la dernière vidéo -->
-    <section class="py-20 bg-gray-100">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">
-                Dernières vidéos
-            </h2>
-            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-                De la même manière, ces vidéos sont chargées dynamiquement depuis une chaîne YouTube, illustrant comment vous pouvez intégrer facilement divers types de contenu.
-            </p>
-            <div id="latest-video-container" class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-                <!-- Les vidéos seront injectées ici -->
-            </div>
-            <div class="text-center mt-12">
-                <a href="/videos/index.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
-                    Voir toutes les vidéos
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Logos des Plateformes de Déploiement -->
-    <section class="py-10">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Déployez Votre Site Facilement</h2>
-            <p class="text-gray-600 mb-8">StackPages est compatible avec les plateformes de déploiement les plus populaires :</p>
-            <div class="flex items-center justify-center space-x-8">
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    <center><img src="./img/cloudflare-pages-logo.png" alt="Cloudflare Pages" class="h-12"></center>
-                    <p>CloudFlare Pages</p>
-                </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    <center><img src="./img/netlify-logo.png" alt="Netlify" class="h-12"> </center>
-                    <p>Netlify Pages</p>
-                </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    <center><img src="./img/gitlab-logo.png" alt="GitLab Pages" class="h-12"> </center>
-                    <p>GitLab Pages</p>
-                </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                    <center><img src="./img/github-logo.png" alt="GitHub Pages" class="h-12"> </center>                    
-                    <p>GitHub Pages</p>
-                </a>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">Le design de Substack a ses limites.</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Courte explication des défis auxquels les créateurs font face.</p>
+        </div>
+    </section>
+
+    <!-- Section Solution -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">StackPages est la solution.</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Présentation du concept de l'intégration via le **flux RSS**.</p>
+        </div>
+    </section>
+
+    <!-- Section "Comment ça marche ?" -->
+    <section class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-12">3 étapes pour lancer votre site.</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Étape 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-shopping-cart"></i></div>
+                    <h3 class="text-xl font-semibold mb-2">Choisissez votre offre</h3>
+                    <p class="text-gray-600">Sélectionnez l'offre qui correspond à vos besoins.</p>
+                </div>
+                <!-- Étape 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-rss"></i></div>
+                    <h3 class="text-xl font-semibold mb-2">Connectez votre Substack</h3>
+                    <p class="text-gray-600">Intégrez votre flux RSS pour importer votre contenu.</p>
+                </div>
+                <!-- Étape 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-105">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-palette"></i></div>
+                    <h3 class="text-xl font-semibold mb-2">Personnalisez votre design</h3>
+                    <p class="text-gray-600">Adaptez l'apparence de votre site à votre image.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Section d'appel à l'action finale -->
+    <!-- Section Témoignages -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">Ce qu'ils en disent.</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Espaces pour des citations de créateurs qui utilisent déjà StackPages.</p>
+        </div>
+    </section>
+
+    <!-- Section CTA Finale -->
     <section class="py-20 bg-orange-500 text-white text-center rounded-t-3xl">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold mb-4">
-                Prêt à lancer votre site ?
-            </h2>
-            <p class="text-lg mb-8">
-                Commencez dès maintenant en connectant ce template à votre compte Cloudflare Pages.
-            </p>
-            <!-- Bouton pour le blog, peut être adapté vers une page de contact ou d'instructions -->
-            <a href="/build.html" target="_blank" class="bg-white text-orange-500 hover:bg-gray-100 font-bold py-4 px-8 rounded-full shadow-lg transition duration-300">
-                <i class="fas fa-rocket mr-2"></i> Créer Package
+            <h2 class="text-3xl font-bold mb-4">Prêt à passer au niveau supérieur ?</h2>
+            <p class="text-lg mb-8">Découvrez nos offres et notre documentation.</p>
+            <a href="/pricing.html" class="bg-white text-orange-500 hover:bg-gray-100 font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 mr-4">
+                Tarifs
+            </a>
+            <a href="/docs.html" class="bg-white text-orange-500 hover:bg-gray-100 font-bold py-4 px-8 rounded-full shadow-lg transition duration-300">
+                Documentation
             </a>
         </div>
     </section>
