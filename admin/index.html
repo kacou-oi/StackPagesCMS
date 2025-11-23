@@ -1,95 +1,354 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panneau d'Administration - StackPages</title>
+    <title>StackPages Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
-</head>
-<body class="bg-gray-100">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    <div class="container mx-auto p-6 my-10">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 text-center">
-                <i class="fas fa-cogs mr-2"></i> Panneau d'Administration
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-10">
+        <div class="p-6 border-b border-slate-100">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                <i class="fas fa-layer-group mr-2 text-orange-500"></i>StackPages
             </h1>
-            <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
-                <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
-            </button>
         </div>
 
-        <div class="bg-white rounded-xl shadow-xl p-8 max-w-3xl mx-auto">
-            <form id="config-form" class="space-y-6">
+        <nav class="flex-1 p-4 space-y-2">
+            <button onclick="showView('dashboard')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center active-nav">
+                <i class="fas fa-chart-pie w-6"></i> Tableau de bord
+            </button>
+            <button onclick="showView('content')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-newspaper w-6"></i> Articles
+            </button>
+            <button onclick="showView('api-explorer')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-terminal w-6"></i> API Explorer
+            </button>
+            <button onclick="showView('config')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-cog w-6"></i> Configuration
+            </button>
+            <button onclick="showView('help')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-question-circle w-6"></i> Aide
+            </button>
+        </nav>
 
-                <!-- Section Informations Générales -->
-                <div>
-                    <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-4">Informations Générales</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="siteName" class="block text-sm font-medium text-gray-700">Nom du site</label>
-                            <input type="text" id="siteName" name="siteName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center justify-between px-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="text-sm">
+                        <p class="font-medium text-slate-700">Admin</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition" title="Déconnexion">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto relative">
+        <!-- Header -->
+        <header class="sticky top-0 z-20 glass-panel px-8 py-4 flex justify-between items-center">
+            <h2 id="page-title" class="text-xl font-semibold text-slate-800">Tableau de bord</h2>
+            <div class="flex gap-3">
+                <a href="/" target="_blank"
+                    class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-orange-600 transition bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow">
+                    <i class="fas fa-external-link-alt mr-2"></i>Voir le site
+                </a>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-7xl mx-auto space-y-8">
+
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view-section space-y-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-slate-500">Articles Totaux</p>
+                                <h3 id="stat-total-posts" class="text-3xl font-bold text-slate-800 mt-2">-</h3>
+                            </div>
+                            <div class="p-3 bg-orange-50 rounded-lg text-orange-500">
+                                <i class="fas fa-file-alt text-xl"></i>
+                            </div>
                         </div>
-                        <div>
-                            <label for="author" class="block text-sm font-medium text-gray-700">Auteur</label>
-                            <input type="text" id="author" name="author" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-slate-500">Dernière Mise à jour</p>
+                                <h3 id="stat-last-update" class="text-lg font-bold text-slate-800 mt-2">-</h3>
+                            </div>
+                            <div class="p-3 bg-blue-50 rounded-lg text-blue-500">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-slate-500">État du Flux</p>
+                                <h3 id="stat-feed-status"
+                                    class="text-lg font-bold text-slate-800 mt-2 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-slate-300"></span> Inconnu
+                                </h3>
+                            </div>
+                            <div class="p-3 bg-green-50 rounded-lg text-green-500">
+                                <i class="fas fa-wifi text-xl"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section Flux RSS -->
-                <div>
-                    <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-4">Flux RSS</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="substackRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS Substack</label>
-                            <input type="url" id="substackRssUrl" name="substackRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
-                        </div>
-                        <div>
-                            <label for="youtubeRssUrl" class="block text-sm font-medium text-gray-700">URL du flux RSS YouTube</label>
-                            <input type="url" id="youtubeRssUrl" name="youtubeRssUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
-                        </div>
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100">
+                        <h3 class="font-semibold text-slate-800">Derniers Articles</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <tr>
+                                    <th class="px-6 py-3">Titre</th>
+                                    <th class="px-6 py-3">Date</th>
+                                    <th class="px-6 py-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-recent-posts" class="divide-y divide-slate-100">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Section SEO -->
-                <div>
-                    <h2 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-4">SEO</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="metaTitle" class="block text-sm font-medium text-gray-700">Titre (balise meta)</label>
-                            <input type="text" id="metaTitle" name="seo.metaTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+            <!-- VIEW: CONTENT -->
+            <div id="view-content" class="view-section hidden space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <h3 class="font-semibold text-slate-800">Tous les Articles</h3>
+                            <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                                title="Actualiser">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
                         </div>
-                        <div>
-                            <label for="metaDescription" class="block text-sm font-medium text-gray-700">Description (balise meta)</label>
-                            <textarea id="metaDescription" name="seo.metaDescription" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
-                        </div>
-                        <div>
-                            <label for="metaKeywords" class="block text-sm font-medium text-gray-700">Mots-clés (séparés par des virgules)</label>
-                            <input type="text" id="metaKeywords" name="seo.metaKeywords" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
-                        </div>
+                        <input type="text" id="search-posts" placeholder="Rechercher..."
+                            class="px-3 py-1.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <tr>
+                                    <th class="px-6 py-3">Image</th>
+                                    <th class="px-6 py-3">Titre</th>
+                                    <th class="px-6 py-3">Date</th>
+                                    <th class="px-6 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-posts-table" class="divide-y divide-slate-100">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Bouton de sauvegarde -->
-                <div class="text-center pt-4">
-                    <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300">
-                        <i class="fas fa-download mr-2"></i> Générer et Télécharger config.json
-                    </button>
+            <!-- VIEW: API EXPLORER -->
+            <div id="view-api-explorer" class="view-section hidden space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/metadata</code>
+                            <button onclick="testApi('/api/metadata')"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/posts</code>
+                            <button onclick="testApi('/api/posts')"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
+                            <input type="text" id="api-slug-input" placeholder="slug-article"
+                                class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                            <button onclick="testApiSlug()"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
+                        <pre id="api-output"
+                            class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-64 overflow-auto">En attente...</pre>
+                    </div>
                 </div>
-            </form>
-            <div id="form-status" class="text-center mt-4 text-sm font-semibold"></div>
+            </div>
+
+            <!-- VIEW: CONFIGURATION -->
+            <div id="view-config" class="view-section hidden space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
+                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Paramètres du Site</h3>
+
+                    <form id="config-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
+                                <input type="text" id="conf-siteName"
+                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
+                                <input type="text" id="conf-author"
+                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
+                            <input type="url" id="conf-substack"
+                                class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            <p class="text-xs text-slate-500 mt-1">L'URL de votre flux RSS (ex:
+                                https://blog.example.com/feed)</p>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
+                                    <input type="text" id="conf-metaTitle"
+                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Description
+                                        Meta</label>
+                                    <textarea id="conf-metaDesc" rows="3"
+                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
+                                    <input type="text" id="conf-metaKeywords"
+                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                                        placeholder="blog, tech, news...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
+                            <button type="button" onclick="clearCache()"
+                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                                <i class="fas fa-broom"></i> Vider le Cache
+                            </button>
+                            <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4">
+                            <div id="config-status" class="text-sm font-medium"></div>
+                            <button type="submit"
+                                class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-orange-500/30">
+                                Sauvegarder
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: HELP -->
+            <div id="view-help" class="view-section hidden space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
+                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
+
+                    <h4>1. Tableau de bord</h4>
+                    <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
+                        synchronisation avec Substack.</p>
+
+                    <h4>2. Gestion des Articles</h4>
+                    <p>Parcourez tous les articles récupérés depuis votre flux RSS. Vous pouvez rechercher des articles
+                        par titre et voir un aperçu complet du contenu tel qu'il apparaîtra sur votre site.</p>
+
+                    <h4>3. Configuration</h4>
+                    <p>Modifiez les paramètres essentiels de votre site sans toucher au code :</p>
+                    <ul>
+                        <li><strong>Nom du Site & Auteur</strong> : Personnalisez l'identité de votre blog.</li>
+                        <li><strong>Flux RSS</strong> : Changez l'URL source si vous migrez ou changez de newsletter.
+                        </li>
+                        <li><strong>SEO</strong> : Optimisez vos titres, descriptions et mots-clés pour les moteurs de
+                            recherche.</li>
+                    </ul>
+
+                    <h4>4. Maintenance</h4>
+                    <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
+                        pas vos derniers articles apparaître immédiatement. Le système met en cache les données pour la
+                        performance.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Preview -->
+    <div id="preview-modal"
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-title" class="font-bold text-lg text-slate-800 truncate pr-4">Titre de l'article</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-orange max-w-none">
+                <!-- Content -->
+            </div>
         </div>
     </div>
 
-    <script src="/admin/js/admin.js"></script>
+    <script src="/admin/js/app.js"></script>
     <script>
-        document.getElementById('logout-button').addEventListener('click', async () => {
+        // Logout Handler
+        async function logout() {
             await fetch('/api/logout');
             window.location.href = '/admin/login.html';
-        });
+        }
     </script>
 </body>
+
 </html>

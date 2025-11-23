@@ -1,33 +1,64 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Administration</title>
+    <title>Connexion - StackPages Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    
-    <div class="w-full max-w-md bg-white rounded-xl shadow-xl p-8">
-    <center><img src="../img/logo.png" alt="logo" style="width:60px; display:block;"> <br></center>
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
-            Accès Administration
-        </h1>
+
+<body class="bg-gradient-to-br from-orange-50 to-red-50 h-screen flex items-center justify-center p-4">
+
+    <div class="glass-panel p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1
+                class="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
+                StackPages
+            </h1>
+            <p class="text-slate-500 text-sm">Portail d'Administration</p>
+        </div>
+
         <form id="login-form" class="space-y-6">
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-                <input type="password" id="password" name="password" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Mot de passe</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-slate-400"></i>
+                    </div>
+                    <input type="password" id="password" name="password" required
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition sm:text-sm"
+                        placeholder="••••••••">
+                </div>
             </div>
-            <div class="text-center">
-                <button type="submit"
-                        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300">
-                    Se connecter
-                </button>
+
+            <div id="error-message"
+                class="hidden text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg border border-red-100">
+                Mot de passe incorrect.
             </div>
+
+            <button type="submit"
+                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition transform hover:scale-[1.02]">
+                Se connecter
+            </button>
         </form>
-        <div id="error-message" class="text-center mt-4 text-sm font-semibold text-red-600"></div>
+
+        <div class="mt-6 text-center">
+            <a href="/" class="text-xs text-slate-400 hover:text-slate-600 transition">Retour au site</a>
+        </div>
     </div>
 
     <script>
@@ -35,22 +66,36 @@
             e.preventDefault();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error-message');
+            const btn = e.target.querySelector('button');
 
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ password }),
-            });
+            // Reset UI
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 
-            if (response.ok) {
-                window.location.href = '/admin/index.html';
-            } else {
-                errorDiv.textContent = 'Mot de passe incorrect.';
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                if (res.ok) {
+                    window.location.href = '/admin/index.html';
+                } else {
+                    errorDiv.textContent = "Mot de passe incorrect.";
+                    errorDiv.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Se connecter';
+                }
+            } catch (err) {
+                errorDiv.textContent = "Erreur de connexion.";
+                errorDiv.classList.remove('hidden');
+                btn.disabled = false;
+                btn.textContent = 'Se connecter';
             }
         });
     </script>
-
 </body>
+
 </html>
