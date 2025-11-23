@@ -105,7 +105,9 @@ async function loadConfig() {
             // Populate Form
             document.getElementById('conf-siteName').value = config.siteName || '';
             document.getElementById('conf-author').value = config.author || '';
+
             document.getElementById('conf-substack').value = config.substackRssUrl || '';
+            document.getElementById('conf-frontend').value = config.frontendUrl || '';
             document.getElementById('conf-metaTitle').value = config.seo?.metaTitle || '';
             document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
             document.getElementById('conf-metaKeywords').value = config.seo?.metaKeywords || '';
@@ -126,6 +128,7 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
         siteName: document.getElementById('conf-siteName').value,
         author: document.getElementById('conf-author').value,
         substackRssUrl: document.getElementById('conf-substack').value,
+        frontendUrl: document.getElementById('conf-frontend').value,
         seo: {
             metaTitle: document.getElementById('conf-metaTitle').value,
             metaDescription: document.getElementById('conf-metaDesc').value,

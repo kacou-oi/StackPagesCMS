@@ -213,6 +213,7 @@ export default {
             author: "Admin",
             substackRssUrl: env.SUBSTACK_FEED_URL,
             youtubeRssUrl: "",
+            frontendUrl: "https://rssblog-7v64r.wstd.io/", // Default Frontend URL
             seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
         };
 
@@ -401,6 +402,24 @@ export default {
             // Ici, on laisse le JS client faire la redirection (app.js: checkAuth), 
             // MAIS pour une vraie sécu, il faudrait intercepter ici.
             // Pour ce MVP, on fait confiance au client + protection API.
+        }
+
+        // --- REVERSE PROXY FRONTEND ---
+        // Si ce n'est pas une route API ni une route Admin, on proxy vers le frontend
+        if (!path.startsWith("/api") && !path.startsWith("/admin")) {
+            const frontendUrl = config.frontendUrl || "https://rssblog-7v64r.wstd.io/";
+            const targetUrl = new URL(path, frontendUrl).toString();
+
+            try {
+                // On clone la requête pour ne pas modifier l'originale
+                const proxyReq = new Request(targetUrl, req);
+                // On peut ajuster les headers si nécessaire (ex: Host)
+                // proxyReq.headers.set("Host", new URL(frontendUrl).host); 
+
+                return await fetch(proxyReq);
+            } catch (e) {
+                return new Response("Erreur Proxy Frontend: " + e.message, { status: 502 });
+            }
         }
 
         try {
