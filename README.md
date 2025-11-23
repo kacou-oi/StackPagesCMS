@@ -37,9 +37,9 @@ Le cœur de ce CMS est le code JavaScript de l'API.
 
 1.  **Copier le Code RAW :** Cliquez sur le bouton ci-dessous. Le lien vous mènera au code source complet (`worker.js`). **Copiez l'intégralité du contenu RAW** dans l'éditeur de votre Worker Cloudflare.
     > *Pour obtenir le lien RAW direct pour un copier-coller en une seule étape dans des scripts, utilisez le format :*
-    > `[https://raw.githubusercontent.com/{VOTRE_NOM}/{NOM_REPO}/main/worker.js](https://raw.githubusercontent.com/kacou-oi/StackPagesCMS/refs/heads/main/_worker.js?token=GHSAT0AAAAAADOKABIJCMSFDG5TKCZMYAIG2JC3PGA)`
+    > `https://raw.githubusercontent.com/kacou-oi/StackPagesCMS/refs/heads/main/_worker.js?token=GHSAT0AAAAAADOKABIJCMSFDG5TKCZMYAIG2JC3PGA`
 
-[![Bouton pour ouvrir le fichier worker.js](https://img.shields.io/badge/Accéder_au_Code_à_Copier_Coller-262D34?style=for-the-badge&logo=cloudflare&logoColor=F38020)]([https://raw.githubusercontent.com/{VOTRE_NOM}/{NOM_REPO}/main/_worker.js?token=GHSAT0AAAAAADOKABIJCMSFDG5TKCZMYAIG2JC3PGA)
+[![Bouton pour ouvrir le fichier worker.js](https://img.shields.io/badge/Accéder_au_Code_à_Copier_Coller-262D34?style=for-the-badge&logo=cloudflare&logoColor=F38020)](https://raw.githubusercontent.com/kacou-oi/StackPagesCMS/refs/heads/main/_worker.js?token=GHSAT0AAAAAADOKABIJCMSFDG5TKCZMYAIG2JC3PGA)
 
 2.  **Configuration Finale :** Veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 
