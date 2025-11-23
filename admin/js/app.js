@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Auth Check
 async function checkAuth() {
     try {
-        const res = await fetch('/api/check-auth');
+        const res = await fetch('/api/check-auth', { credentials: 'include' });
         const data = await res.json();
         if (!data.authenticated) {
             window.location.href = '/admin/login.html';

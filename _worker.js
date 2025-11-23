@@ -272,7 +272,7 @@ export default {
                 if (body.password === ADMIN_PASSWORD) {
                     const token = btoa(ADMIN_PASSWORD + SESSION_SECRET);
                     const headers = new Headers(corsHeaders);
-                    headers.append('Set-Cookie', `stackpages_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400`);
+                    headers.append('Set-Cookie', `stackpages_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
                     return new Response(JSON.stringify({ success: true }), { status: 200, headers });
                 } else {
                     return new Response(JSON.stringify({ error: "Mot de passe incorrect" }), { status: 401, headers: corsHeaders });
