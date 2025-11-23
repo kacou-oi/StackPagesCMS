@@ -336,7 +336,7 @@ export default {
             if (path.startsWith("/api/post/")) {
                 const slug = path.split("/").pop();
                 const post = blogData.posts.find(p => p.slug === slug);
-                if (!post) return new Response("Article non trouvé", { status: 404, headers: corsHeaders });
+                if (!post) return new Response(JSON.stringify({ error: "Article non trouvé" }), { status: 404, headers: corsHeaders });
                 return new Response(JSON.stringify(post), { status: 200, headers: corsHeaders });
             }
         }
@@ -425,7 +425,7 @@ export default {
         try {
             return await env.ASSETS.fetch(req);
         } catch (e) {
-            return new Response("Not Found", { status: 404, headers: corsHeaders });
+            return new Response(JSON.stringify({ error: "Not Found" }), { status: 404, headers: corsHeaders });
         }
     }
 };
