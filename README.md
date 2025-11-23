@@ -49,3 +49,10 @@ Cette documentation vous guidera à travers la configuration complète du systè
 * [2. Guide de Déploiement](docs/deploiement/README.md)
 * [3. Maintenance et Dépannage](docs/maintenance/README.md)
 * [4. Licence et Contribution](LICENSE)
+
+
+```html
+<div class="article-body">
+    <h1>Titre de l'Article</h1>
+    <p>Ceci est le contenu généré par le Worker.</p>
+</div>
