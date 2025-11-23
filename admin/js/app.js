@@ -140,13 +140,19 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
             body: JSON.stringify(newConfig)
         });
 
+        const data = await res.json();
+
         if (res.ok) {
-            status.textContent = "Sauvegardé avec succès !";
-            status.className = "text-sm font-medium text-green-600";
-            setTimeout(() => status.textContent = "", 3000);
+            if (data.warning) {
+                status.textContent = "Attention : " + data.warning;
+                status.className = "text-sm font-medium text-orange-600";
+            } else {
+                status.textContent = "Sauvegardé avec succès !";
+                status.className = "text-sm font-medium text-green-600";
+                setTimeout(() => status.textContent = "", 3000);
+            }
         } else {
-            const err = await res.json();
-            throw new Error(err.error || "Erreur inconnue");
+            throw new Error(data.error || "Erreur inconnue");
         }
     } catch (e) {
         status.textContent = "Erreur: " + e.message;

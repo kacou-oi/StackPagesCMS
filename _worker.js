@@ -353,7 +353,11 @@ export default {
             // POST Config (Save)
             if (req.method === "POST") {
                 if (!env.STACKPAGES_CONFIG) {
-                    return new Response(JSON.stringify({ error: "KV STACKPAGES_CONFIG non configuré" }), { status: 501, headers: corsHeaders });
+                    // Mode sans KV : On renvoie un succès simulé avec un avertissement
+                    return new Response(JSON.stringify({
+                        success: true,
+                        warning: "KV non configuré. Les changements sont temporaires ou ignorés."
+                    }), { status: 200, headers: corsHeaders });
                 }
                 try {
                     const newConfig = await req.json();
