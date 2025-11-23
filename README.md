@@ -1,4 +1,4 @@
-# 🚀 StackPages CMS
+# 🚀 StackPages CMS v1.3
 
 **Bienvenue dans la version Open Source de StackPages CMS !**
 
