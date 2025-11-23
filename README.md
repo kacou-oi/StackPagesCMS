@@ -35,7 +35,7 @@ Pour déployer et utiliser ce projet dans votre propre infrastructure, vous aure
 
 Le cœur de ce CMS est le code JavaScript de l'API. Pour commencer rapidement, cliquez sur le bouton ci-dessous pour ouvrir le fichier `worker.js` et copiez-le dans votre projet Cloudflare Worker.
 
-[![Bouton pour ouvrir le fichier worker.js](https://img.shields.io/badge/Ouvrir_le_Code_du_Worker-262D34?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/kacou-oi/StackPagesCMS/refs/heads/main/_worker.js)
+[![Bouton pour ouvrir le fichier worker.js](https://img.shields.io/badge/Ouvrir_le_Code_du_Worker-262D34?style=for-the-badge&logo=github&logoColor=white)](/_worker.js)
 
 Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 
