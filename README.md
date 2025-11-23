@@ -39,8 +39,6 @@ Le cœur de ce CMS est le code JavaScript de l'API. Pour commencer rapidement, c
 
 
 ```html
-
-````<div> ````
 // Worker Cloudflare (Méthode Pages/Domaine)
 
 // L'URL pointe maintenant vers votre domaine géré par Cloudflare Pages.
@@ -51,10 +49,9 @@ try {
 } catch (error) {
   // ... gestion d'erreur ...
 }
-````</div> ````
 
 ## Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
-
+```
 ---
 
 ## 📄 Structure de la Documentation
