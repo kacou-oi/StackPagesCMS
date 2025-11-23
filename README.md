@@ -51,9 +51,12 @@ try {
 }
 
 ```
----
+
 Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 ---
+## ⚙️ Déploiement Rapide (Cloudflare Worker)
+
+Le cœur de ce CMS est le code JavaScript de l'API. Pour commencer rapidement, cliquez sur le bouton ci-dessous pour ouvrir le fichier `worker.js` et copiez-le dans votre projet Cloudflare Worker.
 
 ## 📄 Structure de la Documentation
 
