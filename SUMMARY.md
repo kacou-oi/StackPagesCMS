@@ -1,6 +1,6 @@
 # Table des Matières
 
-* [Introduction et Fonctionnalités](README.md)
+* [Introduction et Versions](README.md)
 
 * [1. Architecture et API](docs/architecture/README.md)
     * [1.1 Flux de Données et Composants](docs/architecture/architecture-flow.md)
