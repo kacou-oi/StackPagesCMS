@@ -246,10 +246,13 @@ export default {
         };
 
         const isAuthenticated = () => {
+            return true; // AUTHENTIFICATION DÉSACTIVÉE TEMPORAIREMENT
+            /*
             const session = getCookie('stackpages_session');
             // Vérification très basique : le cookie doit être égal au mot de passe (hashé idéalement)
             // Pour ce MVP, on stocke un simple token
             return session === btoa(ADMIN_PASSWORD + SESSION_SECRET);
+            */
         };
 
         const corsHeaders = {
