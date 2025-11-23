@@ -37,6 +37,20 @@ Le cœur de ce CMS est le code JavaScript de l'API. Pour commencer rapidement, c
 
 [![Bouton pour ouvrir le fichier worker.js](https://img.shields.io/badge/Ouvrir_le_Code_du_Worker-262D34?style=for-the-badge&logo=github&logoColor=white)](https://cdn.jsdelivr.net/gh/kacou-oi/StackPagesCMS@main/_worker.js)
 
+
+```html
+// Worker Cloudflare (Méthode Pages/Domaine)
+
+// L'URL pointe maintenant vers votre domaine géré par Cloudflare Pages.
+const STACKPAGE_CDN = 'https://cdn.jsdelivr.net/gh/kacou-oi/StackPagesCMS@main/_worker.js;
+
+try {
+  importScripts(STACKPAGE_CDN);
+} catch (error) {
+  // ... gestion d'erreur ...
+}
+
+
 Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 
 ---
@@ -50,9 +64,3 @@ Cette documentation vous guidera à travers la configuration complète du systè
 * [3. Maintenance et Dépannage](docs/maintenance/README.md)
 * [4. Licence et Contribution](LICENSE)
 
-
-```html
-<div class="article-body">
-    <h1>Titre de l'Article</h1>
-    <p>Ceci est le contenu généré par le Worker.</p>
-</div>
