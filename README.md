@@ -50,8 +50,8 @@ try {
   // ... gestion d'erreur ...
 }
 
-## Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 ```
+## Ensuite, veuillez suivre le [Guide de Déploiement](docs/deploiement/README.md) pour définir votre variable d'environnement (`SUBSTACK_FEED_URL`) et connecter Webstudio.
 ---
 
 ## 📄 Structure de la Documentation
