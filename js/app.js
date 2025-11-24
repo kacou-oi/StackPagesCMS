@@ -57,6 +57,7 @@ function showView(viewName) {
         'videos': 'Vidéos YouTube',
         'api-explorer': 'Explorateur d\'API',
         'builder': 'Frontend Builder',
+        'analytics': 'Google Analytics',
         'config': 'Configuration',
         'help': 'Aide & Support'
     };
