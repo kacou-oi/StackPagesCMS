@@ -102,16 +102,16 @@ async function loadData() {
             diffHours = Math.abs(now - then) / 36e5; // milliseconds → hours
         }
 
-        // 2. Load Content
-        const [postsRes, videosRes, podcastsRes] = await Promise.all([
-            fetch('/api/posts'),
-            fetch('/api/videos'),
-            fetch('/api/podcasts')
-        ]);
+        // 2. Load Content (Individually to prevent one failure from blocking others)
+        const loadPosts = fetch('/api/posts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Posts fetch error:", e); return []; });
+        const loadVideos = fetch('/api/videos').then(res => res.ok ? res.json() : []).catch(e => { console.error("Videos fetch error:", e); return []; });
+        const loadPodcasts = fetch('/api/podcasts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Podcasts fetch error:", e); return []; });
 
-        if (postsRes.ok) appState.posts = await postsRes.json();
-        if (videosRes.ok) appState.videos = await videosRes.json();
-        if (podcastsRes.ok) appState.podcasts = await podcastsRes.json();
+        const [posts, videos, podcasts] = await Promise.all([loadPosts, loadVideos, loadPodcasts]);
+
+        appState.posts = posts;
+        appState.videos = videos;
+        appState.podcasts = podcasts;
 
         // Update Stats
         document.getElementById('stat-total-posts').textContent = appState.posts.length;
