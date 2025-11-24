@@ -384,6 +384,67 @@
                             </div>
                         </div>
 
+                        <!-- Integration Info Section -->
+                        <div
+                            class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-8 mt-6">
+                            <h3
+                                class="font-semibold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-2">
+                                <i class="fas fa-code mr-2 text-slate-400"></i>Informations d'Intégration (Développeur)
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Backend URL
+                                        (Base)</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="integ-base-url" readonly
+                                            class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 font-mono select-all">
+                                        <button onclick="copyToClipboard('integ-base-url')"
+                                            class="px-3 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg transition">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">API Posts
+                                            (Liste)</label>
+                                        <div class="flex gap-2">
+                                            <input type="text" id="integ-api-posts" readonly
+                                                class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 font-mono select-all">
+                                            <button onclick="copyToClipboard('integ-api-posts')"
+                                                class="px-3 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg transition">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">API
+                                            Metadata</label>
+                                        <div class="flex gap-2">
+                                            <input type="text" id="integ-api-meta" readonly
+                                                class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 font-mono select-all">
+                                            <button onclick="copyToClipboard('integ-api-meta')"
+                                                class="px-3 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg transition">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">API Article
+                                        Unique (Exemple)</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="integ-api-slug" readonly
+                                            class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-sm text-slate-600 dark:text-slate-300 font-mono select-all">
+                                        <button onclick="copyToClipboard('integ-api-slug')"
+                                            class="px-3 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg transition">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Step 2: DNS Config -->
                         <div id="dns-config-section" class="hidden opacity-50 transition-opacity duration-500">
                             <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">2. Configuration DNS

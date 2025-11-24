@@ -70,6 +70,82 @@ function showView(viewName) {
     }
 }
 
+// Integration Info Logic
+function updateIntegrationInfo() {
+    const baseUrl = window.location.origin;
+
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+    };
+
+    setVal('integ-base-url', baseUrl);
+    setVal('integ-api-posts', `${baseUrl}/api/posts`);
+    setVal('integ-api-meta', `${baseUrl}/api/metadata`);
+    setVal('integ-api-slug', `${baseUrl}/api/post/:slug`);
+}
+
+async function testApiEndpoint(type) {
+    const baseUrl = window.location.origin;
+    let url = '';
+    let resultId = '';
+
+    if (type === 'posts') {
+        url = `${baseUrl}/api/posts`;
+        resultId = 'test-result-posts';
+    } else if (type === 'meta') {
+        url = `${baseUrl}/api/metadata`;
+        resultId = 'test-result-meta';
+    } else if (type === 'slug') {
+        const slug = prompt("Entrez un slug d'article pour le test (ex: mon-premier-article) :", "welcome");
+        if (!slug) return;
+        url = `${baseUrl}/api/post/${slug}`;
+        resultId = 'test-result-slug';
+    }
+
+    const resultEl = document.getElementById(resultId);
+    resultEl.classList.remove('hidden');
+    resultEl.innerText = 'Chargement...';
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // Format JSON nicely
+        let formatted = JSON.stringify(data, null, 2);
+
+        // Truncate if too long
+        if (formatted.length > 1000) {
+            formatted = formatted.substring(0, 1000) + '\n... (Tronqué)';
+        }
+
+        resultEl.innerText = formatted;
+    } catch (err) {
+        resultEl.innerText = 'Erreur : ' + err.message;
+        resultEl.classList.add('text-red-400');
+    }
+}
+
+function copyToClipboard(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    el.select();
+    el.setSelectionRange(0, 99999); // For mobile devices
+
+    navigator.clipboard.writeText(el.value).then(() => {
+        // Visual feedback could be added here (e.g., toast or tooltip)
+        const btn = document.querySelector(`button[onclick="copyToClipboard('${elementId}')"]`);
+        if (btn) {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check text-green-600"></i>';
+            setTimeout(() => btn.innerHTML = originalHtml, 2000);
+        }
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+
 // Domain Logic
 
 function showDomainConfig() {
@@ -267,6 +343,9 @@ async function loadConfig() {
                 // Otherwise show search state
                 hideDomainConfig();
             }
+
+            // Update Integration Info
+            updateIntegrationInfo();
         }
     } catch (err) {
         console.error('Error loading config:', err);
