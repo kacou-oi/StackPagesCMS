@@ -212,9 +212,7 @@ export default {
             siteName: "StackPages CMS",
             author: "Admin",
             substackRssUrl: env.SUBSTACK_FEED_URL,
-            youtubeRssUrl: "",
-            substackRssUrl: env.SUBSTACK_FEED_URL,
-            youtubeRssUrl: "",
+            youtubeRssUrl: "env.YOUTUBE_FEED_URL",
             seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
         };
 
