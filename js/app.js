@@ -220,15 +220,26 @@ function renderDashboard() {
     }
 }
 
+let currentPage = 1;
+const itemsPerPage = 10;
+
 function renderContentTable() {
     const tbody = document.getElementById('all-posts-table');
     if (!tbody) return;
 
     const search = document.getElementById('search-posts').value.toLowerCase();
-
     const filtered = allPosts.filter(p => p.title.toLowerCase().includes(search));
 
-    tbody.innerHTML = filtered.map(post => `
+    // Pagination Logic
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (currentPage > totalPages) currentPage = 1; // Reset if out of bounds
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const paginatedPosts = filtered.slice(start, end);
+
+    // Update Table
+    tbody.innerHTML = paginatedPosts.map(post => `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4">
                 <div class="w-10 h-10 rounded bg-slate-200 overflow-hidden">
@@ -247,6 +258,29 @@ function renderContentTable() {
             </td>
         </tr>
     `).join('');
+
+    // Update Pagination Controls
+    document.getElementById('pagination-info').textContent = `Page ${currentPage} sur ${totalPages || 1}`;
+    document.getElementById('prev-page-btn').disabled = currentPage === 1;
+    document.getElementById('next-page-btn').disabled = currentPage === totalPages || totalPages === 0;
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderContentTable();
+    }
+}
+
+function nextPage() {
+    const search = document.getElementById('search-posts').value.toLowerCase();
+    const filtered = allPosts.filter(p => p.title.toLowerCase().includes(search));
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderContentTable();
+    }
 }
 
 // Search Listener

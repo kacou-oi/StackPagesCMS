@@ -219,6 +219,16 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Pagination Controls -->
+                    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
+                        <span id="pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                        <div class="flex gap-2">
+                            <button id="prev-page-btn" onclick="prevPage()"
+                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                            <button id="next-page-btn" onclick="nextPage()"
+                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
