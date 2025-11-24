@@ -371,9 +371,14 @@ export default {
 
         // 4. Public Data (Metadata & Posts)
         const FEED_URL = config.substackRssUrl;
+        console.log("DEBUG: Configured Substack URL:", FEED_URL);
 
         if (!FEED_URL && (path === "/api/metadata" || path === "/api/posts" || path.startsWith("/api/post/"))) {
-            return new Response(JSON.stringify({ error: "Flux RSS non configuré (Voir variables d'environnement)" }), { status: 500, headers: corsHeaders });
+            // Return empty data instead of error to allow UI to render
+            const emptyMeta = { siteName: "StackPages", author: "Admin", lastBuildDate: new Date().toISOString() };
+            if (path === "/api/metadata") return new Response(JSON.stringify(emptyMeta), { status: 200, headers: corsHeaders });
+            if (path === "/api/posts") return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
+            return new Response(JSON.stringify({ error: "Article non trouvé" }), { status: 404, headers: corsHeaders });
         }
 
         if (path === "/api/metadata" || path === "/api/posts" || path.startsWith("/api/post/")) {
@@ -381,6 +386,10 @@ export default {
             try {
                 blogData = await getCachedRSSData(FEED_URL);
             } catch (error) {
+                console.error("Error fetching Substack RSS:", error);
+                // Return empty/fallback data on fetch error
+                if (path === "/api/metadata") return new Response(JSON.stringify({ siteName: "Error", author: "Error" }), { status: 200, headers: corsHeaders });
+                if (path === "/api/posts") return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
                 return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
             }
 
@@ -412,6 +421,7 @@ export default {
 
         // 5. Videos
         if (path === "/api/videos") {
+            console.log("DEBUG: Configured YouTube URL:", config.youtubeRssUrl);
             if (!config.youtubeRssUrl) {
                 return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
             }
@@ -419,6 +429,7 @@ export default {
                 const videos = await getCachedYoutubeData(config.youtubeRssUrl);
                 return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
             } catch (error) {
+                console.error("Error fetching YouTube RSS:", error);
                 return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
             }
         }
