@@ -236,9 +236,22 @@ export default {
         const ADMIN_PASSWORD = env.ADMIN_PASSWORD || "admin"; // DÉFAUT NON SÉCURISÉ POUR LE DEV
         const SESSION_SECRET = "stackpages-session-secret"; // À changer en prod idéalement
 
+        const getCookie = (name) => {
+            const cookieString = req.headers.get('Cookie');
+            if (!cookieString) return null;
+            const cookies = cookieString.split(';');
+            for (let cookie of cookies) {
+                const [key, value] = cookie.trim().split('=');
+                if (key === name) return value;
+            }
+            return null;
+        };
+
         const isAuthenticated = () => {
-            const authKey = req.headers.get('X-Auth-Key');
-            return authKey === ADMIN_PASSWORD;
+            const session = getCookie('stackpages_session');
+            // Vérification très basique : le cookie doit être égal au mot de passe (hashé idéalement)
+            // Pour ce MVP, on stocke un simple token
+            return session === btoa(ADMIN_PASSWORD + SESSION_SECRET);
         };
 
         const corsHeaders = {
@@ -254,12 +267,15 @@ export default {
 
         // --- ROUTES API PUBLIC ---
 
-        // 1. Login (Validation simple)
+        // 1. Login
         if (path === "/api/login" && req.method === "POST") {
             try {
                 const body = await req.json();
                 if (body.password === ADMIN_PASSWORD) {
-                    return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
+                    const token = btoa(ADMIN_PASSWORD + SESSION_SECRET);
+                    const headers = new Headers(corsHeaders);
+                    headers.append('Set-Cookie', `stackpages_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
+                    return new Response(JSON.stringify({ success: true }), { status: 200, headers });
                 } else {
                     return new Response(JSON.stringify({ error: "Mot de passe incorrect" }), { status: 401, headers: corsHeaders });
                 }
@@ -268,14 +284,15 @@ export default {
             }
         }
 
-        // 2. Logout (Client side only, but endpoint kept for compatibility)
+        // 2. Logout
         if (path === "/api/logout") {
-            return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
+            const headers = new Headers(corsHeaders);
+            headers.append('Set-Cookie', `stackpages_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`);
+            return new Response(JSON.stringify({ success: true }), { status: 200, headers });
         }
 
-        // 3. Check Auth (Removed or simplified)
+        // 3. Check Auth
         if (path === "/api/check-auth") {
-            // Client checks localStorage, this is just a helper if needed
             if (isAuthenticated()) {
                 return new Response(JSON.stringify({ authenticated: true }), { status: 200, headers: corsHeaders });
             } else {
@@ -408,16 +425,18 @@ export default {
         // --- FICHIERS STATIQUES ---
 
         // Protection du dashboard
-        // Note: Avec l'auth stateless, on ne peut pas facilement protéger les pages statiques côté serveur 
-        // sans envoyer le header (ce que le navigateur ne fait pas pour une navigation standard).
-        // On laisse donc le JS client (app.js) gérer la redirection si le localStorage est vide.
-        // C'est moins sécurisé (le code HTML est visible) mais c'est ce qui est demandé ("pas de session").
-
-        /* 
         if (path === "/dashboard.html") {
-             // Impossible de vérifier X-Auth-Key ici pour une requête GET navigateur standard
+            if (!isAuthenticated()) {
+                return Response.redirect(new URL('/', req.url).toString(), 302);
+            }
         }
-        */
+
+        // Redirection si déjà connecté sur la page de login
+        if (path === "/" || path === "/index.html") {
+            if (isAuthenticated()) {
+                return Response.redirect(new URL('/dashboard.html', req.url).toString(), 302);
+            }
+        }
 
         try {
             return await env.ASSETS.fetch(req);

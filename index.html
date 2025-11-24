@@ -61,7 +61,45 @@
 
     </div>
 
-    <script src="/js/app.js"></script>
+    <<<<<<< HEAD <script src="/js/app.js">
+        </script>
+        =======
+        <script>
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                const errorDiv = document.getElementById('error-message');
+                const btn = e.target.querySelector('button');
+
+                // Reset UI
+                errorDiv.classList.add('hidden');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    });
+
+                    if (res.ok) {
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        errorDiv.textContent = "Mot de passe incorrect.";
+                        errorDiv.classList.remove('hidden');
+                        btn.disabled = false;
+                        btn.textContent = 'Se connecter';
+                    }
+                } catch (err) {
+                    errorDiv.textContent = "Erreur de connexion.";
+                    errorDiv.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Se connecter';
+                }
+            });
+        </script>
+        >>>>>>> parent of 545a061 (PASSWORD LOGIC)
 </body>
 
 </html>
