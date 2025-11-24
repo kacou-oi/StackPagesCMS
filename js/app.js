@@ -4,12 +4,16 @@ let metadata = {};
 let config = {};
 
 // Init
+// Init
 document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
     await checkAuth();
-    await loadData();
-    await loadConfig();
-    renderDashboard();
-    renderContentTable();
+    if (window.location.pathname.includes('dashboard.html')) {
+        await loadData();
+        await loadConfig();
+        renderDashboard();
+        renderContentTable();
+    }
 });
 
 // Auth Check
