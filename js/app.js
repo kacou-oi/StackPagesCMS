@@ -1,8 +1,11 @@
 // State
-let allPosts = [];
-let allVideos = [];
-let metadata = {};
-let config = {};
+const appState = {
+    posts: [],
+    videos: [],
+    podcasts: [],
+    metadata: {},
+    config: {}
+};
 
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
@@ -160,6 +163,11 @@ async function loadConfig() {
         // Fetch metadata from Substack RSS (site name, author, SEO if any)
         const metaRes = await fetch('/api/metadata');
         const metadata = await metaRes.json();
+
+        // Save to State
+        appState.config = config;
+        appState.metadata = metadata;
+
         // Populate Config Form (Read-Only) with combined data
         document.getElementById('conf-siteName').value = config.siteName || metadata.siteName || '';
         document.getElementById('conf-author').value = config.author || metadata.author || '';
@@ -459,7 +467,7 @@ document.getElementById('search-posts')?.addEventListener('input', renderContent
 
 // Modal Logic
 function openPreview(slug) {
-    const post = allPosts.find(p => p.slug === slug);
+    const post = appState.posts.find(p => p.slug === slug);
     if (!post) return;
 
     document.getElementById('modal-title').textContent = post.title;
@@ -477,7 +485,7 @@ function closeModal() {
 }
 
 function openVideoPreview(videoId) {
-    const video = allVideos.find(v => v.id === videoId);
+    const video = appState.videos.find(v => v.id === videoId);
     if (!video) return;
 
     document.getElementById('modal-title').textContent = video.title;
@@ -567,8 +575,4 @@ async function clearCache() {
     }
 }
 
-// Initialization
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadConfig();
-    await loadData();
-});
+
