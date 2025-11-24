@@ -456,24 +456,27 @@
                 <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
                     synchronisation avec Substack.</p>
 
-                <h4>2. Gestion des Articles</h4>
-                <p>Parcourez tous les articles récupérés depuis votre flux RSS. Vous pouvez rechercher des articles
-                    par titre et voir un aperçu complet du contenu tel qu'il apparaîtra sur votre site.</p>
+                <h4>2. Gestion des Articles & Vidéos</h4>
+                <p>Parcourez tous les articles récupérés depuis votre flux RSS Substack et vos vidéos YouTube. Vous
+                    pouvez rechercher du contenu
+                    par titre et voir un aperçu complet tel qu'il apparaîtra sur votre site.</p>
 
                 <h4>3. Configuration</h4>
-                <p>Modifiez les paramètres essentiels de votre site sans toucher au code :</p>
+                <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
+                    Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état actuel
+                    de ces variables :</p>
                 <ul>
-                    <li><strong>Nom du Site & Auteur</strong> : Personnalisez l'identité de votre blog.</li>
-                    <li><strong>Flux RSS</strong> : Changez l'URL source si vous migrez ou changez de newsletter.
-                    </li>
-                    <li><strong>SEO</strong> : Optimisez vos titres, descriptions et mots-clés pour les moteurs de
-                        recherche.</li>
+                    <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
+                    <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
+                    <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
                 </ul>
+                <p>Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de votre
+                    déploiement Cloudflare.</p>
 
                 <h4>4. Maintenance</h4>
                 <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
-                    pas vos derniers articles apparaître immédiatement. Le système met en cache les données pour la
-                    performance.</p>
+                    pas vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
+                    performance (TTL par défaut de 3 minutes).</p>
             </div>
         </div>
 
