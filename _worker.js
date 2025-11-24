@@ -301,8 +301,8 @@ export default {
         let config = {
             siteName: "StackPages CMS",
             author: "Admin",
-            substackRssUrl: env.SUBSTACK_FEED_URL,
-            youtubeRssUrl: env.YOUTUBE_FEED_URL,
+            substackRssUrl: "",
+            youtubeRssUrl: "",
             seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
         };
 
