@@ -1,5 +1,6 @@
 // State
 let allPosts = [];
+let allVideos = [];
 let metadata = {};
 let config = {};
 
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadConfig();
     renderDashboard();
     renderContentTable();
+    renderVideos();
 });
 
 // Auth Check
@@ -49,6 +51,7 @@ function showView(viewName) {
     const titles = {
         'dashboard': 'Tableau de bord',
         'content': 'Gestion des Articles',
+        'videos': 'Vidéos YouTube',
         'api-explorer': 'Explorateur d\'API',
         'config': 'Configuration',
         'help': 'Aide & Support'
@@ -70,13 +73,15 @@ function showView(viewName) {
 // Data Loading
 async function loadData() {
     try {
-        const [metaRes, postsRes] = await Promise.all([
+        const [metaRes, postsRes, videosRes] = await Promise.all([
             fetch('/api/metadata'),
-            fetch('/api/posts')
+            fetch('/api/posts'),
+            fetch('/api/videos')
         ]);
 
         metadata = await metaRes.json();
         allPosts = await postsRes.json();
+        allVideos = await videosRes.json();
 
         // Update Stats
         document.getElementById('stat-total-posts').textContent = allPosts.length;
@@ -123,6 +128,7 @@ async function loadConfig() {
             document.getElementById('conf-author').value = config.author || '';
 
             document.getElementById('conf-substack').value = config.substackRssUrl || '';
+            document.getElementById('conf-youtube').value = config.youtubeRssUrl || '';
             document.getElementById('conf-metaTitle').value = config.seo?.metaTitle || '';
             document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
             document.getElementById('conf-metaKeywords').value = config.seo?.metaKeywords || '';
@@ -143,6 +149,7 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
         siteName: document.getElementById('conf-siteName').value,
         author: document.getElementById('conf-author').value,
         substackRssUrl: document.getElementById('conf-substack').value,
+        youtubeRssUrl: document.getElementById('conf-youtube').value,
         seo: {
             metaTitle: document.getElementById('conf-metaTitle').value,
             metaDescription: document.getElementById('conf-metaDesc').value,
@@ -223,6 +230,38 @@ function renderContentTable() {
                 </button>
             </td>
         </tr>
+    `).join('');
+}
+
+// Search Listener
+function renderVideos() {
+    const grid = document.getElementById('videos-grid');
+    const emptyMsg = document.getElementById('no-videos-message');
+
+    if (!grid) return;
+
+    if (!allVideos || allVideos.length === 0) {
+        grid.innerHTML = '';
+        emptyMsg?.classList.remove('hidden');
+        return;
+    }
+
+    emptyMsg?.classList.add('hidden');
+    grid.innerHTML = allVideos.map(video => `
+        <a href="${video.link}" target="_blank" class="group block bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-md transition">
+            <div class="aspect-video bg-slate-100 relative overflow-hidden">
+                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition flex items-center justify-center">
+                    <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center text-red-600 opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition duration-300 shadow-lg">
+                        <i class="fas fa-play pl-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h4 class="font-medium text-slate-800 line-clamp-2 group-hover:text-orange-600 transition">${video.title}</h4>
+                <p class="text-xs text-slate-500 mt-2">${new Date(video.published).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            </div>
+        </a>
     `).join('');
 }
 

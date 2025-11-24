@@ -157,6 +157,64 @@ function fetchAndParseRSS(xml) {
     return items;
 }
 
+// --- Fonction pour analyser le XML YouTube ---
+function fetchAndParseYoutubeRSS(xml) {
+    const items = [];
+    const entryRe = /<entry[^>]*>((.|[\r\n])*?)<\/entry>/gi;
+    let m;
+
+    while ((m = entryRe.exec(xml)) !== null) {
+        const block = m[1];
+        const getTag = (tag) => {
+            const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
+            const found = block.match(re);
+            if (!found) return "";
+            return decodeHTMLEntities(found[1].trim());
+        };
+
+        const title = getTag('title');
+        const published = getTag('published');
+
+        // Extract Video ID
+        const videoIdRe = /<yt:videoId>((.|[\r\n])*?)<\/yt:videoId>/i;
+        const videoIdMatch = block.match(videoIdRe);
+        const videoId = videoIdMatch ? videoIdMatch[1].trim() : "";
+
+        // Extract Thumbnail
+        const mediaGroupRe = /<media:group>((.|[\r\n])*?)<\/media:group>/i;
+        const mediaGroupMatch = block.match(mediaGroupRe);
+        let thumbnail = "";
+        let description = "";
+
+        if (mediaGroupMatch) {
+            const groupContent = mediaGroupMatch[1];
+            const thumbRe = /<media:thumbnail\s+url=["']([^"']+)["']/i;
+            const thumbMatch = groupContent.match(thumbRe);
+            if (thumbMatch) thumbnail = thumbMatch[1];
+
+            const descRe = /<media:description[^>]*>((.|[\r\n])*?)<\/media:description>/i;
+            const descMatch = groupContent.match(descRe);
+            if (descMatch) description = decodeHTMLEntities(descMatch[1].trim());
+        }
+
+        if (videoId) {
+            items.push({
+                id: videoId,
+                title,
+                published,
+                thumbnail,
+                description,
+                link: `https://www.youtube.com/watch?v=${videoId}`
+            });
+        }
+    }
+
+    // Sort by date desc
+    items.sort((a, b) => new Date(b.published) - new Date(a.published));
+
+    return items;
+}
+
 
 // ====================================================================
 // 3. LOGIQUE DE CACHE ET RÉCUPÉRATION DES DONNÉES
@@ -193,6 +251,38 @@ async function getCachedRSSData(feedUrl) {
     return data;
 }
 
+async function getCachedYoutubeData(feedUrl) {
+    if (!feedUrl) return [];
+
+    const cache = caches.default;
+    const cacheKey = new Request(feedUrl, { method: 'GET' });
+    let response = await cache.match(cacheKey);
+
+    if (response) {
+        return await response.json();
+    }
+
+    try {
+        const res = await fetch(feedUrl);
+        if (!res.ok) throw new Error(`Échec du chargement du flux YouTube`);
+        const xml = await res.text();
+        const videos = fetchAndParseYoutubeRSS(xml);
+
+        const cachedResponse = new Response(JSON.stringify(videos), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': `public, max-age=${CACHE_TTL}`
+            }
+        });
+        await cache.put(cacheKey, cachedResponse.clone());
+
+        return videos;
+    } catch (e) {
+        console.error("Youtube Fetch Error:", e);
+        return [];
+    }
+}
+
 // ====================================================================
 // 4. GESTIONNAIRE PRINCIPAL DU WORKER
 // ====================================================================
@@ -212,7 +302,7 @@ export default {
             siteName: "StackPages CMS",
             author: "Admin",
             substackRssUrl: env.SUBSTACK_FEED_URL,
-            youtubeRssUrl: "env.YOUTUBE_FEED_URL",
+            youtubeRssUrl: env.YOUTUBE_FEED_URL,
             seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
         };
 
@@ -318,6 +408,15 @@ export default {
                 if (!post) return new Response(JSON.stringify({ error: "Article non trouvé" }), { status: 404, headers: corsHeaders });
                 return new Response(JSON.stringify(post), { status: 200, headers: corsHeaders });
             }
+        }
+
+        if (path === "/api/videos") {
+            const YT_FEED_URL = config.youtubeRssUrl;
+            if (!YT_FEED_URL) {
+                return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
+            }
+            const videos = await getCachedYoutubeData(YT_FEED_URL);
+            return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
         }
 
         // --- ROUTES API PROTÉGÉES ---
