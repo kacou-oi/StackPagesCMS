@@ -312,6 +312,7 @@ export default {
             substackRssUrl: env.SUBSTACK_FEED_URL || "",
             youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
             frontendBuilderUrl: env.FRONTEND_BUILDER_URL || "https://p-12e07a9d-76d9-4b9f-9ce9-94eeff0e1f00.apps.webstudio.is/?authToken=c75ba98e-e76b-40be-84a7-d6c435f9e324&mode=design",
+            podcastFeedUrl: env.PODCAST_FEED_URL || "",
             seo: {
                 metaTitle: env.META_TITLE || "",
                 metaDescription: env.META_DESCRIPTION || "",

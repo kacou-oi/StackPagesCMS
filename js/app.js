@@ -58,6 +58,7 @@ function showView(viewName) {
         'api-explorer': 'Explorateur d\'API',
         'builder': 'Frontend Builder',
         'analytics': 'Google Analytics',
+        'podcasts': 'Podcasts',
         'config': 'Configuration',
         'help': 'Aide & Support'
     };
@@ -95,25 +96,30 @@ async function loadData() {
         // Compute diffHours for feed status (use lastBuildDate if present)
         const statusEl = document.getElementById('stat-feed-status');
         let diffHours = 0;
-        if (metadata.lastBuildDate) {
+        if (appState.metadata.lastBuildDate) {
             const now = new Date();
-            const then = new Date(metadata.lastBuildDate);
+            const then = new Date(appState.metadata.lastBuildDate);
             diffHours = Math.abs(now - then) / 36e5; // milliseconds → hours
         }
 
-        // 2. Posts
-        const postsRes = await fetch(`/api/posts${refreshParam}`);
-        allPosts = await postsRes.json();
+        // 2. Load Content
+        const [postsRes, videosRes, podcastsRes] = await Promise.all([
+            fetch('/api/posts'),
+            fetch('/api/videos'),
+            fetch('/api/podcasts')
+        ]);
+
+        if (postsRes.ok) appState.posts = await postsRes.json();
+        if (videosRes.ok) appState.videos = await videosRes.json();
+        if (podcastsRes.ok) appState.podcasts = await podcastsRes.json();
 
         // Update Stats
-        document.getElementById('stat-total-posts').textContent = allPosts.length;
-        const lastPostDate = allPosts.length > 0 ? new Date(allPosts[0].pubDate).toLocaleDateString('fr-FR') : '-';
+        document.getElementById('stat-total-posts').textContent = appState.posts.length;
+        const lastPostDate = appState.posts.length > 0 ? new Date(appState.posts[0].pubDate).toLocaleDateString('fr-FR') : '-';
         document.getElementById('stat-last-update').textContent = lastPostDate;
+        document.getElementById('stat-total-videos').textContent = appState.videos.length;
+        document.getElementById('stat-total-podcasts').textContent = appState.podcasts.length;
 
-        // 3. Videos
-        const videoRes = await fetch(`/api/videos${refreshParam}`);
-        allVideos = await videoRes.json();
-        document.getElementById('stat-total-videos').textContent = allVideos.length;
 
         // Feed status UI (only if element exists)
         if (statusEl) {
@@ -133,6 +139,7 @@ async function loadData() {
         renderDashboard();
         renderContentTable();
         renderVideos();
+        renderPodcasts(); // Call renderPodcasts here
 
     } catch (e) {
         console.error("Erreur de chargement:", e);
@@ -157,7 +164,12 @@ async function loadConfig() {
         document.getElementById('conf-siteName').value = config.siteName || metadata.siteName || '';
         document.getElementById('conf-author').value = config.author || metadata.author || '';
         document.getElementById('conf-substack').value = config.substackRssUrl || '';
-        document.getElementById('conf-youtube').value = config.youtubeRssUrl || '';
+        if (document.getElementById('conf-youtube')) {
+            document.getElementById('conf-youtube').value = config.youtubeRssUrl || 'Non configuré';
+        }
+        if (document.getElementById('conf-podcast')) {
+            document.getElementById('conf-podcast').value = config.podcastFeedUrl || 'Non configuré';
+        }
         if (config.seo) {
             document.getElementById('conf-metaTitle').value = config.seo.metaTitle || '';
             document.getElementById('conf-metaDesc').value = config.seo.metaDescription || '';
@@ -198,10 +210,10 @@ function renderDashboard() {
     // Recent Posts
     const postsTbody = document.getElementById('dashboard-recent-posts');
     if (postsTbody) {
-        if (!allPosts || allPosts.length === 0) {
+        if (!appState.posts || appState.posts.length === 0) {
             postsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun article trouvé.</td></tr>';
         } else {
-            postsTbody.innerHTML = allPosts.slice(0, 5).map(post => `
+            postsTbody.innerHTML = appState.posts.slice(0, 5).map(post => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${post.title}">${post.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(post.pubDate).toLocaleDateString('fr-FR')}</td>
@@ -216,15 +228,33 @@ function renderDashboard() {
     // Recent Videos
     const videosTbody = document.getElementById('dashboard-recent-videos');
     if (videosTbody) {
-        if (!allVideos || allVideos.length === 0) {
+        if (!appState.videos || appState.videos.length === 0) {
             videosTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucune vidéo trouvée.</td></tr>';
         } else {
-            videosTbody.innerHTML = allVideos.slice(0, 5).map(video => `
+            videosTbody.innerHTML = appState.videos.slice(0, 5).map(video => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
                         <button onclick="openVideoPreview('${video.id}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+
+    // Recent Podcasts
+    const podcastsTbody = document.getElementById('dashboard-recent-podcasts');
+    if (podcastsTbody) {
+        if (!appState.podcasts || appState.podcasts.length === 0) {
+            podcastsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun podcast trouvé.</td></tr>';
+        } else {
+            podcastsTbody.innerHTML = appState.podcasts.slice(0, 5).map(podcast => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
+                    <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="${podcast.link}" target="_blank" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Écouter</a>
                     </td>
                 </tr>
             `).join('');
@@ -240,7 +270,7 @@ function renderContentTable() {
     if (!tbody) return;
 
     const search = document.getElementById('search-posts').value.toLowerCase();
-    const filtered = allPosts.filter(p => p.title.toLowerCase().includes(search));
+    const filtered = appState.posts.filter(p => p.title.toLowerCase().includes(search));
 
     // Pagination Logic
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -286,7 +316,7 @@ function prevPage() {
 
 function nextPage() {
     const search = document.getElementById('search-posts').value.toLowerCase();
-    const filtered = allPosts.filter(p => p.title.toLowerCase().includes(search));
+    const filtered = appState.posts.filter(p => p.title.toLowerCase().includes(search));
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
     if (currentPage < totalPages) {
@@ -297,61 +327,113 @@ function nextPage() {
 
 // Video Pagination State
 let currentVideoPage = 1;
-const videosPerPage = 10;
+const VIDEOS_PER_PAGE = 10; // Renamed for consistency with diff
 
 // Search Listener
 function renderVideos() {
-    const tbody = document.getElementById('videos-table');
-    const emptyMsg = document.getElementById('no-videos-message');
+    const container = document.getElementById('videos-container');
+    const countEl = document.getElementById('video-count');
+    if (!container) return;
 
-    if (!tbody) return;
+    const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
+    const filtered = appState.videos.filter(v => v.title.toLowerCase().includes(search));
 
-    if (!allVideos || allVideos.length === 0) {
-        tbody.innerHTML = '';
-        emptyMsg?.classList.remove('hidden');
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                <i class="fas fa-video text-4xl text-slate-300 mb-3"></i>
+                <p class="text-slate-500">Aucune vidéo trouvée</p>
+            </div>
+        `;
+        if (countEl) countEl.textContent = '0 vidéos';
+        // Update Pagination Controls for empty state
+        document.getElementById('video-pagination-info').textContent = `Page 1 / 1`;
+        document.getElementById('prev-video-page-btn').disabled = true;
+        document.getElementById('next-video-page-btn').disabled = true;
         return;
     }
 
-    const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
-    const filtered = allVideos.filter(v => v.title.toLowerCase().includes(search));
+    if (countEl) countEl.textContent = `${filtered.length} vidéos`;
 
     // Pagination Logic
-    const totalPages = Math.ceil(filtered.length / videosPerPage);
+    const totalPages = Math.ceil(filtered.length / VIDEOS_PER_PAGE);
     if (currentVideoPage > totalPages) currentVideoPage = 1;
 
-    const start = (currentVideoPage - 1) * videosPerPage;
-    const end = start + videosPerPage;
-    const paginatedVideos = filtered.slice(start, end);
+    const start = (currentVideoPage - 1) * VIDEOS_PER_PAGE;
+    const end = start + VIDEOS_PER_PAGE;
+    const pageVideos = filtered.slice(start, end);
 
-    emptyMsg?.classList.add('hidden');
-    tbody.innerHTML = paginatedVideos.map(video => `
-        <tr class="hover:bg-slate-50 transition group">
-            <td class="px-6 py-4 w-32">
-                <div class="w-24 h-16 rounded bg-slate-200 overflow-hidden relative group-hover:ring-2 ring-orange-500 transition-all">
-                    <img src="${video.thumbnail}" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition"></div>
+    container.innerHTML = pageVideos.map(video => `
+        <div class="bg-white rounded-lg border border-slate-100 overflow-hidden hover:shadow-md transition group">
+            <div class="aspect-video bg-slate-100 relative overflow-hidden">
+                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <a href="${video.link}" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+                    <i class="fas fa-play-circle text-5xl text-white drop-shadow-lg transform scale-90 group-hover:scale-100 transition"></i>
+                </a>
+            </div>
+            <div class="p-4">
+                <div class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                    <i class="far fa-calendar"></i>
+                    ${new Date(video.published).toLocaleDateString('fr-FR')}
                 </div>
-            </td>
-            <td class="px-6 py-4 font-medium text-slate-800">
-                ${video.title}
-            </td>
-            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick="openVideoPreview('${video.id}')" class="bg-white border border-slate-200 hover:border-red-500 text-slate-600 hover:text-red-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
-                    <i class="fab fa-youtube mr-1"></i> Lire
-                </button>
-            </td>
-        </tr>
+                <h3 class="font-bold text-slate-800 line-clamp-2 mb-2 group-hover:text-orange-600 transition">${video.title}</h3>
+                <p class="text-sm text-slate-600 line-clamp-2">${video.description}</p>
+            </div>
+        </div>
     `).join('');
 
     // Update Pagination Controls
-    const infoEl = document.getElementById('video-pagination-info');
-    const prevBtn = document.getElementById('prev-video-page-btn');
-    const nextBtn = document.getElementById('next-video-page-btn');
+    document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} / ${totalPages}`;
+    document.getElementById('prev-video-page-btn').disabled = currentVideoPage === 1;
+    document.getElementById('next-video-page-btn').disabled = currentVideoPage === totalPages;
+}
 
-    if (infoEl) infoEl.textContent = `Page ${currentVideoPage} sur ${totalPages || 1}`;
-    if (prevBtn) prevBtn.disabled = currentVideoPage === 1;
-    if (nextBtn) nextBtn.disabled = currentVideoPage === totalPages || totalPages === 0;
+function renderPodcasts() {
+    const container = document.getElementById('podcasts-container');
+    const countEl = document.getElementById('podcast-count');
+    if (!container) return;
+
+    if (appState.podcasts.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                <i class="fas fa-microphone text-4xl text-slate-300 mb-3"></i>
+                <p class="text-slate-500">Aucun épisode trouvé</p>
+                <p class="text-xs text-slate-400 mt-2">Vérifiez la variable PODCAST_FEED_URL</p>
+            </div>
+        `;
+        if (countEl) countEl.textContent = '0 épisodes';
+        return;
+    }
+
+    if (countEl) countEl.textContent = `${appState.podcasts.length} épisodes`;
+
+    container.innerHTML = appState.podcasts.map(podcast => `
+        <div class="bg-white rounded-lg border border-slate-100 p-4 hover:shadow-md transition flex flex-col md:flex-row gap-6 items-start md:items-center">
+            <div class="flex-1">
+                <div class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                    <i class="far fa-calendar"></i>
+                    ${new Date(podcast.pubDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </div>
+                <h3 class="font-bold text-lg text-slate-800 mb-2 hover:text-orange-600 transition">
+                    <a href="${podcast.link}" target="_blank">${podcast.title}</a>
+                </h3>
+                <p class="text-sm text-slate-600 line-clamp-2 mb-4">${podcast.description.replace(/<[^>]*>/g, '')}</p>
+                
+                <div class="w-full bg-slate-50 rounded-full p-1 border border-slate-200">
+                    <audio controls class="w-full h-8" preload="none">
+                        <source src="${podcast.audioUrl}" type="audio/mpeg">
+                        Votre navigateur ne supporte pas l'élément audio.
+                    </audio>
+                </div>
+            </div>
+            <div class="flex-shrink-0">
+                <a href="${podcast.link}" target="_blank" 
+                   class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-600 hover:text-white transition">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+    `).join('');
 }
 
 function prevVideoPage() {
