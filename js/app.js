@@ -56,7 +56,7 @@ function showView(viewName) {
         'content': 'Gestion des Articles',
         'videos': 'Vidéos YouTube',
         'api-explorer': 'Explorateur d\'API',
-        'builder': 'Webstudio Builder',
+        'builder': 'Frontend Builder',
         'config': 'Configuration',
         'help': 'Aide & Support'
     };

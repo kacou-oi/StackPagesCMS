@@ -50,7 +50,7 @@
             </button>
             <button onclick="showView('builder')"
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
-                <i class="fas fa-paint-brush w-6"></i> Webstudio Builder
+                <i class="fas fa-paint-brush w-6"></i> Frontend Builder
             </button>
             <button onclick="showView('config')"
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
@@ -91,8 +91,8 @@
             <h2 id="page-title" class="text-xl font-semibold text-slate-800">Tableau de bord</h2>
             <div class="flex gap-3">
                 <a id="header-builder-btn" href="#" target="_blank"
-                    class="px-4 py-2 text-sm font-medium text-white hover:text-white transition bg-slate-900 hover:bg-slate-800 border border-slate-900 rounded-lg shadow-sm hover:shadow-md">
-                    <i class="fas fa-paint-brush mr-2"></i>Ouvrir Webstudio
+                    class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-orange-600 transition bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow">
+                    <i class="fas fa-paint-brush mr-2"></i>Visual Builder
                 </a>
             </div>
         </header>
@@ -469,7 +469,7 @@
                             class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
                             <i class="fas fa-paint-brush text-3xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-3">Webstudio Builder</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-3">Éditeur Visuel</h3>
                         <p class="text-slate-600 text-lg leading-relaxed">
                             Utilisez notre éditeur visuel avancé pour personnaliser l'apparence de votre site.
                             L'interface s'ouvrira dans un nouvel onglet pour vous offrir un espace de travail
@@ -496,27 +496,27 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Right Column: Tutorials -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                    <h3 class="font-semibold text-slate-800">Tutoriels Vidéo</h3>
-                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Playlist
-                        YouTube</span>
-                </div>
-                <div class="flex-1 bg-black relative group">
-                    <iframe width="100%" height="100%"
-                        src="https://www.youtube-nocookie.com/embed/videoseries?si=YyePOX9RjcazflwN&amp;list=PL4vVqpngzeT4Bfs_D25xNi_qNMY99R928"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                        class="absolute inset-0 w-full h-full">
-                    </iframe>
+                <!-- Right Column: Tutorials -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h3 class="font-semibold text-slate-800">Tutoriels Vidéo</h3>
+                        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Playlist
+                            YouTube</span>
+                    </div>
+                    <div class="flex-1 bg-black relative group">
+                        <iframe width="100%" height="100%"
+                            src="https://www.youtube-nocookie.com/embed/videoseries?si=YyePOX9RjcazflwN&amp;list=PL4vVqpngzeT4Bfs_D25xNi_qNMY99R928"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                            class="absolute inset-0 w-full h-full">
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
+
 
         <!-- VIEW: HELP -->
         <div id="view-help" class="view-section hidden space-y-6">
