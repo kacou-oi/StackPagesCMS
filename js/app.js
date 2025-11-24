@@ -7,8 +7,8 @@ let config = {};
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
+    await loadConfig(); // load config first
     await loadData();
-    await loadConfig();
     renderDashboard();
     renderContentTable();
     renderVideos();
@@ -90,6 +90,15 @@ async function loadData() {
         document.getElementById('dashboard-site-name').textContent = metadata.siteName || 'StackPages CMS';
         document.getElementById('dashboard-author').textContent = metadata.author || 'Admin';
 
+        // Compute diffHours for feed status (use lastBuildDate if present)
+        const statusEl = document.getElementById('stat-feed-status');
+        let diffHours = 0;
+        if (metadata.lastBuildDate) {
+            const now = new Date();
+            const then = new Date(metadata.lastBuildDate);
+            diffHours = Math.abs(now - then) / 36e5; // milliseconds → hours
+        }
+
         // 2. Posts
         const postsRes = await fetch(`/api/posts${refreshParam}`);
         allPosts = await postsRes.json();
@@ -104,15 +113,18 @@ async function loadData() {
         allVideos = await videoRes.json();
         document.getElementById('stat-total-videos').textContent = allVideos.length;
 
-        if (diffHours < 24) {
-            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500"></span> Actif';
-            statusEl.className = "text-lg font-bold text-green-600 mt-2 flex items-center gap-2";
-        } else if (diffHours < 72) {
-            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-500"></span> Stable';
-            statusEl.className = "text-lg font-bold text-yellow-600 mt-2 flex items-center gap-2";
-        } else {
-            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Inactif';
-            statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
+        // Feed status UI (only if element exists)
+        if (statusEl) {
+            if (diffHours < 24) {
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500"></span> Actif';
+                statusEl.className = "text-lg font-bold text-green-600 mt-2 flex items-center gap-2";
+            } else if (diffHours < 72) {
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-500"></span> Stable';
+                statusEl.className = "text-lg font-bold text-yellow-600 mt-2 flex items-center gap-2";
+            } else {
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Inactif';
+                statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
+            }
         }
     } catch (e) {
         console.error("Erreur de chargement:", e);
