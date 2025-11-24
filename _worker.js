@@ -416,7 +416,20 @@ export default {
                 // On peut ajuster les headers si nécessaire (ex: Host)
                 // proxyReq.headers.set("Host", new URL(frontendUrl).host); 
 
-                return await fetch(proxyReq);
+                const response = await fetch(proxyReq);
+
+                // Si la réponse est du HTML, on réécrit les liens
+                const contentType = response.headers.get("Content-Type");
+                if (contentType && contentType.includes("text/html")) {
+                    return new HTMLRewriter()
+                        .on("a", new AttributeRewriter("href", frontendUrl))
+                        .on("link", new AttributeRewriter("href", frontendUrl))
+                        .on("img", new AttributeRewriter("src", frontendUrl))
+                        .on("script", new AttributeRewriter("src", frontendUrl))
+                        .transform(response);
+                }
+
+                return response;
             } catch (e) {
                 return new Response("Erreur Proxy Frontend: " + e.message, { status: 502 });
             }
@@ -429,3 +442,24 @@ export default {
         }
     }
 };
+
+// Classe pour réécrire les attributs (href, src)
+class AttributeRewriter {
+    constructor(attributeName, frontendUrl) {
+        this.attributeName = attributeName;
+        this.frontendUrl = frontendUrl;
+    }
+
+    element(element) {
+        const attribute = element.getAttribute(this.attributeName);
+        if (attribute) {
+            // Si l'attribut commence par l'URL du frontend, on le remplace par "/"
+            // Ou si c'est un chemin absolu (commençant par /), on le laisse tel quel (car il sera relatif au domaine actuel)
+            // Le but est surtout d'éviter que des liens absolus vers le domaine de build ne fuient.
+
+            if (attribute.startsWith(this.frontendUrl)) {
+                element.setAttribute(this.attributeName, attribute.replace(this.frontendUrl, "/"));
+            }
+        }
+    }
+}
