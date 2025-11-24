@@ -125,30 +125,36 @@ async function loadData() {
 async function loadConfig() {
     try {
         const authKey = localStorage.getItem('stackpages_auth');
-        const res = await fetch('/api/config', {
+        // Fetch config (environment variables)
+        const configRes = await fetch('/api/config', {
             headers: { 'X-Auth-Key': authKey }
         });
-        config = await res.json();
-
-        // Check if setup is needed (Show Warning instead of blocking)
-        if (!config.substackRssUrl) {
-            document.getElementById('config-warning')?.classList.remove('hidden');
-        } else {
-            document.getElementById('config-warning')?.classList.add('hidden');
-        }
-
-        // Populate Config Form (Read-Only)
-        document.getElementById('conf-siteName').value = config.siteName || '';
-        document.getElementById('conf-author').value = config.author || '';
+        const config = await configRes.json();
+        // Fetch metadata from Substack RSS (site name, author, SEO if any)
+        const metaRes = await fetch('/api/metadata');
+        const metadata = await metaRes.json();
+        // Populate Config Form (Read-Only) with combined data
+        document.getElementById('conf-siteName').value = config.siteName || metadata.siteName || '';
+        document.getElementById('conf-author').value = config.author || metadata.author || '';
         document.getElementById('conf-substack').value = config.substackRssUrl || '';
         document.getElementById('conf-youtube').value = config.youtubeRssUrl || '';
-
         if (config.seo) {
             document.getElementById('conf-metaTitle').value = config.seo.metaTitle || '';
             document.getElementById('conf-metaDesc').value = config.seo.metaDescription || '';
             document.getElementById('conf-metaKeywords').value = config.seo.metaKeywords || '';
         }
-
+        // If metadata provides SEO overrides, use them when config lacks values
+        if (metadata.seo) {
+            if (!config.seo?.metaTitle) document.getElementById('conf-metaTitle').value = metadata.seo.metaTitle || '';
+            if (!config.seo?.metaDescription) document.getElementById('conf-metaDesc').value = metadata.seo.metaDescription || '';
+            if (!config.seo?.metaKeywords) document.getElementById('conf-metaKeywords').value = metadata.seo.metaKeywords || '';
+        }
+        // Show warning if Substack URL missing
+        if (!config.substackRssUrl) {
+            document.getElementById('config-warning')?.classList.remove('hidden');
+        } else {
+            document.getElementById('config-warning')?.classList.add('hidden');
+        }
     } catch (e) {
         console.error("Erreur chargement config:", e);
     }
