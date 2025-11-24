@@ -126,6 +126,12 @@ async function loadData() {
                 statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
             }
         }
+
+        // Render UI with new data
+        renderDashboard();
+        renderContentTable();
+        renderVideos();
+
     } catch (e) {
         console.error("Erreur de chargement:", e);
         // alert("Impossible de charger les données de l'API.");
