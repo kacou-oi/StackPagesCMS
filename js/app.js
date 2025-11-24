@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderDashboard();
     renderContentTable();
     renderVideos();
+
+    // Video Search
+    document.getElementById('search-videos')?.addEventListener('input', () => {
+        currentVideoPage = 1;
+        renderVideos();
+    });
 });
 
 // Auth Check
@@ -283,6 +289,10 @@ function nextPage() {
     }
 }
 
+// Video Pagination State
+let currentVideoPage = 1;
+const videosPerPage = 10;
+
 // Search Listener
 function renderVideos() {
     const tbody = document.getElementById('videos-table');
@@ -296,29 +306,64 @@ function renderVideos() {
         return;
     }
 
+    const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
+    const filtered = allVideos.filter(v => v.title.toLowerCase().includes(search));
+
+    // Pagination Logic
+    const totalPages = Math.ceil(filtered.length / videosPerPage);
+    if (currentVideoPage > totalPages) currentVideoPage = 1;
+
+    const start = (currentVideoPage - 1) * videosPerPage;
+    const end = start + videosPerPage;
+    const paginatedVideos = filtered.slice(start, end);
+
     emptyMsg?.classList.add('hidden');
-    tbody.innerHTML = allVideos.map(video => `
+    tbody.innerHTML = paginatedVideos.map(video => `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4 w-32">
-                <div class="w-24 h-14 rounded bg-slate-200 overflow-hidden relative">
+                <div class="w-24 h-16 rounded bg-slate-200 overflow-hidden relative group-hover:ring-2 ring-orange-500 transition-all">
                     <img src="${video.thumbnail}" class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
-                        <i class="fas fa-play text-white text-xs opacity-80"></i>
-                    </div>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition"></div>
                 </div>
             </td>
             <td class="px-6 py-4 font-medium text-slate-800">
                 ${video.title}
-                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
             </td>
             <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
             <td class="px-6 py-4 text-right">
                 <button onclick="openVideoPreview('${video.id}')" class="bg-white border border-slate-200 hover:border-red-500 text-slate-600 hover:text-red-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
-                    <i class="fas fa-play mr-1"></i> Lire
+                    <i class="fab fa-youtube mr-1"></i> Lire
                 </button>
             </td>
         </tr>
     `).join('');
+
+    // Update Pagination Controls
+    const infoEl = document.getElementById('video-pagination-info');
+    const prevBtn = document.getElementById('prev-video-page-btn');
+    const nextBtn = document.getElementById('next-video-page-btn');
+
+    if (infoEl) infoEl.textContent = `Page ${currentVideoPage} sur ${totalPages || 1}`;
+    if (prevBtn) prevBtn.disabled = currentVideoPage === 1;
+    if (nextBtn) nextBtn.disabled = currentVideoPage === totalPages || totalPages === 0;
+}
+
+function prevVideoPage() {
+    if (currentVideoPage > 1) {
+        currentVideoPage--;
+        renderVideos();
+    }
+}
+
+function nextVideoPage() {
+    const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
+    const filtered = allVideos.filter(v => v.title.toLowerCase().includes(search));
+    const totalPages = Math.ceil(filtered.length / videosPerPage);
+
+    if (currentVideoPage < totalPages) {
+        currentVideoPage++;
+        renderVideos();
+    }
 }
 
 // Search Listener

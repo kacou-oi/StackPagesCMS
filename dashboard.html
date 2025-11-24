@@ -237,10 +237,17 @@
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                         <h3 class="font-semibold text-slate-800">Dernières Vidéos</h3>
-                        <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
-                            title="Actualiser">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <input type="text" id="search-videos" placeholder="Rechercher..."
+                                    class="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 w-64">
+                                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                            </div>
+                            <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                                title="Actualiser">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -250,7 +257,7 @@
                                     <th class="px-6 py-3">Miniature</th>
                                     <th class="px-6 py-3">Titre</th>
                                     <th class="px-6 py-3">Date</th>
-                                    <th class="px-6 py-3 text-right">Actions</th>
+                                    <th class="px-6 py-3 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="videos-table" class="divide-y divide-slate-100">
@@ -259,176 +266,197 @@
                         </table>
                     </div>
 
-                    <div id="no-videos-message" class="hidden text-center py-12 text-slate-500">
-                        <i class="fab fa-youtube text-4xl mb-3 text-slate-300"></i>
-                        <p>Aucune vidéo trouvée. Configurez l'URL du flux RSS YouTube dans les paramètres.</p>
+                    <!-- Pagination Controls -->
+                    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
+                        <span id="video-pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                        <div class="flex gap-2">
+                            <button id="prev-video-page-btn" onclick="prevVideoPage()"
+                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                            <button id="next-video-page-btn" onclick="nextVideoPage()"
+                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+                        </div>
+                    </div>
+                    <th class="px-6 py-3">Titre</th>
+                    <th class="px-6 py-3">Date</th>
+                    <th class="px-6 py-3 text-right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="videos-table" class="divide-y divide-slate-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                    </table>
+                </div>
+
+                <div id="no-videos-message" class="hidden text-center py-12 text-slate-500">
+                    <i class="fab fa-youtube text-4xl mb-3 text-slate-300"></i>
+                    <p>Aucune vidéo trouvée. Configurez l'URL du flux RSS YouTube dans les paramètres.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: API EXPLORER -->
+        <div id="view-api-explorer" class="view-section hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Column: Controls -->
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/metadata</code>
+                            <button onclick="testApi('/api/metadata')"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/posts</code>
+                            <button onclick="testApi('/api/posts')"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/videos</code>
+                            <button onclick="testApi('/api/videos')"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <span
+                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                            <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
+                            <input type="text" id="api-slug-input" placeholder="slug-article"
+                                class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                            <button onclick="testApiSlug()"
+                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                        </div>
+
+                        <button onclick="clearApiOutput()"
+                            class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                            <i class="fas fa-trash-alt"></i> Effacer la console
+                        </button>
+                    </div>
+
+                    <!-- Right Column: Response -->
+                    <div class="flex flex-col">
+                        <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
+                        <pre id="api-output"
+                            class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[300px] overflow-auto">En attente...</pre>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- VIEW: API EXPLORER -->
-            <div id="view-api-explorer" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-                    <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
+        <!-- VIEW: CONFIGURATION -->
+        <div id="view-config" class="view-section hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
+                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Paramètres du Site</h3>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Left Column: Controls -->
+                <form id="config-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
+                            <input type="text" id="conf-siteName"
+                                class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
+                            <input type="text" id="conf-author"
+                                class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
+                        <input type="url" id="conf-substack"
+                            class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                        <p class="text-xs text-slate-500 mt-1">L'URL de votre flux RSS (ex:
+                            https://blog.example.com/feed)</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS YouTube</label>
+                        <input type="url" id="conf-youtube"
+                            class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                        <p class="text-xs text-slate-500 mt-1">L'URL du flux RSS de votre chaîne (ex:
+                            https://www.youtube.com/feeds/videos.xml?channel_id=...)</p>
+                    </div>
+
+
+                    <div class="border-t pt-4">
+                        <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
                         <div class="space-y-4">
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/metadata</code>
-                                <button onclick="testApi('/api/metadata')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
+                                <input type="text" id="conf-metaTitle"
+                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/posts</code>
-                                <button onclick="testApi('/api/posts')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Description
+                                    Meta</label>
+                                <textarea id="conf-metaDesc" rows="3"
+                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/videos</code>
-                                <button onclick="testApi('/api/videos')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
+                                <input type="text" id="conf-metaKeywords"
+                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="blog, tech, news...">
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
-                                <input type="text" id="api-slug-input" placeholder="slug-article"
-                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
-                                <button onclick="testApiSlug()"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                            </div>
-
-                            <button onclick="clearApiOutput()"
-                                class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
-                                <i class="fas fa-trash-alt"></i> Effacer la console
-                            </button>
-                        </div>
-
-                        <!-- Right Column: Response -->
-                        <div class="flex flex-col">
-                            <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
-                            <pre id="api-output"
-                                class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[300px] overflow-auto">En attente...</pre>
                         </div>
                     </div>
-                </div>
+
+                    <div class="border-t pt-4">
+                        <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
+                        <button type="button" onclick="clearCache()"
+                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                            <i class="fas fa-broom"></i> Vider le Cache
+                        </button>
+                        <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4">
+                        <div id="config-status" class="text-sm font-medium"></div>
+                        <button type="submit"
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-orange-500/30">
+                            Sauvegarder
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <!-- VIEW: CONFIGURATION -->
-            <div id="view-config" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Paramètres du Site</h3>
+        <!-- VIEW: HELP -->
+        <div id="view-help" class="view-section hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
+                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
 
-                    <form id="config-form" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
-                                <input type="text" id="conf-siteName"
-                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
-                                <input type="text" id="conf-author"
-                                    class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                            </div>
-                        </div>
+                <h4>1. Tableau de bord</h4>
+                <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
+                    synchronisation avec Substack.</p>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
-                            <input type="url" id="conf-substack"
-                                class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                            <p class="text-xs text-slate-500 mt-1">L'URL de votre flux RSS (ex:
-                                https://blog.example.com/feed)</p>
-                        </div>
+                <h4>2. Gestion des Articles</h4>
+                <p>Parcourez tous les articles récupérés depuis votre flux RSS. Vous pouvez rechercher des articles
+                    par titre et voir un aperçu complet du contenu tel qu'il apparaîtra sur votre site.</p>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS YouTube</label>
-                            <input type="url" id="conf-youtube"
-                                class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                            <p class="text-xs text-slate-500 mt-1">L'URL du flux RSS de votre chaîne (ex:
-                                https://www.youtube.com/feeds/videos.xml?channel_id=...)</p>
-                        </div>
+                <h4>3. Configuration</h4>
+                <p>Modifiez les paramètres essentiels de votre site sans toucher au code :</p>
+                <ul>
+                    <li><strong>Nom du Site & Auteur</strong> : Personnalisez l'identité de votre blog.</li>
+                    <li><strong>Flux RSS</strong> : Changez l'URL source si vous migrez ou changez de newsletter.
+                    </li>
+                    <li><strong>SEO</strong> : Optimisez vos titres, descriptions et mots-clés pour les moteurs de
+                        recherche.</li>
+                </ul>
 
-
-                        <div class="border-t pt-4">
-                            <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
-                                    <input type="text" id="conf-metaTitle"
-                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Description
-                                        Meta</label>
-                                    <textarea id="conf-metaDesc" rows="3"
-                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
-                                    <input type="text" id="conf-metaKeywords"
-                                        class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                                        placeholder="blog, tech, news...">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border-t pt-4">
-                            <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
-                            <button type="button" onclick="clearCache()"
-                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
-                                <i class="fas fa-broom"></i> Vider le Cache
-                            </button>
-                            <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
-                        </div>
-
-                        <div class="flex items-center justify-between pt-4">
-                            <div id="config-status" class="text-sm font-medium"></div>
-                            <button type="submit"
-                                class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition shadow-lg shadow-orange-500/30">
-                                Sauvegarder
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <h4>4. Maintenance</h4>
+                <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
+                    pas vos derniers articles apparaître immédiatement. Le système met en cache les données pour la
+                    performance.</p>
             </div>
-
-            <!-- VIEW: HELP -->
-            <div id="view-help" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
-                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
-
-                    <h4>1. Tableau de bord</h4>
-                    <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
-                        synchronisation avec Substack.</p>
-
-                    <h4>2. Gestion des Articles</h4>
-                    <p>Parcourez tous les articles récupérés depuis votre flux RSS. Vous pouvez rechercher des articles
-                        par titre et voir un aperçu complet du contenu tel qu'il apparaîtra sur votre site.</p>
-
-                    <h4>3. Configuration</h4>
-                    <p>Modifiez les paramètres essentiels de votre site sans toucher au code :</p>
-                    <ul>
-                        <li><strong>Nom du Site & Auteur</strong> : Personnalisez l'identité de votre blog.</li>
-                        <li><strong>Flux RSS</strong> : Changez l'URL source si vous migrez ou changez de newsletter.
-                        </li>
-                        <li><strong>SEO</strong> : Optimisez vos titres, descriptions et mots-clés pour les moteurs de
-                            recherche.</li>
-                    </ul>
-
-                    <h4>4. Maintenance</h4>
-                    <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
-                        pas vos derniers articles apparaître immédiatement. Le système met en cache les données pour la
-                        performance.</p>
-                </div>
-            </div>
+        </div>
 
         </div>
     </main>
