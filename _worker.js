@@ -213,7 +213,8 @@ export default {
             author: "Admin",
             substackRssUrl: env.SUBSTACK_FEED_URL,
             youtubeRssUrl: "",
-            frontendUrl: "https://rssblog-7v64r.wstd.io/", // Default Frontend URL
+            substackRssUrl: env.SUBSTACK_FEED_URL,
+            youtubeRssUrl: "",
             seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
         };
 
@@ -404,37 +405,6 @@ export default {
             // Pour ce MVP, on fait confiance au client + protection API.
         }
 
-        // --- REVERSE PROXY FRONTEND ---
-        // Si ce n'est pas une route API ni une route Admin, on proxy vers le frontend
-        if (!path.startsWith("/api") && !path.startsWith("/admin")) {
-            const frontendUrl = config.frontendUrl || "https://rssblog-7v64r.wstd.io/";
-            const targetUrl = new URL(path, frontendUrl).toString();
-
-            try {
-                // On clone la requête pour ne pas modifier l'originale
-                const proxyReq = new Request(targetUrl, req);
-                // On peut ajuster les headers si nécessaire (ex: Host)
-                // proxyReq.headers.set("Host", new URL(frontendUrl).host); 
-
-                const response = await fetch(proxyReq);
-
-                // Si la réponse est du HTML, on réécrit les liens
-                const contentType = response.headers.get("Content-Type");
-                if (contentType && contentType.includes("text/html")) {
-                    return new HTMLRewriter()
-                        .on("a", new AttributeRewriter("href", frontendUrl))
-                        .on("link", new AttributeRewriter("href", frontendUrl))
-                        .on("img", new AttributeRewriter("src", frontendUrl))
-                        .on("script", new AttributeRewriter("src", frontendUrl))
-                        .transform(response);
-                }
-
-                return response;
-            } catch (e) {
-                return new Response("Erreur Proxy Frontend: " + e.message, { status: 502 });
-            }
-        }
-
         try {
             return await env.ASSETS.fetch(req);
         } catch (e) {
@@ -442,24 +412,3 @@ export default {
         }
     }
 };
-
-// Classe pour réécrire les attributs (href, src)
-class AttributeRewriter {
-    constructor(attributeName, frontendUrl) {
-        this.attributeName = attributeName;
-        this.frontendUrl = frontendUrl;
-    }
-
-    element(element) {
-        const attribute = element.getAttribute(this.attributeName);
-        if (attribute) {
-            // Si l'attribut commence par l'URL du frontend, on le remplace par "/"
-            // Ou si c'est un chemin absolu (commençant par /), on le laisse tel quel (car il sera relatif au domaine actuel)
-            // Le but est surtout d'éviter que des liens absolus vers le domaine de build ne fuient.
-
-            if (attribute.startsWith(this.frontendUrl)) {
-                element.setAttribute(this.attributeName, attribute.replace(this.frontendUrl, "/"));
-            }
-        }
-    }
-}
