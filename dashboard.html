@@ -260,43 +260,48 @@
             <div id="view-api-explorer" class="view-section hidden space-y-6">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
                     <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
-                    <div class="space-y-4">
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/metadata</code>
-                            <button onclick="testApi('/api/metadata')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/videos</code>
-                            <button onclick="testApi('/api/videos')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/posts</code>
-                            <button onclick="testApi('/api/posts')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
-                            <input type="text" id="api-slug-input" placeholder="slug-article"
-                                class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
-                            <button onclick="testApiSlug()"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                    </div>
 
-                    <div class="mt-6">
-                        <h4 class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
-                        <pre id="api-output"
-                            class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-64 overflow-auto">En attente...</pre>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left Column: Controls -->
+                        <div class="space-y-4">
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/metadata</code>
+                                <button onclick="testApi('/api/metadata')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/posts</code>
+                                <button onclick="testApi('/api/posts')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/videos</code>
+                                <button onclick="testApi('/api/videos')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
+                                <input type="text" id="api-slug-input" placeholder="slug-article"
+                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                <button onclick="testApiSlug()"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Response -->
+                        <div class="flex flex-col h-full">
+                            <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
+                            <pre id="api-output"
+                                class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono flex-1 overflow-auto min-h-[300px]">En attente...</pre>
+                        </div>
                     </div>
                 </div>
             </div>

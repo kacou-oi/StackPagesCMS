@@ -354,7 +354,11 @@ async function testApiSlug() {
 
 async function testApi(endpoint) {
     const output = document.getElementById('api-output');
+    const title = document.getElementById('api-response-title');
+
+    if (title) title.textContent = `Réponse : ${endpoint}`;
     output.textContent = "Chargement...";
+
     try {
         const res = await fetch(endpoint);
         const data = await res.json();
