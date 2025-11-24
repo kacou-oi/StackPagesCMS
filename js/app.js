@@ -85,6 +85,7 @@ async function loadData() {
 
         // Update Stats
         document.getElementById('stat-total-posts').textContent = allPosts.length;
+        document.getElementById('stat-total-videos').textContent = allVideos.length;
         if (metadata.lastBuildDate) {
             const date = new Date(metadata.lastBuildDate);
             document.getElementById('stat-last-update').textContent = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
