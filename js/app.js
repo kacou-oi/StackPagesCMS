@@ -155,21 +155,13 @@ async function loadConfig() {
     }
 }
 
-// Config Saving
-document.getElementById('config-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const status = document.getElementById('config-status');
-    status.textContent = "Sauvegarde...";
-    status.className = "text-sm font-medium text-slate-500";
+// Config Saving (Disabled)
+// La configuration est gérée par les variables d'environnement.
 
-    const newConfig = {
-        // Config Saving (Disabled)
-        // La configuration est gérée par les variables d'environnement.
-
-        // Renderers
-        function renderDashboard() {
-            // Recent Posts
-            const postsTbody = document.getElementById('dashboard-recent-posts');
+// Renderers
+function renderDashboard() {
+    // Recent Posts
+    const postsTbody = document.getElementById('dashboard-recent-posts');
     if (postsTbody) {
         postsTbody.innerHTML = allPosts.slice(0, 5).map(post => `
             <tr class="hover:bg-slate-50 transition">
