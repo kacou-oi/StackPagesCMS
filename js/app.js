@@ -114,13 +114,12 @@ async function loadData() {
             statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Inactif';
             statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
         }
-    }
-
     } catch (e) {
-    console.error("Erreur de chargement:", e);
-    // alert("Impossible de charger les données de l'API.");
+        console.error("Erreur de chargement:", e);
+        // alert("Impossible de charger les données de l'API.");
+    }
 }
-}
+
 
 // Config Loading
 async function loadConfig() {
