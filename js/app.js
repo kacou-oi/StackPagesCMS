@@ -235,33 +235,39 @@ function renderContentTable() {
 
 // Search Listener
 function renderVideos() {
-    const grid = document.getElementById('videos-grid');
+    const tbody = document.getElementById('videos-table');
     const emptyMsg = document.getElementById('no-videos-message');
 
-    if (!grid) return;
+    if (!tbody) return;
 
     if (!allVideos || allVideos.length === 0) {
-        grid.innerHTML = '';
+        tbody.innerHTML = '';
         emptyMsg?.classList.remove('hidden');
         return;
     }
 
     emptyMsg?.classList.add('hidden');
-    grid.innerHTML = allVideos.map(video => `
-        <a href="${video.link}" target="_blank" class="group block bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-md transition">
-            <div class="aspect-video bg-slate-100 relative overflow-hidden">
-                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition flex items-center justify-center">
-                    <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center text-red-600 opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition duration-300 shadow-lg">
-                        <i class="fas fa-play pl-1"></i>
+    tbody.innerHTML = allVideos.map(video => `
+        <tr class="hover:bg-slate-50 transition group">
+            <td class="px-6 py-4 w-32">
+                <div class="w-24 h-14 rounded bg-slate-200 overflow-hidden relative">
+                    <img src="${video.thumbnail}" class="w-full h-full object-cover" />
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition">
+                        <i class="fas fa-play text-white text-xs opacity-80"></i>
                     </div>
                 </div>
-            </div>
-            <div class="p-4">
-                <h4 class="font-medium text-slate-800 line-clamp-2 group-hover:text-orange-600 transition">${video.title}</h4>
-                <p class="text-xs text-slate-500 mt-2">${new Date(video.published).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-            </div>
-        </a>
+            </td>
+            <td class="px-6 py-4 font-medium text-slate-800">
+                ${video.title}
+                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
+            </td>
+            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
+            <td class="px-6 py-4 text-right">
+                <button onclick="openVideoPreview('${video.id}')" class="bg-white border border-slate-200 hover:border-red-500 text-slate-600 hover:text-red-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                    <i class="fas fa-play mr-1"></i> Lire
+                </button>
+            </td>
+        </tr>
     `).join('');
 }
 
@@ -282,6 +288,42 @@ function openPreview(slug) {
 
 function closeModal() {
     document.getElementById('preview-modal').classList.add('hidden');
+    // Stop video if playing
+    const content = document.getElementById('modal-content');
+    content.innerHTML = '';
+}
+
+function openVideoPreview(videoId) {
+    const video = allVideos.find(v => v.id === videoId);
+    if (!video) return;
+
+    document.getElementById('modal-title').textContent = video.title;
+
+    // Embed YouTube Video
+    const embedHtml = `
+        <div class="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
+            <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="mt-6 prose prose-orange max-w-none">
+            <p>${video.description || ''}</p>
+            <a href="${video.link}" target="_blank" class="text-sm text-slate-500 hover:text-orange-500 flex items-center gap-2 mt-4">
+                <i class="fab fa-youtube"></i> Regarder sur YouTube
+            </a>
+        </div>
+    `;
+
+    document.getElementById('modal-content').innerHTML = embedHtml;
+
+    const modal = document.getElementById('preview-modal');
+    modal.classList.remove('hidden');
 }
 
 // API Tester
