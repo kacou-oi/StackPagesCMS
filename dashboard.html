@@ -48,6 +48,10 @@
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
                 <i class="fas fa-terminal w-6"></i> API Explorer
             </button>
+            <button onclick="showView('builder')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-paint-brush w-6"></i> Frontend Builder
+            </button>
             <button onclick="showView('config')"
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
                 <i class="fas fa-cog w-6"></i> Configuration
@@ -445,6 +449,26 @@
                         <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- VIEW: BUILDER -->
+        <div id="view-builder" class="view-section hidden space-y-6">
+            <div
+                class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[calc(100vh-12rem)]">
+                <div class="px-6 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <h3 class="font-semibold text-slate-800">Éditeur Visuel</h3>
+                    <a href="https://p-12e07a9d-76d9-4b9f-9ce9-94eeff0e1f00.apps.webstudio.is/?authToken=c75ba98e-e76b-40be-84a7-d6c435f9e324&mode=design"
+                        target="_blank"
+                        class="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-2 transition">
+                        <i class="fas fa-external-link-alt"></i> Ouvrir dans un nouvel onglet
+                    </a>
+                </div>
+                <div class="flex-1 bg-slate-200 relative">
+                    <iframe
+                        src="https://p-12e07a9d-76d9-4b9f-9ce9-94eeff0e1f00.apps.webstudio.is/?authToken=c75ba98e-e76b-40be-84a7-d6c435f9e324&mode=design"
+                        class="w-full h-full border-0" allow="clipboard-write; clipboard-read; fullscreen"></iframe>
+                </div>
             </div>
         </div>
 
