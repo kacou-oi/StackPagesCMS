@@ -310,54 +310,57 @@
 
         <!-- VIEW: API EXPLORER -->
         <div id="view-api-explorer" class="view-section hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-                <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                    <h3 class="font-semibold text-slate-800">Tester les Endpoints</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left Column: Controls -->
+                        <div class="space-y-4">
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/metadata</code>
+                                <button onclick="testApi('/api/metadata')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/posts</code>
+                                <button onclick="testApi('/api/posts')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/videos</code>
+                                <button onclick="testApi('/api/videos')"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
+                                <input type="text" id="api-slug-input" placeholder="slug-article"
+                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                <button onclick="testApiSlug()"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Left Column: Controls -->
-                    <div class="space-y-4">
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/metadata</code>
-                            <button onclick="testApi('/api/metadata')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/posts</code>
-                            <button onclick="testApi('/api/posts')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/videos</code>
-                            <button onclick="testApi('/api/videos')"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
-                        </div>
-                        <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
-                            <span
-                                class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                            <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
-                            <input type="text" id="api-slug-input" placeholder="slug-article"
-                                class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
-                            <button onclick="testApiSlug()"
-                                class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            <button onclick="clearApiOutput()"
+                                class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                <i class="fas fa-trash-alt"></i> Effacer la console
+                            </button>
                         </div>
 
-                        <button onclick="clearApiOutput()"
-                            class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
-                            <i class="fas fa-trash-alt"></i> Effacer la console
-                        </button>
-                    </div>
-
-                    <!-- Right Column: Response -->
-                    <div class="flex flex-col">
-                        <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
-                        <pre id="api-output"
-                            class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[300px] overflow-auto">En attente...</pre>
+                        <!-- Right Column: Response -->
+                        <div class="flex flex-col">
+                            <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
+                            <pre id="api-output"
+                                class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[300px] overflow-auto">En attente...</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -365,90 +368,96 @@
 
         <!-- VIEW: CONFIGURATION -->
         <div id="view-config" class="view-section hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
-                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Paramètres du Site</h3>
-
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r shadow-sm">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800">Configuration via Variables d'Environnement
-                            </h3>
-                            <div class="mt-1 text-sm text-blue-700">
-                                <p>La configuration de ce site est gérée directement via les variables d'environnement
-                                    de votre hébergeur (ex: Cloudflare Dashboard ou wrangler.toml).</p>
-                                <p class="mt-2">Les valeurs ci-dessous sont affichées à titre informatif et ne peuvent
-                                    pas être modifiées ici.</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                    <h3 class="font-semibold text-slate-800">Paramètres du Site</h3>
                 </div>
-
-                <form id="config-form" class="space-y-6 opacity-75">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
-                            <input type="text" id="conf-siteName" readonly
-                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                <div class="p-6">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r shadow-sm">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">Configuration via Variables
+                                    d'Environnement
+                                </h3>
+                                <div class="mt-1 text-sm text-blue-700">
+                                    <p>La configuration de ce site est gérée directement via les variables
+                                        d'environnement
+                                        de votre hébergeur (ex: Cloudflare Dashboard ou wrangler.toml).</p>
+                                    <p class="mt-2">Les valeurs ci-dessous sont affichées à titre informatif et ne
+                                        peuvent
+                                        pas être modifiées ici.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
-                            <input type="text" id="conf-author" readonly
-                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
-                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
-                        <input type="url" id="conf-substack" readonly
-                            class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
-                        <p class="text-xs text-slate-500 mt-1">Variable: <code>SUBSTACK_FEED_URL</code></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS YouTube</label>
-                        <input type="url" id="conf-youtube" readonly
-                            class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
-                        <p class="text-xs text-slate-500 mt-1">Variable: <code>YOUTUBE_FEED_URL</code></p>
-                    </div>
-
-
-                    <div class="border-t pt-4">
-                        <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
-                        <div class="space-y-4">
+                    <form id="config-form" class="space-y-6 opacity-75">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
-                                <input type="text" id="conf-metaTitle" readonly
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
+                                <input type="text" id="conf-siteName" readonly
                                     class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
-                                <p class="text-xs text-slate-500 mt-1">Variable: <code>META_TITLE</code></p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Description
-                                    Meta</label>
-                                <textarea id="conf-metaDesc" rows="3" readonly
-                                    class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed"></textarea>
-                                <p class="text-xs text-slate-500 mt-1">Variable: <code>META_DESCRIPTION</code></p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
-                                <input type="text" id="conf-metaKeywords" readonly
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
+                                <input type="text" id="conf-author" readonly
                                     class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
-                                <p class="text-xs text-slate-500 mt-1">Variable: <code>META_KEYWORDS</code></p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="border-t pt-4">
-                        <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
-                        <button type="button" onclick="clearCache()"
-                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
-                            <i class="fas fa-broom"></i> Vider le Cache
-                        </button>
-                        <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
-                    </div>
-                </form>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
+                            <input type="url" id="conf-substack" readonly
+                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                            <p class="text-xs text-slate-500 mt-1">Variable: <code>SUBSTACK_FEED_URL</code></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS YouTube</label>
+                            <input type="url" id="conf-youtube" readonly
+                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                            <p class="text-xs text-slate-500 mt-1">Variable: <code>YOUTUBE_FEED_URL</code></p>
+                        </div>
+
+
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
+                                    <input type="text" id="conf-metaTitle" readonly
+                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                    <p class="text-xs text-slate-500 mt-1">Variable: <code>META_TITLE</code></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Description
+                                        Meta</label>
+                                    <textarea id="conf-metaDesc" rows="3" readonly
+                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed"></textarea>
+                                    <p class="text-xs text-slate-500 mt-1">Variable: <code>META_DESCRIPTION</code></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
+                                    <input type="text" id="conf-metaKeywords" readonly
+                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                    <p class="text-xs text-slate-500 mt-1">Variable: <code>META_KEYWORDS</code></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
+                            <button type="button" onclick="clearCache()"
+                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                                <i class="fas fa-broom"></i> Vider le Cache
+                            </button>
+                            <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -456,35 +465,40 @@
         <div id="view-builder" class="view-section hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-6 h-[calc(100vh-12rem)]">
                 <!-- Left Column: Instructions & Button -->
-                <div
-                    class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center items-start space-y-8">
-                    <div>
-                        <div
-                            class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
-                            <i class="fas fa-paint-brush text-3xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-3">Constructeur Frontend</h3>
-                        <p class="text-slate-600 text-lg leading-relaxed">
-                            Utilisez notre éditeur visuel avancé pour personnaliser l'apparence de votre site.
-                            L'interface s'ouvrira dans un nouvel onglet pour vous offrir un espace de travail optimal.
-                        </p>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                        <h3 class="font-semibold text-slate-800">Constructeur Frontend</h3>
                     </div>
-
-                    <a id="builder-tab-btn" href="#" target="_blank"
-                        class="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                        <span>Ouvrir le Builder</span>
-                        <i class="fas fa-external-link-alt"></i>
-                    </a>
-
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r w-full">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-blue-500"></i>
+                    <div class="p-6 flex flex-col justify-center items-start space-y-8 flex-1">
+                        <div>
+                            <div
+                                class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
+                                <i class="fas fa-paint-brush text-3xl"></i>
                             </div>
-                            <div class="ml-3">
-                                <p class="text-sm text-blue-700">
-                                    Regardez les tutoriels à droite pour apprendre à maîtriser l'outil.
-                                </p>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3">Éditeur Visuel</h3>
+                            <p class="text-slate-600 text-lg leading-relaxed">
+                                Utilisez notre éditeur visuel avancé pour personnaliser l'apparence de votre site.
+                                L'interface s'ouvrira dans un nouvel onglet pour vous offrir un espace de travail
+                                optimal.
+                            </p>
+                        </div>
+
+                        <a id="builder-tab-btn" href="#" target="_blank"
+                            class="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <span>Ouvrir le Builder</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r w-full">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        Regardez les tutoriels à droite pour apprendre à maîtriser l'outil.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -512,34 +526,38 @@
 
         <!-- VIEW: HELP -->
         <div id="view-help" class="view-section hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
-                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                    <h3 class="font-semibold text-slate-800">Guide d'utilisation</h3>
+                </div>
+                <div class="p-6 prose prose-orange max-w-none">
+                    <h4>1. Tableau de bord</h4>
+                    <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
+                        synchronisation avec Substack.</p>
 
-                <h4>1. Tableau de bord</h4>
-                <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
-                    synchronisation avec Substack.</p>
+                    <h4>2. Gestion des Articles & Vidéos</h4>
+                    <p>Parcourez tous les articles récupérés depuis votre flux RSS Substack et vos vidéos YouTube. Vous
+                        pouvez rechercher du contenu
+                        par titre et voir un aperçu complet tel qu'il apparaîtra sur votre site.</p>
 
-                <h4>2. Gestion des Articles & Vidéos</h4>
-                <p>Parcourez tous les articles récupérés depuis votre flux RSS Substack et vos vidéos YouTube. Vous
-                    pouvez rechercher du contenu
-                    par titre et voir un aperçu complet tel qu'il apparaîtra sur votre site.</p>
+                    <h4>3. Configuration</h4>
+                    <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
+                        Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état
+                        actuel
+                        de ces variables :</p>
+                    <ul>
+                        <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
+                        <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
+                        <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
+                    </ul>
+                    <p>Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de votre
+                        déploiement Cloudflare.</p>
 
-                <h4>3. Configuration</h4>
-                <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
-                    Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état actuel
-                    de ces variables :</p>
-                <ul>
-                    <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
-                    <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
-                    <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
-                </ul>
-                <p>Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de votre
-                    déploiement Cloudflare.</p>
-
-                <h4>4. Maintenance</h4>
-                <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
-                    pas vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
-                    performance (TTL par défaut de 3 minutes).</p>
+                    <h4>4. Maintenance</h4>
+                    <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
+                        pas vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
+                        performance (TTL par défaut de 3 minutes).</p>
+                </div>
             </div>
         </div>
 
