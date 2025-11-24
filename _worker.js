@@ -393,12 +393,17 @@ export default {
 
         // --- FICHIERS STATIQUES ---
 
-        // Protection de l'admin (Maintenant à la racine)
-        // On protège index.html (racine) mais on laisse passer login.html, js, css, et api
-        if ((path === "/" || path === "/index.html") && !path.includes("login.html")) {
+        // Protection du dashboard
+        if (path === "/dashboard.html") {
             if (!isAuthenticated()) {
-                // Redirige vers la page de login si non authentifié
-                return Response.redirect(new URL('/login.html', req.url).toString(), 302);
+                return Response.redirect(new URL('/', req.url).toString(), 302);
+            }
+        }
+
+        // Redirection si déjà connecté sur la page de login
+        if (path === "/" || path === "/index.html") {
+            if (isAuthenticated()) {
+                return Response.redirect(new URL('/dashboard.html', req.url).toString(), 302);
             }
         }
 
