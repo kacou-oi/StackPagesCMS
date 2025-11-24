@@ -374,6 +374,37 @@ export default {
             return new Response(JSON.stringify({ success: true, message: "Cache invalidé (attendre TTL ou redéploiement)" }), { status: 200, headers: corsHeaders });
         }
 
+        // --- API: Domain Check ---
+        if (url.pathname === '/api/domain-check') {
+            const domain = url.searchParams.get('domain');
+            if (!domain) {
+                return new Response(JSON.stringify({ error: "Domaine manquant" }), { status: 400, headers: corsHeaders });
+            }
+
+            try {
+                // Simple reachability check
+                // We try to fetch the domain. If it resolves and responds, we consider it "active" or at least reachable.
+                // In a real scenario, we might check for specific headers or DNS records via DoH.
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+                const res = await fetch(`https://${domain}`, {
+                    method: 'HEAD',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                // If we get a response (even 404 or 403), it means DNS is resolving and server is reachable.
+                return new Response(JSON.stringify({ active: true, status: res.status }), {
+                    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+                });
+            } catch (err) {
+                return new Response(JSON.stringify({ active: false, error: "Unreachable" }), {
+                    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+                });
+            }
+        }
+
         // --- FICHIERS STATIQUES ---
 
         // Protection du dashboard

@@ -6,7 +6,6 @@ let config = {};
 // Init
 // Init
 document.addEventListener('DOMContentLoaded', async () => {
-    initTheme();
     await checkAuth();
     if (window.location.pathname.includes('dashboard.html')) {
         await loadData();
@@ -71,6 +70,89 @@ function showView(viewName) {
     }
 }
 
+// Domain Logic
+async function saveDomain() {
+    const domain = document.getElementById('domain-input').value.trim();
+    if (!domain) return;
+
+    // Update config object
+    config.domain = domain;
+
+    // Save via existing saveConfig logic (reusing the endpoint)
+    // We construct a temporary form-like object or just call the API directly
+    // But since saveConfig reads from the DOM form, we should probably just update the config object and save it.
+    // However, saveConfig reads from specific IDs. Let's just call the API directly here for simplicity.
+
+    const btn = document.querySelector('button[onclick="saveDomain()"]');
+    const originalText = btn.innerText;
+    btn.innerText = 'Enregistrement...';
+    btn.disabled = true;
+
+    try {
+        // We need to include all other config fields to avoid overwriting them with nulls if we used a partial update
+        // But the easiest way is to just update the local config object and send it all back.
+        // Ensure local config is up to date with form values first? 
+        // Actually, let's just send the current config object + new domain.
+
+        const res = await fetch('/api/config', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Auth-Key': localStorage.getItem('stackpages_auth')
+            },
+            body: JSON.stringify(config)
+        });
+
+        if (res.ok) {
+            document.getElementById('dns-config-section').classList.remove('hidden');
+            setTimeout(() => document.getElementById('dns-config-section').classList.remove('opacity-50'), 50);
+
+            document.getElementById('domain-verify-section').classList.remove('hidden');
+            setTimeout(() => document.getElementById('domain-verify-section').classList.remove('opacity-50'), 50);
+
+            btn.innerText = 'Enregistré !';
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 2000);
+        } else {
+            alert('Erreur lors de la sauvegarde.');
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Erreur réseau.');
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
+
+async function verifyDomain() {
+    const domain = document.getElementById('domain-input').value.trim();
+    const statusDiv = document.getElementById('domain-status');
+
+    statusDiv.innerHTML = '<span class="text-slate-500"><i class="fas fa-circle-notch fa-spin"></i> Vérification...</span>';
+
+    try {
+        const res = await fetch(`/api/domain-check?domain=${encodeURIComponent(domain)}`, {
+            headers: {
+                'X-Auth-Key': localStorage.getItem('stackpages_auth')
+            }
+        });
+
+        const data = await res.json();
+
+        if (data.active) {
+            statusDiv.innerHTML = '<span class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Domaine Actif</span>';
+        } else {
+            statusDiv.innerHTML = '<span class="text-orange-600 font-bold"><i class="fas fa-exclamation-circle"></i> En attente de propagation</span>';
+        }
+    } catch (err) {
+        statusDiv.innerHTML = '<span class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Erreur de vérification</span>';
+    }
+}
+
 // Data Loading
 async function loadData() {
     try {
@@ -127,12 +209,19 @@ async function loadConfig() {
             document.getElementById('conf-author').value = config.author || '';
 
             document.getElementById('conf-substack').value = config.substackRssUrl || '';
-            document.getElementById('conf-metaTitle').value = config.seo?.metaTitle || '';
-            document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
-            document.getElementById('conf-metaKeywords').value = config.seo?.metaKeywords || '';
+            document.getElementById('conf-metaTitle').value = config.metaTitle || '';
+            document.getElementById('conf-metaDesc').value = config.metaDescription || '';
+            document.getElementById('conf-metaKeywords').value = config.metaKeywords || '';
+
+            // Domain Config
+            if (config.domain) {
+                document.getElementById('domain-input').value = config.domain;
+                document.getElementById('dns-config-section').classList.remove('hidden', 'opacity-50');
+                document.getElementById('domain-verify-section').classList.remove('hidden', 'opacity-50');
+            }
         }
-    } catch (e) {
-        console.error("Erreur chargement config:", e);
+    } catch (err) {
+        console.error('Error loading config:', err);
     }
 }
 
