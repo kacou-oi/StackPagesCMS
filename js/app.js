@@ -71,6 +71,49 @@ function showView(viewName) {
 }
 
 // Domain Logic
+
+function showDomainConfig() {
+    document.getElementById('domain-search-state').classList.add('hidden');
+    document.getElementById('domain-config-state').classList.remove('hidden');
+}
+
+function hideDomainConfig() {
+    document.getElementById('domain-config-state').classList.add('hidden');
+    document.getElementById('domain-search-state').classList.remove('hidden');
+}
+
+async function searchDomain() {
+    const input = document.getElementById('domain-search-input');
+    const domain = input.value.trim();
+    const btn = document.querySelector('button[onclick="searchDomain()"]');
+
+    if (!domain) return;
+
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Recherche...';
+    btn.disabled = true;
+
+    // Simulate API delay
+    await new Promise(r => setTimeout(r, 1500));
+
+    // Show result
+    document.getElementById('domain-search-result').classList.remove('hidden');
+    document.getElementById('result-domain-name').innerText = domain;
+
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+}
+
+function buyDomain() {
+    const domain = document.getElementById('result-domain-name').innerText;
+    // Open Cloudflare Registrar in new tab
+    window.open(`https://dash.cloudflare.com/?to=/:account/domains/register?domain=${domain}`, '_blank');
+
+    // Switch to config view
+    showDomainConfig();
+    document.getElementById('domain-input').value = domain;
+}
+
 async function saveDomain() {
     const domain = document.getElementById('domain-input').value.trim();
     if (!domain) return;
@@ -215,9 +258,14 @@ async function loadConfig() {
 
             // Domain Config
             if (config.domain) {
+                // If domain is already configured, show the config state directly
+                showDomainConfig();
                 document.getElementById('domain-input').value = config.domain;
                 document.getElementById('dns-config-section').classList.remove('hidden', 'opacity-50');
                 document.getElementById('domain-verify-section').classList.remove('hidden', 'opacity-50');
+            } else {
+                // Otherwise show search state
+                hideDomainConfig();
             }
         }
     } catch (err) {

@@ -302,20 +302,83 @@
 
             <!-- VIEW: DOMAIN -->
             <div id="view-domain" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Connexion de Nom de Domaine</h3>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-8">
+                    <h3
+                        class="font-semibold text-slate-800 dark:text-white mb-6 border-b border-slate-100 dark:border-slate-700 pb-2">
+                        Nom de Domaine</h3>
 
-                    <div class="space-y-8">
-                        <!-- Step 1: Input -->
+                    <!-- State 1: Search -->
+                    <div id="domain-search-state" class="space-y-8">
+                        <div class="text-center max-w-2xl mx-auto py-8">
+                            <h4 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Trouvez votre nom de
+                                domaine idéal</h4>
+                            <p class="text-slate-600 dark:text-slate-400 mb-8">Recherchez et achetez votre domaine
+                                directement via Cloudflare pour une sécurité et une performance optimales.</p>
+
+                            <div class="flex gap-4 relative">
+                                <input type="text" id="domain-search-input" placeholder="ex: mon-super-blog.com"
+                                    class="flex-1 px-6 py-4 text-lg border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 dark:bg-slate-700 dark:text-white shadow-sm">
+                                <button onclick="searchDomain()"
+                                    class="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg font-bold rounded-xl hover:from-orange-600 hover:to-red-600 transition shadow-lg transform hover:scale-[1.02]">
+                                    Rechercher
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Search Result -->
+                        <div id="domain-search-result"
+                            class="hidden max-w-2xl mx-auto bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 id="result-domain-name"
+                                        class="text-xl font-bold text-slate-900 dark:text-white">exemple.com</h5>
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2">
+                                        <i class="fas fa-check-circle mr-1"></i> Disponible
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-slate-900 dark:text-white">~9.00€<span
+                                            class="text-sm font-normal text-slate-500 dark:text-slate-400">/an</span>
+                                    </div>
+                                    <button onclick="buyDomain()"
+                                        class="mt-2 text-sm text-orange-600 dark:text-orange-400 hover:underline font-medium">
+                                        Acheter sur Cloudflare <i class="fas fa-external-link-alt ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center pt-8 border-t border-slate-100 dark:border-slate-700">
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Vous possédez déjà ce domaine ?
+                            </p>
+                            <button onclick="showDomainConfig()"
+                                class="text-slate-600 dark:text-slate-300 font-medium hover:text-orange-500 transition border border-slate-300 dark:border-slate-600 px-4 py-2 rounded-lg hover:border-orange-500">
+                                Je l'ai déjà acheté, passer à la configuration
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- State 2: Configuration (Hidden by default) -->
+                    <div id="domain-config-state" class="hidden space-y-8">
+                        <div class="flex items-center gap-4 mb-6">
+                            <button onclick="hideDomainConfig()"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </button>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white">Configuration DNS</h4>
+                        </div>
+
+                        <!-- Step 1: Input (Read-only if coming from search) -->
                         <div>
-                            <h4 class="text-sm font-bold text-slate-900 mb-2">1. Entrez votre nom de domaine</h4>
-                            <p class="text-sm text-slate-600 mb-4">Indiquez le domaine que vous souhaitez utiliser pour
-                                votre site (ex: monblog.com).</p>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nom de
+                                domaine</label>
                             <div class="flex gap-4">
                                 <input type="text" id="domain-input" placeholder="exemple.com"
-                                    class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+                                    class="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500 dark:bg-slate-700 dark:text-white">
                                 <button onclick="saveDomain()"
-                                    class="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition">
+                                    class="px-6 py-2 bg-slate-800 dark:bg-slate-700 text-white rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition">
                                     Enregistrer
                                 </button>
                             </div>
@@ -323,13 +386,16 @@
 
                         <!-- Step 2: DNS Config -->
                         <div id="dns-config-section" class="hidden opacity-50 transition-opacity duration-500">
-                            <h4 class="text-sm font-bold text-slate-900 mb-2">2. Configuration DNS (Cloudflare)</h4>
-                            <p class="text-sm text-slate-600 mb-4">Connectez-vous à votre registrar et ajoutez les
-                                enregistrements suivants :</p>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">2. Configuration DNS
+                                (Cloudflare)</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Connectez-vous à votre registrar
+                                et ajoutez les enregistrements suivants :</p>
 
-                            <div class="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden">
+                            <div
+                                class="bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-600 overflow-hidden">
                                 <table class="w-full text-sm text-left">
-                                    <thead class="bg-slate-100 text-slate-600 font-medium">
+                                    <thead
+                                        class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium">
                                         <tr>
                                             <th class="px-4 py-2">Type</th>
                                             <th class="px-4 py-2">Nom</th>
@@ -337,13 +403,16 @@
                                             <th class="px-4 py-2">Proxy</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-slate-200">
+                                    <tbody class="divide-y divide-slate-200 dark:divide-slate-600">
                                         <tr>
-                                            <td class="px-4 py-2 font-mono font-bold text-blue-600">CNAME</td>
-                                            <td class="px-4 py-2 font-mono">@ (ou www)</td>
-                                            <td class="px-4 py-2 font-mono text-slate-600">stackpages.pages.dev</td>
+                                            <td class="px-4 py-2 font-mono font-bold text-blue-600 dark:text-blue-400">
+                                                CNAME</td>
+                                            <td class="px-4 py-2 font-mono text-slate-600 dark:text-slate-300">@ (ou
+                                                www)</td>
+                                            <td class="px-4 py-2 font-mono text-slate-600 dark:text-slate-300">
+                                                stackpages.pages.dev</td>
                                             <td class="px-4 py-2"><span
-                                                    class="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs font-bold">Proxied</span>
+                                                    class="px-2 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-xs font-bold">Proxied</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -353,9 +422,9 @@
 
                         <!-- Step 3: Verify -->
                         <div id="domain-verify-section" class="hidden opacity-50 transition-opacity duration-500">
-                            <h4 class="text-sm font-bold text-slate-900 mb-2">3. Vérification</h4>
-                            <p class="text-sm text-slate-600 mb-4">Une fois les DNS propagés (cela peut prendre quelques
-                                minutes), vérifiez la connexion.</p>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-2">3. Vérification</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Une fois les DNS propagés (cela
+                                peut prendre quelques minutes), vérifiez la connexion.</p>
 
                             <div class="flex items-center gap-4">
                                 <button onclick="verifyDomain()"
