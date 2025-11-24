@@ -566,3 +566,9 @@ async function clearCache() {
         status.className = "text-xs text-red-600 mt-2";
     }
 }
+
+// Initialization
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadConfig();
+    await loadData();
+});
