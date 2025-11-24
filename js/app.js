@@ -135,7 +135,7 @@ async function loadConfig() {
             document.getElementById('config-warning')?.classList.add('hidden');
         }
 
-        // Populate Config Form
+        // Populate Config Form (Read-Only)
         document.getElementById('conf-siteName').value = config.siteName || '';
         document.getElementById('conf-author').value = config.author || '';
         document.getElementById('conf-substack').value = config.substackRssUrl || '';
@@ -160,52 +160,13 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
     status.className = "text-sm font-medium text-slate-500";
 
     const newConfig = {
-        siteName: document.getElementById('conf-siteName').value,
-        author: document.getElementById('conf-author').value,
-        substackRssUrl: document.getElementById('conf-substack').value,
-        youtubeRssUrl: document.getElementById('conf-youtube').value,
-        seo: {
-            metaTitle: document.getElementById('conf-metaTitle').value,
-            metaDescription: document.getElementById('conf-metaDesc').value,
-            metaKeywords: document.getElementById('conf-metaKeywords').value
-        }
-    };
+        // Config Saving (Disabled)
+        // La configuration est gérée par les variables d'environnement.
 
-    try {
-        const authKey = localStorage.getItem('stackpages_auth');
-        const res = await fetch('/api/config', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Key': authKey
-            },
-            body: JSON.stringify(newConfig)
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            if (data.warning) {
-                status.textContent = "Attention : " + data.warning;
-                status.className = "text-sm font-medium text-orange-600";
-            } else {
-                status.textContent = "Sauvegardé avec succès !";
-                status.className = "text-sm font-medium text-green-600";
-                setTimeout(() => status.textContent = "", 3000);
-            }
-        } else {
-            throw new Error(data.error || "Erreur inconnue");
-        }
-    } catch (e) {
-        status.textContent = "Erreur: " + e.message;
-        status.className = "text-sm font-medium text-red-600";
-    }
-});
-
-// Renderers
-function renderDashboard() {
-    // Recent Posts
-    const postsTbody = document.getElementById('dashboard-recent-posts');
+        // Renderers
+        function renderDashboard() {
+            // Recent Posts
+            const postsTbody = document.getElementById('dashboard-recent-posts');
     if (postsTbody) {
         postsTbody.innerHTML = allPosts.slice(0, 5).map(post => `
             <tr class="hover:bg-slate-50 transition">

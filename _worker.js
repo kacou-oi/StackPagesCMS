@@ -297,28 +297,21 @@ export default {
         }
 
         // --- CONFIGURATION ---
-        // On essaie de récupérer la config depuis le KV, sinon on utilise les vars d'env ou un défaut
-        let config = {
+        // --- CONFIGURATION (ENV VARS ONLY) ---
+        // La configuration est gérée uniquement par les variables d'environnement.
+        // Pas de KV, pas de Cache API pour la config.
+
+        const config = {
             siteName: "StackPages CMS",
             author: "Admin",
-            substackRssUrl: "",
-            youtubeRssUrl: "",
-            seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
-        };
-
-        // Tentative de chargement depuis KV
-        let configMode = 'file'; // 'file' ou 'kv'
-        if (env.STACKPAGES_CONFIG) {
-            try {
-                const kvConfig = await env.STACKPAGES_CONFIG.get("site_config", { type: "json" });
-                if (kvConfig) {
-                    config = { ...config, ...kvConfig };
-                    configMode = 'kv';
-                }
-            } catch (e) {
-                console.error("Erreur KV:", e);
+            substackRssUrl: env.SUBSTACK_FEED_URL || "",
+            youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
+            seo: {
+                metaTitle: env.META_TITLE || "",
+                metaDescription: env.META_DESCRIPTION || "",
+                metaKeywords: env.META_KEYWORDS || ""
             }
-        }
+        };
 
         // --- AUTHENTIFICATION ---
         const ADMIN_PASSWORD = env.ADMIN_PASSWORD || "admin"; // DÉFAUT NON SÉCURISÉ POUR LE DEV
@@ -338,29 +331,6 @@ export default {
 
         if (req.method === 'OPTIONS') {
             return new Response(null, { status: 204, headers: corsHeaders });
-        }
-
-        // --- CONFIGURATION CACHE LOGIC ---
-        const CONFIG_CACHE_KEY = "https://stackpages-internal/config.json";
-
-        async function getConfigFromCache() {
-            const cache = caches.default;
-            const response = await cache.match(CONFIG_CACHE_KEY);
-            if (response) {
-                return await response.json();
-            }
-            return null;
-        }
-
-        async function saveConfigToCache(configData) {
-            const cache = caches.default;
-            const response = new Response(JSON.stringify(configData), {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'public, max-age=31536000' // Long TTL (1 year)
-                }
-            });
-            await cache.put(CONFIG_CACHE_KEY, response);
         }
 
         // --- ROUTES API PUBLIC ---
@@ -395,24 +365,10 @@ export default {
         }
 
         // 4. Public Data (Metadata & Posts)
-        // Utilise l'URL du flux RSS définie dans la config (KV, Cache ou Env)
-
-        // Chargement de la config pour les routes publiques
-        // On tente KV, puis Cache, puis défauts
-        if (!config.substackRssUrl && !config.youtubeRssUrl) {
-            // Si config vide (défaut), on tente le cache si KV a échoué ou est absent
-            if (configMode === 'file') {
-                const cachedConfig = await getConfigFromCache();
-                if (cachedConfig) {
-                    config = { ...config, ...cachedConfig };
-                }
-            }
-        }
-
         const FEED_URL = config.substackRssUrl;
 
         if (!FEED_URL && (path === "/api/metadata" || path === "/api/posts" || path.startsWith("/api/post/"))) {
-            return new Response(JSON.stringify({ error: "Flux RSS non configuré" }), { status: 500, headers: corsHeaders });
+            return new Response(JSON.stringify({ error: "Flux RSS non configuré (Voir variables d'environnement)" }), { status: 500, headers: corsHeaders });
         }
 
         if (path === "/api/metadata" || path === "/api/posts" || path.startsWith("/api/post/")) {
@@ -449,6 +405,7 @@ export default {
             }
         }
 
+        // 5. Videos
         if (path === "/api/videos") {
             if (!config.youtubeRssUrl) {
                 return new Response(JSON.stringify([]), { status: 200, headers: corsHeaders });
@@ -463,77 +420,17 @@ export default {
 
         // --- ROUTES API PROTÉGÉES ---
 
-        // 6. Get Config
+        // 6. Get Config (Read-Only)
         if (path === "/api/config" && req.method === "GET") {
             if (!isAuthenticated()) {
                 return new Response(JSON.stringify({ error: "Non autorisé" }), { status: 401, headers: corsHeaders });
             }
-
-            // Re-load config to be sure (KV > Cache > Default)
-            let currentConfig = {
-                siteName: "StackPages CMS",
-                author: "Admin",
-                substackRssUrl: "",
-                youtubeRssUrl: "",
-                seo: { metaTitle: "", metaDescription: "", metaKeywords: "" }
-            };
-
-            if (env.STACKPAGES_CONFIG) {
-                try {
-                    const kvConfig = await env.STACKPAGES_CONFIG.get("site_config", { type: "json" });
-                    if (kvConfig) currentConfig = { ...currentConfig, ...kvConfig };
-                } catch (e) { }
-            } else {
-                // Try Cache
-                const cachedConfig = await getConfigFromCache();
-                if (cachedConfig) currentConfig = { ...currentConfig, ...cachedConfig };
-            }
-
-            return new Response(JSON.stringify(currentConfig), { status: 200, headers: corsHeaders });
+            return new Response(JSON.stringify(config), { status: 200, headers: corsHeaders });
         }
 
-        // 7. Save Config
+        // 7. Save Config (Disabled)
         if (path === "/api/config" && req.method === "POST") {
-            if (!isAuthenticated()) {
-                return new Response(JSON.stringify({ error: "Non autorisé" }), { status: 401, headers: corsHeaders });
-            }
-
-            try {
-                const newConfig = await req.json();
-
-                // 1. Save to KV if available
-                let kvSuccess = false;
-                if (env.STACKPAGES_CONFIG) {
-                    try {
-                        await env.STACKPAGES_CONFIG.put("site_config", JSON.stringify(newConfig));
-                        kvSuccess = true;
-                    } catch (e) {
-                        console.error("KV Save Error", e);
-                    }
-                }
-
-                // 2. ALWAYS Save to Cache (Backup or Primary)
-                await saveConfigToCache(newConfig);
-
-                if (env.STACKPAGES_CONFIG && !kvSuccess) {
-                    return new Response(JSON.stringify({
-                        success: true,
-                        warning: "Erreur KV, sauvegardé en Cache uniquement (moins persistant)."
-                    }), { status: 200, headers: corsHeaders });
-                }
-
-                if (!env.STACKPAGES_CONFIG) {
-                    return new Response(JSON.stringify({
-                        success: true,
-                        warning: "KV non détecté. Sauvegardé en Cache (peut être effacé par Cloudflare)."
-                    }), { status: 200, headers: corsHeaders });
-                }
-
-                return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
-
-            } catch (e) {
-                return new Response(JSON.stringify({ error: "Erreur lors de la sauvegarde: " + e.message }), { status: 500, headers: corsHeaders });
-            }
+            return new Response(JSON.stringify({ error: "La configuration est gérée par les variables d'environnement." }), { status: 405, headers: corsHeaders });
         }
 
         // 5. Clear Cache (Protected)
