@@ -368,6 +368,14 @@ async function testApi(endpoint) {
     }
 }
 
+function clearApiOutput() {
+    const output = document.getElementById('api-output');
+    const title = document.getElementById('api-response-title');
+
+    if (output) output.textContent = "En attente...";
+    if (title) title.textContent = "Réponse";
+}
+
 // Cache Clearing
 async function clearCache() {
     const status = document.getElementById('cache-status');
