@@ -421,6 +421,76 @@ export default {
             }
         }
 
+        // API: Get Podcasts
+        if (path === "/api/podcasts") {
+            const feedUrl = config.podcastFeedUrl;
+            if (!feedUrl) {
+                return new Response(JSON.stringify([]), {
+                    headers: corsHeaders
+                });
+            }
+
+            try {
+                const response = await fetch(feedUrl, {
+                    headers: {
+                        "User-Agent": "StackPages-Worker/1.0"
+                    }
+                });
+
+                if (!response.ok) throw new Error(`Failed to fetch RSS: ${response.status}`);
+
+                const xmlText = await response.text();
+
+                // Basic XML parsing for podcasts
+                const items = [];
+                let currentPos = 0;
+
+                while (true) {
+                    const itemStart = xmlText.indexOf("<item>", currentPos);
+                    if (itemStart === -1) break;
+
+                    const itemEnd = xmlText.indexOf("</item>", itemStart);
+                    if (itemEnd === -1) break;
+
+                    const itemContent = xmlText.substring(itemStart, itemEnd);
+
+                    const titleMatch = itemContent.match(/<title>(.*?)<\/title>/s);
+                    const linkMatch = itemContent.match(/<link>(.*?)<\/link>/s);
+                    const pubDateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/s);
+                    const descriptionMatch = itemContent.match(/<description>(.*?)<\/description>/s);
+                    const enclosureMatch = itemContent.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/s);
+
+                    // Clean up CDATA
+                    const clean = (str) => {
+                        if (!str) return "";
+                        return str.replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim();
+                    };
+
+                    items.push({
+                        title: clean(titleMatch ? titleMatch[1] : "Sans titre"),
+                        link: clean(linkMatch ? linkMatch[1] : "#"),
+                        pubDate: clean(pubDateMatch ? pubDateMatch[1] : ""),
+                        description: clean(descriptionMatch ? descriptionMatch[1] : ""),
+                        audioUrl: enclosureMatch ? enclosureMatch[1] : null
+                    });
+
+                    currentPos = itemEnd + 7;
+                }
+
+                return new Response(JSON.stringify(items), {
+                    headers: corsHeaders
+                });
+
+            } catch (error) {
+                return new Response(JSON.stringify({
+                    error: error.message
+                }), {
+                    status: 500,
+                    headers: corsHeaders
+                });
+            }
+        }
+
         // 5. Videos
         if (path === "/api/videos") {
             console.log("DEBUG: Configured YouTube URL:", config.youtubeRssUrl);
