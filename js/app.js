@@ -191,18 +191,33 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
 
 // Renderers
 function renderDashboard() {
-    const tbody = document.getElementById('dashboard-recent-posts');
-    if (!tbody) return;
+    // Recent Posts
+    const postsTbody = document.getElementById('dashboard-recent-posts');
+    if (postsTbody) {
+        postsTbody.innerHTML = allPosts.slice(0, 5).map(post => `
+            <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${post.title}">${post.title}</td>
+                <td class="px-6 py-4 text-slate-500">${new Date(post.pubDate).toLocaleDateString('fr-FR')}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="openPreview('${post.slug}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                </td>
+            </tr>
+        `).join('');
+    }
 
-    tbody.innerHTML = allPosts.slice(0, 5).map(post => `
-        <tr class="hover:bg-slate-50 transition">
-            <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs">${post.title}</td>
-            <td class="px-6 py-4 text-slate-500">${new Date(post.pubDate).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick="openPreview('${post.slug}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">Voir</button>
-            </td>
-        </tr>
-    `).join('');
+    // Recent Videos
+    const videosTbody = document.getElementById('dashboard-recent-videos');
+    if (videosTbody) {
+        videosTbody.innerHTML = allVideos.slice(0, 5).map(video => `
+            <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
+                <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="openVideoPreview('${video.id}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                </td>
+            </tr>
+        `).join('');
+    }
 }
 
 function renderContentTable() {
