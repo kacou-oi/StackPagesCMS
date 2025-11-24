@@ -79,44 +79,47 @@ function showView(viewName) {
 // Data Loading
 async function loadData() {
     try {
-        const [metaRes, postsRes, videosRes] = await Promise.all([
-            fetch('/api/metadata'),
-            fetch('/api/posts'),
-            fetch('/api/videos')
-        ]);
+        // Force refresh on load
+        const refreshParam = '?refresh=true';
 
+        // 1. Metadata
+        const metaRes = await fetch(`/api/metadata${refreshParam}`);
         metadata = await metaRes.json();
+
+        // Update UI with Metadata
+        document.getElementById('dashboard-site-name').textContent = metadata.siteName || 'StackPages CMS';
+        document.getElementById('dashboard-author').textContent = metadata.author || 'Admin';
+
+        // 2. Posts
+        const postsRes = await fetch(`/api/posts${refreshParam}`);
         allPosts = await postsRes.json();
-        allVideos = await videosRes.json();
 
         // Update Stats
         document.getElementById('stat-total-posts').textContent = allPosts.length;
+        const lastPostDate = allPosts.length > 0 ? new Date(allPosts[0].pubDate).toLocaleDateString('fr-FR') : '-';
+        document.getElementById('stat-last-update').textContent = lastPostDate;
+
+        // 3. Videos
+        const videoRes = await fetch(`/api/videos${refreshParam}`);
+        allVideos = await videoRes.json();
         document.getElementById('stat-total-videos').textContent = allVideos.length;
-        if (metadata.lastBuildDate) {
-            const date = new Date(metadata.lastBuildDate);
-            document.getElementById('stat-last-update').textContent = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
-            // Feed Status Logic
-            const now = new Date();
-            const diffHours = (now - date) / (1000 * 60 * 60);
-            const statusEl = document.getElementById('stat-feed-status');
-
-            if (diffHours < 24) {
-                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500"></span> Actif';
-                statusEl.className = "text-lg font-bold text-green-600 mt-2 flex items-center gap-2";
-            } else if (diffHours < 72) {
-                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-500"></span> Stable';
-                statusEl.className = "text-lg font-bold text-yellow-600 mt-2 flex items-center gap-2";
-            } else {
-                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Inactif';
-                statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
-            }
+        if (diffHours < 24) {
+            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500"></span> Actif';
+            statusEl.className = "text-lg font-bold text-green-600 mt-2 flex items-center gap-2";
+        } else if (diffHours < 72) {
+            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-500"></span> Stable';
+            statusEl.className = "text-lg font-bold text-yellow-600 mt-2 flex items-center gap-2";
+        } else {
+            statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Inactif';
+            statusEl.className = "text-lg font-bold text-slate-500 mt-2 flex items-center gap-2";
         }
+    }
 
     } catch (e) {
-        console.error("Erreur de chargement:", e);
-        // alert("Impossible de charger les données de l'API.");
-    }
+    console.error("Erreur de chargement:", e);
+    // alert("Impossible de charger les données de l'API.");
+}
 }
 
 // Config Loading

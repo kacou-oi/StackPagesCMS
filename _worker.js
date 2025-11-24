@@ -219,13 +219,15 @@ function fetchAndParseYoutubeRSS(xml) {
 // ====================================================================
 // 3. LOGIQUE DE CACHE ET RÉCUPÉRATION DES DONNÉES
 // ====================================================================
-async function getCachedRSSData(feedUrl) {
+async function getCachedRSSData(feedUrl, forceRefresh = false) {
     const cache = caches.default;
     const cacheKey = new Request(feedUrl, { method: 'GET' });
-    let response = await cache.match(cacheKey);
 
-    if (response) {
-        return await response.json();
+    if (!forceRefresh) {
+        let response = await cache.match(cacheKey);
+        if (response) {
+            return await response.json();
+        }
     }
 
     const res = await fetch(feedUrl);
@@ -246,20 +248,23 @@ async function getCachedRSSData(feedUrl) {
             'Cache-Control': `public, max-age=${CACHE_TTL}`
         }
     });
+    // Always update cache
     await cache.put(cacheKey, cachedResponse.clone());
 
     return data;
 }
 
-async function getCachedYoutubeData(feedUrl) {
+async function getCachedYoutubeData(feedUrl, forceRefresh = false) {
     if (!feedUrl) return [];
 
     const cache = caches.default;
     const cacheKey = new Request(feedUrl, { method: 'GET' });
-    let response = await cache.match(cacheKey);
 
-    if (response) {
-        return await response.json();
+    if (!forceRefresh) {
+        let response = await cache.match(cacheKey);
+        if (response) {
+            return await response.json();
+        }
     }
 
     try {
@@ -278,7 +283,7 @@ async function getCachedYoutubeData(feedUrl) {
 
         return videos;
     } catch (e) {
-        console.error("Youtube Fetch Error:", e);
+        console.error("Erreur YouTube Fetch:", e);
         return [];
     }
 }
