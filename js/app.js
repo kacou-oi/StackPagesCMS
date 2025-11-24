@@ -128,10 +128,11 @@ async function loadConfig() {
         });
         config = await res.json();
 
-        // Check if setup is needed
+        // Check if setup is needed (Show Warning instead of blocking)
         if (!config.substackRssUrl) {
-            showSetupView();
-            return;
+            document.getElementById('config-warning')?.classList.remove('hidden');
+        } else {
+            document.getElementById('config-warning')?.classList.add('hidden');
         }
 
         // Populate Config Form
@@ -150,67 +151,6 @@ async function loadConfig() {
         console.error("Erreur chargement config:", e);
     }
 }
-
-function showSetupView() {
-    // Hide everything else
-    document.getElementById('sidebar').classList.add('hidden');
-    document.getElementById('main-content').classList.add('w-full');
-    document.getElementById('main-content').classList.remove('ml-64');
-
-    // Show Setup
-    document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-    document.getElementById('view-setup').classList.remove('hidden');
-    document.getElementById('page-title').textContent = "Initialisation";
-}
-
-async function saveSetupConfig() {
-    const substackUrl = document.getElementById('setup-substack').value;
-    const youtubeUrl = document.getElementById('setup-youtube').value;
-    const status = document.getElementById('setup-status');
-
-    if (!substackUrl) {
-        status.textContent = "L'URL Substack est requise.";
-        status.className = "text-center mt-4 text-sm text-red-600 font-bold";
-        return;
-    }
-
-    status.textContent = "Configuration en cours...";
-    status.className = "text-center mt-4 text-sm text-orange-600";
-
-    const newConfig = {
-        ...config, // Keep defaults
-        substackRssUrl: substackUrl,
-        youtubeRssUrl: youtubeUrl
-    };
-
-    try {
-        const authKey = localStorage.getItem('stackpages_auth');
-        const res = await fetch('/api/config', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Key': authKey
-            },
-            body: JSON.stringify(newConfig)
-        });
-
-        if (res.ok) {
-            status.textContent = "C'est tout bon ! Redirection...";
-            status.className = "text-center mt-4 text-sm text-green-600 font-bold";
-            setTimeout(() => window.location.reload(), 1500);
-        } else {
-            throw new Error("Erreur sauvegarde");
-        }
-    } catch (e) {
-        status.textContent = "Erreur: " + e.message;
-        status.className = "text-center mt-4 text-sm text-red-600";
-    }
-}
-
-document.getElementById('setup-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await saveSetupConfig();
-});
 
 // Config Saving
 document.getElementById('config-form').addEventListener('submit', async (e) => {
