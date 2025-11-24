@@ -396,13 +396,13 @@ export default {
 
         // --- FICHIERS STATIQUES ---
 
-        // Protection de l'admin
-        // Si on essaie d'accéder à /admin/* (sauf login.html et les assets JS/CSS si besoin), on vérifie l'auth
-        if (path.startsWith("/admin") && !path.includes("login.html") && !path.includes("/js/") && !path.includes("/css/")) {
-            // Note: Vérifier les cookies côté serveur pour une page statique est complexe avec env.ASSETS.
-            // Ici, on laisse le JS client faire la redirection (app.js: checkAuth), 
-            // MAIS pour une vraie sécu, il faudrait intercepter ici.
-            // Pour ce MVP, on fait confiance au client + protection API.
+        // Protection de l'admin (Maintenant à la racine)
+        // On protège index.html (racine) mais on laisse passer login.html, js, css, et api
+        if ((path === "/" || path === "/index.html") && !path.includes("login.html")) {
+            if (!isAuthenticated()) {
+                // Redirige vers la page de login si non authentifié
+                return Response.redirect(new URL('/login.html', req.url).toString(), 302);
+            }
         }
 
         try {

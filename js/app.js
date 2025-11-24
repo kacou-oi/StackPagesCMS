@@ -18,10 +18,10 @@ async function checkAuth() {
         const res = await fetch('/api/check-auth', { credentials: 'include' });
         const data = await res.json();
         if (!data.authenticated) {
-            window.location.href = '/admin/login.html';
+            window.location.href = '/login.html';
         }
     } catch (e) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/login.html';
     }
 }
 
