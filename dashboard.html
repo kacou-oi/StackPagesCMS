@@ -454,20 +454,59 @@
 
         <!-- VIEW: BUILDER -->
         <div id="view-builder" class="view-section hidden space-y-6">
-            <div
-                class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[calc(100vh-12rem)]">
-                <div class="px-6 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-semibold text-slate-800">Éditeur Visuel</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-12rem)]">
+                <!-- Left Column: Instructions & Button -->
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center items-start space-y-8">
+                    <div>
+                        <div
+                            class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
+                            <i class="fas fa-paint-brush text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-3">Constructeur Frontend</h3>
+                        <p class="text-slate-600 text-lg leading-relaxed">
+                            Utilisez notre éditeur visuel avancé pour personnaliser l'apparence de votre site.
+                            L'interface s'ouvrira dans un nouvel onglet pour vous offrir un espace de travail optimal.
+                        </p>
+                    </div>
+
                     <a href="https://p-12e07a9d-76d9-4b9f-9ce9-94eeff0e1f00.apps.webstudio.is/?authToken=c75ba98e-e76b-40be-84a7-d6c435f9e324&mode=design"
                         target="_blank"
-                        class="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-2 transition">
-                        <i class="fas fa-external-link-alt"></i> Ouvrir dans un nouvel onglet
+                        class="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        <span>Ouvrir le Builder</span>
+                        <i class="fas fa-external-link-alt"></i>
                     </a>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r w-full">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-500"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Regardez les tutoriels à droite pour apprendre à maîtriser l'outil.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex-1 bg-slate-200 relative">
-                    <iframe
-                        src="https://p-12e07a9d-76d9-4b9f-9ce9-94eeff0e1f00.apps.webstudio.is/?authToken=c75ba98e-e76b-40be-84a7-d6c435f9e324&mode=design"
-                        class="w-full h-full border-0" allow="clipboard-write; clipboard-read; fullscreen"></iframe>
+
+                <!-- Right Column: Tutorials -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h3 class="font-semibold text-slate-800">Tutoriels Vidéo</h3>
+                        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Playlist
+                            YouTube</span>
+                    </div>
+                    <div class="flex-1 bg-black relative group">
+                        <iframe width="100%" height="100%"
+                            src="https://www.youtube-nocookie.com/embed/videoseries?si=YyePOX9RjcazflwN&amp;list=PL4vVqpngzeT4Bfs_D25xNi_qNMY99R928"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                            class="absolute inset-0 w-full h-full">
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </div>
