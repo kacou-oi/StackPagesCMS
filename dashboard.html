@@ -347,6 +347,7 @@
         // Logout Handler
         async function logout() {
             await fetch('/api/logout');
+            localStorage.removeItem('stackpages_auth');
             window.location.href = '/';
         }
     </script>

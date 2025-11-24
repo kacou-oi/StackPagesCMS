@@ -13,16 +13,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Auth Check
+// Auth Check
 async function checkAuth() {
+    const authKey = localStorage.getItem('stackpages_auth');
+    if (!authKey) {
+        window.location.href = '/';
+        return;
+    }
+
+    // Optional: Verify with server if needed, but for now just trust existence + API 401s
+    /*
     try {
-        const res = await fetch('/api/check-auth', { credentials: 'include' });
+        const res = await fetch('/api/check-auth', { 
+            headers: { 'X-Auth-Key': authKey }
+        });
         const data = await res.json();
         if (!data.authenticated) {
+            localStorage.removeItem('stackpages_auth');
             window.location.href = '/';
         }
     } catch (e) {
         window.location.href = '/';
     }
+    */
 }
 
 // Navigation
@@ -97,7 +110,10 @@ async function loadData() {
 // Config Loading
 async function loadConfig() {
     try {
-        const res = await fetch('/api/config');
+        const authKey = localStorage.getItem('stackpages_auth');
+        const res = await fetch('/api/config', {
+            headers: { 'X-Auth-Key': authKey }
+        });
         if (res.ok) {
             const data = await res.json();
             config = data.config;
@@ -135,9 +151,13 @@ document.getElementById('config-form').addEventListener('submit', async (e) => {
     };
 
     try {
+        const authKey = localStorage.getItem('stackpages_auth');
         const res = await fetch('/api/config', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Auth-Key': authKey
+            },
             body: JSON.stringify(newConfig)
         });
 
@@ -252,7 +272,11 @@ async function clearCache() {
     const status = document.getElementById('cache-status');
     status.textContent = "Nettoyage...";
     try {
-        const res = await fetch('/api/clear-cache', { method: 'POST' });
+        const authKey = localStorage.getItem('stackpages_auth');
+        const res = await fetch('/api/clear-cache', {
+            method: 'POST',
+            headers: { 'X-Auth-Key': authKey }
+        });
         if (res.ok) {
             status.textContent = "Cache vidé avec succès !";
             status.className = "text-xs text-green-600 mt-2";
@@ -263,5 +287,6 @@ async function clearCache() {
         }
     } catch (e) {
         status.textContent = "Erreur: " + e.message;
+        status.className = "text-xs text-red-600 mt-2";
     }
 }

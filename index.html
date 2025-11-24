@@ -79,6 +79,7 @@
                 });
 
                 if (res.ok) {
+                    localStorage.setItem('stackpages_auth', password);
                     window.location.href = '/dashboard.html';
                 } else {
                     errorDiv.textContent = "Mot de passe incorrect.";
