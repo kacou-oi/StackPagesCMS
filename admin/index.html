@@ -60,6 +60,15 @@
     </div>
 
     <script>
+        // Check if already authenticated, redirect to dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const authKey = localStorage.getItem('stackpages_auth');
+            if (authKey) {
+                window.location.href = '/dashboard';
+                return;
+            }
+        });
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('password').value;
@@ -80,7 +89,7 @@
 
                 if (res.ok) {
                     localStorage.setItem('stackpages_auth', password);
-                    window.location.href = '/dashboard.html';
+                    window.location.href = '/dashboard';
                 } else {
                     errorDiv.textContent = "Mot de passe incorrect.";
                     errorDiv.classList.remove('hidden');

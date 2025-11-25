@@ -573,6 +573,14 @@ export default {
             }));
         }
 
+        // Dashboard -> admin/dashboard.html
+        if (path === "/dashboard" || path === "/dashboard/") {
+            return await env.ASSETS.fetch(new Request(new URL("/admin/dashboard.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
 
 
         try {

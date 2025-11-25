@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Auth Check
 async function checkAuth() {
+    // Only check auth on dashboard page, not on login page
+    const currentPath = window.location.pathname;
+    if (currentPath === '/admin' || currentPath === '/admin/' || currentPath === '/admin/index.html') {
+        // We're on the login page, don't redirect
+        return;
+    }
+
     const authKey = localStorage.getItem('stackpages_auth');
     if (!authKey) {
         window.location.href = '/admin';
@@ -37,10 +44,10 @@ async function checkAuth() {
         const data = await res.json();
         if (!data.authenticated) {
             localStorage.removeItem('stackpages_auth');
-            window.location.href = '/';
+            window.location.href = '/admin';
         }
     } catch (e) {
-        window.location.href = '/';
+        window.location.href = '/admin';
     }
     */
 }
