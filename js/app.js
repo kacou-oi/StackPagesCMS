@@ -347,7 +347,7 @@ function renderVideos() {
 
     if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr>`;
-        document.getElementById('video-pagination-info').textContent = `Page 1 / 1`;
+        document.getElementById('video-pagination-info').textContent = `Page 1 sur 1`;
         document.getElementById('prev-video-page-btn').disabled = true;
         document.getElementById('next-video-page-btn').disabled = true;
         return;
@@ -379,7 +379,7 @@ function renderVideos() {
         </tr>
     `).join('');
 
-    document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} / ${totalPages}`;
+    document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} sur ${totalPages}`;
     document.getElementById('prev-video-page-btn').disabled = currentVideoPage === 1;
     document.getElementById('next-video-page-btn').disabled = currentVideoPage === totalPages;
 }
