@@ -201,6 +201,14 @@ async function loadConfig() {
         } else {
             document.getElementById('config-warning')?.classList.add('hidden');
         }
+
+        // Update Frontend Builder Button URL
+        if (config.frontendBuilderUrl) {
+            const builderBtn = document.getElementById('builder-tab-btn');
+            if (builderBtn) {
+                builderBtn.href = config.frontendBuilderUrl;
+            }
+        }
     } catch (e) {
         console.error("Erreur chargement config:", e);
     }
