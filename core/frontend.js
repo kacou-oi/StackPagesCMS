@@ -35,15 +35,18 @@ class AttributeRewriter {
 export default {
     async fetch(request, env, ctx) {
         // 1. Définition des domaines
-        // TARGET_DOMAIN doit être défini comme variable d'environnement (ex: votredomaine-originel.com)
-        const TARGET_DOMAIN = env.TARGET_DOMAIN;
+        // TARGET_SUBDOMAIN doit être défini comme variable d'environnement (ex: mon-site)
+        // Le domaine complet sera construit automatiquement: mon-site.wstd.io
+        const TARGET_SUBDOMAIN = env.TARGET_SUBDOMAIN;
+        const TARGET_BASE_DOMAIN = 'wstd.io';
+        const TARGET_DOMAIN = TARGET_SUBDOMAIN ? `${TARGET_SUBDOMAIN}.${TARGET_BASE_DOMAIN}` : null;
         const TARGET_PROTOCOL = 'https:';
 
         const url = new URL(request.url);
         const WORKER_DOMAIN = url.hostname;
 
-        if (!TARGET_DOMAIN) {
-            return new Response("Erreur de configuration : TARGET_DOMAIN n'est pas défini dans les variables d'environnement.", { status: 500 });
+        if (!TARGET_SUBDOMAIN) {
+            return new Response("Erreur de configuration : TARGET_SUBDOMAIN n'est pas défini dans les variables d'environnement.", { status: 500 });
         }
 
         // 2. Proxification de la requête

@@ -597,13 +597,18 @@ export default {
         }
 
         // ====================================================================
-        // 5. REVERSE PROXY (SI TARGET_DOMAIN EST DÉFINI)
+        // 5. REVERSE PROXY (SI TARGET_SUBDOMAIN EST DÉFINI)
         // ====================================================================
         // Note: Cette logique est également documentée dans /core/frontend.js
         //       pour référence et maintenance future.
-        const TARGET_DOMAIN = env.TARGET_DOMAIN;
+
+        const TARGET_SUBDOMAIN = env.TARGET_SUBDOMAIN;
+        const TARGET_BASE_DOMAIN = 'wstd.io'; // Domaine de base pour Webstudio
         const TARGET_PROTOCOL = 'https:';
         const WORKER_DOMAIN = url.hostname;
+
+        // Construire le domaine cible complet si le sous-domaine est défini
+        const TARGET_DOMAIN = TARGET_SUBDOMAIN ? `${TARGET_SUBDOMAIN}.${TARGET_BASE_DOMAIN}` : null;
 
         // Si TARGET_DOMAIN est défini, activer le reverse proxy
         if (TARGET_DOMAIN) {
