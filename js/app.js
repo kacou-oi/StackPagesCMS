@@ -360,11 +360,20 @@ function renderVideos() {
     const pageVideos = filtered.slice(start, start + VIDEOS_PER_PAGE);
 
     tbody.innerHTML = pageVideos.map(video => `
-        <tr class="hover:bg-slate-50 transition">
-            <td class="px-6 py-4"><img src="${video.thumbnail}" alt="${video.title}" class="w-16 h-9 object-cover rounded"/></td>
-            <td class="px-6 py-4"><a href="${video.link}" target="_blank" class="text-blue-600 hover:underline">${video.title}</a></td>
-            <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right"><a href="${video.link}" target="_blank" class="text-orange-600 hover:underline">Voir</a></td>
+        <tr class="hover:bg-slate-50 transition group">
+            <td class="px-6 py-4">
+                <div class="w-10 h-10 rounded bg-slate-200 overflow-hidden">
+                    ${video.thumbnail ? `<img src="${video.thumbnail}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-video"></i></div>'}
+                </div>
+            </td>
+            <td class="px-6 py-4 font-medium text-slate-800">
+                ${video.title}
+                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
+            </td>
+            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
+            <td class="px-6 py-4 text-right">
+                <a href="${video.link}" target="_blank" class="text-blue-600 hover:underline">Voir</a>
+            </td>
         </tr>
     `).join('');
 
