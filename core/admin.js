@@ -248,7 +248,7 @@ function renderDashboard() {
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
-                        <button onclick="openVideoPreview('${video.id}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                        <button onclick="openVideoPreview('${video.link}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
                     </td>
                 </tr>
             `).join('');
