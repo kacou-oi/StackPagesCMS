@@ -615,31 +615,46 @@
         <div id="view-help" class="view-section hidden space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
                 <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
+
                 <h4>1. Tableau de bord</h4>
                 <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
                     synchronisation avec Substack.</p>
 
-                <h4>2. Gestion des Articles & Vidéos</h4>
-                <p>Parcourez tous les articles récupérés depuis votre flux RSS Substack et vos vidéos YouTube. Vous
-                    pouvez rechercher du contenu
-                    par titre et voir un aperçu complet tel qu'il apparaîtra sur votre site.</p>
+                <h4>2. Gestion des Contenus</h4>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Articles :</strong> Parcourez les articles récupérés depuis votre flux RSS Substack.
+                    </li>
+                    <li><strong>Vidéos :</strong> Consultez les dernières vidéos de votre chaîne YouTube.</li>
+                    <li><strong>Podcasts :</strong> Écoutez et gérez vos épisodes de podcast.</li>
+                </ul>
 
-                <h4>3. Configuration</h4>
+                <h4>3. Outils Avancés</h4>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Frontend Builder :</strong> Personnalisez l'apparence de votre site via l'éditeur visuel
+                        Webstudio.</li>
+                    <li><strong>API Explorer :</strong> Testez les endpoints de votre API pour vérifier les données
+                        brutes.</li>
+                    <li><strong>Google Analytics :</strong> Suivez les performances de votre site via les rapports
+                        intégrés.</li>
+                </ul>
+
+                <h4>4. Configuration</h4>
                 <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
-                    Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état
-                    actuel
+                    Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état actuel
                     de ces variables :</p>
-                <ul>
+                <ul class="list-disc pl-5 space-y-1">
                     <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
                     <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
+                    <li><strong>PODCAST_FEED_URL</strong> : L'URL du flux RSS de votre podcast.</li>
+                    <li><strong>FRONTEND_BUILDER_URL</strong> : L'URL de votre projet Webstudio.</li>
                     <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
                 </ul>
-                <p>Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de votre
-                    déploiement Cloudflare.</p>
+                <p class="mt-2">Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de
+                    votre déploiement Cloudflare.</p>
 
-                <h4>4. Maintenance</h4>
-                <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
-                    pas vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
+                <h4>5. Maintenance</h4>
+                <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez pas
+                    vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
                     performance (TTL par défaut de 3 minutes).</p>
             </div>
         </div>
