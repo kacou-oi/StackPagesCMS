@@ -561,7 +561,7 @@ export default {
             // We only copy essential headers or just make a simple GET if it's a navigation
             return await env.ASSETS.fetch(new Request(new URL("/index.html", url), {
                 method: 'GET',
-                headers: request.headers // Pass headers but ensure method is GET for static files
+                headers: req.headers // Pass headers but ensure method is GET for static files
             }));
         }
 
@@ -569,7 +569,7 @@ export default {
         if (path === "/admin" || path === "/admin/") {
             return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
                 method: 'GET',
-                headers: request.headers
+                headers: req.headers
             }));
         }
 
