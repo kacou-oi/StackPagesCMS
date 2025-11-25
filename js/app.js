@@ -339,58 +339,35 @@ const VIDEOS_PER_PAGE = 10; // Renamed for consistency with diff
 
 // Search Listener
 function renderVideos() {
-    const container = document.getElementById('videos-container');
-    const countEl = document.getElementById('video-count');
-    if (!container) return;
+    const tbody = document.getElementById('videos-table');
+    if (!tbody) return;
 
     const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
     const filtered = appState.videos.filter(v => v.title.toLowerCase().includes(search));
 
     if (filtered.length === 0) {
-        container.innerHTML = `
-            <div class="col-span-full text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300">
-                <i class="fas fa-video text-4xl text-slate-300 mb-3"></i>
-                <p class="text-slate-500">Aucune vidéo trouvée</p>
-            </div>
-        `;
-        if (countEl) countEl.textContent = '0 vidéos';
-        // Update Pagination Controls for empty state
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr>`;
         document.getElementById('video-pagination-info').textContent = `Page 1 / 1`;
         document.getElementById('prev-video-page-btn').disabled = true;
         document.getElementById('next-video-page-btn').disabled = true;
         return;
     }
 
-    if (countEl) countEl.textContent = `${filtered.length} vidéos`;
-
-    // Pagination Logic
     const totalPages = Math.ceil(filtered.length / VIDEOS_PER_PAGE);
     if (currentVideoPage > totalPages) currentVideoPage = 1;
 
     const start = (currentVideoPage - 1) * VIDEOS_PER_PAGE;
-    const end = start + VIDEOS_PER_PAGE;
-    const pageVideos = filtered.slice(start, end);
+    const pageVideos = filtered.slice(start, start + VIDEOS_PER_PAGE);
 
-    container.innerHTML = pageVideos.map(video => `
-        <div class="bg-white rounded-lg border border-slate-100 overflow-hidden hover:shadow-md transition group">
-            <div class="aspect-video bg-slate-100 relative overflow-hidden">
-                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                <a href="${video.link}" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
-                    <i class="fas fa-play-circle text-5xl text-white drop-shadow-lg transform scale-90 group-hover:scale-100 transition"></i>
-                </a>
-            </div>
-            <div class="p-4">
-                <div class="text-xs text-slate-500 mb-2 flex items-center gap-2">
-                    <i class="far fa-calendar"></i>
-                    ${new Date(video.published).toLocaleDateString('fr-FR')}
-                </div>
-                <h3 class="font-bold text-slate-800 line-clamp-2 mb-2 group-hover:text-orange-600 transition">${video.title}</h3>
-                <p class="text-sm text-slate-600 line-clamp-2">${video.description}</p>
-            </div>
-        </div>
+    tbody.innerHTML = pageVideos.map(video => `
+        <tr class="hover:bg-slate-50 transition">
+            <td class="px-6 py-4"><img src="${video.thumbnail}" alt="${video.title}" class="w-16 h-9 object-cover rounded"/></td>
+            <td class="px-6 py-4"><a href="${video.link}" target="_blank" class="text-blue-600 hover:underline">${video.title}</a></td>
+            <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
+            <td class="px-6 py-4 text-right"><a href="${video.link}" target="_blank" class="text-orange-600 hover:underline">Voir</a></td>
+        </tr>
     `).join('');
 
-    // Update Pagination Controls
     document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} / ${totalPages}`;
     document.getElementById('prev-video-page-btn').disabled = currentVideoPage === 1;
     document.getElementById('next-video-page-btn').disabled = currentVideoPage === totalPages;
@@ -453,8 +430,8 @@ function prevVideoPage() {
 
 function nextVideoPage() {
     const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
-    const filtered = allVideos.filter(v => v.title.toLowerCase().includes(search));
-    const totalPages = Math.ceil(filtered.length / videosPerPage);
+    const filtered = appState.videos.filter(v => v.title.toLowerCase().includes(search));
+    const totalPages = Math.ceil(filtered.length / VIDEOS_PER_PAGE);
 
     if (currentVideoPage < totalPages) {
         currentVideoPage++;
