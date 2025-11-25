@@ -557,16 +557,18 @@ export default {
 
         // Page d'accueil (Racine) -> index.html (Landing Page)
         if (path === "/" || path === "/index.html") {
+            // Create a new request for the internal asset
+            // We only copy essential headers or just make a simple GET if it's a navigation
             return await env.ASSETS.fetch(new Request(new URL("/index.html", url), {
-                method: request.method,
-                headers: request.headers
+                method: 'GET',
+                headers: request.headers // Pass headers but ensure method is GET for static files
             }));
         }
 
         // Admin Login -> admin/index.html
         if (path === "/admin" || path === "/admin/") {
             return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
-                method: request.method,
+                method: 'GET',
                 headers: request.headers
             }));
         }
