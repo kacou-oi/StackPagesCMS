@@ -97,10 +97,11 @@ async function loadData() {
 
         // Update UI with Metadata
         const siteNameEl = document.getElementById('dashboard-site-name');
-        if (siteNameEl) siteNameEl.textContent = metadata.siteName || 'StackPages CMS';
+        if (siteNameEl) siteNameEl.textContent = window.location.hostname;
 
         const authorEl = document.getElementById('dashboard-author');
-        if (authorEl) authorEl.textContent = metadata.author || 'Admin';
+        const adminEmail = localStorage.getItem('stackpages_email') || 'Admin';
+        if (authorEl) authorEl.textContent = adminEmail;
 
         // Compute diffHours for feed status (use lastBuildDate if present)
         const statusEl = document.getElementById('stat-feed-status');
