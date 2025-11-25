@@ -21,11 +21,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Auth Check
-// Auth Check
 async function checkAuth() {
     const authKey = localStorage.getItem('stackpages_auth');
     if (!authKey) {
-        window.location.href = '/';
+        window.location.href = '/admin';
         return;
     }
 
