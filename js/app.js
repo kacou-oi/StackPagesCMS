@@ -292,7 +292,7 @@ function renderContentTable() {
     tbody.innerHTML = paginatedPosts.map(post => `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4">
-                <div class="w-10 h-10 rounded bg-slate-200 overflow-hidden">
+                <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
                     ${post.image ? `<img src="${post.image}" class="w-full h-full object-cover" />` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-image"></i></div>'}
                 </div>
             </td>
@@ -362,7 +362,7 @@ function renderVideos() {
     tbody.innerHTML = pageVideos.map(video => `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4">
-                <div class="w-10 h-10 rounded bg-slate-200 overflow-hidden">
+                <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
                     ${video.thumbnail ? `<img src="${video.thumbnail}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-video"></i></div>'}
                 </div>
             </td>
