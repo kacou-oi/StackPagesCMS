@@ -478,13 +478,29 @@ function openVideoPreview(link) {
     if (!video) return;
 
     document.getElementById('modal-title').textContent = video.title;
+
+    // Extract Video ID
+    let videoId = '';
+    try {
+        const url = new URL(link);
+        if (url.hostname.includes('youtube.com')) {
+            videoId = url.searchParams.get('v');
+        } else if (url.hostname.includes('youtu.be')) {
+            videoId = url.pathname.slice(1);
+        }
+    } catch (e) {
+        console.error("Invalid video URL", link);
+    }
+
+    const embedSrc = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : link;
+
     // Build modal content: embed video if possible, otherwise show link and description
     const content = `<div class="flex flex-col gap-4">
         <div class="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
             <iframe 
                 width="100%" 
                 height="100%" 
-                src="${video.link}?autoplay=1" 
+                src="${embedSrc}" 
                 title="YouTube video player" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
