@@ -266,7 +266,7 @@ function renderDashboard() {
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
-                        <a href="${podcast.link}" target="_blank" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Écouter</a>
+                        <a href="${podcast.link}" target="_blank" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</a>
                     </td>
                 </tr>
             `).join('');
