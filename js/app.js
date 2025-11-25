@@ -371,9 +371,10 @@ function renderVideos() {
                 <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
             </td>
             <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right space-x-2">
-                <button onclick="openVideoPreview('${video.link}')" class="text-slate-600 hover:text-orange-600"><i class="fas fa-eye"></i></button>
-                <a href="${video.link}" target="_blank" class="text-blue-600 hover:underline">Voir</a>
+            <td class="px-6 py-4 text-right">
+                <button onclick="openVideoPreview('${video.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                    <i class="fas fa-eye mr-1"></i> Aperçu
+                </button>
             </td>
         </tr>
     `).join('');
