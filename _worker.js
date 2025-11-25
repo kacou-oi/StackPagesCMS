@@ -557,12 +557,18 @@ export default {
 
         // Page d'accueil (Racine) -> index.html (Landing Page)
         if (path === "/" || path === "/index.html") {
-            return await env.ASSETS.fetch(new Request(new URL("/index.html", url), request));
+            return await env.ASSETS.fetch(new Request(new URL("/index.html", url), {
+                method: request.method,
+                headers: request.headers
+            }));
         }
 
         // Admin Login -> admin/index.html
         if (path === "/admin" || path === "/admin/") {
-            return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), request));
+            return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
+                method: request.method,
+                headers: request.headers
+            }));
         }
 
         try {
