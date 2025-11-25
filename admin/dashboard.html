@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StackPages Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./../core/WhatsappChatBox.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -669,6 +670,20 @@
             localStorage.removeItem('stackpages_auth');
             window.location.href = '/admin';
         }
+    </script>
+
+    <script>
+        // integration de Chat WhatsApp
+        new WAChatBox({
+            link: "https://wa.me/2250747288793",
+            user: {
+                name: "Ange",
+                avatar: "https://img.icons8.com/?size=100&id=23460&format=png&color=000000",
+                status: "Typically replies within an hour",
+            },
+            text: `Hey There 👋<br><br>I'm here to help, so let me know what's up and I'll be happy to find a solution 🤓`,
+            button_text: "Need Help?",
+        });
     </script>
 </body>
 
