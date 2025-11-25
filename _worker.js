@@ -58,6 +58,31 @@ function cleanHtmlContent(html) {
     return cleanedHtml;
 }
 
+// ====================================================================
+// 1.5 REVERSE PROXY - CLASSE UTILITAIRE
+// ====================================================================
+
+// Classe pour réécrire les attributs HTML lors du reverse proxy
+class AttributeRewriter {
+    constructor(attributeName, targetDomain, workerDomain) {
+        this.attributeName = attributeName;
+        this.targetDomain = targetDomain;
+        this.workerDomain = workerDomain;
+    }
+
+    element(element) {
+        const attribute = element.getAttribute(this.attributeName);
+
+        // Remplacer les liens absolus du domaine cible par le domaine du Worker
+        if (attribute && attribute.includes(this.targetDomain)) {
+            element.setAttribute(
+                this.attributeName,
+                attribute.replace(this.targetDomain, this.workerDomain)
+            );
+        }
+    }
+}
+
 
 // ====================================================================
 // 2. LOGIQUE DE PARSING
@@ -555,16 +580,6 @@ export default {
         }
         */
 
-        // Page d'accueil (Racine) -> index.html (Landing Page)
-        if (path === "/" || path === "/index.html") {
-            // Create a new request for the internal asset
-            // We only copy essential headers or just make a simple GET if it's a navigation
-            return await env.ASSETS.fetch(new Request(new URL("/index.html", url), {
-                method: 'GET',
-                headers: req.headers // Pass headers but ensure method is GET for static files
-            }));
-        }
-
         // Admin Login -> admin/index.html
         if (path === "/admin" || path === "/admin/") {
             return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
@@ -580,6 +595,67 @@ export default {
                 headers: req.headers
             }));
         }
+
+        // ====================================================================
+        // 5. REVERSE PROXY (SI TARGET_DOMAIN EST DÉFINI)
+        // ====================================================================
+        // Note: Cette logique est également documentée dans /core/frontend.js
+        //       pour référence et maintenance future.
+        const TARGET_DOMAIN = env.TARGET_DOMAIN;
+        const TARGET_PROTOCOL = 'https:';
+        const WORKER_DOMAIN = url.hostname;
+
+        // Si TARGET_DOMAIN est défini, activer le reverse proxy
+        if (TARGET_DOMAIN) {
+            const originUrl = new URL(req.url);
+            originUrl.hostname = TARGET_DOMAIN;
+            originUrl.protocol = TARGET_PROTOCOL;
+
+            let newRequest = new Request(originUrl, req);
+
+            try {
+                let response = await fetch(newRequest);
+                const contentType = response.headers.get('content-type');
+
+                // Gestion des redirections
+                if (response.headers.has('location')) {
+                    const location = response.headers.get('location');
+                    if (location.includes(TARGET_DOMAIN)) {
+                        let newHeaders = new Headers(response.headers);
+                        const newLocation = location.replace(TARGET_DOMAIN, WORKER_DOMAIN);
+                        newHeaders.set('location', newLocation);
+
+                        return new Response(response.body, {
+                            status: response.status,
+                            statusText: response.statusText,
+                            headers: newHeaders
+                        });
+                    }
+                }
+
+                // Réécriture du contenu HTML
+                if (contentType && contentType.startsWith('text/html')) {
+                    return new HTMLRewriter()
+                        .on('a[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('link[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('script[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('img[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('form[action]', new AttributeRewriter('action', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .transform(response);
+                }
+
+                // Renvoyer les autres ressources telles quelles
+                return response;
+
+            } catch (error) {
+                console.error("Erreur de reverse proxy:", error);
+                return new Response(`Erreur de reverse proxy : ${error.message}`, { status: 500 });
+            }
+        }
+
+        // ====================================================================
+        // 6. FALLBACK - SERVIR INDEX.HTML PAR DÉFAUT
+        // ====================================================================
 
 
 
