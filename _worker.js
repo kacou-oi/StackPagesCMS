@@ -367,14 +367,16 @@ export default {
 
         // --- ROUTES API PUBLIC ---
 
-        // 1. Login (Validation simple)
+        // 1. Login (Validation email + password)
         if (path === "/api/login" && req.method === "POST") {
             try {
                 const body = await req.json();
-                if (body.password === ADMIN_PASSWORD) {
+                const ADMIN_EMAIL = env.ADMIN_EMAIL || "admin@example.com"; // Default for dev
+
+                if (body.email === ADMIN_EMAIL && body.password === ADMIN_PASSWORD) {
                     return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
                 } else {
-                    return new Response(JSON.stringify({ error: "Mot de passe incorrect" }), { status: 401, headers: corsHeaders });
+                    return new Response(JSON.stringify({ error: "Identifiants incorrects" }), { status: 401, headers: corsHeaders });
                 }
             } catch (e) {
                 return new Response("Bad Request", { status: 400, headers: corsHeaders });

@@ -38,6 +38,18 @@
 
         <form id="login-form" class="space-y-6">
             <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-slate-400"></i>
+                    </div>
+                    <input type="email" id="email" name="email" required
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition sm:text-sm"
+                        placeholder="admin@example.com">
+                </div>
+            </div>
+
+            <div>
                 <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Mot de passe</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -51,7 +63,7 @@
 
             <div id="error-message"
                 class="hidden text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg border border-red-100">
-                Mot de passe incorrect.
+                Identifiants incorrects.
             </div>
 
             <button type="submit"
@@ -75,6 +87,7 @@
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error-message');
             const btn = e.target.querySelector('button');
@@ -88,14 +101,14 @@
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password })
+                    body: JSON.stringify({ email, password })
                 });
 
                 if (res.ok) {
                     localStorage.setItem('stackpages_auth', password);
                     window.location.href = '/dashboard';
                 } else {
-                    errorDiv.textContent = "Mot de passe incorrect.";
+                    errorDiv.textContent = "Identifiants incorrects.";
                     errorDiv.classList.remove('hidden');
                     btn.disabled = false;
                     btn.textContent = 'Se connecter';
