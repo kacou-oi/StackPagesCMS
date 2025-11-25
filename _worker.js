@@ -502,6 +502,9 @@ export default {
                     currentPos = itemEnd + 7;
                 }
 
+                // Sort by date desc
+                items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
                 return new Response(JSON.stringify(items), {
                     headers: corsHeaders
                 });
