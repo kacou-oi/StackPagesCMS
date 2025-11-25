@@ -371,7 +371,8 @@ function renderVideos() {
                 <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
             </td>
             <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
+            <td class="px-6 py-4 text-right space-x-2">
+                <button onclick="openVideoPreview('${video.link}')" class="text-slate-600 hover:text-orange-600"><i class="fas fa-eye"></i></button>
                 <a href="${video.link}" target="_blank" class="text-blue-600 hover:underline">Voir</a>
             </td>
         </tr>
@@ -470,19 +471,19 @@ function closeModal() {
     content.innerHTML = '';
 }
 
-function openVideoPreview(videoId) {
-    const video = appState.videos.find(v => v.id === videoId);
+// New function to preview a video in the same modal
+function openVideoPreview(link) {
+    const video = appState.videos.find(v => v.link === link);
     if (!video) return;
 
     document.getElementById('modal-title').textContent = video.title;
-
-    // Embed YouTube Video
-    const embedHtml = `
+    // Build modal content: embed video if possible, otherwise show link and description
+    const content = `<div class="flex flex-col gap-4">
         <div class="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
             <iframe 
                 width="100%" 
                 height="100%" 
-                src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                src="${video.link}?autoplay=1" 
                 title="YouTube video player" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
