@@ -499,11 +499,11 @@ function openVideoPreview(link) {
         </div>
     `;
 
-    document.getElementById('modal-content').innerHTML = embedHtml;
-
+    document.getElementById('modal-content').innerHTML = content;
     const modal = document.getElementById('preview-modal');
     modal.classList.remove('hidden');
 }
+
 
 // API Tester
 async function testApiSlug() {
