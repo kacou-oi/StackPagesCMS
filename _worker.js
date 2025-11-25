@@ -610,8 +610,17 @@ export default {
         // Construire le domaine cible complet si le sous-domaine est défini
         const TARGET_DOMAIN = TARGET_SUBDOMAIN ? `${TARGET_SUBDOMAIN}.${TARGET_BASE_DOMAIN}` : null;
 
-        // Si TARGET_DOMAIN est défini, activer le reverse proxy
-        if (TARGET_DOMAIN) {
+        // Si TARGET_DOMAIN est défini ET que ce n'est pas un chemin admin/API, activer le reverse proxy
+        // Chemins exclus du proxy (déjà gérés ci-dessus):
+        // - /api/* (toutes les API)
+        // - /admin, /dashboard (pages admin)
+        // - /core/* (fichiers JS)
+        const isAdminOrApiPath = path.startsWith('/api/') ||
+            path.startsWith('/admin') ||
+            path.startsWith('/dashboard') ||
+            path.startsWith('/core/');
+
+        if (TARGET_DOMAIN && !isAdminOrApiPath) {
             const originUrl = new URL(req.url);
             originUrl.hostname = TARGET_DOMAIN;
             originUrl.protocol = TARGET_PROTOCOL;
