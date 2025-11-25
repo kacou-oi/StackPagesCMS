@@ -571,14 +571,7 @@ export default {
             }));
         }
 
-        // Handle relative paths for core JS from admin pages (e.g. /admin/core/admin.js -> /core/admin.js)
-        if (path.startsWith("/admin/core/")) {
-            const newPath = path.replace("/admin/core/", "/core/");
-            return await env.ASSETS.fetch(new Request(new URL(newPath, url), {
-                method: request.method,
-                headers: request.headers
-            }));
-        }
+
 
         try {
             return await env.ASSETS.fetch(req);
