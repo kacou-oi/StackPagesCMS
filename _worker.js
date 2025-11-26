@@ -629,27 +629,66 @@ export default {
             originUrl.hostname = TARGET_DOMAIN;
             originUrl.protocol = TARGET_PROTOCOL;
 
-            let newRequest = new Request(originUrl, req);
+            // Créer une nouvelle requête avec les headers modifiés
+            let newHeaders = new Headers(req.headers);
+            newHeaders.set("Host", TARGET_DOMAIN);
+            newHeaders.set("Referer", originUrl.toString()); // Optionnel: faire croire que ça vient du site cible
+
+            let newRequest = new Request(originUrl, {
+                method: req.method,
+                headers: newHeaders,
+                body: req.body,
+                redirect: "manual" // Gérer les redirections manuellement
+            });
 
             try {
                 let response = await fetch(newRequest);
                 const contentType = response.headers.get('content-type');
 
+                // Préparer les headers de réponse (nettoyage CSP/Frame-Options)
+                let responseHeaders = new Headers(response.headers);
+                responseHeaders.delete("Content-Security-Policy");
+                responseHeaders.delete("X-Frame-Options");
+
                 // Gestion des redirections
                 if (response.headers.has('location')) {
                     const location = response.headers.get('location');
                     if (location.includes(TARGET_DOMAIN)) {
-                        let newHeaders = new Headers(response.headers);
                         const newLocation = location.replace(TARGET_DOMAIN, WORKER_DOMAIN);
-                        newHeaders.set('location', newLocation);
+                        responseHeaders.set('location', newLocation);
 
                         return new Response(response.body, {
                             status: response.status,
                             statusText: response.statusText,
-                            headers: newHeaders
+                            headers: responseHeaders
                         });
                     }
                 }
+
+                // Réécriture du contenu HTML
+                if (contentType && contentType.startsWith('text/html')) {
+                    return new HTMLRewriter()
+                        .on('a[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('link[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('script[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('img[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('img[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('source[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('source[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('form[action]', new AttributeRewriter('action', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .transform(new Response(response.body, {
+                            status: response.status,
+                            statusText: response.statusText,
+                            headers: responseHeaders
+                        }));
+                }
+
+                // Renvoyer les autres ressources telles quelles (images, css, etc.)
+                return new Response(response.body, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: responseHeaders
+                });
 
                 // Réécriture du contenu HTML
                 if (contentType && contentType.startsWith('text/html')) {
