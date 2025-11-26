@@ -106,7 +106,6 @@
 
                 if (res.ok) {
                     localStorage.setItem('stackpages_auth', password);
-                    localStorage.setItem('stackpages_email', email);
                     window.location.href = '/dashboard';
                 } else {
                     errorDiv.textContent = "Identifiants incorrects.";
