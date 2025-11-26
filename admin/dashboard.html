@@ -440,17 +440,41 @@
         <!-- VIEW: PODCASTS -->
         <div id="view-podcasts" class="view-section hidden space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                    <h3 class="font-semibold text-slate-800">Épisodes de Podcast</h3>
-                    <span id="podcast-count"
-                        class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-medium">0
-                        épisodes</span>
+                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <h3 class="font-semibold text-slate-800">Épisodes de Podcast</h3>
+                        <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                            title="Actualiser">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="search-podcasts" placeholder="Rechercher..."
+                        class="px-3 py-1.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
                 </div>
-                <div id="podcasts-container" class="p-6 grid grid-cols-1 gap-6">
-                    <!-- Les épisodes seront injectés ici -->
-                    <div class="text-center py-12 text-slate-500">
-                        <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
-                        <p>Chargement des podcasts...</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <tr>
+                                <th class="px-6 py-3">Titre</th>
+                                <th class="px-6 py-3">Date</th>
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="podcasts-table" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
+                    <span id="podcast-pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                    <div class="flex gap-2">
+                        <button id="prev-podcast-page-btn" onclick="prevPodcastPage()"
+                            class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                        <button id="next-podcast-page-btn" onclick="nextPodcastPage()"
+                            class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
                     </div>
                 </div>
             </div>
