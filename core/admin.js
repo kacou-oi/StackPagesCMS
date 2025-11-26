@@ -267,7 +267,7 @@ function renderDashboard() {
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
-                        <a href="${podcast.link}" target="_blank" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</a>
+                        <button onclick="openPodcastPreview('${podcast.link}')" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</button>
                     </td>
                 </tr>
             `).join('');
@@ -428,10 +428,10 @@ function renderPodcasts() {
                 </div>
             </div>
             <div class="flex-shrink-0">
-                <a href="${podcast.link}" target="_blank" 
+                <button onclick="openPodcastPreview('${podcast.link}')" 
                    class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-600 hover:text-white transition">
-                    <i class="fas fa-external-link-alt"></i>
-                </a>
+                    <i class="fas fa-play"></i>
+                </button>
             </div>
         </div>
     `).join('');
@@ -519,6 +519,38 @@ function openVideoPreview(link) {
             </a>
         </div>
     `;
+
+    document.getElementById('modal-content').innerHTML = content;
+    const modal = document.getElementById('preview-modal');
+    modal.classList.remove('hidden');
+}
+
+function openPodcastPreview(link) {
+    const podcast = appState.podcasts.find(p => p.link === link);
+    if (!podcast) return;
+
+    document.getElementById('modal-title').textContent = podcast.title;
+
+    const content = `<div class="flex flex-col gap-4">
+        <div class="w-full bg-slate-50 rounded-xl p-6 border border-slate-200 flex flex-col items-center justify-center gap-4">
+            <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center text-purple-500 mb-2">
+                <i class="fas fa-microphone-alt text-4xl"></i>
+            </div>
+            <audio controls class="w-full max-w-md" preload="auto">
+                <source src="${podcast.audioUrl}" type="audio/mpeg">
+                Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+        </div>
+        <div class="mt-6 prose prose-orange max-w-none">
+            <div class="text-sm text-slate-500 mb-2">
+                <i class="far fa-calendar mr-2"></i> ${new Date(podcast.pubDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </div>
+            <p>${podcast.description || ''}</p>
+            <a href="${podcast.link}" target="_blank" class="text-sm text-slate-500 hover:text-orange-500 flex items-center gap-2 mt-4">
+                <i class="fas fa-external-link-alt"></i> Écouter sur la plateforme d'origine
+            </a>
+        </div>
+    </div>`;
 
     document.getElementById('modal-content').innerHTML = content;
     const modal = document.getElementById('preview-modal');
