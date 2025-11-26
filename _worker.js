@@ -75,10 +75,9 @@ class AttributeRewriter {
 
         // Remplacer les liens absolus du domaine cible par le domaine du Worker
         if (attribute && attribute.includes(this.targetDomain)) {
-            element.setAttribute(
-                this.attributeName,
-                attribute.replace(this.targetDomain, this.workerDomain)
-            );
+            // Utiliser une regex globale ou split/join pour tout remplacer (important pour srcset)
+            const newValue = attribute.split(this.targetDomain).join(this.workerDomain);
+            element.setAttribute(this.attributeName, newValue);
         }
     }
 }
@@ -659,6 +658,9 @@ export default {
                         .on('link[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
                         .on('script[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
                         .on('img[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('img[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('source[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
+                        .on('source[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
                         .on('form[action]', new AttributeRewriter('action', TARGET_DOMAIN, WORKER_DOMAIN))
                         .transform(response);
                 }
