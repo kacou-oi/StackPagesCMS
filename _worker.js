@@ -601,18 +601,26 @@ export default {
         }
 
         // ====================================================================
-        // 5. REVERSE PROXY (SI TARGET_SUBDOMAIN EST DÉFINI)
+        // 5. REVERSE PROXY (SI STAGING_URL EST DÉFINI)
         // ====================================================================
         // Note: Cette logique est également documentée dans /core/frontend.js
         //       pour référence et maintenance future.
 
-        const TARGET_SUBDOMAIN = env.TARGET_SUBDOMAIN;
-        const TARGET_BASE_DOMAIN = 'wstd.io'; // Domaine de base pour Webstudio
-        const TARGET_PROTOCOL = 'https:';
-        const WORKER_DOMAIN = url.hostname;
+        const STAGING_URL = env.STAGING_URL;
+        let TARGET_DOMAIN = null;
+        let TARGET_PROTOCOL = 'https:';
 
-        // Construire le domaine cible complet si le sous-domaine est défini
-        const TARGET_DOMAIN = TARGET_SUBDOMAIN ? `${TARGET_SUBDOMAIN}.${TARGET_BASE_DOMAIN}` : null;
+        if (STAGING_URL) {
+            try {
+                const stagingUrlObj = new URL(STAGING_URL);
+                TARGET_DOMAIN = stagingUrlObj.hostname;
+                TARGET_PROTOCOL = stagingUrlObj.protocol;
+            } catch (e) {
+                console.error("Invalid STAGING_URL:", STAGING_URL);
+            }
+        }
+
+        const WORKER_DOMAIN = url.hostname;
 
         // Si TARGET_DOMAIN est défini ET que ce n'est pas un chemin admin/API, activer le reverse proxy
         // Chemins exclus du proxy (déjà gérés ci-dessus):
@@ -690,22 +698,7 @@ export default {
                     headers: responseHeaders
                 });
 
-                // Réécriture du contenu HTML
-                if (contentType && contentType.startsWith('text/html')) {
-                    return new HTMLRewriter()
-                        .on('a[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('link[href]', new AttributeRewriter('href', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('script[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('img[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('img[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('source[src]', new AttributeRewriter('src', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('source[srcset]', new AttributeRewriter('srcset', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .on('form[action]', new AttributeRewriter('action', TARGET_DOMAIN, WORKER_DOMAIN))
-                        .transform(response);
-                }
 
-                // Renvoyer les autres ressources telles quelles
-                return response;
 
             } catch (error) {
                 console.error("Erreur de reverse proxy:", error);
