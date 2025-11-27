@@ -18,67 +18,31 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Code editor styling */
-        .code-editor-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
+        /* Code editor styling - Simple and clean approach */
         #page-html-editor {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             padding: 1rem;
             margin: 0;
             border: 0;
-            background: transparent !important;
-            color: transparent;
-            caret-color: #4ade80;
-            font-family: 'Courier New', Courier, monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            caret-color: #ffffff;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 14px;
             line-height: 1.6;
             resize: none;
             outline: none;
             overflow: auto;
-            white-space: pre;
-            word-wrap: normal;
-            z-index: 2;
+            tab-size: 4;
         }
 
         #page-html-editor::selection {
-            background: rgba(74, 222, 128, 0.3);
+            background: rgba(38, 79, 120, 0.6);
         }
 
-        #page-html-highlight {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 1rem;
-            margin: 0;
-            background: #1e293b;
-            overflow: auto;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        #page-html-highlight pre {
-            margin: 0;
-            padding: 0;
-            background: transparent;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        #page-html-highlight code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            line-height: 1.6;
+        #page-html-editor::placeholder {
+            color: #6a737d;
         }
     </style>
 </head>
@@ -187,20 +151,16 @@
                     </button>
                 </div>
             </div>
-            <div class="flex-1 relative overflow-hidden bg-slate-900">
-                <div class="code-editor-container">
-                    <div id="page-html-highlight">
-                        <pre><code class="language-markup"></code></pre>
-                    </div>
-                    <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..." spellcheck="false"
-                        autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
-                </div>
+            <div class="flex-1 bg-[#1e1e1e] overflow-hidden">
+                <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..." spellcheck="false"
+                    autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
             </div>
-            <div class="px-6 py-3 border-t border-slate-200 bg-slate-50">
-                <span class="text-xs text-slate-500">
+            <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
+                <span class="text-xs text-slate-400">
                     <i class="fas fa-lightbulb text-orange-400 mr-1"></i>
-                    Le code est automatiquement mis en exergue avec Prism.js
+                    Éditeur de code HTML - La coloration syntaxique apparaîtra dans l'aperçu
                 </span>
+                <span id="html-char-count" class="text-xs text-slate-400">0 caractères</span>
             </div>
         </div>
     </main>
@@ -223,29 +183,23 @@
 
     <script src="./../core/admin.js"></script>
     <script>
-        // Sync scrolling between textarea and highlight
-        function syncScroll() {
-            const editor = document.getElementById('page-html-editor');
-            const highlight = document.getElementById('page-html-highlight');
-
-            if (editor && highlight) {
-                highlight.scrollTop = editor.scrollTop;
-                highlight.scrollLeft = editor.scrollLeft;
-            }
-        }
-
         // Initialize on load
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
 
-            // Initialize code editor
-            initializeCodeEditor();
-
-            // Add scroll sync
+            // Initialize character counter
             const editor = document.getElementById('page-html-editor');
-            if (editor) {
-                editor.addEventListener('scroll', syncScroll);
-                editor.addEventListener('input', syncScroll);
+            const charCount = document.getElementById('html-char-count');
+
+            if (editor && charCount) {
+                editor.addEventListener('input', function () {
+                    charCount.textContent = `${this.value.length} caractères`;
+                });
+
+                // Initial count
+                if (editor.value) {
+                    charCount.textContent = `${editor.value.length} caractères`;
+                }
             }
 
             // Check if editing existing page
@@ -287,6 +241,12 @@
 
             // Update status
             document.getElementById('page-status').textContent = 'Édition: ' + page.title;
+
+            // Update character count
+            const charCount = document.getElementById('html-char-count');
+            if (charCount && page.htmlContent) {
+                charCount.textContent = `${page.htmlContent.length} caractères`;
+            }
 
             // Trigger input event to update syntax highlighting
             const editor = document.getElementById('page-html-editor');
