@@ -676,7 +676,7 @@ function initializeCodeEditor() {
     // Update syntax highlighting on input
     editor.addEventListener('input', function () {
         const code = this.value;
-        const highlightCode = highlight.querySelector('code');
+        const highlightCode = highlight?.querySelector('code');
 
         if (highlightCode) {
             highlightCode.textContent = code;
@@ -691,13 +691,18 @@ function initializeCodeEditor() {
         }
     });
 
-    // Sync scroll
+    // Sync scroll between textarea and highlight
     editor.addEventListener('scroll', function () {
         if (highlight) {
             highlight.scrollTop = this.scrollTop;
             highlight.scrollLeft = this.scrollLeft;
         }
     });
+
+    // Trigger initial highlight if there's content
+    if (editor.value) {
+        editor.dispatchEvent(new Event('input'));
+    }
 }
 
 // Generate URL-friendly slug from title
