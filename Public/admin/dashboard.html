@@ -742,10 +742,19 @@
         </div>
     </div>
 
+    <!-- CONFIGURATION PUBLIC VERSION -->
+    <!-- Décommenter et configurer pour pointer vers un worker public partagé -->
     <!--
     <script>
-        // CONFIGURATION: Si le frontend est hébergé séparément du worker
-        // window.STACKPAGES_API_URL = "https://votre-worker.workers.dev";
+        // URL de l'API Worker public (ex: https://api.stackpages.dev)
+        window.STACKPAGES_API_URL = ""; // Laisser vide si le worker est au même endroit que le frontend
+        
+        // Configuration des flux RSS (requis pour le mode Public)
+        window.STACKPAGES_CONFIG = {
+            substack: "https://votre-compte.substack.com/feed",
+            youtube: "https://www.youtube.com/feeds/videos.xml?channel_id=VOTRE_CHANNEL_ID",
+            podcast: "https://anchor.fm/s/VOTRE_PODCAST_ID/podcast/rss"
+        };
     </script>
     -->
     <script src="./../core/admin.js"></script>

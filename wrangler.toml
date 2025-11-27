@@ -1,0 +1,37 @@
+name = "stackpages-portal"
+main = "_worker.js"
+compatibility_date = "2023-10-25"
+
+# Configuration des variables d'environnement
+# Remplacer les valeurs par vos propres configurations
+[vars]
+# URLs des flux RSS
+SUBSTACK_FEED_URL = "https://example.substack.com/feed"
+YOUTUBE_FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=VOTRE_CHANNEL_ID"
+PODCAST_FEED_URL = "https://anchor.fm/s/votre-podcast/podcast/rss"
+
+# URL du constructeur Frontend (Webstudio ou autre)
+FRONTEND_BUILDER_URL = "https://builder.wstd.io/votre-projet"
+
+# Configuration SEO par défaut
+META_TITLE = "StackPages Portal"
+META_DESCRIPTION = "Portail de contenus agrégés"
+META_KEYWORDS = "stackpages, portal, cms, rss"
+
+# Authentification Admin
+ADMIN_EMAIL = "admin@example.com"
+ADMIN_PASSWORD = "change_me_please"
+
+# Reverse Proxy (Optionnel)
+# Si défini, le site affichera le contenu de cette URL (ex: un site Webstudio publié)
+# tout en gardant les fonctionnalités du portail (/admin, /api, etc.)
+STAGING_URL = ""
+
+# Restriction de Domaine (Optionnel)
+# Si défini, le worker ne répondra QUE si le domaine correspond (protection contre le vol de worker)
+ALLOWED_DOMAIN = ""
+
+# Configuration KV (Optionnel - pour le cache avancé ou l'archivage)
+# [[kv_namespaces]]
+# binding = "CONTENT_ARCHIVE"
+# id = "votre-id-kv"
