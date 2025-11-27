@@ -535,6 +535,28 @@ export default {
             }
         }
 
+        // 5.1 Single Video
+        if (path.startsWith("/api/video/")) {
+            const videoId = path.split("/").pop();
+            if (!config.youtubeRssUrl) {
+                return new Response(JSON.stringify({ error: "Flux YouTube non configuré" }), { status: 404, headers: corsHeaders });
+            }
+
+            try {
+                const videos = await getCachedYoutubeData(config.youtubeRssUrl);
+                const video = videos.find(v => v.id === videoId);
+
+                if (video) {
+                    return new Response(JSON.stringify(video), { status: 200, headers: corsHeaders });
+                } else {
+                    return new Response(JSON.stringify({ error: "Vidéo non trouvée" }), { status: 404, headers: corsHeaders });
+                }
+            } catch (error) {
+                console.error("Error fetching YouTube RSS:", error);
+                return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
+            }
+        }
+
         // --- ROUTES API PROTÉGÉES ---
 
         // 6. Get Config (Read-Only)
