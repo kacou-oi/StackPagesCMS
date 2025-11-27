@@ -403,6 +403,24 @@
                                 <button onclick="testApiSlug()"
                                     class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
                             </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/video/:id</code>
+                                <input type="text" id="api-video-input" placeholder="id-video"
+                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                <button onclick="testApiVideo()"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
+                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span
+                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-600">/api/podcast/:id</code>
+                                <input type="text" id="api-podcast-input" placeholder="guid-ou-slug"
+                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                <button onclick="testApiPodcast()"
+                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                            </div>
 
                             <button onclick="clearApiOutput()"
                                 class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
@@ -414,7 +432,7 @@
                         <div class="flex flex-col">
                             <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
                             <pre id="api-output"
-                                class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[400px] overflow-auto">En attente...</pre>
+                                class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[500px] overflow-auto">En attente...</pre>
                         </div>
                     </div>
                 </div>
@@ -661,10 +679,20 @@
                         <li><strong>Frontend Builder :</strong> Personnalisez l'apparence de votre site via l'éditeur
                             visuel
                             Webstudio.</li>
-                        <li><strong>API Explorer :</strong> Testez les endpoints de votre API pour vérifier les données
-                            brutes.</li>
-                        <li><strong>Google Analytics :</strong> Suivez les performances de votre site via les rapports
-                            intégrés.</li>
+                        <li><strong>API Explorer :</strong> Testez les endpoints de votre API directement depuis le
+                            dashboard.
+                            <ul class="list-circle pl-5 mt-1 text-sm text-slate-600">
+                                <li><code>/api/metadata</code> : Informations du site</li>
+                                <li><code>/api/posts</code> : Liste des articles</li>
+                                <li><code>/api/post/:slug</code> : Détail d'un article</li>
+                                <li><code>/api/videos</code> : Liste des vidéos</li>
+                                <li><code>/api/video/:id</code> : Détail d'une vidéo (par ID YouTube)</li>
+                                <li><code>/api/podcasts</code> : Liste des podcasts</li>
+                                <li><code>/api/podcast/:id</code> : Détail d'un podcast (par GUID ou Slug)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Analytics :</strong> Consultez les rapports de trafic Google Analytics intégrés.
+                        </li>
                     </ul>
 
                     <br>

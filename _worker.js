@@ -485,6 +485,7 @@ export default {
                     const pubDateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/s);
                     const descriptionMatch = itemContent.match(/<description>(.*?)<\/description>/s);
                     const enclosureMatch = itemContent.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/s);
+                    const guidMatch = itemContent.match(/<guid[^>]*>(.*?)<\/guid>/s);
 
                     // Clean up CDATA
                     const clean = (str) => {
@@ -492,8 +493,12 @@ export default {
                         return str.replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim();
                     };
 
+                    const title = clean(titleMatch ? titleMatch[1] : "Sans titre");
+
                     items.push({
-                        title: clean(titleMatch ? titleMatch[1] : "Sans titre"),
+                        title: title,
+                        slug: slugify(title),
+                        guid: clean(guidMatch ? guidMatch[1] : ""),
                         link: clean(linkMatch ? linkMatch[1] : "#"),
                         pubDate: clean(pubDateMatch ? pubDateMatch[1] : ""),
                         description: clean(descriptionMatch ? descriptionMatch[1] : ""),
@@ -517,6 +522,71 @@ export default {
                     status: 500,
                     headers: corsHeaders
                 });
+            }
+        }
+
+        // API: Single Podcast
+        if (path.startsWith("/api/podcast/")) {
+            const podcastId = path.split("/").pop();
+            const feedUrl = config.podcastFeedUrl;
+
+            if (!feedUrl) {
+                return new Response(JSON.stringify({ error: "Flux Podcast non configuré" }), { status: 404, headers: corsHeaders });
+            }
+
+            try {
+                // Réutiliser la logique de fetch/parse (idéalement factoriser, mais ici on duplique pour l'instant ou on appelle une fonction commune si on refactorise)
+                // Pour faire simple et rapide sans gros refactoring, on refait le fetch (le cache HTTP du worker aidera)
+                // OU MIEUX : On appelle l'endpoint interne ou on extrait la logique.
+                // Ici, je vais copier la logique de parsing pour l'instant car elle est dans le bloc if précédent.
+
+                const response = await fetch(feedUrl, { headers: { "User-Agent": "StackPages-Worker/1.0" } });
+                if (!response.ok) throw new Error(`Failed to fetch RSS: ${response.status}`);
+                const xmlText = await response.text();
+
+                // Parsing simplifié (copie de ci-dessus)
+                const items = [];
+                let currentPos = 0;
+                while (true) {
+                    const itemStart = xmlText.indexOf("<item>", currentPos);
+                    if (itemStart === -1) break;
+                    const itemEnd = xmlText.indexOf("</item>", itemStart);
+                    if (itemEnd === -1) break;
+                    const itemContent = xmlText.substring(itemStart, itemEnd);
+
+                    const titleMatch = itemContent.match(/<title>(.*?)<\/title>/s);
+                    const linkMatch = itemContent.match(/<link>(.*?)<\/link>/s);
+                    const pubDateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/s);
+                    const descriptionMatch = itemContent.match(/<description>(.*?)<\/description>/s);
+                    const enclosureMatch = itemContent.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/s);
+                    const guidMatch = itemContent.match(/<guid[^>]*>(.*?)<\/guid>/s);
+
+                    const clean = (str) => str ? str.replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim() : "";
+                    const title = clean(titleMatch ? titleMatch[1] : "Sans titre");
+
+                    items.push({
+                        title: title,
+                        slug: slugify(title),
+                        guid: clean(guidMatch ? guidMatch[1] : ""),
+                        link: clean(linkMatch ? linkMatch[1] : "#"),
+                        pubDate: clean(pubDateMatch ? pubDateMatch[1] : ""),
+                        description: clean(descriptionMatch ? descriptionMatch[1] : ""),
+                        audioUrl: enclosureMatch ? enclosureMatch[1] : null
+                    });
+                    currentPos = itemEnd + 7;
+                }
+
+                // Recherche par GUID ou Slug
+                const podcast = items.find(p => p.guid === podcastId || p.slug === podcastId);
+
+                if (podcast) {
+                    return new Response(JSON.stringify(podcast), { status: 200, headers: corsHeaders });
+                } else {
+                    return new Response(JSON.stringify({ error: "Podcast non trouvé" }), { status: 404, headers: corsHeaders });
+                }
+
+            } catch (error) {
+                return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
             }
         }
 
