@@ -826,7 +826,7 @@ function loadSavedPages() {
     }
 
     if (pages.length === 0) {
-        listEl.innerHTML = '<div class="text-center py-8 text-slate-500"><i class="fas fa-folder-open text-3xl mb-2"></i><p>Aucune page sauvegardée</p></div>';
+        listEl.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fas fa-folder-open text-4xl mb-3"></i><p class="text-lg">Aucune page sauvegardée</p><p class="text-sm mt-2">Cliquez sur "Nouvelle Page" pour commencer</p></div>';
         return;
     }
 
@@ -834,37 +834,38 @@ function loadSavedPages() {
     pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
     listEl.innerHTML = pages.map((page, index) => `
-        <div class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition group">
+        <div class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition group mb-3">
             <div class="flex-1">
-                <h4 class="font-medium text-slate-800">${page.title}</h4>
-                <div class="flex items-center gap-3 mt-1">
-                    <span class="text-xs text-slate-500">
+                <h4 class="font-medium text-slate-800 text-lg">${page.title}</h4>
+                <div class="flex items-center gap-4 mt-2">
+                    <span class="text-sm text-slate-500">
                         <i class="fas fa-link mr-1"></i>${page.slug}
                     </span>
-                    <span class="text-xs text-slate-400">
+                    <span class="text-sm text-slate-400">
                         <i class="far fa-clock mr-1"></i>${new Date(page.updatedAt).toLocaleDateString('fr-FR')}
                     </span>
+                    ${page.metaDesc ? `<span class="text-xs text-slate-400 truncate max-w-md"><i class="fas fa-info-circle mr-1"></i>${page.metaDesc.substring(0, 60)}...</span>` : ''}
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="loadPageToEditor(${index})" 
-                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 transition">
-                    <i class="fas fa-edit"></i>
-                </button>
+                <a href="/admin/IDE.html?page=${encodeURIComponent(page.slug)}"
+                    class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 transition flex items-center gap-2">
+                    <i class="fas fa-edit"></i> Éditer
+                </a>
                 <button onclick="previewSavedPage(${index})" 
-                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 transition">
-                    <i class="fas fa-eye"></i>
+                    class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 transition flex items-center gap-2">
+                    <i class="fas fa-eye"></i> Aperçu
                 </button>
                 <button onclick="deletePage(${index})" 
-                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-red-50 hover:border-red-500 hover:text-red-600 transition">
-                    <i class="fas fa-trash-alt"></i>
+                    class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm hover:bg-red-50 hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
+                    <i class="fas fa-trash-alt"></i> Supprimer
                 </button>
             </div>
         </div>
     `).join('');
 }
 
-// Load a saved page into the editor
+// Load a saved page into the editor (redirects to IDE.html)
 function loadPageToEditor(index) {
     let pages = [];
     try {
@@ -882,22 +883,8 @@ function loadPageToEditor(index) {
 
     if (!page) return;
 
-    // Populate form fields
-    document.getElementById('page-title').value = page.title || '';
-    document.getElementById('page-slug').value = page.slug || '';
-    document.getElementById('page-meta-desc').value = page.metaDesc || '';
-    document.getElementById('page-meta-keywords').value = page.metaKeywords || '';
-    document.getElementById('page-thumbnail').value = page.thumbnail || '';
-    document.getElementById('page-html-editor').value = page.htmlContent || '';
-
-    // Trigger input event to update syntax highlighting
-    const editor = document.getElementById('page-html-editor');
-    if (editor) {
-        editor.dispatchEvent(new Event('input'));
-    }
-
-    // Scroll to top of form
-    document.getElementById('page-creator-form')?.scrollIntoView({ behavior: 'smooth' });
+    // Redirect to IDE.html with page slug
+    window.location.href = `/admin/IDE.html?page=${encodeURIComponent(page.slug)}`;
 }
 
 // Delete a page
