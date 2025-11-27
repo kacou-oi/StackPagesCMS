@@ -589,7 +589,7 @@ function openPodcastPreview(link) {
 async function testApiSlug() {
     const slug = document.getElementById('api-slug-input').value;
     if (!slug) {
-        alert("Veuillez entrer un slug");
+        document.getElementById('api-output').textContent = "Erreur : Veuillez entrer un slug";
         return;
     }
     testApi(`/api/post/${slug}`);
@@ -598,7 +598,7 @@ async function testApiSlug() {
 async function testApiVideo() {
     const id = document.getElementById('api-video-input').value;
     if (!id) {
-        alert("Veuillez entrer un ID vidéo");
+        document.getElementById('api-output').textContent = "Erreur : Veuillez entrer un ID vidéo";
         return;
     }
     testApi(`/api/video/${id}`);
@@ -607,7 +607,7 @@ async function testApiVideo() {
 async function testApiPodcast() {
     const id = document.getElementById('api-podcast-input').value;
     if (!id) {
-        alert("Veuillez entrer un GUID ou un Slug de podcast");
+        document.getElementById('api-output').textContent = "Erreur : Veuillez entrer un GUID ou un Slug de podcast";
         return;
     }
     testApi(`/api/podcast/${id}`);
