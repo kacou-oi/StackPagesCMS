@@ -10,6 +10,10 @@
     <script src="./../core/WhatsappChatBox.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Prism.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -63,6 +67,10 @@
             <button onclick="showView('builder')"
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
                 <i class="fas fa-paint-brush w-6"></i> Frontend Builder
+            </button>
+            <button onclick="showView('page-creator')"
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                <i class="fas fa-file-code w-6"></i> Page Creator
             </button>
             <button onclick="showView('analytics')"
                 class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
@@ -651,6 +659,134 @@
                                 class="absolute inset-0 w-full h-full">
                             </iframe>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: PAGE CREATOR -->
+            <div id="view-page-creator" class="view-section hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Left Column: Form -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div
+                                class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600">
+                                <i class="fas fa-file-code text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">Créer une Page</h3>
+                                <p class="text-sm text-slate-500">Remplissez les informations de la page</p>
+                            </div>
+                        </div>
+
+                        <form id="page-creator-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                    <i class="fas fa-heading text-orange-500 mr-2"></i>Titre de la Page *
+                                </label>
+                                <input type="text" id="page-title" required placeholder="Ex: À propos de nous"
+                                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                    <i class="fas fa-link text-orange-500 mr-2"></i>Slug URL
+                                </label>
+                                <input type="text" id="page-slug" readonly placeholder="a-propos-de-nous"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-600 cursor-not-allowed">
+                                <p class="text-xs text-slate-500 mt-1">Généré automatiquement depuis le titre</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                    <i class="fas fa-align-left text-orange-500 mr-2"></i>Meta Description
+                                </label>
+                                <textarea id="page-meta-desc" rows="3"
+                                    placeholder="Description courte pour les moteurs de recherche..."
+                                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition resize-none"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                    <i class="fas fa-tags text-orange-500 mr-2"></i>Meta Keywords
+                                </label>
+                                <input type="text" id="page-meta-keywords" placeholder="mot-clé1, mot-clé2, mot-clé3"
+                                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                    <i class="fas fa-image text-orange-500 mr-2"></i>Image Thumbnail (URL)
+                                </label>
+                                <input type="url" id="page-thumbnail" placeholder="https://example.com/image.jpg"
+                                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-200 flex gap-3">
+                                <button type="button" onclick="savePage()"
+                                    class="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2.5 rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fas fa-save"></i> Sauvegarder
+                                </button>
+                                <button type="button" onclick="previewPage()"
+                                    class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-eye"></i> Aperçu
+                                </button>
+                                <button type="button" onclick="clearPageForm()"
+                                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-lg font-medium transition">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+
+                            <div id="page-save-status" class="text-sm"></div>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Code Editor -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-code text-orange-500"></i>
+                                Éditeur HTML
+                            </h3>
+                            <button onclick="copyHtmlCode()"
+                                class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition flex items-center gap-2">
+                                <i class="fas fa-copy"></i> Copier
+                            </button>
+                        </div>
+                        <div class="flex-1 relative">
+                            <div class="absolute inset-0 overflow-auto">
+                                <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..."
+                                    class="absolute inset-0 w-full h-full p-4 font-mono text-sm bg-slate-900 text-green-400 border-0 focus:outline-none resize-none"
+                                    style="tab-size: 2; line-height: 1.6;" spellcheck="false"></textarea>
+                                <pre id="page-html-highlight"
+                                    class="absolute inset-0 p-4 m-0 pointer-events-none overflow-hidden"
+                                    style="line-height: 1.6;"><code class="language-markup"></code></pre>
+                            </div>
+                        </div>
+                        <div class="px-6 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                            <span class="text-xs text-slate-500">
+                                <i class="fas fa-lightbulb text-orange-400 mr-1"></i>
+                                Le code est automatiquement mis en exergue
+                            </span>
+                            <span id="html-char-count" class="text-xs text-slate-500">0 caractères</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Pages List -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                            <i class="fas fa-list text-orange-500"></i>
+                            Pages Sauvegardées
+                        </h3>
+                        <button onclick="loadSavedPages()" class="text-slate-400 hover:text-orange-500 transition"
+                            title="Actualiser">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div id="saved-pages-list" class="space-y-2">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>

@@ -78,6 +78,7 @@ function showView(viewName) {
         'videos': 'Vidéos YouTube',
         'api-explorer': 'Explorateur d\'API',
         'builder': 'Frontend Builder',
+        'page-creator': 'Page Creator',
         'analytics': 'Google Analytics',
         'podcasts': 'Podcasts',
         'config': 'Configuration',
@@ -661,4 +662,381 @@ async function clearCache() {
     }
 }
 
+
+// ==================== PAGE CREATOR FUNCTIONS ====================
+
+// Initialize Code Editor with Prism highlighting
+function initializeCodeEditor() {
+    const editor = document.getElementById('page-html-editor');
+    const highlight = document.getElementById('page-html-highlight');
+    const charCount = document.getElementById('html-char-count');
+
+    if (!editor) return;
+
+    // Update syntax highlighting on input
+    editor.addEventListener('input', function () {
+        const code = this.value;
+        const highlightCode = highlight.querySelector('code');
+
+        if (highlightCode) {
+            highlightCode.textContent = code;
+            if (window.Prism) {
+                Prism.highlightElement(highlightCode);
+            }
+        }
+
+        // Update character count
+        if (charCount) {
+            charCount.textContent = `${code.length} caractères`;
+        }
+    });
+
+    // Sync scroll
+    editor.addEventListener('scroll', function () {
+        if (highlight) {
+            highlight.scrollTop = this.scrollTop;
+            highlight.scrollLeft = this.scrollLeft;
+        }
+    });
+}
+
+// Generate URL-friendly slug from title
+function generateSlug(title) {
+    return title
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove accents
+        .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
+// Auto-generate slug when title changes
+document.addEventListener('DOMContentLoaded', () => {
+    const titleInput = document.getElementById('page-title');
+    const slugInput = document.getElementById('page-slug');
+
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('input', function () {
+            slugInput.value = generateSlug(this.value);
+        });
+    }
+
+    // Initialize code editor
+    initializeCodeEditor();
+
+    // Load saved pages on init
+    loadSavedPages();
+});
+
+// Save page to localStorage
+function savePage() {
+    const title = document.getElementById('page-title')?.value.trim();
+    const slug = document.getElementById('page-slug')?.value.trim();
+    const metaDesc = document.getElementById('page-meta-desc')?.value.trim();
+    const metaKeywords = document.getElementById('page-meta-keywords')?.value.trim();
+    const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
+    const htmlContent = document.getElementById('page-html-editor')?.value.trim();
+    const statusEl = document.getElementById('page-save-status');
+
+    // Validation
+    if (!title) {
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>Le titre est requis</span>';
+        }
+        return;
+    }
+
+    if (!htmlContent) {
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>Le contenu HTML est requis</span>';
+        }
+        return;
+    }
+
+    // Create page object
+    const page = {
+        title,
+        slug,
+        metaDesc,
+        metaKeywords,
+        thumbnail,
+        htmlContent,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+
+    // Get existing pages from localStorage
+    let pages = [];
+    try {
+        const stored = localStorage.getItem('stackpages_custom_pages');
+        if (stored) {
+            pages = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading pages:', e);
+    }
+
+    // Check if page with same slug exists
+    const existingIndex = pages.findIndex(p => p.slug === slug);
+    if (existingIndex !== -1) {
+        // Update existing page
+        page.createdAt = pages[existingIndex].createdAt;
+        pages[existingIndex] = page;
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page mise à jour avec succès!</span>';
+        }
+    } else {
+        // Add new page
+        pages.push(page);
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page sauvegardée avec succès!</span>';
+        }
+    }
+
+    // Save to localStorage
+    try {
+        localStorage.setItem('stackpages_custom_pages', JSON.stringify(pages));
+        loadSavedPages(); // Refresh the list
+
+        // Clear status message after 3 seconds
+        setTimeout(() => {
+            if (statusEl) statusEl.innerHTML = '';
+        }, 3000);
+    } catch (e) {
+        console.error('Error saving page:', e);
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="text-red-600"><i class="fas fa-exclamation-circle mr-1"></i>Erreur lors de la sauvegarde</span>';
+        }
+    }
+}
+
+// Load saved pages from localStorage
+function loadSavedPages() {
+    const listEl = document.getElementById('saved-pages-list');
+    if (!listEl) return;
+
+    let pages = [];
+    try {
+        const stored = localStorage.getItem('stackpages_custom_pages');
+        if (stored) {
+            pages = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading pages:', e);
+    }
+
+    if (pages.length === 0) {
+        listEl.innerHTML = '<div class="text-center py-8 text-slate-500"><i class="fas fa-folder-open text-3xl mb-2"></i><p>Aucune page sauvegardée</p></div>';
+        return;
+    }
+
+    // Sort by updated date (newest first)
+    pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+    listEl.innerHTML = pages.map((page, index) => `
+        <div class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition group">
+            <div class="flex-1">
+                <h4 class="font-medium text-slate-800">${page.title}</h4>
+                <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs text-slate-500">
+                        <i class="fas fa-link mr-1"></i>${page.slug}
+                    </span>
+                    <span class="text-xs text-slate-400">
+                        <i class="far fa-clock mr-1"></i>${new Date(page.updatedAt).toLocaleDateString('fr-FR')}
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="loadPageToEditor(${index})" 
+                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 transition">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="previewSavedPage(${index})" 
+                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 transition">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button onclick="deletePage(${index})" 
+                    class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-red-50 hover:border-red-500 hover:text-red-600 transition">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load a saved page into the editor
+function loadPageToEditor(index) {
+    let pages = [];
+    try {
+        const stored = localStorage.getItem('stackpages_custom_pages');
+        if (stored) {
+            pages = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading pages:', e);
+        return;
+    }
+
+    pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    const page = pages[index];
+
+    if (!page) return;
+
+    // Populate form fields
+    document.getElementById('page-title').value = page.title || '';
+    document.getElementById('page-slug').value = page.slug || '';
+    document.getElementById('page-meta-desc').value = page.metaDesc || '';
+    document.getElementById('page-meta-keywords').value = page.metaKeywords || '';
+    document.getElementById('page-thumbnail').value = page.thumbnail || '';
+    document.getElementById('page-html-editor').value = page.htmlContent || '';
+
+    // Trigger input event to update syntax highlighting
+    const editor = document.getElementById('page-html-editor');
+    if (editor) {
+        editor.dispatchEvent(new Event('input'));
+    }
+
+    // Scroll to top of form
+    document.getElementById('page-creator-form')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Delete a page
+function deletePage(index) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette page ?')) {
+        return;
+    }
+
+    let pages = [];
+    try {
+        const stored = localStorage.getItem('stackpages_custom_pages');
+        if (stored) {
+            pages = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading pages:', e);
+        return;
+    }
+
+    pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    pages.splice(index, 1);
+
+    try {
+        localStorage.setItem('stackpages_custom_pages', JSON.stringify(pages));
+        loadSavedPages();
+    } catch (e) {
+        console.error('Error deleting page:', e);
+        alert('Erreur lors de la suppression de la page');
+    }
+}
+
+// Preview current page in modal
+function previewPage() {
+    const title = document.getElementById('page-title')?.value.trim();
+    const htmlContent = document.getElementById('page-html-editor')?.value.trim();
+    const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
+
+    if (!title || !htmlContent) {
+        alert('Veuillez remplir au moins le titre et le contenu HTML');
+        return;
+    }
+
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const modal = document.getElementById('preview-modal');
+
+    if (modalTitle) modalTitle.textContent = title;
+
+    let previewHtml = '';
+    if (thumbnail) {
+        previewHtml += `<img src="${thumbnail}" alt="${title}" class="w-full rounded-lg mb-6" />`;
+    }
+    previewHtml += htmlContent;
+
+    if (modalContent) modalContent.innerHTML = previewHtml;
+    if (modal) modal.classList.remove('hidden');
+}
+
+// Preview a saved page
+function previewSavedPage(index) {
+    let pages = [];
+    try {
+        const stored = localStorage.getItem('stackpages_custom_pages');
+        if (stored) {
+            pages = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading pages:', e);
+        return;
+    }
+
+    pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    const page = pages[index];
+
+    if (!page) return;
+
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const modal = document.getElementById('preview-modal');
+
+    if (modalTitle) modalTitle.textContent = page.title;
+
+    let previewHtml = '';
+    if (page.thumbnail) {
+        previewHtml += `<img src="${page.thumbnail}" alt="${page.title}" class="w-full rounded-lg mb-6" />`;
+    }
+    previewHtml += page.htmlContent;
+
+    if (modalContent) modalContent.innerHTML = previewHtml;
+    if (modal) modal.classList.remove('hidden');
+}
+
+// Clear page creator form
+function clearPageForm() {
+    if (!confirm('Effacer tous les champs du formulaire ?')) {
+        return;
+    }
+
+    document.getElementById('page-title').value = '';
+    document.getElementById('page-slug').value = '';
+    document.getElementById('page-meta-desc').value = '';
+    document.getElementById('page-meta-keywords').value = '';
+    document.getElementById('page-thumbnail').value = '';
+    document.getElementById('page-html-editor').value = '';
+    document.getElementById('page-save-status').innerHTML = '';
+
+    // Reset syntax highlighting
+    const editor = document.getElementById('page-html-editor');
+    if (editor) {
+        editor.dispatchEvent(new Event('input'));
+    }
+}
+
+// Copy HTML code to clipboard
+function copyHtmlCode() {
+    const editor = document.getElementById('page-html-editor');
+    if (!editor) return;
+
+    const code = editor.value;
+
+    if (!code) {
+        alert('Aucun code à copier');
+        return;
+    }
+
+    navigator.clipboard.writeText(code).then(() => {
+        // Show success feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copié!';
+        btn.classList.add('text-green-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('text-green-600');
+        }, 2000);
+    }).catch(err => {
+        console.error('Error copying to clipboard:', err);
+        alert('Erreur lors de la copie');
+    });
+}
 
