@@ -99,6 +99,8 @@ function showView(viewName) {
     // Specific View Logic
     if (viewName === 'builder') {
         loadPublishedPages();
+    } else if (viewName === 'page-creator') {
+        loadSavedPages();
     }
 }
 
