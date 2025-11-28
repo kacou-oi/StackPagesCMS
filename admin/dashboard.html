@@ -777,142 +777,147 @@
 
                 <!-- New Published Pages Gallery -->
                 <div class="space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Pages Publiées</h3>
-                            <p class="text-slate-500 dark:text-slate-400">Vos pages en ligne accessibles publiquement
-                            </p>
-                        </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Pages Publiées</h3>
+                        <p class="text-slate-500 dark:text-slate-400">Vos pages en ligne accessibles publiquement
+                        </p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="/admin/visual-editor.html"
+                            class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg shadow-orange-500/20">
+                            <i class="fas fa-paint-brush"></i> Éditeur Visuel
+                        </a>
                         <a href="/admin/IDE.html"
                             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg shadow-blue-500/20">
-                            <i class="fas fa-plus"></i> Nouvelle Page
-                        </a>
-                    </div>
-
-                    <div id="published-pages-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Cards will be injected here -->
-                    </div>
-
-                    <div id="published-pages-empty"
-                        class="hidden flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                        <div
-                            class="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 shadow-sm">
-                            <i class="fas fa-globe text-3xl text-slate-400"></i>
-                        </div>
-                        <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Aucune page publiée</h3>
-                        <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
-                            Créez et publiez des pages depuis l'IDE pour les voir apparaître ici.
-                        </p>
-                        <a href="/admin/IDE.html"
-                            class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-600 transition">
-                            Créer une page
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: PAGE CREATOR -->
-            <div id="view-page-creator" class="view-section hidden space-y-6">
-                <!-- Header with Create Button -->
-                <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-2xl font-bold mb-2">Pages Frame IDE</h2>
-                            <p class="text-orange-100">Créez et gérez vos pages personnalisées</p>
-                        </div>
-                        <a href="/admin/IDE.html"
-                            class="px-6 py-3 bg-white text-orange-600 hover:bg-orange-50 rounded-lg font-bold transition shadow-lg hover:shadow-xl flex items-center gap-2">
-                            <i class="fas fa-plus-circle"></i>
-                            Nouvelle Page
+                            <i class="fas fa-plus"></i> Nouvelle Page (Code)
                         </a>
                     </div>
                 </div>
 
-                <!-- Saved Pages List -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                        <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                            <i class="fas fa-list text-orange-500"></i>
-                            Pages Sauvegardées
-                        </h3>
-                        <button onclick="loadSavedPages()" class="text-slate-400 hover:text-orange-500 transition"
-                            title="Actualiser">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                <div id="published-pages-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <div id="published-pages-empty"
+                    class="hidden flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                    <div
+                        class="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                        <i class="fas fa-globe text-3xl text-slate-400"></i>
                     </div>
-                    <div id="saved-pages-list" class="p-6">
-                        <!-- Populated by JS -->
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Aucune page publiée</h3>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+                        Créez et publiez des pages depuis l'IDE pour les voir apparaître ici.
+                    </p>
+                    <a href="/admin/IDE.html"
+                        class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-600 transition">
+                        Créer une page
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PAGE CREATOR -->
+        <div id="view-page-creator" class="view-section hidden space-y-6">
+            <!-- Header with Create Button -->
+            <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg p-8 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2">Pages Frame IDE</h2>
+                        <p class="text-orange-100">Créez et gérez vos pages personnalisées</p>
                     </div>
+                    <a href="/admin/IDE.html"
+                        class="px-6 py-3 bg-white text-orange-600 hover:bg-orange-50 rounded-lg font-bold transition shadow-lg hover:shadow-xl flex items-center gap-2">
+                        <i class="fas fa-plus-circle"></i>
+                        Nouvelle Page
+                    </a>
                 </div>
             </div>
 
-
-            <!-- VIEW: HELP -->
-            <div id="view-help" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
-                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
-
-                    <br>
-                    <h4>1. Tableau de bord</h4>
-                    <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
-                        synchronisation avec Substack.</p>
-
-                    <br>
-                    <h4>2. Gestion des Contenus</h4>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li><strong>Articles :</strong> Parcourez les articles récupérés depuis votre flux RSS Substack.
-                        </li>
-                        <li><strong>Vidéos :</strong> Consultez les dernières vidéos de votre chaîne YouTube.</li>
-                        <li><strong>Podcasts :</strong> Écoutez et gérez vos épisodes de podcast.</li>
-                    </ul>
-
-                    <br>
-                    <h4>3. Outils Avancés</h4>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li><strong>Frontend Builder :</strong> Personnalisez l'apparence de votre site via l'éditeur
-                            visuel
-                            Webstudio.</li>
-                        <li><strong>API Explorer :</strong> Testez les endpoints de votre API directement depuis le
-                            dashboard.
-                            <ul class="list-circle pl-5 mt-1 text-sm text-slate-600">
-                                <li><code>/api/metadata</code> : Informations du site</li>
-                                <li><code>/api/posts</code> : Liste des articles</li>
-                                <li><code>/api/post/:slug</code> : Détail d'un article</li>
-                                <li><code>/api/videos</code> : Liste des vidéos</li>
-                                <li><code>/api/video/:id</code> : Détail d'une vidéo (par ID YouTube)</li>
-                                <li><code>/api/podcasts</code> : Liste des podcasts</li>
-                                <li><code>/api/podcast/:id</code> : Détail d'un podcast (par GUID ou Slug)</li>
-                            </ul>
-                        </li>
-                        <li><strong>Analytics :</strong> Consultez les rapports de trafic Google Analytics intégrés.
-                        </li>
-                    </ul>
-
-                    <br>
-                    <h4>4. Configuration</h4>
-                    <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
-                        Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état
-                        actuel
-                        de ces variables :</p>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
-                        <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
-                        <li><strong>PODCAST_FEED_URL</strong> : L'URL du flux RSS de votre podcast.</li>
-                        <li><strong>FRONTEND_BUILDER_URL</strong> : L'URL de votre projet Webstudio.</li>
-                        <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
-                    </ul>
-                    <p class="mt-2">Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de
-                        votre déploiement Cloudflare.</p>
-
-
-                    <br>
-                    <h4>5. Maintenance</h4>
-                    <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
-                        pas
-                        vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
-                        performance (TTL par défaut de 3 minutes).</p>
+            <!-- Saved Pages List -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                        <i class="fas fa-list text-orange-500"></i>
+                        Pages Sauvegardées
+                    </h3>
+                    <button onclick="loadSavedPages()" class="text-slate-400 hover:text-orange-500 transition"
+                        title="Actualiser">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div id="saved-pages-list" class="p-6">
+                    <!-- Populated by JS -->
                 </div>
             </div>
+        </div>
+
+
+        <!-- VIEW: HELP -->
+        <div id="view-help" class="view-section hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
+                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
+
+                <br>
+                <h4>1. Tableau de bord</h4>
+                <p>Visualisez un aperçu rapide de votre site, y compris le nombre d'articles et l'état de la
+                    synchronisation avec Substack.</p>
+
+                <br>
+                <h4>2. Gestion des Contenus</h4>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Articles :</strong> Parcourez les articles récupérés depuis votre flux RSS Substack.
+                    </li>
+                    <li><strong>Vidéos :</strong> Consultez les dernières vidéos de votre chaîne YouTube.</li>
+                    <li><strong>Podcasts :</strong> Écoutez et gérez vos épisodes de podcast.</li>
+                </ul>
+
+                <br>
+                <h4>3. Outils Avancés</h4>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Frontend Builder :</strong> Personnalisez l'apparence de votre site via l'éditeur
+                        visuel
+                        Webstudio.</li>
+                    <li><strong>API Explorer :</strong> Testez les endpoints de votre API directement depuis le
+                        dashboard.
+                        <ul class="list-circle pl-5 mt-1 text-sm text-slate-600">
+                            <li><code>/api/metadata</code> : Informations du site</li>
+                            <li><code>/api/posts</code> : Liste des articles</li>
+                            <li><code>/api/post/:slug</code> : Détail d'un article</li>
+                            <li><code>/api/videos</code> : Liste des vidéos</li>
+                            <li><code>/api/video/:id</code> : Détail d'une vidéo (par ID YouTube)</li>
+                            <li><code>/api/podcasts</code> : Liste des podcasts</li>
+                            <li><code>/api/podcast/:id</code> : Détail d'un podcast (par GUID ou Slug)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Analytics :</strong> Consultez les rapports de trafic Google Analytics intégrés.
+                    </li>
+                </ul>
+
+                <br>
+                <h4>4. Configuration</h4>
+                <p>La configuration de ce site est gérée par des <strong>variables d'environnement</strong> (sur
+                    Cloudflare Workers ou via <code>wrangler.toml</code>). L'onglet Configuration affiche l'état
+                    actuel
+                    de ces variables :</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>SUBSTACK_FEED_URL</strong> : L'URL du flux RSS de votre newsletter Substack.</li>
+                    <li><strong>YOUTUBE_FEED_URL</strong> : L'URL du flux RSS de votre chaîne YouTube.</li>
+                    <li><strong>PODCAST_FEED_URL</strong> : L'URL du flux RSS de votre podcast.</li>
+                    <li><strong>FRONTEND_BUILDER_URL</strong> : L'URL de votre projet Webstudio.</li>
+                    <li><strong>META_TITLE / DESC / KEYWORDS</strong> : Paramètres SEO globaux du site.</li>
+                </ul>
+                <p class="mt-2">Pour modifier ces valeurs, vous devez mettre à jour les variables d'environnement de
+                    votre déploiement Cloudflare.</p>
+
+
+                <br>
+                <h4>5. Maintenance</h4>
+                <p>Utilisez le bouton <strong>Vider le Cache</strong> dans l'onglet Configuration si vous ne voyez
+                    pas
+                    vos derniers contenus apparaître immédiatement. Le système met en cache les données pour la
+                    performance (TTL par défaut de 3 minutes).</p>
+            </div>
+        </div>
 
         </div>
     </main>

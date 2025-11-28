@@ -692,6 +692,22 @@ export default {
             }));
         }
 
+        // Visual Editor -> admin/visual-editor.html
+        if (path === "/admin/visual-editor.html") {
+            return await env.ASSETS.fetch(new Request(new URL("/admin/visual-editor.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
+        // Custom Pages Loader -> /p/*
+        if (path.startsWith("/p/")) {
+            return await env.ASSETS.fetch(new Request(new URL("/loader.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
         // ====================================================================
         // 5. REVERSE PROXY (SI STAGING_URL EST DÉFINI)
         // ====================================================================

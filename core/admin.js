@@ -290,7 +290,7 @@ function renderDashboard() {
                         ${new Date(page.updatedAt || Date.now()).toLocaleDateString('fr-FR')}
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <a href="/${page.slug}" 
+                        <a href="/p/${page.slug}" 
                            target="_blank"
                            class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">
                             Voir
