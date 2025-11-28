@@ -143,12 +143,19 @@ async function loadData() {
         appState.podcasts = podcasts;
 
         // Update Stats
-        document.getElementById('stat-total-posts').textContent        // Update Stats
         document.getElementById('stat-total-posts').textContent = appState.posts.length;
         const lastPostDate = appState.posts.length > 0 ? new Date(appState.posts[0].pubDate).toLocaleDateString('fr-FR') : '-';
         document.getElementById('stat-last-update').textContent = lastPostDate;
         document.getElementById('stat-total-videos').textContent = appState.videos.length;
         document.getElementById('stat-total-podcasts').textContent = appState.podcasts.length;
+
+        // Update Published Pages Stat
+        const pages = JSON.parse(localStorage.getItem('stackpages_custom_pages') || '[]');
+        const publishedCount = pages.filter(p => p.status === 'published').length;
+        const statPagesEl = document.getElementById('stat-total-pages');
+        if (statPagesEl) {
+            statPagesEl.textContent = publishedCount;
+        }
 
 
         // Feed status UI (only if element exists)
