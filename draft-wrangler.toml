@@ -6,9 +6,9 @@ compatibility_date = "2023-10-25"
 # Remplacer les valeurs par vos propres configurations
 [vars]
 # URLs des flux RSS
-SUBSTACK_FEED_URL = "https://example.substack.com/feed"
-YOUTUBE_FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=VOTRE_CHANNEL_ID"
-PODCAST_FEED_URL = "https://anchor.fm/s/votre-podcast/podcast/rss"
+SUBSTACK_FEED_URL = "https://www.theverge.com/rss/index.xml"
+YOUTUBE_FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw"
+PODCAST_FEED_URL = "https://feed.syntax.fm/rss"
 
 # URL du constructeur Frontend (Webstudio ou autre)
 FRONTEND_BUILDER_URL = "https://builder.wstd.io/votre-projet"
