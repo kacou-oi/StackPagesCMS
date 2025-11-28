@@ -91,10 +91,14 @@ function showView(viewName) {
         el.classList.remove('bg-orange-50', 'text-orange-600');
         el.classList.add('text-slate-600');
     });
-    const activeBtn = document.querySelector(`button[onclick="showView('${viewName}')"]`);
     if (activeBtn) {
         activeBtn.classList.add('bg-orange-50', 'text-orange-600');
         activeBtn.classList.remove('text-slate-600');
+    }
+
+    // Specific View Logic
+    if (viewName === 'builder') {
+        loadPublishedPages();
     }
 }
 
@@ -1048,3 +1052,65 @@ function copyHtmlCode() {
     });
 }
 
+// Load Published Pages for Frontend Builder View
+function loadPublishedPages() {
+    const container = document.getElementById('published-pages-container');
+    const emptyState = document.getElementById('published-pages-empty');
+    if (!container || !emptyState) return;
+
+    container.innerHTML = '';
+
+    const pages = JSON.parse(localStorage.getItem('stackpages_custom_pages') || '[]');
+    const publishedPages = pages.filter(p => p.status === 'published');
+
+    if (publishedPages.length === 0) {
+        container.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+    }
+
+    container.classList.remove('hidden');
+    emptyState.classList.add('hidden');
+
+    publishedPages.forEach(page => {
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-[#252526] rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition group';
+
+        const thumbnail = page.thumbnail || 'https://placehold.co/600x400/e2e8f0/64748b?text=No+Image';
+        const date = new Date(page.updatedAt || Date.now()).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        card.innerHTML = `
+            <div class="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                <img src="${thumbnail}" alt="${page.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                    <span class="text-white text-xs font-medium px-2 py-1 bg-green-500/80 backdrop-blur-sm rounded-full">
+                        <i class="fas fa-check-circle mr-1"></i> Publié
+                    </span>
+                </div>
+            </div>
+            <div class="p-5">
+                <h4 class="font-bold text-slate-800 dark:text-white text-lg mb-2 truncate" title="${page.title}">${page.title}</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2 h-10">
+                    ${page.metaDesc || 'Aucune description disponible.'}
+                </p>
+                
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <span class="text-xs text-slate-400">
+                        <i class="far fa-clock mr-1"></i> ${date}
+                    </span>
+                    <div class="flex gap-2">
+                        <a href="/admin/IDE.html?page=${encodeURIComponent(page.slug)}" 
+                           class="text-slate-400 hover:text-blue-500 transition" title="Éditer">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="#" onclick="alert('La prévisualisation en ligne sera disponible une fois le routing configuré.'); return false;"
+                           class="text-slate-400 hover:text-orange-500 transition" title="Voir en ligne">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}

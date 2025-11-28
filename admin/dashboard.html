@@ -698,8 +698,9 @@
 
             <!-- VIEW: BUILDER -->
             <div id="view-builder" class="view-section hidden space-y-6">
+                <!-- Old Builder Content (Hidden) -->
+                <!--
                 <div class="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-6 h-[calc(100vh-12rem)]">
-                    <!-- Left Column: Instructions & Button -->
                     <div
                         class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center items-start space-y-8">
                         <div>
@@ -735,7 +736,6 @@
                         </div>
                     </div>
 
-                    <!-- Right Column: Tutorials -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
                         <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                             <h3 class="font-semibold text-slate-800">Tutoriels Vidéo</h3>
@@ -751,6 +751,42 @@
                                 class="absolute inset-0 w-full h-full">
                             </iframe>
                         </div>
+                    </div>
+                </div>
+                -->
+
+                <!-- New Published Pages Gallery -->
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Pages Publiées</h3>
+                            <p class="text-slate-500 dark:text-slate-400">Vos pages en ligne accessibles publiquement
+                            </p>
+                        </div>
+                        <a href="/admin/IDE.html"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg shadow-blue-500/20">
+                            <i class="fas fa-plus"></i> Nouvelle Page
+                        </a>
+                    </div>
+
+                    <div id="published-pages-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Cards will be injected here -->
+                    </div>
+
+                    <div id="published-pages-empty"
+                        class="hidden flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                        <div
+                            class="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                            <i class="fas fa-globe text-3xl text-slate-400"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Aucune page publiée</h3>
+                        <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+                            Créez et publiez des pages depuis l'IDE pour les voir apparaître ici.
+                        </p>
+                        <a href="/admin/IDE.html"
+                            class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-600 transition">
+                            Créer une page
+                        </a>
                     </div>
                 </div>
             </div>
