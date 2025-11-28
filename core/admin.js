@@ -78,7 +78,7 @@ function showView(viewName) {
         'videos': 'Vidéos YouTube',
         'api-explorer': 'Explorateur d\'API',
         'builder': 'Frontend Builder',
-        'page-creator': 'Page Creator',
+        'page-creator': 'Pages Frame IDE',
         'analytics': 'Google Analytics',
         'podcasts': 'Podcasts',
         'config': 'Configuration',
