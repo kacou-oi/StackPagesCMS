@@ -29,123 +29,130 @@
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
-
+<body class="font-sans antialiased bg-[#1e1e1e]">
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <a href="/admin/dashboard.html" class="text-slate-400 hover:text-orange-500 transition"
-                title="Retour au dashboard">
-                <i class="fas fa-arrow-left text-xl"></i>
-            </a>
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Page Creator IDE</h1>
-                <p class="text-sm text-slate-500" id="page-status">Nouvelle page</p>
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg border-b border-slate-700">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-4">
+                <a href="/admin/dashboard.html" class="text-slate-400 hover:text-orange-500 transition"
+                    title="Retour au dashboard">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </a>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Page Creator IDE</h1>
+                    <p class="text-sm text-slate-400" id="page-status">Nouvelle page</p>
+                </div>
             </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <button onclick="previewPageNewTab()"
-                class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition flex items-center gap-2">
-                <i class="fas fa-external-link-alt"></i> Aperçu
-            </button>
-            <button onclick="savePage('draft')"
-                class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition flex items-center gap-2">
-                <i class="far fa-save"></i> Brouillon
-            </button>
-            <button onclick="savePage('published')"
-                class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2">
-                <i class="fas fa-check"></i> Publier
-            </button>
-        </div>
+            <div class="flex items-center gap-3">
+                <button onclick="previewPageNewTab()"
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center gap-2">
+                    <i class="fas fa-external-link-alt"></i> Aperçu
+                </button>
+                <button onclick="savePage('draft')"
+                    class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition flex items-center gap-2">
+                    <i class="far fa-save"></i> Brouillon
+                </button>
+                <button onclick="savePage('published')"
+                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="fas fa-check"></i> Publier
+                </button>
+            </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 overflow-hidden flex">
-        <!-- Left Sidebar - Form -->
-        <aside class="w-80 bg-white border-r border-slate-200 overflow-y-auto p-6">
-            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-cog text-orange-500"></i>
-                Paramètres de la Page
-            </h2>
+    <!-- Main Layout -->
+    <main class="flex h-screen">
+        <!-- Left Panel - Page Settings -->
+        <div class="w-80 bg-[#252526] border-r border-slate-700 overflow-y-auto">
+            <div class="p-6">
+                <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-cog text-orange-400"></i>
+                    Paramètres de la Page
+                </h2>
 
-            <form id="page-creator-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                        Titre de la Page <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" id="page-title" required placeholder="Ex: À propos de nous"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition text-sm">
-                </div>
+                <form id="page-creator-form" class="space-y-4">
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Titre de la Page <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="page-title" required placeholder="Ex: À propos de nous"
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                        Slug URL
-                    </label>
-                    <input type="text" id="page-slug" readonly placeholder="a-propos-de-nous"
-                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-600 cursor-not-allowed text-sm">
-                    <p class="text-xs text-slate-500 mt-1">Généré automatiquement</p>
-                </div>
+                    <!-- Slug -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Slug URL
+                        </label>
+                        <input type="text" id="page-slug" readonly placeholder="a-propos-de-nous"
+                            class="w-full px-3 py-2 bg-[#333333] border border-slate-600 rounded-lg text-slate-400 cursor-not-allowed">
+                        <p class="text-xs text-slate-500 mt-1">Généré automatiquement</p>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                        Meta Description
-                    </label>
-                    <textarea id="page-meta-desc" rows="3"
-                        placeholder="Description courte pour les moteurs de recherche..."
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition resize-none text-sm"></textarea>
-                </div>
+                    <!-- Meta Description -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Meta Description
+                        </label>
+                        <textarea id="page-meta-desc" rows="3"
+                            placeholder="Description courte pour les moteurs de recherche..."
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition resize-none"></textarea>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                        Meta Keywords
-                    </label>
-                    <input type="text" id="page-meta-keywords" placeholder="mot-clé1, mot-clé2, mot-clé3"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition text-sm">
-                </div>
+                    <!-- Meta Keywords -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Meta Keywords
+                        </label>
+                        <input type="text" id="page-meta-keywords" placeholder="mot-clé1, mot-clé2, mot-clé3"
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                        Image Thumbnail (URL)
-                    </label>
-                    <input type="url" id="page-thumbnail" placeholder="https://example.com/image.jpg"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition text-sm">
-                </div>
+                    <!-- Thumbnail -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Image Thumbnail (URL)
+                        </label>
+                        <input type="url" id="page-thumbnail" placeholder="https://example.com/image.jpg"
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                    </div>
 
-                <div class="pt-4 border-t border-slate-200">
-                    <button type="button" onclick="clearPageForm()"
-                        class="w-full px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition flex items-center justify-center gap-2">
-                        <i class="fas fa-trash-alt"></i> Réinitialiser le formulaire
-                    </button>
-                </div>
+                    <div class="pt-4 border-t border-slate-700">
+                        <!-- Reset Button -->
+                        <button type="button" onclick="clearPageForm()"
+                            class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center justify-center gap-2">
+                            <i class="fas fa-redo"></i> Réinitialiser le formulaire
+                        </button>
+                    </div>
 
-                <div id="page-save-status" class="text-sm"></div>
-            </form>
-        </aside>
+                    <div id="page-save-status" class="text-sm"></div>
+                </form>
+            </div>
+        </div>
 
         <!-- Right Panel - Code Editor -->
-        <div class="flex-1 flex flex-col bg-white">
+        <div class="flex-1 flex flex-col bg-[#1e1e1e]">
             <!-- Code Editor Header -->
-            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+            <div class="px-6 py-4 border-b border-slate-700 bg-[#252526] flex justify-between items-center">
+                <h3 class="font-semibold text-slate-200 flex items-center gap-2">
                     <i class="fas fa-code text-orange-500"></i>
                     Éditeur HTML
                 </h3>
 
                 <!-- Gemini Branding -->
-                <div
-                    class="flex items-center gap-3 bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 bg-[#1e1e1e] px-4 py-1.5 rounded-full border border-slate-700">
                     <img src="https://img.icons8.com/fluency/48/gemini-ai.png" alt="Gemini" class="w-5 h-5">
-                    <span class="font-bold text-slate-700 text-sm">Powered by Google Gemini</span>
-                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-500 hover:text-slate-700 transition"
+                    <span class="font-bold text-slate-200 text-sm">Powered by Google Gemini</span>
+                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-400 hover:text-white transition"
                         title="Configurer l'API Gemini">
                         <i class="fas fa-cog text-lg hover:rotate-90 transition-transform duration-500"></i>
                     </button>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span id="html-char-count" class="text-xs text-slate-500 mr-2">0 caractères</span>
+                    <span id="html-char-count" class="text-xs text-slate-400 mr-2">0 caractères</span>
                     <button onclick="copyHtmlCode()"
-                        class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition flex items-center gap-2">
+                        class="px-3 py-1.5 bg-[#333333] border border-slate-600 rounded-md text-sm text-slate-200 hover:bg-[#444444] transition flex items-center gap-2">
                         <i class="fas fa-copy"></i> Copier
                     </button>
                 </div>
@@ -155,13 +162,13 @@
                 <div id="monaco-editor-container"></div>
             </div>
 
-            <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-                <span class="text-xs text-slate-500">
+            <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
+                <span class="text-xs text-slate-400">
                     <i class="fas fa-keyboard text-orange-400 mr-1"></i>
                     Monaco Editor - Coloration syntaxique automatique
                 </span>
                 <div class="flex items-center gap-4">
-                    <span id="page-status-badge" class="text-xs px-2 py-1 rounded bg-slate-200 text-slate-700">
+                    <span id="page-status-badge" class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
                         <i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i>
                         Prêt
                     </span>
