@@ -143,15 +143,10 @@ async function loadData() {
         appState.podcasts = podcasts;
 
         // Update Stats
+        document.getElementById('stat-total-posts').textContent        // Update Stats
         document.getElementById('stat-total-posts').textContent = appState.posts.length;
-        document.getElementById('stat-total-posts').textContent = appState.posts.length;
-
-        // Update Total Published Pages
-        const pages = JSON.parse(localStorage.getItem('stackpages_custom_pages') || '[]');
-        const publishedCount = pages.filter(p => p.status === 'published').length;
-        const totalPagesEl = document.getElementById('stat-total-pages');
-        if (totalPagesEl) totalPagesEl.textContent = publishedCount;
-
+        const lastPostDate = appState.posts.length > 0 ? new Date(appState.posts[0].pubDate).toLocaleDateString('fr-FR') : '-';
+        document.getElementById('stat-last-update').textContent = lastPostDate;
         document.getElementById('stat-total-videos').textContent = appState.videos.length;
         document.getElementById('stat-total-podcasts').textContent = appState.podcasts.length;
 
