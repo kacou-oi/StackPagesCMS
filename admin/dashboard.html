@@ -17,12 +17,78 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Dark mode classes */
+        body.dark {
+            background-color: #1e1e1e;
+            color: #e2e8f0;
+        }
+
+        body.dark .bg-white {
+            background-color: #252526 !important;
+        }
+
+        body.dark .bg-slate-50 {
+            background-color: #1e1e1e !important;
+        }
+
+        body.dark .text-slate-800,
+        body.dark .text-slate-700,
+        body.dark .text-slate-600 {
+            color: #cbd5e1 !important;
+        }
+
+        body.dark .border-slate-200,
+        body.dark .border-slate-100 {
+            border-color: #374151 !important;
+        }
+
+        body.dark .glass-panel {
+            background: rgba(37, 37, 38, 0.7);
+            border-color: rgba(55, 65, 81, 0.5);
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #cbd5e1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle.dark {
+            background: #475569;
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-center;
+            font-size: 12px;
+        }
+
+        .theme-toggle.dark .theme-toggle-slider {
+            transform: translateX(30px);
+            background: #1e293b;
         }
     </style>
 </head>
@@ -116,6 +182,16 @@
         <!-- Header -->
         <header class="sticky top-0 z-20 glass-panel px-8 py-4 flex justify-between items-center">
             <h2 id="page-title" class="text-xl font-semibold text-slate-800">Tableau de bord</h2>
+
+            <!-- Theme Toggle Button -->
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-slate-600" id="theme-label">Mode sombre</span>
+                <div onclick="toggleDarkMode()" class="theme-toggle" id="theme-toggle">
+                    <div class="theme-toggle-slider">
+                        <i class="fas fa-sun text-yellow-500"></i>
+                    </div>
+                </div>
+            </div>
             <div class="flex gap-3">
                 <a id="header-site-btn" href="/" target="_blank"
                     class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-orange-600 transition bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow">
@@ -793,6 +869,49 @@
     -->
     <script src="./../core/admin.js"></script>
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const toggle = document.getElementById('theme-toggle');
+            const slider = toggle.querySelector('.theme-toggle-slider');
+            const label = document.getElementById('theme-label');
+
+            body.classList.toggle('dark');
+            toggle.classList.toggle('dark');
+
+            // Update icon and label
+            if (body.classList.contains('dark')) {
+                slider.innerHTML = '<i class="fas fa-moon text-blue-400"></i>';
+                label.textContent = 'Mode clair';
+                localStorage.setItem('stackpages_theme', 'dark');
+            } else {
+                slider.innerHTML = '<i class="fas fa-sun text-yellow-500"></i>';
+                label.textContent = 'Mode sombre';
+                localStorage.setItem('stackpages_theme', 'light');
+            }
+        }
+
+        // Initialize theme on load
+        function initTheme() {
+            const savedTheme = localStorage.getItem('stackpages_theme');
+            const body = document.body;
+            const toggle = document.getElementById('theme-toggle');
+            const slider = toggle?.querySelector('.theme-toggle-slider');
+            const label = document.getElementById('theme-label');
+
+            if (savedTheme === 'dark') {
+                body.classList.add('dark');
+                toggle?.classList.add('dark');
+                if (slider) slider.innerHTML = '<i class="fas fa-moon text-blue-400"></i>';
+                if (label) label.textContent = 'Mode clair';
+            }
+        }
+
+        // Initialize theme when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+        });
+
         // Logout Handler
         async function logout() {
             await fetch('/api/logout');
