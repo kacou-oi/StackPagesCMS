@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDE - Page Creator - StackPages CMS</title>
     <link rel="icon" type="image/x-icon" href="https://stackpages.net/img/logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Monaco Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Prism.js for Code Highlighting -->
@@ -18,35 +20,11 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Code editor styling - Simple and clean approach */
-        #page-html-editor {
+        /* Monaco Editor container */
+        #monaco-editor-container {
             width: 100%;
             height: 100%;
-            padding: 1rem;
-            margin: 0;
-            border: 0;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            caret-color: #ffffff;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
-            overflow: auto;
-            tab-size: 4;
-        }
-
-        #page-html-editor::selection {
-            background: rgba(38, 79, 120, 0.6);
-        }
-
-        #page-html-editor::placeholder {
-            color: #6a737d;
-        }
-
-        #page-html-editor::placeholder {
-            color: #6a737d;
+            min-height: 400px;
         }
     </style>
 </head>
@@ -171,10 +149,9 @@
                     </button>
                 </div>
             </div>
-            <!-- Code Editor -->
+            <!-- Monaco Editor -->
             <div class="flex-1 bg-[#1e1e1e] overflow-hidden">
-                <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..." spellcheck="false"
-                    autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+                <div id="monaco-editor-container"></div>
             </div>
 
             <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
@@ -268,10 +245,98 @@
 
     <script src="./../core/admin.js"></script>
     <script>
+        // Global Monaco Editor instance (accessible from admin.js)
+        let monacoEditor = null;
+        window.monacoEditor = null;
+
+        // Initialize Monaco Editor
+        function initMonacoEditor(initialValue = '') {
+            require.config({
+                paths: {
+                    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'
+                }
+            });
+
+            require(['vs/editor/editor.main'], function () {
+                monacoEditor = monaco.editor.create(document.getElementById('monaco-editor-container'), {
+                    value: initialValue,
+                    language: 'html',
+                    theme: 'vs-dark',
+                    automaticLayout: true,
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    wordWrap: 'on',
+                    tabSize: 2,
+                    insertSpaces: true,
+                    formatOnPaste: true,
+                    formatOnType: true,
+                    suggest: {
+                        snippetsPreventQuickSuggestions: false
+                    }
+                });
+
+                // Make globally accessible
+                window.monacoEditor = monacoEditor;
+
+                // Update character count on content change
+                monacoEditor.onDidChangeModelContent(() => {
+                    updateCharacterCount();
+                    updateStatusBadge();
+                });
+
+                // Initial character count
+                updateCharacterCount();
+            });
+        }
+
+        // Update character count
+        function updateCharacterCount() {
+            if (monacoEditor) {
+                const charCount = document.getElementById('html-char-count');
+                const content = monacoEditor.getValue();
+                if (charCount) {
+                    charCount.textContent = `${content.length} caractères`;
+                }
+            }
+        }
+
+        // Update status badge
+        function updateStatusBadge() {
+            if (monacoEditor) {
+                const statusBadge = document.getElementById('page-status-badge');
+                const content = monacoEditor.getValue();
+                if (statusBadge && content.length > 0) {
+                    statusBadge.innerHTML = '<i class="fas fa-circle text-yellow-500 mr-1" style="font-size: 6px;"></i> Modifié';
+                    statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
+                }
+            }
+        }
+
+        // Copy HTML code to clipboard
+        function copyHtmlCode() {
+            if (monacoEditor) {
+                const content = monacoEditor.getValue();
+                navigator.clipboard.writeText(content).then(() => {
+                    // Visual feedback
+                    const btn = event.target.closest('button');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Erreur lors de la copie:', err);
+                    alert('Erreur lors de la copie');
+                });
+            }
+        }
+
         // Open preview in new tab
         function previewPageNewTab() {
             const title = document.getElementById('page-title')?.value.trim();
-            const htmlContent = document.getElementById('page-html-editor')?.value.trim();
+            const htmlContent = monacoEditor ? monacoEditor.getValue().trim() : '';
             const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
             const metaDesc = document.getElementById('page-meta-desc')?.value.trim();
             const metaKeywords = document.getElementById('page-meta-keywords')?.value.trim();
@@ -377,35 +442,16 @@ ${htmlContent}
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
 
-            // Initialize editor event listeners
-            const editor = document.getElementById('page-html-editor');
-            const charCount = document.getElementById('html-char-count');
-            const statusBadge = document.getElementById('page-status-badge');
-
-            if (editor) {
-                // Update character count and status on input
-                editor.addEventListener('input', function () {
-                    if (charCount) {
-                        charCount.textContent = `${this.value.length} caractères`;
-                    }
-                    if (statusBadge && this.value.length > 0) {
-                        statusBadge.innerHTML = '<i class=\"fas fa-circle text-yellow-500 mr-1\" style=\"font-size: 6px;\"></i> Modifié';
-                        statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
-                    }
-                });
-
-                // Initial count
-                if (editor.value && charCount) {
-                    charCount.textContent = `${editor.value.length} caractères`;
-                }
-            }
+            // Initialize Monaco Editor
+            initMonacoEditor('');
 
             // Check if editing existing page
             const urlParams = new URLSearchParams(window.location.search);
             const pageSlug = urlParams.get('page');
 
             if (pageSlug) {
-                loadPageBySlug(pageSlug);
+                // Wait a bit for Monaco to be ready before loading page
+                setTimeout(() => loadPageBySlug(pageSlug), 500);
             }
         });
 
@@ -435,7 +481,11 @@ ${htmlContent}
             document.getElementById('page-meta-desc').value = page.metaDesc || '';
             document.getElementById('page-meta-keywords').value = page.metaKeywords || '';
             document.getElementById('page-thumbnail').value = page.thumbnail || '';
-            document.getElementById('page-html-editor').value = page.htmlContent || '';
+
+            // Set Monaco content
+            if (monacoEditor && page.htmlContent) {
+                monacoEditor.setValue(page.htmlContent);
+            }
 
             // Update status
             const statusText = page.status === 'draft' ? 'Édition: ' + page.title + ' (Brouillon)' : 'Édition: ' + page.title;
@@ -452,10 +502,7 @@ ${htmlContent}
             }
 
             // Update character count
-            const charCount = document.getElementById('html-char-count');
-            if (charCount && page.htmlContent) {
-                charCount.textContent = `${page.htmlContent.length} caractères`;
-            }
+            updateCharacterCount();
         }
 
         // Close modal

@@ -740,7 +740,8 @@ function savePage(status = 'published') {
     const metaDesc = document.getElementById('page-meta-desc')?.value.trim();
     const metaKeywords = document.getElementById('page-meta-keywords')?.value.trim();
     const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
-    const htmlContent = document.getElementById('page-html-editor')?.value.trim();
+    // Get content from Monaco Editor (global variable from IDE.html)
+    const htmlContent = (window.monacoEditor ? window.monacoEditor.getValue() : document.getElementById('page-html-editor')?.value || '').trim();
     const statusEl = document.getElementById('page-save-status');
     const statusBadge = document.getElementById('page-status-badge');
 
