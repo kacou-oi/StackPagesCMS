@@ -158,9 +158,9 @@
 
                 <div class="flex items-center gap-3">
                     <span id="html-char-count" class="text-xs text-slate-400 mr-2">0 caractères</span>
-                    <button onclick="copyHtmlCode()"
-                        class="px-3 py-1.5 bg-[#333333] border border-slate-600 rounded-md text-sm text-slate-200 hover:bg-[#444444] transition flex items-center gap-2">
-                        <i class="fas fa-copy"></i> Copier
+                    <button onclick="openPromptModal()"
+                        class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 border border-transparent rounded-md text-sm text-white transition flex items-center gap-2 shadow-lg shadow-purple-500/20">
+                        <i class="fas fa-magic"></i> Prompt
                     </button>
                 </div>
             </div>
@@ -197,6 +197,61 @@
             </div>
             <div id="modal-content" class="p-8 overflow-y-auto prose prose-orange max-w-none">
                 <!-- Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Modal -->
+    <div id="prompt-modal"
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700 transform transition-all scale-100 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center bg-[#252526] rounded-t-xl">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-magic text-purple-400"></i>
+                    Générer avec Gemini
+                </h3>
+                <button onclick="closePromptModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 flex-1 overflow-y-auto">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        Décrivez la page ou le composant que vous souhaitez créer
+                    </label>
+                    <textarea id="gemini-prompt-input" rows="6"
+                        placeholder="Ex: Crée une landing page moderne pour un café avec une section héro, une galerie de photos et un formulaire de contact. Utilise des couleurs chaudes."
+                        class="w-full px-4 py-3 bg-[#252526] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition resize-none text-base"></textarea>
+                </div>
+
+                <div id="generation-error"
+                    class="hidden mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm flex items-center gap-2">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="generation-error-msg">Une erreur est survenue.</span>
+                </div>
+
+                <div class="bg-blue-900/20 border border-blue-800 rounded-lg p-4 mb-2">
+                    <p class="text-sm text-blue-200 flex items-start gap-2">
+                        <i class="fas fa-info-circle mt-0.5"></i>
+                        <span>Le code généré remplacera le contenu actuel de l'éditeur. Assurez-vous d'avoir sauvegardé
+                            votre travail si nécessaire.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-700 bg-[#252526] rounded-b-xl flex justify-end gap-3">
+                <button onclick="closePromptModal()"
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition">
+                    Annuler
+                </button>
+                <button onclick="generateCode()" id="generate-btn"
+                    class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg font-bold transition shadow-lg shadow-purple-500/20 flex items-center gap-2">
+                    <span id="generate-btn-text">Générer le code</span>
+                    <i id="generate-btn-icon" class="fas fa-wand-magic-sparkles"></i>
+                    <i id="generate-loading" class="fas fa-circle-notch fa-spin hidden"></i>
+                </button>
             </div>
         </div>
     </div>

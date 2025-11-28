@@ -663,7 +663,7 @@ async function clearCache() {
 }
 
 
-// ==================== PAGE CREATOR FUNCTIONS ====================
+// ==================== PAGES FRAME IDE FUNCTIONS ====================
 
 // Initialize Code Editor with Prism highlighting
 function initializeCodeEditor() {
@@ -998,7 +998,7 @@ function previewSavedPage(index) {
     if (modal) modal.classList.remove('hidden');
 }
 
-// Clear page creator form
+// Clear Pages Frame IDE form
 function clearPageForm() {
     if (!confirm('Effacer tous les champs du formulaire ?')) {
         return;
