@@ -298,13 +298,13 @@ function renderDashboard() {
             videosTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucune vidéo trouvée.</td></tr>';
         } else {
             videosTbody.innerHTML = appState.videos.slice(0, 5).map(video => `
-            < tr class="hover:bg-slate-50 transition" >
+            <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
                         <button onclick="openVideoPreview('${video.link}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
                     </td>
-                </tr >
+                </tr>
             `).join('');
         }
     }
@@ -316,13 +316,13 @@ function renderDashboard() {
             podcastsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun podcast trouvé.</td></tr>';
         } else {
             podcastsTbody.innerHTML = appState.podcasts.slice(0, 5).map(podcast => `
-            < tr class="hover:bg-slate-50 transition" >
+            <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
                         <button onclick="openPodcastPreview('${podcast.link}')" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</button>
                     </td>
-                </tr >
+                </tr>
             `).join('');
         }
     }
