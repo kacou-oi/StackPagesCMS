@@ -45,26 +45,8 @@
             color: #6a737d;
         }
 
-        /* Syntax highlighting preview */
-        #syntax-preview {
-            background: #1e1e1e;
-            padding: 1rem;
-            overflow: auto;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        #syntax-preview pre {
-            margin: 0;
-            padding: 0;
-            background: transparent;
-        }
-
-        #syntax-preview code {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
+        #page-html-editor::placeholder {
+            color: #6a737d;
         }
     </style>
 </head>
@@ -177,30 +159,10 @@
                     </button>
                 </div>
             </div>
-            <!-- Split view: Editor + Preview -->
-            <div class="flex-1 flex flex-col overflow-hidden">
-                <!-- Code Editor -->
-                <div class="flex-1 bg-[#1e1e1e] overflow-hidden border-b border-slate-700">
-                    <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..." spellcheck="false"
-                        autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
-                </div>
-
-                <!-- Syntax Highlighting Preview -->
-                <div class="flex-1 overflow-hidden">
-                    <div class="px-4 py-2 bg-[#252526] border-b border-slate-700 flex items-center justify-between">
-                        <span class="text-xs text-slate-400 font-medium">
-                            <i class="fas fa-palette text-orange-400 mr-1"></i>
-                            Prévisualisation avec Coloration Syntaxique
-                        </span>
-                        <button onclick="togglePreview()"
-                            class="text-xs text-slate-400 hover:text-orange-400 transition">
-                            <i id="preview-toggle-icon" class="fas fa-chevron-up"></i>
-                        </button>
-                    </div>
-                    <div id="syntax-preview" class="h-full">
-                        <pre><code class="language-markup"></code></pre>
-                    </div>
-                </div>
+            <!-- Code Editor -->
+            <div class="flex-1 bg-[#1e1e1e] overflow-hidden">
+                <textarea id="page-html-editor" placeholder="Collez votre code HTML ici..." spellcheck="false"
+                    autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
             </div>
 
             <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
@@ -237,22 +199,6 @@
 
     <script src="./../core/admin.js"></script>
     <script>
-        // Toggle syntax preview panel
-        function togglePreview() {
-            const preview = document.getElementById('syntax-preview').parentElement;
-            const icon = document.getElementById('preview-toggle-icon');
-
-            if (preview.classList.contains('hidden')) {
-                preview.classList.remove('hidden');
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-            } else {
-                preview.classList.add('hidden');
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
-            }
-        }
-
         // Open preview in new tab
         function previewPageNewTab() {
             const title = document.getElementById('page-title')?.value.trim();
@@ -299,70 +245,30 @@ ${htmlContent}
             newTab.document.close();
         }
 
-        // Debounce timer for syntax highlighting
-        let highlightTimeout = null;
-
-        // Update syntax highlighting in real-time
-        function updateSyntaxHighlight(immediate = false) {
-            const editor = document.getElementById('page-html-editor');
-            const preview = document.getElementById('syntax-preview');
-            const charCount = document.getElementById('html-char-count');
-            const statusBadge = document.getElementById('page-status-badge');
-
-            if (!editor || !preview) return;
-
-            const performUpdate = () => {
-                const code = editor.value;
-                const previewCode = preview.querySelector('code');
-
-                if (previewCode) {
-                    previewCode.textContent = code;
-                    // Use requestAnimationFrame for smooth updates
-                    requestAnimationFrame(() => {
-                        if (window.Prism) {
-                            Prism.highlightElement(previewCode);
-                        }
-                    });
-                }
-
-                // Update character count
-                if (charCount) {
-                    charCount.textContent = `${code.length} caractères`;
-                }
-
-                // Update status badge
-                if (statusBadge && code.length > 0) {
-                    statusBadge.innerHTML = '<i class=\"fas fa-circle text-yellow-500 mr-1\" style=\"font-size: 6px;\"></i> Modifié';
-                    statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
-                }
-            };
-
-            if (immediate) {
-                // Clear any pending timeout
-                if (highlightTimeout) clearTimeout(highlightTimeout);
-                performUpdate();
-            } else {
-                // Debounce for performance (but still very fast - 50ms)
-                if (highlightTimeout) clearTimeout(highlightTimeout);
-                highlightTimeout = setTimeout(performUpdate, 50);
-            }
-        }
-
         // Initialize on load
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
 
             // Initialize editor event listeners
             const editor = document.getElementById('page-html-editor');
+            const charCount = document.getElementById('html-char-count');
+            const statusBadge = document.getElementById('page-status-badge');
 
             if (editor) {
-                // Update syntax highlighting on input (debounced)
-                editor.addEventListener('input', () => updateSyntaxHighlight(false));
+                // Update character count and status on input
+                editor.addEventListener('input', function () {
+                    if (charCount) {
+                        charCount.textContent = `${this.value.length} caractères`;
+                    }
+                    if (statusBadge && this.value.length > 0) {
+                        statusBadge.innerHTML = '<i class=\"fas fa-circle text-yellow-500 mr-1\" style=\"font-size: 6px;\"></i> Modifié';
+                        statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
+                    }
+                });
 
-                // Initial highlight if there's content (immediate)
-                if (editor.value) {
-                    // Wait a bit for Prism to load
-                    setTimeout(() => updateSyntaxHighlight(true), 100);
+                // Initial count
+                if (editor.value && charCount) {
+                    charCount.textContent = `${editor.value.length} caractères`;
                 }
             }
 
@@ -417,8 +323,11 @@ ${htmlContent}
                 statusBadge.className = 'text-xs px-2 py-1 rounded bg-green-900 text-green-300';
             }
 
-            // Update syntax highlighting (immediate)
-            setTimeout(() => updateSyntaxHighlight(true), 50);
+            // Update character count
+            const charCount = document.getElementById('html-char-count');
+            if (charCount && page.htmlContent) {
+                charCount.textContent = `${page.htmlContent.length} caractères`;
+            }
         }
 
         // Close modal
