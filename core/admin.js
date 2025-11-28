@@ -298,13 +298,13 @@ function renderDashboard() {
             videosTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucune vidéo trouvée.</td></tr>';
         } else {
             videosTbody.innerHTML = appState.videos.slice(0, 5).map(video => `
-            < tr class="hover:bg-slate-50 transition" >
+                <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
                         <button onclick="openVideoPreview('${video.link}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
                     </td>
-                </tr >
+                </tr>
             `).join('');
         }
     }
@@ -316,13 +316,13 @@ function renderDashboard() {
             podcastsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun podcast trouvé.</td></tr>';
         } else {
             podcastsTbody.innerHTML = appState.podcasts.slice(0, 5).map(podcast => `
-            < tr class="hover:bg-slate-50 transition" >
+                <tr class="hover:bg-slate-50 transition">
                     <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
                     <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
                     <td class="px-6 py-4 text-right">
                         <button onclick="openPodcastPreview('${podcast.link}')" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</button>
                     </td>
-                </tr >
+                </tr>
             `).join('');
         }
     }
@@ -348,7 +348,7 @@ function renderContentTable() {
 
     // Update Table
     tbody.innerHTML = paginatedPosts.map(post => `
-            < tr class="hover:bg-slate-50 transition group" >
+        <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4">
                 <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
                     ${post.image ? `<img src="${post.image}" class="w-full h-full object-cover" />` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-image"></i></div>'}
@@ -364,7 +364,7 @@ function renderContentTable() {
                     <i class="fas fa-eye mr-1"></i> Aperçu
                 </button>
             </td>
-        </tr >
+        </tr>
             `).join('');
 
     // Update Pagination Controls
@@ -404,7 +404,7 @@ function renderVideos() {
     const filtered = appState.videos.filter(v => v.title.toLowerCase().includes(search));
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `< tr > <td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr > `;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr>`;
         document.getElementById('video-pagination-info').textContent = `Page 1 sur 1`;
         document.getElementById('prev-video-page-btn').disabled = true;
         document.getElementById('next-video-page-btn').disabled = true;
@@ -418,7 +418,7 @@ function renderVideos() {
     const pageVideos = filtered.slice(start, start + VIDEOS_PER_PAGE);
 
     tbody.innerHTML = pageVideos.map(video => `
-            < tr class="hover:bg-slate-50 transition group" >
+        <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4">
                 <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
                     ${video.thumbnail ? `<img src="${video.thumbnail}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-video"></i></div>'}
@@ -434,7 +434,7 @@ function renderVideos() {
                     <i class="fas fa-eye mr-1"></i> Aperçu
                 </button>
             </td>
-        </tr >
+        </tr>
             `).join('');
 
     document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} sur ${totalPages} `;
@@ -454,7 +454,7 @@ function renderPodcasts() {
     const filtered = appState.podcasts.filter(p => p.title.toLowerCase().includes(search));
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `< tr > <td colspan="3" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-microphone text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucun épisode trouvé</p></td></tr > `;
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-microphone text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucun épisode trouvé</p></td></tr>`;
         document.getElementById('podcast-pagination-info').textContent = `Page 1 sur 1`;
         document.getElementById('prev-podcast-page-btn').disabled = true;
         document.getElementById('next-podcast-page-btn').disabled = true;
@@ -468,7 +468,7 @@ function renderPodcasts() {
     const pagePodcasts = filtered.slice(start, start + PODCASTS_PER_PAGE);
 
     tbody.innerHTML = pagePodcasts.map(podcast => `
-            < tr class="hover:bg-slate-50 transition group" >
+        <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4 font-medium text-slate-800">
                 ${podcast.title}
                 <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${podcast.description ? podcast.description.replace(/<[^>]*>/g, '').substring(0, 60) + '...' : ''}</div>
@@ -479,7 +479,7 @@ function renderPodcasts() {
                     <i class="fas fa-play mr-1"></i> Ouvrir
                 </button>
             </td>
-        </tr >
+        </tr>
             `).join('');
 
     document.getElementById('podcast-pagination-info').textContent = `Page ${currentPodcastPage} sur ${totalPages} `;
