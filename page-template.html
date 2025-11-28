@@ -46,7 +46,7 @@
             }
 
             // Inject page content
-            document.getElementById('page-content').innerHTML = page.content || '<div class="p-8"><h1 class="text-3xl font-bold">Aucun contenu</h1></div>';
+            document.getElementById('page-content').innerHTML = page.htmlContent || '<div class="p-8"><h1 class="text-3xl font-bold">Aucun contenu</h1></div>';
         } else {
             // Page not found - redirect to homepage
             window.location.href = '/';
