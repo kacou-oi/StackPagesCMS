@@ -106,7 +106,7 @@ async function loadData() {
 
         // 1. Metadata
         const metaRes = await fetch(`/api/metadata${refreshParam}`);
-        metadata = await metaRes.json();
+        appState.metadata = await metaRes.json();
 
         // Update UI with Metadata
         // Update UI with Metadata
