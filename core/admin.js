@@ -418,49 +418,62 @@ const VIDEOS_PER_PAGE = 10; // Renamed for consistency with diff
 
 // Search Listener
 function renderVideos() {
-    const tbody = document.getElementById('videos-table');
-    if (!tbody) return;
+    try {
+        const tbody = document.getElementById('videos-table');
+        if (!tbody) return;
 
-    const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
-    const filtered = appState.videos.filter(v => v.title.toLowerCase().includes(search));
+        const search = document.getElementById('search-videos')?.value.toLowerCase() || '';
+        const filtered = appState.videos.filter(v => (v.title || '').toLowerCase().includes(search));
 
-    if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr>`;
-        document.getElementById('video-pagination-info').textContent = `Page 1 sur 1`;
-        document.getElementById('prev-video-page-btn').disabled = true;
-        document.getElementById('next-video-page-btn').disabled = true;
-        return;
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-video text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucune vidéo trouvée</p></td></tr>`;
+            const info = document.getElementById('video-pagination-info');
+            if (info) info.textContent = `Page 1 sur 1`;
+            const prev = document.getElementById('prev-video-page-btn');
+            if (prev) prev.disabled = true;
+            const next = document.getElementById('next-video-page-btn');
+            if (next) next.disabled = true;
+            return;
+        }
+
+        const totalPages = Math.ceil(filtered.length / VIDEOS_PER_PAGE);
+        if (currentVideoPage > totalPages) currentVideoPage = 1;
+
+        const start = (currentVideoPage - 1) * VIDEOS_PER_PAGE;
+        const pageVideos = filtered.slice(start, start + VIDEOS_PER_PAGE);
+
+        tbody.innerHTML = pageVideos.map(video => {
+            const dateStr = video.published ? new Date(video.published).toLocaleDateString('fr-FR') : '-';
+            const desc = video.description ? video.description.substring(0, 60) + '...' : '';
+            return `
+            <tr class="hover:bg-slate-50 transition group">
+                <td class="px-6 py-4">
+                    <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
+                        ${video.thumbnail ? `<img src="${video.thumbnail}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-video"></i></div>'}
+                    </div>
+                </td>
+                <td class="px-6 py-4 font-medium text-slate-800">
+                    ${video.title || 'Sans titre'}
+                    <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${desc}</div>
+                </td>
+                <td class="px-6 py-4 text-slate-500 text-xs">${dateStr}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="openVideoPreview('${video.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                        <i class="fas fa-eye mr-1"></i> Aperçu
+                    </button>
+                </td>
+            </tr>
+        `}).join('');
+
+        const info = document.getElementById('video-pagination-info');
+        if (info) info.textContent = `Page ${currentVideoPage} sur ${totalPages}`;
+        const prev = document.getElementById('prev-video-page-btn');
+        if (prev) prev.disabled = currentVideoPage === 1;
+        const next = document.getElementById('next-video-page-btn');
+        if (next) next.disabled = currentVideoPage === totalPages;
+    } catch (e) {
+        console.error('Error rendering videos:', e);
     }
-
-    const totalPages = Math.ceil(filtered.length / VIDEOS_PER_PAGE);
-    if (currentVideoPage > totalPages) currentVideoPage = 1;
-
-    const start = (currentVideoPage - 1) * VIDEOS_PER_PAGE;
-    const pageVideos = filtered.slice(start, start + VIDEOS_PER_PAGE);
-
-    tbody.innerHTML = pageVideos.map(video => `
-        <tr class="hover:bg-slate-50 transition group">
-            <td class="px-6 py-4">
-                <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
-                    ${video.thumbnail ? `<img src="${video.thumbnail}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-video"></i></div>'}
-                </div>
-            </td>
-            <td class="px-6 py-4 font-medium text-slate-800">
-                ${video.title}
-                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${video.description ? video.description.substring(0, 60) + '...' : ''}</div>
-            </td>
-            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick="openVideoPreview('${video.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
-                    <i class="fas fa-eye mr-1"></i> Aperçu
-                </button>
-            </td>
-        </tr>
-    `).join('');
-
-    document.getElementById('video-pagination-info').textContent = `Page ${currentVideoPage} sur ${totalPages}`;
-    document.getElementById('prev-video-page-btn').disabled = currentVideoPage === 1;
-    document.getElementById('next-video-page-btn').disabled = currentVideoPage === totalPages;
 }
 
 // Podcast Pagination State
@@ -468,44 +481,57 @@ let currentPodcastPage = 1;
 const PODCASTS_PER_PAGE = 10;
 
 function renderPodcasts() {
-    const tbody = document.getElementById('podcasts-table');
-    if (!tbody) return;
+    try {
+        const tbody = document.getElementById('podcasts-table');
+        if (!tbody) return;
 
-    const search = document.getElementById('search-podcasts')?.value.toLowerCase() || '';
-    const filtered = appState.podcasts.filter(p => p.title.toLowerCase().includes(search));
+        const search = document.getElementById('search-podcasts')?.value.toLowerCase() || '';
+        const filtered = appState.podcasts.filter(p => (p.title || '').toLowerCase().includes(search));
 
-    if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-microphone text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucun épisode trouvé</p></td></tr>`;
-        document.getElementById('podcast-pagination-info').textContent = `Page 1 sur 1`;
-        document.getElementById('prev-podcast-page-btn').disabled = true;
-        document.getElementById('next-podcast-page-btn').disabled = true;
-        return;
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-300"><i class="fas fa-microphone text-4xl text-slate-300 mb-3"></i><p class="text-slate-500">Aucun épisode trouvé</p></td></tr>`;
+            const info = document.getElementById('podcast-pagination-info');
+            if (info) info.textContent = `Page 1 sur 1`;
+            const prev = document.getElementById('prev-podcast-page-btn');
+            if (prev) prev.disabled = true;
+            const next = document.getElementById('next-podcast-page-btn');
+            if (next) next.disabled = true;
+            return;
+        }
+
+        const totalPages = Math.ceil(filtered.length / PODCASTS_PER_PAGE);
+        if (currentPodcastPage > totalPages) currentPodcastPage = 1;
+
+        const start = (currentPodcastPage - 1) * PODCASTS_PER_PAGE;
+        const pagePodcasts = filtered.slice(start, start + PODCASTS_PER_PAGE);
+
+        tbody.innerHTML = pagePodcasts.map(podcast => {
+            const dateStr = podcast.pubDate ? new Date(podcast.pubDate).toLocaleDateString('fr-FR') : '-';
+            const desc = podcast.description ? podcast.description.replace(/<[^>]*>/g, '').substring(0, 60) + '...' : '';
+            return `
+            <tr class="hover:bg-slate-50 transition group">
+                <td class="px-6 py-4 font-medium text-slate-800">
+                    ${podcast.title || 'Sans titre'}
+                    <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${desc}</div>
+                </td>
+                <td class="px-6 py-4 text-slate-500 text-xs">${dateStr}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="openPodcastPreview('${podcast.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                        <i class="fas fa-play mr-1"></i> Ouvrir
+                    </button>
+                </td>
+            </tr>
+        `}).join('');
+
+        const info = document.getElementById('podcast-pagination-info');
+        if (info) info.textContent = `Page ${currentPodcastPage} sur ${totalPages}`;
+        const prev = document.getElementById('prev-podcast-page-btn');
+        if (prev) prev.disabled = currentPodcastPage === 1;
+        const next = document.getElementById('next-podcast-page-btn');
+        if (next) next.disabled = currentPodcastPage === totalPages;
+    } catch (e) {
+        console.error('Error rendering podcasts:', e);
     }
-
-    const totalPages = Math.ceil(filtered.length / PODCASTS_PER_PAGE);
-    if (currentPodcastPage > totalPages) currentPodcastPage = 1;
-
-    const start = (currentPodcastPage - 1) * PODCASTS_PER_PAGE;
-    const pagePodcasts = filtered.slice(start, start + PODCASTS_PER_PAGE);
-
-    tbody.innerHTML = pagePodcasts.map(podcast => `
-        <tr class="hover:bg-slate-50 transition group">
-            <td class="px-6 py-4 font-medium text-slate-800">
-                ${podcast.title}
-                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${podcast.description ? podcast.description.replace(/<[^>]*>/g, '').substring(0, 60) + '...' : ''}</div>
-            </td>
-            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick="openPodcastPreview('${podcast.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
-                    <i class="fas fa-play mr-1"></i> Ouvrir
-                </button>
-            </td>
-        </tr>
-    `).join('');
-
-    document.getElementById('podcast-pagination-info').textContent = `Page ${currentPodcastPage} sur ${totalPages}`;
-    document.getElementById('prev-podcast-page-btn').disabled = currentPodcastPage === 1;
-    document.getElementById('next-podcast-page-btn').disabled = currentPodcastPage === totalPages;
 }
 
 function prevPodcastPage() {
