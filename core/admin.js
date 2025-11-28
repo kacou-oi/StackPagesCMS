@@ -734,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Save page to localStorage
-function savePage() {
+function savePage(status = 'published') {
     const title = document.getElementById('page-title')?.value.trim();
     const slug = document.getElementById('page-slug')?.value.trim();
     const metaDesc = document.getElementById('page-meta-desc')?.value.trim();
@@ -742,6 +742,7 @@ function savePage() {
     const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
     const htmlContent = document.getElementById('page-html-editor')?.value.trim();
     const statusEl = document.getElementById('page-save-status');
+    const statusBadge = document.getElementById('page-status-badge');
 
     // Validation
     if (!title) {
@@ -766,6 +767,7 @@ function savePage() {
         metaKeywords,
         thumbnail,
         htmlContent,
+        status: status, // 'draft' or 'published'
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     };
@@ -788,13 +790,15 @@ function savePage() {
         page.createdAt = pages[existingIndex].createdAt;
         pages[existingIndex] = page;
         if (statusEl) {
-            statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page mise à jour avec succès!</span>';
+            const statusText = status === 'draft' ? 'brouillon sauvegardé' : 'page publiée';
+            statusEl.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page mise à jour (${statusText})!</span>`;
         }
     } else {
         // Add new page
         pages.push(page);
         if (statusEl) {
-            statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page sauvegardée avec succès!</span>';
+            const statusText = status === 'draft' ? 'brouillon sauvegardé' : 'page publiée';
+            statusEl.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page sauvegardée (${statusText})!</span>`;
         }
     }
 
@@ -802,6 +806,17 @@ function savePage() {
     try {
         localStorage.setItem('stackpages_custom_pages', JSON.stringify(pages));
         loadSavedPages(); // Refresh the list
+
+        // Update status badge
+        if (statusBadge) {
+            if (status === 'draft') {
+                statusBadge.innerHTML = '<i class="fas fa-circle text-orange-500 mr-1" style="font-size: 6px;"></i> Brouillon';
+                statusBadge.className = 'text-xs px-2 py-1 rounded bg-orange-900 text-orange-300';
+            } else {
+                statusBadge.innerHTML = '<i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i> Publié';
+                statusBadge.className = 'text-xs px-2 py-1 rounded bg-green-900 text-green-300';
+            }
+        }
 
         // Clear status message after 3 seconds
         setTimeout(() => {
