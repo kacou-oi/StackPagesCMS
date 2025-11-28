@@ -138,8 +138,20 @@ async function loadData() {
 
         // Update Stats
         document.getElementById('stat-total-posts').textContent = appState.posts.length;
-        const lastPostDate = appState.posts.length > 0 ? new Date(appState.posts[0].pubDate).toLocaleDateString('fr-FR') : '-';
-        document.getElementById('stat-last-update').textContent = lastPostDate;
+
+        // Count custom pages
+        let customPagesCount = 0;
+        try {
+            const storedPages = localStorage.getItem('stackpages_custom_pages');
+            if (storedPages) {
+                customPagesCount = JSON.parse(storedPages).length;
+            }
+        } catch (e) {
+            console.error('Error counting pages:', e);
+        }
+        const statPagesEl = document.getElementById('stat-total-pages');
+        if (statPagesEl) statPagesEl.textContent = customPagesCount;
+
         document.getElementById('stat-total-videos').textContent = appState.videos.length;
         document.getElementById('stat-total-podcasts').textContent = appState.podcasts.length;
 

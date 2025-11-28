@@ -146,15 +146,27 @@
 
         <!-- Right Panel - Code Editor -->
         <div class="flex-1 flex flex-col bg-white">
-            <div class="px-6 py-3 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
-                <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+            <!-- Code Editor Header -->
+            <div class="px-6 py-3 border-b border-slate-700 bg-[#252526] flex justify-between items-center">
+                <h3 class="font-semibold text-slate-200 flex items-center gap-2">
                     <i class="fas fa-code text-orange-500"></i>
                     Éditeur HTML
                 </h3>
+
+                <!-- Gemini Branding -->
+                <div class="flex items-center gap-3 bg-[#1e1e1e] px-4 py-1.5 rounded-full border border-slate-700">
+                    <i class="fas fa-star text-blue-400 animate-pulse"></i>
+                    <span class="font-bold text-slate-200 text-sm">Powered by Google Gemini</span>
+                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-400 hover:text-white transition"
+                        title="Configurer l'API Gemini">
+                        <i class="fas fa-cog text-lg hover:rotate-90 transition-transform duration-500"></i>
+                    </button>
+                </div>
+
                 <div class="flex items-center gap-3">
-                    <span id="html-char-count" class="text-xs text-slate-500">0 caractères</span>
+                    <span id="html-char-count" class="text-xs text-slate-400 mr-2">0 caractères</span>
                     <button onclick="copyHtmlCode()"
-                        class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition flex items-center gap-2">
+                        class="px-3 py-1.5 bg-[#333333] border border-slate-600 rounded-md text-sm text-slate-200 hover:bg-[#444444] transition flex items-center gap-2">
                         <i class="fas fa-copy"></i> Copier
                     </button>
                 </div>
@@ -193,6 +205,63 @@
             </div>
             <div id="modal-content" class="p-8 overflow-y-auto prose prose-orange max-w-none">
                 <!-- Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Gemini Config Modal -->
+    <div id="gemini-modal"
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-md border border-slate-700 transform transition-all scale-100">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fas fa-star text-blue-400"></i>
+                        Configuration Gemini
+                    </h3>
+                    <button onclick="closeGeminiConfig()" class="text-slate-400 hover:text-white transition">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Clé API Gemini</label>
+                        <div class="relative">
+                            <input type="password" id="gemini-api-key" placeholder="Collez votre clé API ici..."
+                                class="w-full pl-10 pr-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-slate-500">
+                            <i class="fas fa-key absolute left-3 top-3 text-slate-500"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#252526] rounded-lg p-4 border border-slate-700">
+                        <p class="text-sm text-slate-300 mb-2 font-medium">Comment obtenir une clé :</p>
+                        <ol class="list-decimal list-inside space-y-1.5 text-sm text-slate-400 ml-1">
+                            <li>Allez sur <a href="https://makersuite.google.com/app/apikey" target="_blank"
+                                    class="text-blue-400 hover:text-blue-300 hover:underline">Google AI Studio</a></li>
+                            <li>Créez une clé API gratuite</li>
+                            <li>Copiez et collez-la ci-dessus</li>
+                        </ol>
+                    </div>
+
+                    <div class="pt-1">
+                        <a href="https://www.youtube.com/watch?v=example" target="_blank"
+                            class="flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-medium group">
+                            <div
+                                class="w-6 h-6 bg-red-500/10 rounded-full flex items-center justify-center group-hover:bg-red-500/20 transition">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            VIDEO TUTO : Comment configurer Gemini
+                        </a>
+                    </div>
+
+                    <button onclick="saveGeminiConfig()"
+                        class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-bold transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+                        <i class="fas fa-save"></i>
+                        Sauvegarder la configuration
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -244,6 +313,65 @@ ${htmlContent}
             newTab.document.write(previewHtml);
             newTab.document.close();
         }
+
+        // Gemini Configuration Functions
+        function openGeminiConfig() {
+            const modal = document.getElementById('gemini-modal');
+            const apiKeyInput = document.getElementById('gemini-api-key');
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                // Load saved key
+                const savedKey = localStorage.getItem('stackpages_gemini_key');
+                if (savedKey && apiKeyInput) {
+                    apiKeyInput.value = savedKey;
+                }
+            }
+        }
+
+        function closeGeminiConfig() {
+            const modal = document.getElementById('gemini-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function saveGeminiConfig() {
+            const apiKeyInput = document.getElementById('gemini-api-key');
+            if (apiKeyInput) {
+                const key = apiKeyInput.value.trim();
+                if (key) {
+                    localStorage.setItem('stackpages_gemini_key', key);
+
+                    // Show success feedback
+                    const btn = document.querySelector('#gemini-modal button[onclick="saveGeminiConfig()"]');
+                    const originalContent = btn.innerHTML;
+
+                    btn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+                    btn.classList.remove('from-blue-600', 'to-blue-500');
+                    btn.classList.add('from-green-600', 'to-green-500');
+
+                    setTimeout(() => {
+                        closeGeminiConfig();
+                        // Reset button style after closing
+                        setTimeout(() => {
+                            btn.innerHTML = originalContent;
+                            btn.classList.add('from-blue-600', 'to-blue-500');
+                            btn.classList.remove('from-green-600', 'to-green-500');
+                        }, 500);
+                    }, 1000);
+                } else {
+                    alert('Veuillez entrer une clé API valide');
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('gemini-modal')?.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeGeminiConfig();
+            }
+        });
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', async () => {
