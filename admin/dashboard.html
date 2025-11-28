@@ -82,13 +82,26 @@
             transition: transform 0.3s;
             display: flex;
             align-items: center;
-            justify-center;
+            justify-content: center;
             font-size: 12px;
         }
 
         .theme-toggle.dark .theme-toggle-slider {
             transform: translateX(30px);
-            background: #1e293b;
+            background: #64748b;
+        }
+
+        /* Dark mode hover improvements */
+        body.dark .hover\:bg-orange-50:hover {
+            background-color: #334155 !important;
+        }
+
+        body.dark .hover\:bg-slate-50:hover {
+            background-color: #334155 !important;
+        }
+
+        body.dark .hover\:bg-slate-100:hover {
+            background-color: #374151 !important;
         }
     </style>
 </head>
@@ -187,9 +200,7 @@
             <div class="flex items-center gap-3">
                 <span class="text-sm text-slate-600" id="theme-label">Mode sombre</span>
                 <div onclick="toggleDarkMode()" class="theme-toggle" id="theme-toggle">
-                    <div class="theme-toggle-slider">
-                        <i class="fas fa-sun text-yellow-500"></i>
-                    </div>
+                    <div class="theme-toggle-slider"></div>
                 </div>
             </div>
             <div class="flex gap-3">
@@ -881,11 +892,9 @@
 
             // Update icon and label
             if (body.classList.contains('dark')) {
-                slider.innerHTML = '<i class="fas fa-moon text-blue-400"></i>';
                 label.textContent = 'Mode clair';
                 localStorage.setItem('stackpages_theme', 'dark');
             } else {
-                slider.innerHTML = '<i class="fas fa-sun text-yellow-500"></i>';
                 label.textContent = 'Mode sombre';
                 localStorage.setItem('stackpages_theme', 'light');
             }
@@ -902,7 +911,6 @@
             if (savedTheme === 'dark') {
                 body.classList.add('dark');
                 toggle?.classList.add('dark');
-                if (slider) slider.innerHTML = '<i class="fas fa-moon text-blue-400"></i>';
                 if (label) label.textContent = 'Mode clair';
             }
         }
