@@ -91,6 +91,7 @@ function showView(viewName) {
         el.classList.remove('bg-orange-50', 'text-orange-600');
         el.classList.add('text-slate-600');
     });
+    const activeBtn = document.querySelector(`button[onclick="showView('${viewName}')"]`);
     if (activeBtn) {
         activeBtn.classList.add('bg-orange-50', 'text-orange-600');
         activeBtn.classList.remove('text-slate-600');
@@ -112,7 +113,7 @@ async function loadData() {
 
         // 1. Metadata
         const metaRes = await fetch(`/api/metadata${refreshParam}`);
-        metadata = await metaRes.json();
+        appState.metadata = await metaRes.json();
 
         // Update UI with Metadata
         // Update UI with Metadata
