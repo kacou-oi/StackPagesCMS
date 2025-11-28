@@ -290,9 +290,10 @@ function renderDashboard() {
                         ${new Date(page.updatedAt || Date.now()).toLocaleDateString('fr-FR')}
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <a href="/admin/IDE.html?page=${encodeURIComponent(page.slug)}" 
-                           class="text-blue-600 hover:text-blue-800 font-medium text-xs uppercase tracking-wide">
-                            Éditer
+                        <a href="/${page.slug}" 
+                           target="_blank"
+                           class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">
+                            Voir
                         </a>
                     </td>
                 </tr>
