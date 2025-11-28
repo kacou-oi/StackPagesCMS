@@ -863,9 +863,8 @@ function loadSavedPages() {
             <div class="flex-1">
                 <h4 class="font-medium text-slate-800 text-lg">${page.title}</h4>
                 <div class="flex items-center gap-4 mt-2">
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full ${page.status === 'published' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'}">
-                        <i class="fas ${page.status === 'published' ? 'fa-check-circle' : 'fa-pencil-alt'} mr-1"></i>
-                        ${page.status === 'published' ? 'Publié' : 'Brouillon'}
+                    <span class="text-sm font-medium ${page.status === 'published' ? 'text-green-600' : 'text-yellow-600'}">
+                        <i class="fas ${page.status === 'published' ? 'fa-check-circle' : 'fa-pencil-alt'} mr-1"></i>${page.status === 'published' ? 'Publié' : 'Brouillon'}
                     </span>
                     <span class="text-sm text-slate-500">
                         <i class="fas fa-link mr-1"></i>${page.slug}
