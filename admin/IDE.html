@@ -258,36 +258,38 @@
             const title = document.getElementById('page-title')?.value.trim();
             const htmlContent = document.getElementById('page-html-editor')?.value.trim();
             const thumbnail = document.getElementById('page-thumbnail')?.value.trim();
+            const metaDesc = document.getElementById('page-meta-desc')?.value.trim();
+            const metaKeywords = document.getElementById('page-meta-keywords')?.value.trim();
 
             if (!title || !htmlContent) {
                 alert('Veuillez remplir au moins le titre et le contenu HTML');
                 return;
             }
 
-            // Create preview HTML
-            let previewHtml = `
-<!DOCTYPE html>
+            // Create preview HTML - minimal interference with user's code
+            let previewHtml = `<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
+    ${metaDesc ? `<meta name="description" content="${metaDesc}">` : ''}
+    ${metaKeywords ? `<meta name="keywords" content="${metaKeywords}">` : ''}
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            color: #333;
+        /* Reset minimal pour éviter les interférences */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        img { max-width: 100%; height: auto; }
+        body {
+            margin: 0;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
-    <h1>${title}</h1>
-    ${thumbnail ? `<img src="${thumbnail}" alt="${title}" style="width: 100%; margin: 20px 0; border-radius: 8px;">` : ''}
-    ${htmlContent}
+${htmlContent}
 </body>
 </html>`;
 
@@ -297,22 +299,30 @@
             newTab.document.close();
         }
 
+        // Debounce timer for syntax highlighting
+        let highlightTimeout = null;
+
         // Update syntax highlighting in real-time
-        function updateSyntaxHighlight() {
+        function updateSyntaxHighlight(immediate = false) {
             const editor = document.getElementById('page-html-editor');
             const preview = document.getElementById('syntax-preview');
             const charCount = document.getElementById('html-char-count');
             const statusBadge = document.getElementById('page-status-badge');
 
-            if (editor && preview) {
+            if (!editor || !preview) return;
+
+            const performUpdate = () => {
                 const code = editor.value;
                 const previewCode = preview.querySelector('code');
 
                 if (previewCode) {
                     previewCode.textContent = code;
-                    if (window.Prism) {
-                        Prism.highlightElement(previewCode);
-                    }
+                    // Use requestAnimationFrame for smooth updates
+                    requestAnimationFrame(() => {
+                        if (window.Prism) {
+                            Prism.highlightElement(previewCode);
+                        }
+                    });
                 }
 
                 // Update character count
@@ -325,6 +335,16 @@
                     statusBadge.innerHTML = '<i class=\"fas fa-circle text-yellow-500 mr-1\" style=\"font-size: 6px;\"></i> Modifié';
                     statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
                 }
+            };
+
+            if (immediate) {
+                // Clear any pending timeout
+                if (highlightTimeout) clearTimeout(highlightTimeout);
+                performUpdate();
+            } else {
+                // Debounce for performance (but still very fast - 50ms)
+                if (highlightTimeout) clearTimeout(highlightTimeout);
+                highlightTimeout = setTimeout(performUpdate, 50);
             }
         }
 
@@ -336,12 +356,13 @@
             const editor = document.getElementById('page-html-editor');
 
             if (editor) {
-                // Update syntax highlighting on input
-                editor.addEventListener('input', updateSyntaxHighlight);
+                // Update syntax highlighting on input (debounced)
+                editor.addEventListener('input', () => updateSyntaxHighlight(false));
 
-                // Initial highlight if there's content
+                // Initial highlight if there's content (immediate)
                 if (editor.value) {
-                    updateSyntaxHighlight();
+                    // Wait a bit for Prism to load
+                    setTimeout(() => updateSyntaxHighlight(true), 100);
                 }
             }
 
@@ -396,8 +417,8 @@
                 statusBadge.className = 'text-xs px-2 py-1 rounded bg-green-900 text-green-300';
             }
 
-            // Update syntax highlighting
-            updateSyntaxHighlight();
+            // Update syntax highlighting (immediate)
+            setTimeout(() => updateSyntaxHighlight(true), 50);
         }
 
         // Close modal
