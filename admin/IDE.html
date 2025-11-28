@@ -44,6 +44,12 @@
                     <p class="text-sm text-slate-400" id="page-status">Nouvelle page</p>
                 </div>
             </div>
+
+            <!-- Domain Display -->
+            <div class="flex-1 flex justify-center">
+                <span id="site-domain" class="text-2xl font-bold text-white tracking-wide"></span>
+            </div>
+
             <div class="flex items-center gap-3">
                 <button onclick="previewPageNewTab()"
                     class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center gap-2">
@@ -450,6 +456,12 @@ ${htmlContent}
         // Initialize on load
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
+
+            // Display site domain
+            const domainEl = document.getElementById('site-domain');
+            if (domainEl) {
+                domainEl.textContent = window.location.hostname || 'localhost';
+            }
 
             // Initialize Monaco Editor
             initMonacoEditor('');

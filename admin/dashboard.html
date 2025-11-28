@@ -211,7 +211,7 @@
             <div class="flex gap-3">
                 <a id="header-site-btn" href="/" target="_blank"
                     class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-orange-600 transition bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow">
-                    <i class="fas fa-external-link-alt mr-2"></i>Aller au Site
+                    <i class="fas fa-external-link-alt mr-2"></i><span id="site-domain-link"></span>
                 </a>
             </div>
         </header>
@@ -923,6 +923,12 @@
         // Initialize theme when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
+
+            // Display site domain in header button
+            const domainLinkEl = document.getElementById('site-domain-link');
+            if (domainLinkEl) {
+                domainLinkEl.textContent = window.location.hostname || 'localhost';
+            }
         });
 
         // Logout Handler
