@@ -1106,16 +1106,15 @@ function loadPublishedPages() {
                     <div class="flex gap-2">
                         <a href="/admin/IDE.html?page=${encodeURIComponent(page.slug)}" 
                            class="text-slate-400 hover:text-blue-500 transition" title="Éditer">
-                            <i class="fas fa-edit"></i>
+                           class="text-blue-600 hover:text-blue-800 font-medium text-xs uppercase tracking-wide">
+                            Éditer
                         </a>
-                        <a href="#" onclick="alert('La prévisualisation en ligne sera disponible une fois le routing configuré.'); return false;"
-                           class="text-slate-400 hover:text-orange-500 transition" title="Voir en ligne">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.appendChild(card);
+                    </td>
+                </tr>
+            `).join('');
+}
+    }
+
+    // Recent Videosr.appendChild(card);
     });
 }
