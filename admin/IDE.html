@@ -125,26 +125,27 @@
         <!-- Right Panel - Code Editor -->
         <div class="flex-1 flex flex-col bg-white">
             <!-- Code Editor Header -->
-            <div class="px-6 py-3 border-b border-slate-700 bg-[#252526] flex justify-between items-center">
-                <h3 class="font-semibold text-slate-200 flex items-center gap-2">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <h3 class="font-semibold text-slate-800 flex items-center gap-2">
                     <i class="fas fa-code text-orange-500"></i>
                     Éditeur HTML
                 </h3>
 
                 <!-- Gemini Branding -->
-                <div class="flex items-center gap-3 bg-[#1e1e1e] px-4 py-1.5 rounded-full border border-slate-700">
+                <div
+                    class="flex items-center gap-3 bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
                     <img src="https://img.icons8.com/fluency/48/gemini-ai.png" alt="Gemini" class="w-5 h-5">
-                    <span class="font-bold text-slate-200 text-sm">Powered by Google Gemini</span>
-                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-400 hover:text-white transition"
+                    <span class="font-bold text-slate-700 text-sm">Powered by Google Gemini</span>
+                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-500 hover:text-slate-700 transition"
                         title="Configurer l'API Gemini">
                         <i class="fas fa-cog text-lg hover:rotate-90 transition-transform duration-500"></i>
                     </button>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span id="html-char-count" class="text-xs text-slate-400 mr-2">0 caractères</span>
+                    <span id="html-char-count" class="text-xs text-slate-500 mr-2">0 caractères</span>
                     <button onclick="copyHtmlCode()"
-                        class="px-3 py-1.5 bg-[#333333] border border-slate-600 rounded-md text-sm text-slate-200 hover:bg-[#444444] transition flex items-center gap-2">
+                        class="px-3 py-1.5 bg-white border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition flex items-center gap-2">
                         <i class="fas fa-copy"></i> Copier
                     </button>
                 </div>
@@ -154,17 +155,17 @@
                 <div id="monaco-editor-container"></div>
             </div>
 
-            <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
-                <span class="text-xs text-slate-400">
+            <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+                <span class="text-xs text-slate-500">
                     <i class="fas fa-keyboard text-orange-400 mr-1"></i>
-                    Tapez dans l'éditeur ci-dessus - La coloration s'actualise automatiquement
+                    Monaco Editor - Coloration syntaxique automatique
                 </span>
                 <div class="flex items-center gap-4">
-                    <span id="page-status-badge" class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
+                    <span id="page-status-badge" class="text-xs px-2 py-1 rounded bg-slate-200 text-slate-700">
                         <i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i>
                         Prêt
                     </span>
-                    <span id="html-char-count" class="text-xs text-slate-400">0 caractères</span>
+                    <span id="html-char-count" class="text-xs text-slate-500">0 caractères</span>
                 </div>
             </div>
         </div>
