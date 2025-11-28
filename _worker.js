@@ -798,8 +798,31 @@ export default {
             }
         }
 
+
         // ====================================================================
-        // 6. FALLBACK - SERVIR INDEX.HTML PAR DÉFAUT
+        // 6. CUSTOM PAGES ROUTING (CLIENT-SIDE RENDERING FROM LOCALSTORAGE)
+        // ====================================================================
+
+        // If path matches a potential page slug (not a file extension), serve the page template
+        // This allows pages stored in localStorage to be accessed via their slug URLs
+        const hasFileExtension = path.match(/\.[a-z0-9]+$/i);
+        const isRootOrIndex = path === '/' || path === '/index.html' || path === '';
+
+        if (!isRootOrIndex && !hasFileExtension && !isAdminOrApiPath) {
+            // Serve the page template which will load content from localStorage
+            try {
+                return await env.ASSETS.fetch(new Request(new URL('/page-template.html', url), {
+                    method: 'GET',
+                    headers: req.headers
+                }));
+            } catch (e) {
+                console.error('Error serving page template:', e);
+                // Fall through to default asset serving
+            }
+        }
+
+        // ====================================================================
+        // 7. FALLBACK - SERVIR INDEX.HTML PAR DÉFAUT
         // ====================================================================
 
 

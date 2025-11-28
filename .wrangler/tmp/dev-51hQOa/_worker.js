@@ -597,6 +597,18 @@ var worker_default = {
         return new Response(`Erreur de reverse proxy : ${error.message}`, { status: 500 });
       }
     }
+    const hasFileExtension = path.match(/\.[a-z0-9]+$/i);
+    const isRootOrIndex = path === "/" || path === "/index.html" || path === "";
+    if (!isRootOrIndex && !hasFileExtension && !isAdminOrApiPath) {
+      try {
+        return await env.ASSETS.fetch(new Request(new URL("/page-template.html", url), {
+          method: "GET",
+          headers: req.headers
+        }));
+      } catch (e) {
+        console.error("Error serving page template:", e);
+      }
+    }
     try {
       return await env.ASSETS.fetch(req);
     } catch (e) {
