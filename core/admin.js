@@ -137,23 +137,38 @@ async function loadData() {
         appState.podcasts = podcasts;
 
         // Update Stats
-        document.getElementById('stat-total-posts').textContent = appState.posts.length;
-
-        // Count custom pages
-        let customPagesCount = 0;
+        // Update Stats
         try {
-            const storedPages = localStorage.getItem('stackpages_custom_pages');
-            if (storedPages) {
-                customPagesCount = JSON.parse(storedPages).length;
-            }
-        } catch (e) {
-            console.error('Error counting pages:', e);
-        }
-        const statPagesEl = document.getElementById('stat-total-pages');
-        if (statPagesEl) statPagesEl.textContent = customPagesCount;
+            // Posts
+            const statPosts = document.getElementById('stat-total-posts');
+            if (statPosts) statPosts.textContent = appState.posts.length;
 
-        document.getElementById('stat-total-videos').textContent = appState.videos.length;
-        document.getElementById('stat-total-podcasts').textContent = appState.podcasts.length;
+            // Custom Pages
+            let customPagesCount = 0;
+            try {
+                const storedPages = localStorage.getItem('stackpages_custom_pages');
+                if (storedPages) {
+                    const parsed = JSON.parse(storedPages);
+                    if (Array.isArray(parsed)) {
+                        customPagesCount = parsed.length;
+                    }
+                }
+            } catch (e) {
+                console.error('Error counting pages:', e);
+            }
+            const statPagesEl = document.getElementById('stat-total-pages');
+            if (statPagesEl) statPagesEl.textContent = customPagesCount;
+
+            // Videos
+            const statVideos = document.getElementById('stat-total-videos');
+            if (statVideos) statVideos.textContent = appState.videos.length;
+
+            // Podcasts
+            const statPodcasts = document.getElementById('stat-total-podcasts');
+            if (statPodcasts) statPodcasts.textContent = appState.podcasts.length;
+        } catch (e) {
+            console.error('Error updating stats:', e);
+        }
 
 
         // Feed status UI (only if element exists)
@@ -246,57 +261,75 @@ async function loadConfig() {
 // Renderers
 function renderDashboard() {
     // Recent Posts
-    const postsTbody = document.getElementById('dashboard-recent-posts');
-    if (postsTbody) {
-        if (!appState.posts || appState.posts.length === 0) {
-            postsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun article trouvé.</td></tr>';
-        } else {
-            postsTbody.innerHTML = appState.posts.slice(0, 5).map(post => `
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${post.title}">${post.title}</td>
-                    <td class="px-6 py-4 text-slate-500">${new Date(post.pubDate).toLocaleDateString('fr-FR')}</td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openPreview('${post.slug}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">Voir</button>
-                    </td>
-                </tr>
-            `).join('');
+    try {
+        const postsTbody = document.getElementById('dashboard-recent-posts');
+        if (postsTbody) {
+            if (!appState.posts || appState.posts.length === 0) {
+                postsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun article trouvé.</td></tr>';
+            } else {
+                postsTbody.innerHTML = appState.posts.slice(0, 5).map(post => {
+                    const dateStr = post.pubDate ? new Date(post.pubDate).toLocaleDateString('fr-FR') : '-';
+                    return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${post.title || ''}">${post.title || 'Sans titre'}</td>
+                        <td class="px-6 py-4 text-slate-500">${dateStr}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="openPreview('${post.slug}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                        </td>
+                    </tr>
+                `}).join('');
+            }
         }
+    } catch (e) {
+        console.error('Error rendering dashboard posts:', e);
     }
 
     // Recent Videos
-    const videosTbody = document.getElementById('dashboard-recent-videos');
-    if (videosTbody) {
-        if (!appState.videos || appState.videos.length === 0) {
-            videosTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucune vidéo trouvée.</td></tr>';
-        } else {
-            videosTbody.innerHTML = appState.videos.slice(0, 5).map(video => `
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title}">${video.title}</td>
-                    <td class="px-6 py-4 text-slate-500">${new Date(video.published).toLocaleDateString('fr-FR')}</td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openVideoPreview('${video.link}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
-                    </td>
-                </tr>
-            `).join('');
+    try {
+        const videosTbody = document.getElementById('dashboard-recent-videos');
+        if (videosTbody) {
+            if (!appState.videos || appState.videos.length === 0) {
+                videosTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucune vidéo trouvée.</td></tr>';
+            } else {
+                videosTbody.innerHTML = appState.videos.slice(0, 5).map(video => {
+                    const dateStr = video.published ? new Date(video.published).toLocaleDateString('fr-FR') : '-';
+                    return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${video.title || ''}">${video.title || 'Sans titre'}</td>
+                        <td class="px-6 py-4 text-slate-500">${dateStr}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="openVideoPreview('${video.link}')" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase tracking-wide">Voir</button>
+                        </td>
+                    </tr>
+                `}).join('');
+            }
         }
+    } catch (e) {
+        console.error('Error rendering dashboard videos:', e);
     }
 
     // Recent Podcasts
-    const podcastsTbody = document.getElementById('dashboard-recent-podcasts');
-    if (podcastsTbody) {
-        if (!appState.podcasts || appState.podcasts.length === 0) {
-            podcastsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun podcast trouvé.</td></tr>';
-        } else {
-            podcastsTbody.innerHTML = appState.podcasts.slice(0, 5).map(podcast => `
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title}">${podcast.title}</td>
-                    <td class="px-6 py-4 text-slate-500">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openPodcastPreview('${podcast.link}')" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</button>
-                    </td>
-                </tr>
-            `).join('');
+    try {
+        const podcastsTbody = document.getElementById('dashboard-recent-podcasts');
+        if (podcastsTbody) {
+            if (!appState.podcasts || appState.podcasts.length === 0) {
+                podcastsTbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-slate-500">Aucun podcast trouvé.</td></tr>';
+            } else {
+                podcastsTbody.innerHTML = appState.podcasts.slice(0, 5).map(podcast => {
+                    const dateStr = podcast.pubDate ? new Date(podcast.pubDate).toLocaleDateString('fr-FR') : '-';
+                    return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-medium text-slate-800 truncate max-w-xs" title="${podcast.title || ''}">${podcast.title || 'Sans titre'}</td>
+                        <td class="px-6 py-4 text-slate-500">${dateStr}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="openPodcastPreview('${podcast.link}')" class="text-blue-500 hover:text-blue-700 font-medium text-xs uppercase tracking-wide">Ouvrir</button>
+                        </td>
+                    </tr>
+                `}).join('');
+            }
         }
+    } catch (e) {
+        console.error('Error rendering dashboard podcasts:', e);
     }
 }
 
@@ -304,45 +337,61 @@ let currentPage = 1;
 const itemsPerPage = 10;
 
 function renderContentTable() {
-    const tbody = document.getElementById('all-posts-table');
-    if (!tbody) return;
+    try {
+        const tbody = document.getElementById('all-posts-table');
+        if (!tbody) return;
 
-    const search = document.getElementById('search-posts').value.toLowerCase();
-    const filtered = appState.posts.filter(p => p.title.toLowerCase().includes(search));
+        const search = document.getElementById('search-posts')?.value.toLowerCase() || '';
+        const filtered = appState.posts.filter(p => (p.title || '').toLowerCase().includes(search));
 
-    // Pagination Logic
-    const totalPages = Math.ceil(filtered.length / itemsPerPage);
-    if (currentPage > totalPages) currentPage = 1; // Reset if out of bounds
+        // Pagination Logic
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = 1; // Reset if out of bounds
 
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const paginatedPosts = filtered.slice(start, end);
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedPosts = filtered.slice(start, end);
 
-    // Update Table
-    tbody.innerHTML = paginatedPosts.map(post => `
-        <tr class="hover:bg-slate-50 transition group">
-            <td class="px-6 py-4">
-                <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
-                    ${post.image ? `<img src="${post.image}" class="w-full h-full object-cover" />` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-image"></i></div>'}
-                </div>
-            </td>
-            <td class="px-6 py-4 font-medium text-slate-800">
-                ${post.title}
-                <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${post.description.substring(0, 60)}...</div>
-            </td>
-            <td class="px-6 py-4 text-slate-500 text-xs">${new Date(post.pubDate).toLocaleDateString('fr-FR')}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick="openPreview('${post.slug}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
-                    <i class="fas fa-eye mr-1"></i> Aperçu
-                </button>
-            </td>
-        </tr>
-    `).join('');
+        if (paginatedPosts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-slate-500">Aucun article trouvé.</td></tr>';
+        } else {
+            // Update Table
+            tbody.innerHTML = paginatedPosts.map(post => {
+                const dateStr = post.pubDate ? new Date(post.pubDate).toLocaleDateString('fr-FR') : '-';
+                const desc = post.description ? post.description.substring(0, 60) + '...' : '';
+                return `
+                <tr class="hover:bg-slate-50 transition group">
+                    <td class="px-6 py-4">
+                        <div class="w-16 h-10 rounded bg-slate-200 overflow-hidden">
+                            ${post.image ? `<img src="${post.image}" class="w-full h-full object-cover" />` : '<div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-image"></i></div>'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-slate-800">
+                        ${post.title || 'Sans titre'}
+                        <div class="text-xs text-slate-400 mt-0.5 truncate max-w-md">${desc}</div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-500 text-xs">${dateStr}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="openPreview('${post.slug}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                            <i class="fas fa-eye mr-1"></i> Aperçu
+                        </button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
 
-    // Update Pagination Controls
-    document.getElementById('pagination-info').textContent = `Page ${currentPage} sur ${totalPages || 1}`;
-    document.getElementById('prev-page-btn').disabled = currentPage === 1;
-    document.getElementById('next-page-btn').disabled = currentPage === totalPages || totalPages === 0;
+        // Update Pagination Controls
+        const paginationInfo = document.getElementById('pagination-info');
+        if (paginationInfo) paginationInfo.textContent = `Page ${currentPage} sur ${totalPages || 1}`;
+
+        const prevBtn = document.getElementById('prev-page-btn');
+        if (prevBtn) prevBtn.disabled = currentPage === 1;
+
+        const nextBtn = document.getElementById('next-page-btn');
+        if (nextBtn) nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    } catch (e) {
+        console.error('Error rendering content table:', e);
+    }
 }
 
 function prevPage() {
