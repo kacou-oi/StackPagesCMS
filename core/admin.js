@@ -747,9 +747,23 @@ function saveGitHubConfig() {
     const config = { owner, repo, token };
     localStorage.setItem('stackpages_github_config', JSON.stringify(config));
 
+    updateGitHubDisplay();
     alert("Configuration GitHub sauvegardée !");
     closeGitHubConfig();
 }
+
+function updateGitHubDisplay() {
+    const config = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+    const display = document.getElementById('github-username-display');
+    if (display) {
+        display.textContent = config.owner || 'Non connecté';
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateGitHubDisplay();
+});
 
 
 // ==================== PAGES FRAME IDE FUNCTIONS ====================
