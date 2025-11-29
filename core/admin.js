@@ -911,14 +911,14 @@ function savePage(status = 'published') {
         pages[existingIndex] = page;
         if (statusEl) {
             const statusText = status === 'draft' ? 'brouillon sauvegardé' : 'page publiée';
-            statusEl.innerHTML = `< span class="text-green-600" > <i class="fas fa-check-circle mr-1"></i>Page mise à jour(${statusText})!</span > `;
+            statusEl.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page mise à jour (${statusText})!</span>`;
         }
     } else {
         // Add new page
         pages.push(page);
         if (statusEl) {
             const statusText = status === 'draft' ? 'brouillon sauvegardé' : 'page publiée';
-            statusEl.innerHTML = `< span class="text-green-600" > <i class="fas fa-check-circle mr-1"></i>Page sauvegardée(${statusText})!</span > `;
+            statusEl.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle mr-1"></i>Page sauvegardée (${statusText})!</span>`;
         }
     }
 
@@ -974,7 +974,7 @@ function loadSavedPages() {
     pages.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
     listEl.innerHTML = pages.map((page, index) => `
-            < div class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition group mb-3" >
+            <div class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition group mb-3">
             <div class="flex-1">
                 <h4 class="font-medium text-slate-800 text-lg">${page.title}</h4>
                 <div class="flex items-center gap-4 mt-2">
@@ -1078,7 +1078,7 @@ function previewPage() {
 
     let previewHtml = '';
     if (thumbnail) {
-        previewHtml += `< img src = "${thumbnail}" alt = "${title}" class="w-full rounded-lg mb-6" /> `;
+        previewHtml += `<img src="${thumbnail}" alt="${title}" class="w-full rounded-lg mb-6" />`;
     }
     previewHtml += htmlContent;
 
@@ -1112,7 +1112,7 @@ function previewSavedPage(index) {
 
     let previewHtml = '';
     if (page.thumbnail) {
-        previewHtml += `< img src = "${page.thumbnail}" alt = "${page.title}" class="w-full rounded-lg mb-6" /> `;
+        previewHtml += `<img src="${page.thumbnail}" alt="${page.title}" class="w-full rounded-lg mb-6" />`;
     }
     previewHtml += page.htmlContent;
 
@@ -1198,7 +1198,7 @@ function loadPublishedPages() {
         const date = new Date(page.updatedAt || Date.now()).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
         card.innerHTML = `
-            < div class="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800" >
+            <div class="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
                 <img src="${thumbnail}" alt="${page.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
                     <span class="text-white text-xs font-medium px-2 py-1 bg-green-500/80 backdrop-blur-sm rounded-full">
