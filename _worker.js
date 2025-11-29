@@ -702,6 +702,28 @@ export default {
 
         // Custom Pages Loader -> /p/*
         if (path.startsWith("/p/")) {
+            const slug = path.split("/").pop();
+
+            // 1. Try to fetch from GitHub if configured
+            const GITHUB_USER = env.GITHUB_USER;
+            const GITHUB_REPO = env.GITHUB_REPO;
+
+            if (GITHUB_USER && GITHUB_REPO) {
+                const githubUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/content/pages/${slug}.html`;
+                try {
+                    const ghRes = await fetch(githubUrl);
+                    if (ghRes.ok) {
+                        const html = await ghRes.text();
+                        return new Response(html, {
+                            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+                        });
+                    }
+                } catch (e) {
+                    console.error("GitHub Fetch Error:", e);
+                }
+            }
+
+            // 2. Fallback to Local Loader (Client-side localStorage)
             return await env.ASSETS.fetch(new Request(new URL("/loader.html", url), {
                 method: 'GET',
                 headers: req.headers

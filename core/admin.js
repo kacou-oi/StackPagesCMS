@@ -710,6 +710,45 @@ async function clearCache() {
         status.textContent = "Erreur: " + e.message;
         status.className = "text-xs text-red-600 mt-2";
     }
+} catch (e) {
+    status.textContent = "Erreur: " + e.message;
+    status.className = "text-xs text-red-600 mt-2";
+}
+}
+
+// GitHub Config Functions
+function openGitHubConfig() {
+    const modal = document.getElementById('github-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        // Load saved values
+        const config = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+        if (config.owner) document.getElementById('gh-owner').value = config.owner;
+        if (config.repo) document.getElementById('gh-repo').value = config.repo;
+        if (config.token) document.getElementById('gh-token').value = config.token;
+    }
+}
+
+function closeGitHubConfig() {
+    const modal = document.getElementById('github-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function saveGitHubConfig() {
+    const owner = document.getElementById('gh-owner').value.trim();
+    const repo = document.getElementById('gh-repo').value.trim();
+    const token = document.getElementById('gh-token').value.trim();
+
+    if (!owner || !repo || !token) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+
+    const config = { owner, repo, token };
+    localStorage.setItem('stackpages_github_config', JSON.stringify(config));
+
+    alert("Configuration GitHub sauvegardée !");
+    closeGitHubConfig();
 }
 
 

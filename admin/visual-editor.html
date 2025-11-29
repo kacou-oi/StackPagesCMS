@@ -396,9 +396,105 @@
             }
         }
 
-        function publishCurrentPage() {
-            if (confirm("Voulez-vous publier cette page ? Elle sera accessible publiquement.")) {
-                saveCurrentPage(true);
+        async function publishCurrentPage() {
+            if (!confirm("Voulez-vous publier cette page sur GitHub ?")) return;
+
+            // 1. Save locally first
+            saveCurrentPage(true);
+
+            // 2. Get GitHub Config
+            const ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+            if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+                alert("Configuration GitHub manquante. Veuillez la configurer dans le tableau de bord.");
+                return;
+            }
+
+            // 3. Prepare Content
+            const iframe = document.getElementById('editor-frame');
+            const doc = iframe.contentWindow.document;
+
+            // Clean content (same as save)
+            const style = doc.getElementById('editor-styles');
+            if (style) style.remove();
+            const allElements = doc.querySelectorAll('*');
+            allElements.forEach(el => {
+                el.removeAttribute('contenteditable');
+                el.classList.remove('editable-active', 'editable-hover');
+                if (el.tagName === 'IMG') el.style.cursor = '';
+            });
+            let htmlContent = doc.documentElement.outerHTML;
+
+            // Restore styles for editing
+            if (isEditMode) {
+                const editableStyles = `
+                    <style id="editor-styles">
+                        .editable-hover { outline: 2px dashed #f97316; cursor: text; }
+                        .editable-active { outline: 2px solid #f97316; }
+                        [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
+                    </style>
+                `;
+                doc.head.insertAdjacentHTML('beforeend', editableStyles);
+                enableVisualEditing(true);
+            }
+
+            // 4. Push to GitHub
+            const path = `content/pages/${currentPageSlug}.html`;
+            const contentBase64 = btoa(unescape(encodeURIComponent(htmlContent))); // Handle UTF-8
+            const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+
+            const status = document.getElementById('save-status');
+            status.textContent = "Publication sur GitHub...";
+            status.classList.add('text-blue-600');
+
+            try {
+                // Check if file exists to get SHA (needed for update)
+                let sha = null;
+                const checkRes = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${ghConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (checkRes.ok) {
+                    const data = await checkRes.json();
+                    sha = data.sha;
+                }
+
+                // PUT request
+                const body = {
+                    message: `Publish page: ${currentPageSlug}`,
+                    content: contentBase64,
+                    branch: 'main' // or master
+                };
+                if (sha) body.sha = sha;
+
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${ghConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (putRes.ok) {
+                    status.textContent = "Publié sur GitHub !";
+                    status.classList.remove('text-blue-600');
+                    status.classList.add('text-green-600');
+                    setTimeout(() => status.textContent = "", 3000);
+                } else {
+                    const err = await putRes.json();
+                    throw new Error(err.message);
+                }
+
+            } catch (e) {
+                console.error("GitHub Error:", e);
+                status.textContent = "Erreur GitHub";
+                status.classList.remove('text-blue-600');
+                status.classList.add('text-red-600');
+                alert(`Erreur lors de la publication GitHub: ${e.message}`);
             }
         }
 
