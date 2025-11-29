@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,21 @@
     <meta name="description" content="" id="page-meta-desc">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b', // Custom dark shade
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             min-height: 100vh;
@@ -15,12 +30,12 @@
     </style>
 </head>
 
-<body class="bg-white text-slate-900">
+<body class="bg-slate-900 text-slate-200">
     <div id="page-content" class="min-h-screen">
         <div class="flex items-center justify-center min-h-screen">
             <div class="text-center">
-                <i class="fas fa-spinner fa-spin text-4xl text-orange-500 mb-4"></i>
-                <p class="text-slate-600">Chargement de la page...</p>
+                <i class="fas fa-spinner fa-spin text-4xl text-green-500 mb-4"></i>
+                <p class="text-slate-400">Chargement de la page...</p>
             </div>
         </div>
     </div>

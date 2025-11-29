@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - StackPages CMS </title>
+    <title>Dashboard - Iziweb.studio</title>
     <link rel="icon" type="image/x-icon" href="https://stackpages.net/img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="./../core/WhatsappChatBox.min.js"></script>
@@ -14,184 +14,152 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b', // Custom dark shade
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        /* Dark mode classes */
-        body.dark {
-            background-color: #1e1e1e;
-            color: #e2e8f0;
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
         }
 
-        body.dark .bg-white {
-            background-color: #252526 !important;
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
         }
 
-        body.dark .bg-slate-50 {
-            background-color: #1e1e1e !important;
-        }
-
-        body.dark .text-slate-800,
-        body.dark .text-slate-700,
-        body.dark .text-slate-600 {
-            color: #cbd5e1 !important;
-        }
-
-        body.dark .border-slate-200,
-        body.dark .border-slate-100 {
-            border-color: #374151 !important;
-        }
-
-        body.dark .glass-panel {
-            background: rgba(37, 37, 38, 0.7);
-            border-color: rgba(55, 65, 81, 0.5);
-        }
-
-        /* Dark mode toggle */
-        .theme-toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #cbd5e1;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .theme-toggle.dark {
+        ::-webkit-scrollbar-thumb:hover {
             background: #475569;
         }
 
-        .theme-toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .theme-toggle.dark .theme-toggle-slider {
-            transform: translateX(30px);
-            background: #64748b;
+        /* Dark mode overrides (default now) */
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
 
-        /* Dark mode hover improvements */
-        body.dark .hover\:bg-orange-50:hover {
-            background-color: #334155 !important;
+        .nav-item.active-nav {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border-right: 3px solid #4ade80;
         }
 
-        body.dark .hover\:bg-slate-50:hover {
-            background-color: #334155 !important;
-        }
-
-        body.dark .hover\:bg-slate-100:hover {
-            background-color: #374151 !important;
-        }
-
-        /* Keep Nouvelle Page button white in dark mode */
-        body.dark .bg-gradient-to-r.from-orange-500 a.bg-white {
-            background-color: white !important;
+        .nav-item:hover:not(.active-nav) {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #4ade80;
         }
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden">
+<body class="bg-slate-900 text-slate-200 h-screen flex overflow-hidden selection:bg-green-500 selection:text-white">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-10">
-        <div class="p-6 border-b border-slate-100">
+    <aside class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col z-10 shadow-xl">
+        <div class="p-6 border-b border-slate-700">
             <h1 class="text-xl font-bold">
-                <a href="https://stackpages.net/" target="_blank" class="flex items-center gap-2">
-                    <img src="https://stackpages.net/img/logo.png" alt="StackPages" class="h-8">
-                    <span>StackPages</span>
+                <a href="/" target="_blank" class="flex items-center gap-2">
+                    <!-- <img src="https://stackpages.net/img/logo.png" alt="StackPages" class="h-8"> -->
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 font-extrabold text-2xl">Iziweb.</span>
                 </a>
             </h1>
         </div>
 
-        <nav class="flex-1 p-4 space-y-2">
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <button onclick="showView('dashboard')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center active-nav">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center active-nav">
                 <i class="fas fa-chart-pie w-6"></i> Tableau de bord
             </button>
             <button onclick="showView('content')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-newspaper w-6"></i> Articles
             </button>
             <button onclick="showView('videos')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-video w-6"></i> Vidéos
             </button>
             <button onclick="showView('podcasts')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-microphone w-6"></i> Podcasts
             </button>
 
-            <div class="border-t border-slate-100 my-2"></div>
+            <div class="border-t border-slate-700 my-2"></div>
 
             <button onclick="showView('api-explorer')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-terminal w-6"></i> API Explorer
             </button>
             <button onclick="showView('builder')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-paint-brush w-6"></i> Frontend Builder
             </button>
             <button onclick="showView('page-creator')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-file-code w-6"></i> Pages Frame IDE
             </button>
             <button onclick="showView('analytics')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-chart-line w-6"></i> Google Analytics
             </button>
 
-            <div class="border-t border-slate-100 my-2"></div>
+            <div class="border-t border-slate-700 my-2"></div>
 
             <button onclick="showView('config')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-cog w-6"></i> Configuration
             </button>
             <button onclick="showView('help')"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-question-circle w-6"></i> Aide & Support
             </button>
             <a href="https://docs.stackpages.net/" target="_blank"
-                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-orange-50 text-slate-600 hover:text-orange-600 flex items-center">
+                class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all text-slate-400 flex items-center">
                 <i class="fas fa-book w-6"></i> Documentation
             </a>
         </nav>
 
-        <div class="p-4 border-t border-slate-100">
+        <div class="p-4 border-t border-slate-700 bg-slate-850">
             <div class="flex items-center justify-between px-2">
                 <div onclick="openGitHubConfig()"
-                    class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition">
+                    class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition hover:bg-slate-700">
                     <div
-                        class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 transition">
+                        class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 transition">
                         <i class="fab fa-github"></i>
                     </div>
                     <div class="text-sm">
-                        <p id="gh-username-display" class="font-medium text-slate-700">Non
-                            connecté</p>
+                        <p id="gh-username-display" class="font-medium text-slate-300">Non connecté</p>
                         <p id="dashboard-author" class="text-xs text-slate-500">Configurer GitHub</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition p-2" title="Déconnexion">
+                <button onclick="logout()" class="text-slate-500 hover:text-red-400 transition p-2" title="Déconnexion">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
@@ -199,22 +167,15 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto relative">
+    <main class="flex-1 overflow-auto relative bg-slate-900">
         <!-- Header -->
         <header class="sticky top-0 z-20 glass-panel px-8 py-4 flex justify-between items-center">
-            <h2 id="page-title" class="text-xl font-semibold text-slate-800">Tableau de bord</h2>
+            <h2 id="page-title" class="text-xl font-semibold text-white">Tableau de bord</h2>
 
-            <!-- Theme Toggle Button -->
-            <div class="flex items-center gap-3">
-                <span class="text-sm text-slate-600" id="theme-label">Mode sombre</span>
-                <div onclick="toggleDarkMode()" class="theme-toggle" id="theme-toggle">
-                    <div class="theme-toggle-slider"></div>
-                </div>
-            </div>
             <div class="flex gap-3">
                 <a id="header-site-btn" href="/" target="_blank"
-                    class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-orange-600 transition bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow">
-                    <i class="fas fa-external-link-alt mr-2"></i><span id="site-domain-link"></span>
+                    class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-green-400 transition bg-slate-800 border border-slate-700 rounded-lg shadow-sm hover:shadow-md hover:border-green-500/50">
+                    <i class="fas fa-external-link-alt mr-2"></i><span id="site-domain-link">Voir le site</span>
                 </a>
             </div>
         </header>
@@ -225,20 +186,20 @@
             <div id="view-dashboard" class="view-section space-y-6">
                 <!-- Config Warning (Hidden by default) -->
                 <div id="config-warning"
-                    class="hidden bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r shadow-sm">
+                    class="hidden bg-orange-900/20 border-l-4 border-orange-500 p-4 rounded-r shadow-sm">
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <i class="fas fa-exclamation-triangle text-orange-500 mt-0.5"></i>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-orange-800">Configuration manquante</h3>
-                            <div class="mt-1 text-sm text-orange-700">
+                            <h3 class="text-sm font-medium text-orange-400">Configuration manquante</h3>
+                            <div class="mt-1 text-sm text-orange-300">
                                 <p>L'URL de votre flux RSS Substack n'est pas configurée. Vos articles ne peuvent pas
                                     s'afficher.</p>
                             </div>
                             <div class="mt-3">
                                 <button onclick="showView('config')"
-                                    class="text-sm font-medium text-orange-800 hover:text-orange-900 underline">
+                                    class="text-sm font-medium text-orange-400 hover:text-orange-300 underline">
                                     Aller à la configuration <i class="fas fa-arrow-right ml-1"></i>
                                 </button>
                             </div>
@@ -248,64 +209,69 @@
 
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div
+                        class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 hover:border-green-500/30 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Articles</p>
-                                <h3 id="stat-total-posts" class="text-3xl font-bold text-slate-800 mt-2">-</h3>
+                                <p class="text-sm font-medium text-slate-400">Articles</p>
+                                <h3 id="stat-total-posts" class="text-3xl font-bold text-white mt-2">-</h3>
                             </div>
-                            <div class="p-3 bg-orange-50 rounded-lg text-orange-500">
+                            <div class="p-3 bg-green-500/10 rounded-lg text-green-500">
                                 <i class="fas fa-rss text-xl"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div
+                        class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 hover:border-green-500/30 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Vidéos</p>
-                                <h3 id="stat-total-videos" class="text-3xl font-bold text-slate-800 mt-2">-</h3>
+                                <p class="text-sm font-medium text-slate-400">Vidéos</p>
+                                <h3 id="stat-total-videos" class="text-3xl font-bold text-white mt-2">-</h3>
                             </div>
-                            <div class="p-3 bg-red-50 rounded-lg text-red-500">
+                            <div class="p-3 bg-red-500/10 rounded-lg text-red-500">
                                 <i class="fab fa-youtube text-xl"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div
+                        class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 hover:border-green-500/30 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Podcasts</p>
-                                <h3 id="stat-total-podcasts" class="text-3xl font-bold text-slate-800 mt-2">-</h3>
+                                <p class="text-sm font-medium text-slate-400">Podcasts</p>
+                                <h3 id="stat-total-podcasts" class="text-3xl font-bold text-white mt-2">-</h3>
                             </div>
-                            <div class="p-3 bg-purple-50 rounded-lg text-purple-500">
+                            <div class="p-3 bg-purple-500/10 rounded-lg text-purple-500">
                                 <i class="fas fa-microphone text-xl"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div
+                        class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 hover:border-green-500/30 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Pages</p>
-                                <h3 id="stat-total-pages" class="text-lg font-bold text-slate-800 mt-2">-</h3>
+                                <p class="text-sm font-medium text-slate-400">Pages</p>
+                                <h3 id="stat-total-pages" class="text-lg font-bold text-white mt-2">-</h3>
                             </div>
-                            <div class="p-3 bg-blue-50 rounded-lg text-blue-500">
+                            <div class="p-3 bg-blue-500/10 rounded-lg text-blue-500">
                                 <i class="fas fa-file-alt text-xl"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div
+                        class="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 hover:border-green-500/30 transition">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">État du Flux</p>
+                                <p class="text-sm font-medium text-slate-400">État du Flux</p>
                                 <h3 id="stat-feed-status"
-                                    class="text-lg font-bold text-slate-800 mt-2 flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-slate-300"></span> Inconnu
+                                    class="text-lg font-bold text-white mt-2 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-slate-500"></span> Inconnu
                                 </h3>
                             </div>
-                            <div class="p-3 bg-green-50 rounded-lg text-green-500">
+                            <div class="p-3 bg-emerald-500/10 rounded-lg text-emerald-500">
                                 <i class="fas fa-globe text-xl"></i>
                             </div>
                         </div>
@@ -314,80 +280,82 @@
 
                 <!-- Recent Activity -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2">
-                        <div class="px-6 py-4 border-b border-slate-100">
-                            <h3 class="font-semibold text-slate-800">Derniers Articles</h3>
+                    <div
+                        class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden lg:col-span-2">
+                        <div class="px-6 py-4 border-b border-slate-700">
+                            <h3 class="font-semibold text-white">Derniers Articles</h3>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <thead class="bg-slate-900 text-slate-400 font-medium">
                                     <tr>
                                         <th class="px-6 py-3">Titre</th>
                                         <th class="px-6 py-3">Date</th>
                                         <th class="px-6 py-3 text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="dashboard-recent-posts" class="divide-y divide-slate-100">
+                                <tbody id="dashboard-recent-posts" class="divide-y divide-slate-700 text-slate-300">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2">
-                        <div class="px-6 py-4 border-b border-slate-100">
-                            <h3 class="font-semibold text-slate-800">Dernières Pages Publiées</h3>
+                    <div
+                        class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden lg:col-span-2">
+                        <div class="px-6 py-4 border-b border-slate-700">
+                            <h3 class="font-semibold text-white">Dernières Pages Publiées</h3>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <thead class="bg-slate-900 text-slate-400 font-medium">
                                     <tr>
                                         <th class="px-6 py-3">Titre</th>
                                         <th class="px-6 py-3">Date</th>
                                         <th class="px-6 py-3 text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="dashboard-recent-pages" class="divide-y divide-slate-100">
+                                <tbody id="dashboard-recent-pages" class="divide-y divide-slate-700 text-slate-300">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-slate-100">
-                            <h3 class="font-semibold text-slate-800">Dernières Vidéos</h3>
+                    <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-700">
+                            <h3 class="font-semibold text-white">Dernières Vidéos</h3>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <thead class="bg-slate-900 text-slate-400 font-medium">
                                     <tr>
                                         <th class="px-6 py-3">Titre</th>
                                         <th class="px-6 py-3">Date</th>
                                         <th class="px-6 py-3 text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="dashboard-recent-videos" class="divide-y divide-slate-100">
+                                <tbody id="dashboard-recent-videos" class="divide-y divide-slate-700 text-slate-300">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-slate-100">
-                            <h3 class="font-semibold text-slate-800">Derniers Podcasts</h3>
+                    <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-700">
+                            <h3 class="font-semibold text-white">Derniers Podcasts</h3>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-500 font-medium">
+                                <thead class="bg-slate-900 text-slate-400 font-medium">
                                     <tr>
                                         <th class="px-6 py-3">Titre</th>
                                         <th class="px-6 py-3">Date</th>
                                         <th class="px-6 py-3 text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="dashboard-recent-podcasts" class="divide-y divide-slate-100">
+                                <tbody id="dashboard-recent-podcasts" class="divide-y divide-slate-700 text-slate-300">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
@@ -398,21 +366,21 @@
 
             <!-- VIEW: CONTENT -->
             <div id="view-content" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center">
                         <div class="flex items-center gap-4">
-                            <h3 class="font-semibold text-slate-800">Tous les Articles</h3>
-                            <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                            <h3 class="font-semibold text-white">Tous les Articles</h3>
+                            <button onclick="loadData()" class="text-slate-400 hover:text-green-500 transition"
                                 title="Actualiser">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                         <input type="text" id="search-posts" placeholder="Rechercher..."
-                            class="px-3 py-1.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            class="px-3 py-1.5 bg-slate-900 border border-slate-600 rounded-md text-sm text-white focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <thead class="bg-slate-900 text-slate-400 font-medium">
                                 <tr>
                                     <th class="px-6 py-3">Image</th>
                                     <th class="px-6 py-3">Titre</th>
@@ -420,19 +388,19 @@
                                     <th class="px-6 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="all-posts-table" class="divide-y divide-slate-100">
+                            <tbody id="all-posts-table" class="divide-y divide-slate-700 text-slate-300">
                                 <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
                     <!-- Pagination Controls -->
-                    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-                        <span id="pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                    <div class="px-6 py-4 border-t border-slate-700 flex justify-between items-center bg-slate-850">
+                        <span id="pagination-info" class="text-sm text-slate-400">Page 1 sur 1</span>
                         <div class="flex gap-2">
                             <button id="prev-page-btn" onclick="prevPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
                             <button id="next-page-btn" onclick="nextPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
                         </div>
                     </div>
                 </div>
@@ -440,22 +408,22 @@
 
             <!-- VIEW: VIDEOS -->
             <div id="view-videos" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center">
                         <div class="flex items-center gap-4">
-                            <h3 class="font-semibold text-slate-800">Toutes les Vidéos</h3>
-                            <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                            <h3 class="font-semibold text-white">Toutes les Vidéos</h3>
+                            <button onclick="loadData()" class="text-slate-400 hover:text-green-500 transition"
                                 title="Actualiser">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                         <input type="text" id="search-videos" placeholder="Rechercher..."
-                            class="px-3 py-1.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            class="px-3 py-1.5 bg-slate-900 border border-slate-600 rounded-md text-sm text-white focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <thead class="bg-slate-900 text-slate-400 font-medium">
                                 <tr>
                                     <th class="px-6 py-3">Image</th>
                                     <th class="px-6 py-3">Titre</th>
@@ -463,86 +431,86 @@
                                     <th class="px-6 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="videos-table" class="divide-y divide-slate-100">
+                            <tbody id="videos-table" class="divide-y divide-slate-700 text-slate-300">
                                 <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Pagination Controls -->
-                    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-                        <span id="video-pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                    <div class="px-6 py-4 border-t border-slate-700 flex justify-between items-center bg-slate-850">
+                        <span id="video-pagination-info" class="text-sm text-slate-400">Page 1 sur 1</span>
                         <div class="flex gap-2">
                             <button id="prev-video-page-btn" onclick="prevVideoPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
                             <button id="next-video-page-btn" onclick="nextVideoPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- VIEW: API EXPLORER -->
             <div id="view-api-explorer" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-                    <h3 class="font-semibold text-slate-800 mb-4">Tester les Endpoints</h3>
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6">
+                    <h3 class="font-semibold text-white mb-4">Tester les Endpoints</h3>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Left Column: Controls -->
                         <div class="space-y-4">
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/metadata</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/metadata</code>
                                 <button onclick="testApi('/api/metadata')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/posts</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/posts</code>
                                 <button onclick="testApi('/api/posts')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/videos</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/videos</code>
                                 <button onclick="testApi('/api/videos')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/podcasts</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/podcasts</code>
                                 <button onclick="testApi('/api/podcasts')"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/post/:slug</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/post/:slug</code>
                                 <input type="text" id="api-slug-input" placeholder="slug-article"
-                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                    class="px-2 py-1 text-sm bg-slate-800 border border-slate-600 rounded w-32 text-white">
                                 <button onclick="testApiSlug()"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/video/:id</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/video/:id</code>
                                 <input type="text" id="api-video-input" placeholder="id-video"
-                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                    class="px-2 py-1 text-sm bg-slate-800 border border-slate-600 rounded w-32 text-white">
                                 <button onclick="testApiVideo()"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
-                            <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex gap-4 items-center p-4 bg-slate-900 rounded-lg border border-slate-700">
                                 <span
-                                    class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">GET</span>
-                                <code class="text-sm font-mono text-slate-600">/api/podcast/:id</code>
+                                    class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs font-mono font-bold">GET</span>
+                                <code class="text-sm font-mono text-slate-400">/api/podcast/:id</code>
                                 <input type="text" id="api-podcast-input" placeholder="guid-ou-slug"
-                                    class="px-2 py-1 text-sm border border-slate-300 rounded w-32">
+                                    class="px-2 py-1 text-sm bg-slate-800 border border-slate-600 rounded w-32 text-white">
                                 <button onclick="testApiPodcast()"
-                                    class="ml-auto px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Envoyer</button>
+                                    class="ml-auto px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600">Envoyer</button>
                             </div>
 
                         </div>
@@ -550,12 +518,12 @@
                         <!-- Right Column: Response -->
                         <div class="flex flex-col space-y-4">
                             <div>
-                                <h4 id="api-response-title" class="text-sm font-medium text-slate-500 mb-2">Réponse</h4>
+                                <h4 id="api-response-title" class="text-sm font-medium text-slate-400 mb-2">Réponse</h4>
                                 <pre id="api-output"
-                                    class="bg-slate-900 text-green-400 p-4 rounded-lg text-xs font-mono h-[450px] overflow-auto">En attente...</pre>
+                                    class="bg-black text-green-400 p-4 rounded-lg text-xs font-mono h-[450px] overflow-auto border border-slate-700">En attente...</pre>
                             </div>
                             <button onclick="clearApiOutput()"
-                                class="w-full py-2 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                class="w-full py-2 border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg text-sm transition flex items-center justify-center gap-2">
                                 <i class="fas fa-trash-alt"></i> Effacer la console
                             </button>
                         </div>
@@ -565,9 +533,9 @@
 
             <!-- VIEW: ANALYTICS -->
             <div id="view-analytics" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
-                        <h3 class="font-semibold text-slate-800">Rapports Google Analytics</h3>
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-700 bg-slate-850">
+                        <h3 class="font-semibold text-white">Rapports Google Analytics</h3>
                     </div>
                     <div class="p-6">
                         <iframe width="100%" height="600"
@@ -580,42 +548,42 @@
 
             <!-- VIEW: PODCASTS -->
             <div id="view-podcasts" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center">
                         <div class="flex items-center gap-4">
-                            <h3 class="font-semibold text-slate-800">Épisodes de Podcast</h3>
-                            <button onclick="loadData()" class="text-slate-400 hover:text-orange-500 transition"
+                            <h3 class="font-semibold text-white">Épisodes de Podcast</h3>
+                            <button onclick="loadData()" class="text-slate-400 hover:text-green-500 transition"
                                 title="Actualiser">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                         <input type="text" id="search-podcasts" placeholder="Rechercher..."
-                            class="px-3 py-1.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            class="px-3 py-1.5 bg-slate-900 border border-slate-600 rounded-md text-sm text-white focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <thead class="bg-slate-900 text-slate-400 font-medium">
                                 <tr>
                                     <th class="px-6 py-3">Titre</th>
                                     <th class="px-6 py-3">Date</th>
                                     <th class="px-6 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="podcasts-table" class="divide-y divide-slate-100">
+                            <tbody id="podcasts-table" class="divide-y divide-slate-700 text-slate-300">
                                 <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Pagination Controls -->
-                    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50">
-                        <span id="podcast-pagination-info" class="text-sm text-slate-500">Page 1 sur 1</span>
+                    <div class="px-6 py-4 border-t border-slate-700 flex justify-between items-center bg-slate-850">
+                        <span id="podcast-pagination-info" class="text-sm text-slate-400">Page 1 sur 1</span>
                         <div class="flex gap-2">
                             <button id="prev-podcast-page-btn" onclick="prevPodcastPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
                             <button id="next-podcast-page-btn" onclick="nextPodcastPage()"
-                                class="px-3 py-1 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+                                class="px-3 py-1 bg-slate-700 border border-slate-600 rounded text-sm text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
                         </div>
                     </div>
                 </div>
@@ -623,18 +591,18 @@
 
             <!-- VIEW: CONFIGURATION -->
             <div id="view-config" class="view-section hidden space-y-6">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Paramètres du Site</h3>
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r shadow-sm">
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-8">
+                    <h3 class="font-semibold text-white mb-6 border-b border-slate-700 pb-2">Paramètres du Site</h3>
+                    <div class="bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6 rounded-r shadow-sm">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
                                 <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
                             </div>
                             <div class="ml-3">
-                                <h3 class="text-sm font-medium text-blue-800">Configuration via Variables
+                                <h3 class="text-sm font-medium text-blue-400">Configuration via Variables
                                     d'Environnement
                                 </h3>
-                                <div class="mt-1 text-sm text-blue-700">
+                                <div class="mt-1 text-sm text-blue-300">
                                     <p>La configuration de ce site est gérée directement via les variables
                                         d'environnement
                                         de votre hébergeur (ex: Cloudflare Dashboard ou wrangler.toml).</p>
@@ -649,68 +617,68 @@
                     <form id="config-form" class="space-y-6 opacity-75">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Site</label>
+                                <label class="block text-sm font-medium text-slate-400 mb-1">Nom du Site</label>
                                 <input type="text" id="conf-siteName" readonly
-                                    class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                    class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Auteur</label>
+                                <label class="block text-sm font-medium text-slate-400 mb-1">Auteur</label>
                                 <input type="text" id="conf-author" readonly
-                                    class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                    class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Substack</label>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">URL Flux RSS Substack</label>
                             <input type="url" id="conf-substack" readonly
-                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                             <p class="text-xs text-slate-500 mt-1">Variable: <code>SUBSTACK_FEED_URL</code></p>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS YouTube</label>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">URL Flux RSS YouTube</label>
                             <input type="url" id="conf-youtube" readonly
-                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                             <p class="text-xs text-slate-500 mt-1">Variable: <code>YOUTUBE_FEED_URL</code></p>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Flux RSS Podcast</label>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">URL Flux RSS Podcast</label>
                             <input type="url" id="conf-podcast" readonly
-                                class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                             <p class="text-xs text-slate-500 mt-1">Variable: <code>PODCAST_FEED_URL</code></p>
                         </div>
 
 
-                        <div class="border-t pt-4">
-                            <h4 class="text-sm font-medium text-slate-900 mb-4">SEO & Métadonnées</h4>
+                        <div class="border-t border-slate-700 pt-4">
+                            <h4 class="text-sm font-medium text-white mb-4">SEO & Métadonnées</h4>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Titre Meta</label>
+                                    <label class="block text-sm font-medium text-slate-400 mb-1">Titre Meta</label>
                                     <input type="text" id="conf-metaTitle" readonly
-                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                        class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                                     <p class="text-xs text-slate-500 mt-1">Variable: <code>META_TITLE</code></p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Description
+                                    <label class="block text-sm font-medium text-slate-400 mb-1">Description
                                         Meta</label>
                                     <textarea id="conf-metaDesc" rows="3" readonly
-                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed"></textarea>
+                                        class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed"></textarea>
                                     <p class="text-xs text-slate-500 mt-1">Variable: <code>META_DESCRIPTION</code></p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Mots-clés Meta</label>
+                                    <label class="block text-sm font-medium text-slate-400 mb-1">Mots-clés Meta</label>
                                     <input type="text" id="conf-metaKeywords" readonly
-                                        class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm text-slate-500 cursor-not-allowed">
+                                        class="w-full bg-slate-900 border-slate-600 rounded-lg shadow-sm text-slate-400 cursor-not-allowed">
                                     <p class="text-xs text-slate-500 mt-1">Variable: <code>META_KEYWORDS</code></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="border-t pt-4">
-                            <h4 class="text-sm font-medium text-slate-900 mb-4">Maintenance</h4>
+                        <div class="border-t border-slate-700 pt-4">
+                            <h4 class="text-sm font-medium text-white mb-4">Maintenance</h4>
                             <button type="button" onclick="clearCache()"
-                                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                                class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
                                 <i class="fas fa-broom"></i> Vider le Cache
                             </button>
                             <p id="cache-status" class="text-xs text-slate-500 mt-2"></p>
@@ -721,73 +689,16 @@
 
             <!-- VIEW: BUILDER -->
             <div id="view-builder" class="view-section hidden space-y-6">
-                <!-- Old Builder Content (Hidden) -->
-                <!--
-                <div class="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-6 h-[calc(100vh-12rem)]">
-                    <div
-                        class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center items-start space-y-8">
-                        <div>
-                            <div
-                                class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
-                                <i class="fas fa-paint-brush text-3xl"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-slate-800 mb-3">Éditeur Visuel</h3>
-                            <p class="text-slate-600 text-lg leading-relaxed">
-                                Utilisez notre éditeur visuel avancé pour personnaliser l'apparence de votre site.
-                                L'interface s'ouvrira dans un nouvel onglet pour vous offrir un espace de travail
-                                optimal.
-                            </p>
-                        </div>
-
-                        <a id="builder-tab-btn" href="https://apps.webstudio.is/dashboard" target="_blank"
-                            class="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                            <span>Ouvrir le Builder</span>
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-
-                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r w-full">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-blue-700">
-                                        Regardez les tutoriels à droite pour apprendre à maîtriser l'outil.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
-                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                            <h3 class="font-semibold text-slate-800">Tutoriels Vidéo</h3>
-                            <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Playlist
-                                YouTube</span>
-                        </div>
-                        <div class="flex-1 bg-black relative group">
-                            <iframe width="100%" height="100%"
-                                src="https://www.youtube-nocookie.com/embed/videoseries?si=YyePOX9RjcazflwN&amp;list=PL4vVqpngzeT4Bfs_D25xNi_qNMY99R928"
-                                title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                                class="absolute inset-0 w-full h-full">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-                -->
-
                 <!-- New Published Pages Gallery -->
                 <div class="space-y-6">
                     <div>
-                        <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Pages Publiées</h3>
-                        <p class="text-slate-500 dark:text-slate-400">Vos pages en ligne accessibles publiquement
+                        <h3 class="text-2xl font-bold text-white">Pages Publiées</h3>
+                        <p class="text-slate-400">Vos pages en ligne accessibles publiquement
                         </p>
                     </div>
                     <div class="flex gap-3">
                         <a href="/admin/visual-editor.html"
-                            class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg shadow-orange-500/20">
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg shadow-green-500/20">
                             <i class="fas fa-paint-brush"></i> Éditeur Visuel
                         </a>
                         <a href="/admin/IDE.html"
@@ -802,17 +713,16 @@
                 </div>
 
                 <div id="published-pages-empty"
-                    class="hidden flex flex-col items-center justify-center py-20 text-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                    <div
-                        class="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                    class="hidden flex flex-col items-center justify-center py-20 text-center bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-700">
+                    <div class="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mb-4 shadow-sm">
                         <i class="fas fa-globe text-3xl text-slate-400"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Aucune page publiée</h3>
-                    <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+                    <h3 class="text-lg font-medium text-white mb-2">Aucune page publiée</h3>
+                    <p class="text-slate-400 max-w-md mx-auto mb-6">
                         Créez et publiez des pages depuis l'IDE pour les voir apparaître ici.
                     </p>
                     <a href="/admin/IDE.html"
-                        class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-600 transition">
+                        class="px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg font-medium hover:bg-slate-600 transition">
                         Créer une page
                     </a>
                 </div>
@@ -822,14 +732,14 @@
         <!-- VIEW: PAGE CREATOR -->
         <div id="view-page-creator" class="view-section hidden space-y-6">
             <!-- Header with Create Button -->
-            <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg p-8 text-white">
+            <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg p-8 text-white">
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-2xl font-bold mb-2">Pages Frame IDE</h2>
-                        <p class="text-orange-100">Créez et gérez vos pages personnalisées</p>
+                        <p class="text-green-100">Créez et gérez vos pages personnalisées</p>
                     </div>
                     <a href="/admin/IDE.html"
-                        class="px-6 py-3 bg-white text-orange-600 hover:bg-orange-50 rounded-lg font-bold transition shadow-lg hover:shadow-xl flex items-center gap-2">
+                        class="px-6 py-3 bg-white text-green-700 hover:bg-green-50 rounded-lg font-bold transition shadow-lg hover:shadow-xl flex items-center gap-2">
                         <i class="fas fa-plus-circle"></i>
                         Nouvelle Page
                     </a>
@@ -837,13 +747,13 @@
             </div>
 
             <!-- Saved Pages List -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-list text-orange-500"></i>
+            <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-700 bg-slate-850 flex items-center justify-between">
+                    <h3 class="font-semibold text-white flex items-center gap-2">
+                        <i class="fas fa-list text-green-500"></i>
                         Pages Sauvegardées
                     </h3>
-                    <button onclick="loadSavedPages()" class="text-slate-400 hover:text-orange-500 transition"
+                    <button onclick="loadSavedPages()" class="text-slate-400 hover:text-green-500 transition"
                         title="Actualiser">
                         <i class="fas fa-sync-alt"></i>
                     </button>
@@ -857,8 +767,8 @@
 
         <!-- VIEW: HELP -->
         <div id="view-help" class="view-section hidden space-y-6">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose prose-orange max-w-none">
-                <h3 class="font-semibold text-slate-800 mb-6 border-b pb-2">Guide d'utilisation</h3>
+            <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-8 prose prose-invert max-w-none">
+                <h3 class="font-semibold text-white mb-6 border-b border-slate-700 pb-2">Guide d'utilisation</h3>
 
                 <br>
                 <h4>1. Tableau de bord</h4>
@@ -878,11 +788,10 @@
                 <h4>3. Outils Avancés</h4>
                 <ul class="list-disc pl-5 space-y-1">
                     <li><strong>Frontend Builder :</strong> Personnalisez l'apparence de votre site via l'éditeur
-                        visuel
-                        Webstudio.</li>
+                        visuel.</li>
                     <li><strong>API Explorer :</strong> Testez les endpoints de votre API directement depuis le
                         dashboard.
-                        <ul class="list-circle pl-5 mt-1 text-sm text-slate-600">
+                        <ul class="list-circle pl-5 mt-1 text-sm text-slate-400">
                             <li><code>/api/metadata</code> : Informations du site</li>
                             <li><code>/api/posts</code> : Liste des articles</li>
                             <li><code>/api/post/:slug</code> : Détail d'un article</li>
@@ -927,69 +836,64 @@
 
     <!-- Modal Preview -->
     <div id="preview-modal"
-        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 id="modal-title" class="font-bold text-lg text-slate-800 truncate pr-4">Titre de l'article</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition">
+        class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-slate-700">
+            <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center bg-slate-850">
+                <h3 id="modal-title" class="font-bold text-lg text-white truncate pr-4">Titre de l'article</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <div id="modal-content" class="p-8 overflow-y-auto prose prose-orange max-w-none">
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none">
                 <!-- Content -->
             </div>
         </div>
     </div>
 
-    <!--
-    <script>
-        // CONFIGURATION: Si le frontend est hébergé séparément du worker
-        // window.STACKPAGES_API_URL = "https://votre-worker.workers.dev";
-    </script>
-    -->
     <!-- GitHub Config Modal -->
     <div id="github-modal"
-        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div
-            class="bg-white rounded-xl shadow-2xl w-full max-w-md border border-slate-200 transform transition-all scale-100">
+            class="bg-slate-800 rounded-xl shadow-2xl w-full max-w-md border border-slate-700 transform transition-all scale-100">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fab fa-github text-slate-700"></i>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fab fa-github text-slate-400"></i>
                         Configuration GitHub
                     </h3>
-                    <button onclick="closeGitHubConfig()" class="text-slate-400 hover:text-slate-600 transition">
+                    <button onclick="closeGitHubConfig()" class="text-slate-400 hover:text-white transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
 
                 <div class="space-y-4">
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r">
-                        <p class="text-sm text-blue-700">
+                    <div class="bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r">
+                        <p class="text-sm text-blue-300">
                             Configurez votre dépôt pour activer la publication automatique et le stockage gratuit.
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nom d'utilisateur (Owner)</label>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Nom d'utilisateur (Owner)</label>
                         <input type="text" id="gh-owner" placeholder="ex: mon-user"
-                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-white">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nom du Dépôt (Repo)</label>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Nom du Dépôt (Repo)</label>
                         <input type="text" id="gh-repo" placeholder="ex: mon-site-web"
-                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-white">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Token d'accès (PAT)</label>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Token d'accès (PAT)</label>
                         <div class="relative">
                             <input type="password" id="gh-token" placeholder="github_pat_..."
-                                class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
-                            <i class="fas fa-key absolute left-3 top-3 text-slate-400"></i>
+                                class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-white">
+                            <i class="fas fa-key absolute left-3 top-3 text-slate-500"></i>
                         </div>
-                        <div class="mt-2 text-xs text-slate-500 bg-slate-50 p-2 rounded border border-slate-200">
+                        <div class="mt-2 text-xs text-slate-500 bg-slate-900 p-2 rounded border border-slate-700">
                             <p class="font-medium mb-1">Recommandé : Fine-grained Token</p>
                             <ol class="list-decimal pl-4 space-y-1">
                                 <li>Allez dans <em>Developer Settings > Personal access tokens </em></li>
@@ -1000,7 +904,7 @@
                     </div>
 
                     <button onclick="saveGitHubConfig()"
-                        class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold transition shadow-lg flex items-center justify-center gap-2 mt-2">
+                        class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition shadow-lg flex items-center justify-center gap-2 mt-2">
                         <i class="fas fa-save"></i>
                         Sauvegarder
                     </button>
@@ -1011,44 +915,11 @@
 
     <script src="./../core/admin.js"></script>
     <script>
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggle = document.getElementById('theme-toggle');
-            const slider = toggle.querySelector('.theme-toggle-slider');
-            const label = document.getElementById('theme-label');
-
-            body.classList.toggle('dark');
-            toggle.classList.toggle('dark');
-
-            // Update icon and label
-            if (body.classList.contains('dark')) {
-                label.textContent = 'Mode clair';
-                localStorage.setItem('stackpages_theme', 'dark');
-            } else {
-                label.textContent = 'Mode sombre';
-                localStorage.setItem('stackpages_theme', 'light');
-            }
-        }
-
-        // Initialize theme on load
-        function initTheme() {
-            const savedTheme = localStorage.getItem('stackpages_theme');
-            const body = document.body;
-            const toggle = document.getElementById('theme-toggle');
-            const slider = toggle?.querySelector('.theme-toggle-slider');
-            const label = document.getElementById('theme-label');
-
-            if (savedTheme === 'dark') {
-                body.classList.add('dark');
-                toggle?.classList.add('dark');
-                if (label) label.textContent = 'Mode clair';
-            }
-        }
-
         // Initialize theme when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
+            // Force dark mode
+            document.body.classList.add('dark');
+            localStorage.setItem('stackpages_theme', 'dark');
 
             // Display site domain in header button
             const domainLinkEl = document.getElementById('site-domain-link');
@@ -1064,20 +935,6 @@
             window.location.href = '/admin';
         }
     </script>
-
-    <!--<script>
-        // integration de Chat WhatsApp
-        new WAChatBox({
-            link: "https://wa.me/2250747288793",
-            user: {
-                name: "Ange",
-                avatar: "https://img.icons8.com/?size=100&id=23460&format=png&color=000000",
-                status: "Typically replies within an hour",
-            },
-            text: `Hey There 👋<br><br>I'm here to help, so let me know what's up and I'll be happy to find a solution 🤓`,
-            button_text: "Need Help?",
-        });
-    </script> -->
 </body>
 
 </html>
