@@ -24,8 +24,8 @@
 <body class="bg-slate-100 h-screen flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center z-20 shadow-sm">
-        <div class="flex items-center gap-4">
+    <header class="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center z-20 shadow-sm gap-4">
+        <div class="flex items-center gap-4 shrink-0">
             <a href="/admin/dashboard.html" class="text-slate-400 hover:text-orange-500 transition"
                 title="Retour au dashboard">
                 <i class="fas fa-arrow-left text-xl"></i>
@@ -42,25 +42,56 @@
             </select>
         </div>
 
-        <div class="flex items-center gap-3">
+        <!-- Toolbar (Moved here) -->
+        <div id="editor-toolbar"
+            class="bg-slate-800 text-white px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1 opacity-50 pointer-events-none transition-opacity duration-200">
+            <button onclick="execCmd('bold')" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
+                title="Gras"><i class="fas fa-bold text-sm"></i></button>
+            <button onclick="execCmd('italic')"
+                class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700" title="Italique"><i
+                    class="fas fa-italic text-sm"></i></button>
+            <button onclick="execCmd('underline')"
+                class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700" title="Souligné"><i
+                    class="fas fa-underline text-sm"></i></button>
+            <div class="w-px h-4 bg-slate-600 mx-1"></div>
+            <button onclick="execCmd('h2')"
+                class="p-1.5 hover:text-orange-400 transition font-bold text-sm rounded hover:bg-slate-700"
+                title="Titre 2">H2</button>
+            <button onclick="execCmd('h3')"
+                class="p-1.5 hover:text-orange-400 transition font-bold text-sm rounded hover:bg-slate-700"
+                title="Titre 3">H3</button>
+            <button onclick="execCmd('p')" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
+                title="Paragraphe"><i class="fas fa-paragraph text-sm"></i></button>
+            <div class="w-px h-4 bg-slate-600 mx-1"></div>
+            <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
+                title="Lien"><i class="fas fa-link text-sm"></i></button>
+            <button onclick="promptImage()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
+                title="Image"><i class="fas fa-image text-sm"></i></button>
+        </div>
+
+        <div class="flex items-center gap-3 shrink-0">
             <div id="save-status" class="text-sm text-slate-500 mr-2"></div>
             <button onclick="toggleEditMode()" id="edit-mode-btn"
-                class="px-4 py-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition flex items-center gap-2">
+                class="px-3 py-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition flex items-center gap-2 text-sm">
                 <i class="fas fa-edit"></i> <span id="edit-mode-text">Mode Édition</span>
             </button>
             <button onclick="saveCurrentPage()"
-                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2">
+                class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2 text-sm">
                 <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <button onclick="publishCurrentPage()"
+                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2 text-sm">
+                <i class="fas fa-globe"></i> Publier
             </button>
         </div>
     </header>
 
     <!-- Main Workspace -->
-    <main class="flex-1 relative flex justify-center bg-slate-100 p-8 overflow-hidden">
+    <main class="flex-1 relative flex justify-center bg-slate-100 p-4 overflow-hidden">
 
-        <!-- Device Frame (Desktop by default) -->
+        <!-- Device Frame (Enlarged) -->
         <div id="device-frame"
-            class="bg-white shadow-2xl rounded-lg overflow-hidden w-full max-w-6xl h-full border border-slate-200 relative transition-all duration-300">
+            class="bg-white shadow-2xl rounded-lg overflow-hidden w-full max-w-[95%] h-full border border-slate-200 relative transition-all duration-300">
             <!-- Iframe for Page Content -->
             <iframe id="editor-frame" class="w-full h-full bg-white" sandbox="allow-same-origin allow-scripts"></iframe>
 
@@ -73,29 +104,6 @@
                 <p class="text-slate-500">Choisissez une page dans le menu déroulant pour commencer l'édition visuelle.
                 </p>
             </div>
-        </div>
-
-        <!-- Floating Toolbar (Injected into UI, but controls iframe) -->
-        <div id="editor-toolbar"
-            class="absolute top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full shadow-xl flex items-center gap-2 z-50 opacity-0 pointer-events-none">
-            <button onclick="execCmd('bold')" class="p-2 hover:text-orange-400 transition" title="Gras"><i
-                    class="fas fa-bold"></i></button>
-            <button onclick="execCmd('italic')" class="p-2 hover:text-orange-400 transition" title="Italique"><i
-                    class="fas fa-italic"></i></button>
-            <button onclick="execCmd('underline')" class="p-2 hover:text-orange-400 transition" title="Souligné"><i
-                    class="fas fa-underline"></i></button>
-            <div class="w-px h-4 bg-slate-600 mx-1"></div>
-            <button onclick="execCmd('h2')" class="p-2 hover:text-orange-400 transition font-bold"
-                title="Titre 2">H2</button>
-            <button onclick="execCmd('h3')" class="p-2 hover:text-orange-400 transition font-bold"
-                title="Titre 3">H3</button>
-            <button onclick="execCmd('p')" class="p-2 hover:text-orange-400 transition" title="Paragraphe"><i
-                    class="fas fa-paragraph"></i></button>
-            <div class="w-px h-4 bg-slate-600 mx-1"></div>
-            <button onclick="promptLink()" class="p-2 hover:text-orange-400 transition" title="Lien"><i
-                    class="fas fa-link"></i></button>
-            <button onclick="promptImage()" class="p-2 hover:text-orange-400 transition" title="Image"><i
-                    class="fas fa-image"></i></button>
         </div>
 
     </main>
@@ -307,7 +315,7 @@
         }
 
         // --- Saving ---
-        function saveCurrentPage() {
+        function saveCurrentPage(shouldPublish = false) {
             if (!currentPageSlug) return;
 
             const iframe = document.getElementById('editor-frame');
@@ -352,11 +360,16 @@
                 if (pageIndex !== -1) {
                     pages[pageIndex].htmlContent = htmlContent;
                     pages[pageIndex].updatedAt = new Date().toISOString();
+
+                    if (shouldPublish) {
+                        pages[pageIndex].status = 'published';
+                    }
+
                     localStorage.setItem('stackpages_custom_pages', JSON.stringify(pages));
 
                     // Feedback
                     const status = document.getElementById('save-status');
-                    status.textContent = "Sauvegardé !";
+                    status.textContent = shouldPublish ? "Publié !" : "Sauvegardé !";
                     status.classList.add('text-green-600');
                     setTimeout(() => {
                         status.textContent = "";
@@ -383,7 +396,14 @@
             }
         }
 
+        function publishCurrentPage() {
+            if (confirm("Voulez-vous publier cette page ? Elle sera accessible publiquement.")) {
+                saveCurrentPage(true);
+            }
+        }
+
     </script>
 </body>
 
 </html>
+```
