@@ -710,13 +710,25 @@ async function clearCache() {
         status.textContent = "Erreur: " + e.message;
         status.className = "text-xs text-red-600 mt-2";
     }
-} catch (e) {
-    status.textContent = "Erreur: " + e.message;
-    status.className = "text-xs text-red-600 mt-2";
-}
 }
 
 // GitHub Config Functions
+function updateGitHubDisplay() {
+    const config = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+    const display = document.getElementById('gh-username-display');
+    const subtext = document.getElementById('dashboard-author');
+
+    if (display) {
+        if (config.owner) {
+            display.textContent = config.owner;
+            if (subtext) subtext.textContent = 'Connecté';
+        } else {
+            display.textContent = 'Non connecté';
+            if (subtext) subtext.textContent = 'Configurer GitHub';
+        }
+    }
+}
+
 function openGitHubConfig() {
     const modal = document.getElementById('github-modal');
     if (modal) {
@@ -747,23 +759,14 @@ function saveGitHubConfig() {
     const config = { owner, repo, token };
     localStorage.setItem('stackpages_github_config', JSON.stringify(config));
 
-    updateGitHubDisplay();
+    updateGitHubDisplay(); // Update UI immediately
+
     alert("Configuration GitHub sauvegardée !");
     closeGitHubConfig();
 }
 
-function updateGitHubDisplay() {
-    const config = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
-    const display = document.getElementById('github-username-display');
-    if (display) {
-        display.textContent = config.owner || 'Non connecté';
-    }
-}
-
-// Initialize on load
-document.addEventListener('DOMContentLoaded', () => {
-    updateGitHubDisplay();
-});
+// Init GitHub Display on load
+document.addEventListener('DOMContentLoaded', updateGitHubDisplay);
 
 
 // ==================== PAGES FRAME IDE FUNCTIONS ====================
