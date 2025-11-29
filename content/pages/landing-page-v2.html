@@ -1,0 +1,544 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ange Kacou Oi - Consultant en Gestion de Projet Numérique</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlEDKnxnJp0hP1p2T2x+K1z/V2k1j5M+9B/w3m75F61N/s5L3rJ/R1a0G/x123A7f8ZJz9K30/c7f0z5w==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .animate-fadeInUp {
+            opacity: 0;
+            transform: translate3d(0, 20px, 0);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 20px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        /* Style for the pseudo-carousel of logos */
+        .logo-carousel-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem; /* Equivalent to Tailwind gap-10 */
+        }
+    </style>
+
+                            
+                        </head>
+<body class="font-sans text-gray-800 bg-gray-50">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 transition-all duration-300 ease-in-out">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-indigo-700 hover:text-indigo-900 transition-colors duration-300">Ange Kacou Oi</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#hero" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Accueil</a>
+                <a href="#about" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">À Propos</a>
+                <a href="#services" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Services</a>
+                <a href="#skills" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Compétences</a>
+                <a href="#projects" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Projets</a>
+                <a href="#blog" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Blog</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Témoignages</a>
+                <a href="#contact" class="text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300">Contact</a>
+            </div>
+            <a href="#contact" class="hidden md:block bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">Contactez-moi</a>
+            <!-- Mobile Menu Button (requires JS to toggle visibility) -->
+            <button class="md:hidden text-gray-600 focus:outline-none menu-toggle">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu (hidden by default, would need JS to toggle) -->
+        <div class="md:hidden bg-white py-4 px-6 text-center space-y-2 border-t border-gray-100 hidden mobile-menu">
+            <a href="#hero" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Accueil</a>
+            <a href="#about" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">À Propos</a>
+            <a href="#services" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Services</a>
+            <a href="#skills" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Compétences</a>
+            <a href="#projects" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Projets</a>
+            <a href="#blog" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Blog</a>
+            <a href="#testimonials" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Témoignages</a>
+            <a href="#contact" class="block text-gray-600 hover:text-indigo-700 font-medium transition-colors duration-300 py-2">Contact</a>
+            <a href="#contact" class="block bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-semibold mt-4">Contactez-moi</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative bg-gradient-to-r from-indigo-700 to-indigo-900 text-white py-20 md:py-32 overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+                <div class="md:w-1/2 text-center md:text-left animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    <p class="text-lg md:text-xl font-medium mb-4 text-indigo-200">Bonjour, je suis Ange Kacou Oi</p>
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">Votre Architecte en <span class="text-teal-400">Gestion de Projet Numérique</span> à Abidjan</h1>
+                    <p class="text-xl md:text-2xl mb-8 text-indigo-100 max-w-lg mx-auto md:mx-0">
+                        Expertise, Innovation, Succès. Transformons ensemble vos idées en réalisations digitales impactantes et performantes.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                        <a href="#services" class="bg-teal-500 hover:bg-teal-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">Découvrez mes services</a>
+                        <a href="#projects" class="bg-transparent border-2 border-white hover:border-teal-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105">Voir mes projets</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                    <img src="https://placehold.co/500x500/A0C4FF/000000?text=Ange+Kacou+Oi" alt="Ange Kacou Oi - Consultant en Gestion de Projet Numérique" class="rounded-full shadow-2xl border-4 border-indigo-300 max-w-xs md:max-w-md w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500 ease-in-out" style="">
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    <img src="https://placehold.co/600x400/E0F2F7/000000?text=Mon+Parcours" alt="Ange Kacou Oi - À Propos" class="rounded-xl shadow-xl w-full h-auto object-cover transform hover:scale-102 transition-transform duration-500 ease-in-out" style="">
+                </div>
+                <div class="md:w-1/2 text-center md:text-left animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                    <h2 class="text-4xl font-extrabold text-indigo-800 mb-6">Qui suis-je ?</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Avec une passion inébranlable pour l'innovation et une expertise avérée en gestion de projet numérique, j'aide les entreprises et les startups à Abidjan et au-delà à naviguer dans le paysage complexe du digital. Mon approche combine rigueur méthodologique, agilité et une vision stratégique pour transformer vos ambitions en succès mesurables.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Je m'engage à fournir des solutions sur mesure, en mettant l'accent sur la collaboration, la transparence et l'excellence. Ensemble, nous bâtirons des projets numériques qui non seulement répondent à vos objectifs, mais dépassent vos attentes.
+                    </p>
+                    <a href="#contact" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-7 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-md">Discutons de votre projet</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section (Pertinent) -->
+        <section id="services" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold text-indigo-800 mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Mes Services Clés</h2>
+                <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    J'offre une gamme complète de services pour propulser vos initiatives numériques.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <div class="text-indigo-600 mb-6 text-5xl">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-4">Pilotage de Projet Agile</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Mise en place et gestion de méthodologies Agiles (Scrum, Kanban) pour des livraisons rapides et itératives.
+                        </p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <div class="text-indigo-600 mb-6 text-5xl">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-4">Stratégie &amp; Innovation Digitale</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Définition de la feuille de route digitale, identification des opportunités et intégration de solutions innovantes.
+                        </p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.4s 1 normal forwards running fadeInUp;">
+                        <div class="text-indigo-600 mb-6 text-5xl">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-4">Optimisation de la Performance</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Analyse des processus, amélioration continue et coaching pour maximiser l'efficacité de vos équipes numériques.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold text-indigo-800 mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Mon Expertise à Votre Service</h2>
+                <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    Fort de mes années d'expérience, je maîtrise les facettes essentielles de la gestion de projet numérique.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Skill Card 1 -->
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl card-hover-effect animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <div class="mb-6 text-5xl text-teal-300">
+                            <i class="fas fa-people-arrows"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Gestion de Projet Agile</h3>
+                        <p class="text-indigo-100 leading-relaxed">
+                            Expertise en Scrum, Kanban, SAFe et autres frameworks agiles pour une livraison efficace et flexible.
+                        </p>
+                    </div>
+                    <!-- Skill Card 2 -->
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl card-hover-effect animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <div class="mb-6 text-5xl text-teal-300">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Transformation Digitale &amp; Innovation</h3>
+                        <p class="text-indigo-100 leading-relaxed">
+                            Accompagnement dans l'adoption de nouvelles technologies et l'optimisation des processus digitaux.
+                        </p>
+                    </div>
+                    <!-- Skill Card 3 -->
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl card-hover-effect animate-fadeInUp" style="animation: 1s ease-out 0.4s 1 normal forwards running fadeInUp;">
+                        <div class="mb-6 text-5xl text-teal-300">
+                            <i class="fas fa-users-rays"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Leadership &amp; Coaching d'Équipe</h3>
+                        <p class="text-indigo-100 leading-relaxed">
+                            Développement des compétences, motivation et harmonisation des équipes pour une performance accrue.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects & Main Technologies Section -->
+        <section id="projects" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold text-indigo-800 mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Mes Réalisations &amp; Outils Préférés</h2>
+                <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    Découvrez quelques-uns des projets que j'ai eu le plaisir de mener à bien, et les technologies qui m'accompagnent.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Project Card 1 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/E0E7FF/000000?text=Projet+E-commerce" alt="Projet E-commerce" class="w-full h-56 object-cover" style="">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-indigo-800 mb-3">Refonte Plateforme E-commerce</h3>
+                            <p class="text-gray-700 mb-4">
+                                Pilotage de la refonte complète d'une plateforme e-commerce, améliorant l'expérience utilisateur et les taux de conversion.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Scrum</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Jira</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Magento</span>
+                            </div>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center justify-center">
+                                Voir le cas d'étude
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Project Card 2 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/D1E9FF/000000?text=Application+Mobile" alt="Application Mobile Santé" class="w-full h-56 object-cover" style="">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-indigo-800 mb-3">Développement Application Mobile Santé</h3>
+                            <p class="text-gray-700 mb-4">
+                                Gestion du cycle de vie complet d'une application mobile innovante pour le suivi de la santé.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Kanban</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Firebase</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Figma</span>
+                            </div>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center justify-center">
+                                Voir le cas d'étude
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Project Card 3 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.4s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/C2E0FF/000000?text=Intranet+Collaboratif" alt="Intranet Collaboratif" class="w-full h-56 object-cover" style="">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-indigo-800 mb-3">Mise en place Intranet Collaboratif</h3>
+                            <p class="text-gray-700 mb-4">
+                                Conception et déploiement d'un intranet pour fluidifier la communication interne d'une grande entreprise.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Waterfall</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">SharePoint</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Teams</span>
+                            </div>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center justify-center">
+                                Voir le cas d'étude
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-16 text-center animate-fadeInUp" style="animation: 1s ease-out 0.5s 1 normal forwards running fadeInUp;">
+                    <h3 class="text-2xl font-bold text-indigo-800 mb-6">Technologies et Outils Principaux</h3>
+                    <div class="flex flex-wrap justify-center gap-6 text-gray-700">
+                        <span class="flex items-center text-lg"><i class="fab fa-jira text-indigo-600 mr-2 text-3xl"></i> Jira</span>
+                        <span class="flex items-center text-lg"><i class="fab fa-trello text-blue-500 mr-2 text-3xl"></i> Trello</span>
+                        <span class="flex items-center text-lg"><i class="fab fa-slack text-yellow-500 mr-2 text-3xl"></i> Slack</span>
+                        <span class="flex items-center text-lg"><i class="fas fa-project-diagram text-green-600 mr-2 text-3xl"></i> Asana</span>
+                        <span class="flex items-center text-lg"><i class="fab fa-microsoft text-blue-800 mr-2 text-3xl"></i> Azure DevOps</span>
+                        <span class="flex items-center text-lg"><i class="fab fa-google text-red-600 mr-2 text-3xl"></i> Google Workspace</span>
+                        <span class="flex items-center text-lg"><i class="fab fa-figma text-purple-600 mr-2 text-3xl"></i> Figma</span>
+                        <span class="flex items-center text-lg"><i class="fas fa-chart-pie text-indigo-400 mr-2 text-3xl"></i> Power BI</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold text-indigo-800 mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Mon Blog : Insights &amp; Réflexions</h2>
+                <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    Découvrez mes articles sur la gestion de projet, les tendances digitales et l'innovation.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Blog Post 1 -->
+                    <article class="bg-gray-50 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/B2DFDB/000000?text=Blog+Post+1" alt="L'Agilité en 2024" class="w-full h-48 object-cover" style="">
+                        <div class="p-6 text-left">
+                            <span class="text-sm text-gray-500 mb-2 block">12 Mars 2024</span>
+                            <h3 class="text-xl font-bold text-indigo-800 mb-3">L'Agilité : Plus qu'une Méthode, une Philosophie</h3>
+                            <p class="text-gray-700 mb-4 line-clamp-3">
+                                Plongez au cœur de la méthodologie Agile et découvrez comment elle peut transformer la dynamique de vos équipes et la livraison de vos projets.
+                            </p>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                    <!-- Blog Post 2 -->
+                    <article class="bg-gray-50 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/C2E8FF/000000?text=Blog+Post+2" alt="IA et PM" class="w-full h-48 object-cover" style="">
+                        <div class="p-6 text-left">
+                            <span class="text-sm text-gray-500 mb-2 block">05 Février 2024</span>
+                            <h3 class="text-xl font-bold text-indigo-800 mb-3">L'IA au Service du Chef de Projet Numérique</h3>
+                            <p class="text-gray-700 mb-4 line-clamp-3">
+                                Comment l'intelligence artificielle révolutionne la gestion de projet et offre de nouvelles perspectives pour l'optimisation.
+                            </p>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                    <!-- Blog Post 3 -->
+                    <article class="bg-gray-50 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.4s 1 normal forwards running fadeInUp;">
+                        <img src="https://placehold.co/600x400/DDEFFF/000000?text=Blog+Post+3" alt="Soft Skills" class="w-full h-48 object-cover" style="">
+                        <div class="p-6 text-left">
+                            <span class="text-sm text-gray-500 mb-2 block">18 Janvier 2024</span>
+                            <h3 class="text-xl font-bold text-indigo-800 mb-3">Soft Skills : Le Cœur de la Réussite Projet</h3>
+                            <p class="text-gray-700 mb-4 line-clamp-3">
+                                L'importance des compétences interpersonnelles pour un chef de projet efficace et un leadership inspirant.
+                            </p>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 flex items-center">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+                <div class="mt-12 animate-fadeInUp" style="animation: 1s ease-out 0.5s 1 normal forwards running fadeInUp;">
+                    <a href="#" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-7 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-md">Voir tous les articles</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- References / Testimonials Section -->
+        <section id="testimonials" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold text-indigo-800 mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Ce Qu'ils Disent de Mon Travail</h2>
+                <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    La satisfaction de mes clients est ma plus belle récompense.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <p class="text-lg italic text-gray-700 mb-6">
+                            "Ange est un professionnel exceptionnel. Sa vision stratégique et sa capacité à gérer des projets complexes avec calme et efficacité ont été déterminantes pour le succès de notre transformation digitale."
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <img src="https://placehold.co/80x80/CCD1D1/000000?text=Client1" alt="Client 1" class="w-16 h-16 rounded-full mr-4 object-cover" style="">
+                            <div>
+                                <p class="font-bold text-indigo-800">Marc Dupont</p>
+                                <p class="text-gray-600 text-sm">CEO, InnovTech Solutions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 transform transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-2xl animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <p class="text-lg italic text-gray-700 mb-6">
+                            "Son expertise en Agile nous a permis de livrer notre produit bien avant les délais prévus, avec une qualité irréprochable. Un vrai partenaire, à l'écoute et proactif."
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <img src="https://placehold.co/80x80/B0BEC5/000000?text=Client2" alt="Client 2" class="w-16 h-16 rounded-full mr-4 object-cover" style="">
+                            <div>
+                                <p class="font-bold text-indigo-800">Sophie Dubois</p>
+                                <p class="text-gray-600 text-sm">Directrice Produit, DigiGrowth</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-bold text-indigo-800 mb-8 mt-16 animate-fadeInUp" style="animation: 1s ease-out 0.4s 1 normal forwards running fadeInUp;">Ils m'ont fait confiance</h3>
+                <!-- Logo Carousel (static for HTML, would need JS for actual carousel) -->
+                <div class="logo-carousel-container opacity-80 animate-fadeInUp" style="animation: 1s ease-out 0.5s 1 normal forwards running fadeInUp;">
+                    <img src="https://placehold.co/120x60/E2E8F0/000000?text=Logo+Client+1" alt="Client Logo 1" class="h-12 w-auto object-contain transition-all duration-300 hover:opacity-100 hover:scale-110" style="">
+                    <img src="https://placehold.co/120x60/E2E8F0/000000?text=Logo+Client+2" alt="Client Logo 2" class="h-12 w-auto object-contain transition-all duration-300 hover:opacity-100 hover:scale-110" style="">
+                    <img src="https://placehold.co/120x60/E2E8F0/000000?text=Logo+Client+3" alt="Client Logo 3" class="h-12 w-auto object-contain transition-all duration-300 hover:opacity-100 hover:scale-110" style="">
+                    <img src="https://placehold.co/120x60/E2E8F0/000000?text=Logo+Client+4" alt="Client Logo 4" class="h-12 w-auto object-contain transition-all duration-300 hover:opacity-100 hover:scale-110" style="">
+                    <img src="https://placehold.co/120x60/E2E8F0/000000?text=Logo+Client+5" alt="Client Logo 5" class="h-12 w-auto object-contain transition-all duration-300 hover:opacity-100 hover:scale-110" style="">
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 bg-gradient-to-r from-indigo-700 to-indigo-900 text-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-extrabold mb-4 animate-fadeInUp" style="animation: 1s ease-out 0s 1 normal forwards running fadeInUp;">Prêt à Collaborer ?</h2>
+                <p class="text-xl text-indigo-100 mb-12 max-w-2xl mx-auto animate-fadeInUp" style="animation: 1s ease-out 0.1s 1 normal forwards running fadeInUp;">
+                    N'hésitez pas à me contacter pour discuter de votre prochain projet numérique. Je suis basé à Abidjan.
+                </p>
+
+                <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                    <!-- Contact Info -->
+                    <div class="md:w-1/2 text-center md:text-left animate-fadeInUp" style="animation: 1s ease-out 0.2s 1 normal forwards running fadeInUp;">
+                        <h3 class="text-3xl font-bold mb-6">Mes Coordonnées</h3>
+                        <p class="text-lg mb-4 flex items-center justify-center md:justify-start">
+                            <i class="fas fa-map-marker-alt text-teal-400 mr-3 text-2xl"></i> Abidjan, Côte d'Ivoire
+                        </p>
+                        <p class="text-lg mb-4 flex items-center justify-center md:justify-start">
+                            <i class="fas fa-phone-alt text-teal-400 mr-3 text-2xl"></i> <a href="tel:0747288793" class="hover:underline">07 47 28 87 93</a>
+                        </p>
+                        <p class="text-lg mb-8 flex items-center justify-center md:justify-start">
+                            <i class="fas fa-envelope text-teal-400 mr-3 text-2xl"></i> <a href="mailto:ange@kacou-oi.com" class="hover:underline">ange@kacou-oi.com</a>
+                        </p>
+
+                        <h3 class="text-3xl font-bold mb-6">Suivez-moi</h3>
+                        <div class="flex justify-center md:justify-start gap-6 text-3xl">
+                            <a href="https://facebook.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://linkedin.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://youtube.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-youtube"></i></a>
+                            <a href="https://github.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-github"></i></a>
+                            <a href="https://twitter.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-twitter"></i></a>
+                            <a href="https://instagram.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-instagram"></i></a>
+                            <a href="https://medium.com" target="_blank" class="text-white hover:text-teal-400 transition-colors duration-300 transform hover:scale-110"><i class="fab fa-medium-m"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="md:w-1/2 bg-white p-8 rounded-xl shadow-xl animate-fadeInUp" style="animation: 1s ease-out 0.3s 1 normal forwards running fadeInUp;">
+                        <form action="#" method="POST" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 text-left mb-2">Votre Nom</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300" placeholder="Votre nom complet" required="">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 text-left mb-2">Votre Email</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300" placeholder="votre.email@exemple.com" required="">
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 text-left mb-2">Sujet</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300" placeholder="Demande de projet, collaboration..." required="">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 text-left mb-2">Votre Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300 resize-none" placeholder="Décrivez votre projet ou votre demande..." required=""></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+                                Envoyer le message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-white">Ange Kacou Oi</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Votre partenaire privilégié pour une gestion de projet numérique innovante et efficace à Abidjan.
+                </p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-white">Liens Rapides</h3>
+                <ul class="space-y-2">
+                    <li><a href="#hero" class="hover:text-white transition-colors duration-300">Accueil</a></li>
+                    <li><a href="#about" class="hover:text-white transition-colors duration-300">À Propos</a></li>
+                    <li><a href="#services" class="hover:text-white transition-colors duration-300">Services</a></li>
+                    <li><a href="#projects" class="hover:text-white transition-colors duration-300">Projets</a></li>
+                    <li><a href="#blog" class="hover:text-white transition-colors duration-300">Blog</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors duration-300">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-white">Contact &amp; Réseaux</h3>
+                <p class="mb-2"><i class="fas fa-map-marker-alt mr-2 text-teal-400"></i> Abidjan, Côte d'Ivoire</p>
+                <p class="mb-2"><i class="fas fa-phone-alt mr-2 text-teal-400"></i> <a href="tel:0747288793" class="hover:text-white">+225 07 47 28 87 93</a></p>
+                <p class="mb-4"><i class="fas fa-envelope mr-2 text-teal-400"></i> <a href="mailto:ange@kacou-oi.com" class="hover:text-white">ange@kacou-oi.com</a></p>
+                <div class="flex justify-center md:justify-start gap-4 text-xl">
+                    <a href="https://facebook.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://linkedin.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://youtube.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-youtube"></i></a>
+                    <a href="https://github.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-github"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                    <a href="https://medium.com" target="_blank" class="hover:text-white transition-colors duration-300"><i class="fab fa-medium-m"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-12 border-t border-gray-700 pt-8 text-center text-gray-500">
+            <p>© <span id="current-year">2025</span> Ange Kacou Oi. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', function () {
+            document.querySelector('.mobile-menu').classList.toggle('hidden');
+        });
+
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Intersection Observer for fadeInUp animation on scroll
+        const faders = document.querySelectorAll('.animate-fadeInUp');
+
+        const appearOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.style.animation = `fadeInUp 1s ease-out forwards ${entry.target.style.animationDelay || '0s'}`;
+                    appearOnScroll.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+
+        faders.forEach(fader => {
+            appearOnScroll.observe(fader);
+        });
+    </script>
+
+
+                
+            </body></html>
