@@ -26,21 +26,30 @@
     <style>
         body {
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
     </style>
 </head>
 
-<body class="bg-slate-900 text-slate-200">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div id="page-content" class="min-h-screen">
         <div class="flex items-center justify-center min-h-screen">
             <div class="text-center">
                 <i class="fas fa-spinner fa-spin text-4xl text-green-500 mb-4"></i>
-                <p class="text-slate-400">Chargement de la page...</p>
+                <p class="text-slate-500 dark:text-slate-400">Chargement de la page...</p>
             </div>
         </div>
     </div>
 
     <script>
+        // Initialize theme
+        const savedTheme = localStorage.getItem('stackpages_theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
         // Extract slug from URL
         const path = window.location.pathname;
         const slug = path.startsWith('/') ? path.substring(1) : path;
