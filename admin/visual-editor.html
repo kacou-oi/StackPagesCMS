@@ -1,33 +1,17 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Éditeur Visuel - Iziweb.studio</title>
+    <title>Éditeur Visuel - StackPages CMS</title>
     <link rel="icon" type="image/x-icon" href="https://stackpages.net/img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: {
-                            850: '#1e293b', // Custom dark shade
-                            900: '#0f172a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Toolbar transition */
@@ -37,24 +21,22 @@
     </style>
 </head>
 
-<body
-    class="bg-slate-50 dark:bg-slate-900 h-screen flex flex-col overflow-hidden text-slate-800 dark:text-slate-200 selection:bg-green-500 selection:text-white transition-colors duration-300">
+<body class="bg-slate-100 h-screen flex flex-col overflow-hidden">
 
     <!-- Header -->
-    <header
-        class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex justify-between items-center z-20 shadow-lg gap-4 transition-colors duration-300">
+    <header class="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center z-20 shadow-sm gap-4">
         <div class="flex items-center gap-4 shrink-0">
-            <a href="/admin/dashboard.html" class="text-slate-400 hover:text-green-500 transition"
+            <a href="/admin/dashboard.html" class="text-slate-400 hover:text-orange-500 transition"
                 title="Retour au dashboard">
                 <i class="fas fa-arrow-left text-xl"></i>
             </a>
-            <h1 class="text-lg font-bold flex items-center gap-2">
-                <i class="fas fa-paint-brush text-green-500"></i>
-                <span class="hidden md:inline text-slate-800 dark:text-white">Éditeur Visuel</span>
+            <h1 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <i class="fas fa-paint-brush text-orange-500"></i>
+                Éditeur Visuel
             </h1>
-            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600 mx-2"></div>
+            <div class="h-6 w-px bg-slate-200 mx-2"></div>
             <select id="page-selector"
-                class="bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-2 min-w-[200px]">
+                class="bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2 min-w-[200px]">
                 <option value="">Sélectionner une page...</option>
                 <!-- Populated by JS -->
             </select>
@@ -62,79 +44,64 @@
 
         <!-- Toolbar (Moved here) -->
         <div id="editor-toolbar"
-            class="bg-white dark:bg-slate-700 text-slate-700 dark:text-white px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1 opacity-50 pointer-events-none transition-opacity duration-200 border border-slate-200 dark:border-slate-600">
-            <button onclick="execCmd('bold')"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+            class="bg-slate-800 text-white px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1 opacity-50 pointer-events-none transition-opacity duration-200">
+            <button onclick="execCmd('bold')" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
                 title="Gras"><i class="fas fa-bold text-sm"></i></button>
             <button onclick="execCmd('italic')"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
-                title="Italique"><i class="fas fa-italic text-sm"></i></button>
+                class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700" title="Italique"><i
+                    class="fas fa-italic text-sm"></i></button>
             <button onclick="execCmd('underline')"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
-                title="Souligné"><i class="fas fa-underline text-sm"></i></button>
-            <div class="w-px h-4 bg-slate-300 dark:bg-slate-500 mx-1"></div>
+                class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700" title="Souligné"><i
+                    class="fas fa-underline text-sm"></i></button>
+            <div class="w-px h-4 bg-slate-600 mx-1"></div>
             <button onclick="execCmd('h2')"
-                class="p-1.5 hover:text-green-500 transition font-bold text-sm rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+                class="p-1.5 hover:text-orange-400 transition font-bold text-sm rounded hover:bg-slate-700"
                 title="Titre 2">H2</button>
             <button onclick="execCmd('h3')"
-                class="p-1.5 hover:text-green-500 transition font-bold text-sm rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+                class="p-1.5 hover:text-orange-400 transition font-bold text-sm rounded hover:bg-slate-700"
                 title="Titre 3">H3</button>
-            <button onclick="execCmd('p')"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+            <button onclick="execCmd('p')" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
                 title="Paragraphe"><i class="fas fa-paragraph text-sm"></i></button>
-            <div class="w-px h-4 bg-slate-300 dark:bg-slate-500 mx-1"></div>
-            <button onclick="promptLink()"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+            <div class="w-px h-4 bg-slate-600 mx-1"></div>
+            <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
                 title="Lien"><i class="fas fa-link text-sm"></i></button>
-            <button onclick="promptImage()"
-                class="p-1.5 hover:text-green-500 transition rounded hover:bg-slate-100 dark:hover:bg-slate-600"
+            <button onclick="promptImage()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-slate-700"
                 title="Image"><i class="fas fa-image text-sm"></i></button>
         </div>
 
         <div class="flex items-center gap-3 shrink-0">
-            <!-- Theme Switcher -->
-            <button onclick="toggleTheme()"
-                class="p-2 rounded-lg text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-green-400 transition bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 mr-2">
-                <i class="fas fa-sun hidden dark:inline"></i>
-                <i class="fas fa-moon inline dark:hidden"></i>
-            </button>
-
-            <div id="save-status" class="text-sm text-slate-500 dark:text-slate-400 mr-2"></div>
+            <div id="save-status" class="text-sm text-slate-500 mr-2"></div>
             <button onclick="toggleEditMode()" id="edit-mode-btn"
-                class="px-3 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg font-medium transition flex items-center gap-2 text-sm">
+                class="px-3 py-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition flex items-center gap-2 text-sm">
                 <i class="fas fa-edit"></i> <span id="edit-mode-text">Mode Édition</span>
             </button>
             <button onclick="saveCurrentPage()"
-                class="px-4 py-2 bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2 text-sm border border-slate-300 dark:border-slate-500">
+                class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2 text-sm">
                 <i class="fas fa-save"></i> Enregistrer
             </button>
             <button onclick="publishCurrentPage()"
-                class="px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2 text-sm shadow-green-500/20">
+                class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition shadow-sm hover:shadow flex items-center gap-2 text-sm">
                 <i class="fas fa-globe"></i> Publier
             </button>
         </div>
     </header>
 
     <!-- Main Workspace -->
-    <main
-        class="flex-1 relative flex justify-center bg-slate-100 dark:bg-slate-900 p-4 overflow-hidden transition-colors duration-300">
+    <main class="flex-1 relative flex justify-center bg-slate-100 p-4 overflow-hidden">
 
         <!-- Device Frame (Enlarged) -->
         <div id="device-frame"
-            class="bg-white shadow-2xl rounded-lg overflow-hidden w-full max-w-[95%] h-full border border-slate-200 dark:border-slate-700 relative transition-all duration-300">
+            class="bg-white shadow-2xl rounded-lg overflow-hidden w-full max-w-[95%] h-full border border-slate-200 relative transition-all duration-300">
             <!-- Iframe for Page Content -->
             <iframe id="editor-frame" class="w-full h-full bg-white" sandbox="allow-same-origin allow-scripts"></iframe>
 
             <!-- Empty State -->
-            <div id="empty-state"
-                class="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800 z-10 transition-colors duration-300">
-                <div
-                    class="w-20 h-20 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 mb-4">
+            <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10">
+                <div class="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center text-slate-400 mb-4">
                     <i class="fas fa-mouse-pointer text-3xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold text-slate-800 dark:text-white mb-2">Sélectionnez une page</h3>
-                <p class="text-slate-500 dark:text-slate-400">Choisissez une page dans le menu déroulant pour commencer
-                    l'édition visuelle.
+                <h3 class="text-xl font-semibold text-slate-700 mb-2">Sélectionnez une page</h3>
+                <p class="text-slate-500">Choisissez une page dans le menu déroulant pour commencer l'édition visuelle.
                 </p>
             </div>
         </div>
@@ -147,14 +114,6 @@
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Check localStorage for theme preference
-            const savedTheme = localStorage.getItem('stackpages_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-
             loadPagesList();
 
             // Handle page selection
@@ -167,18 +126,6 @@
                 }
             });
         });
-
-        // Toggle Theme Function
-        function toggleTheme() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('stackpages_theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('stackpages_theme', 'dark');
-            }
-        }
 
         // --- Data Loading ---
         function loadPagesList() {
@@ -232,11 +179,10 @@
 
             // Prepare HTML with editable styles
             // We inject a small script and style to help with editing
-            // Updated colors for Green theme
             const editableStyles = `
                 <style id="editor-styles">
-                    .editable-hover { outline: 2px dashed #22c55e; cursor: text; }
-                    .editable-active { outline: 2px solid #22c55e; }
+                    .editable-hover { outline: 2px dashed #f97316; cursor: text; }
+                    .editable-active { outline: 2px solid #f97316; }
                     [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
                 </style>
             `;
@@ -265,13 +211,10 @@
             const text = document.getElementById('edit-mode-text');
 
             if (isEditMode) {
-                // Green theme active state
-                btn.classList.add('bg-green-100', 'dark:bg-green-900/30', 'text-green-600', 'dark:text-green-400', 'border-green-300', 'dark:border-green-500/50');
-                btn.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-200', 'border-slate-300', 'dark:border-slate-600');
+                btn.classList.add('bg-orange-50', 'text-orange-600', 'border-orange-200');
                 text.textContent = "Mode Édition Actif";
             } else {
-                btn.classList.remove('bg-green-100', 'dark:bg-green-900/30', 'text-green-600', 'dark:text-green-400', 'border-green-300', 'dark:border-green-500/50');
-                btn.classList.add('bg-slate-100', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-200', 'border-slate-300', 'dark:border-slate-600');
+                btn.classList.remove('bg-orange-50', 'text-orange-600', 'border-orange-200');
                 text.textContent = "Mode Édition";
             }
         }
@@ -427,10 +370,10 @@
                     // Feedback
                     const status = document.getElementById('save-status');
                     status.textContent = shouldPublish ? "Publié !" : "Sauvegardé !";
-                    status.classList.add('text-green-500');
+                    status.classList.add('text-green-600');
                     setTimeout(() => {
                         status.textContent = "";
-                        status.classList.remove('text-green-500');
+                        status.classList.remove('text-green-600');
                     }, 2000);
 
                     // Restore edit mode
@@ -438,8 +381,8 @@
                         // We need to re-inject styles because we removed them
                         const editableStyles = `
                             <style id="editor-styles">
-                                .editable-hover { outline: 2px dashed #22c55e; cursor: text; }
-                                .editable-active { outline: 2px solid #22c55e; }
+                                .editable-hover { outline: 2px dashed #f97316; cursor: text; }
+                                .editable-active { outline: 2px solid #f97316; }
                                 [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
                             </style>
                         `;
@@ -485,8 +428,8 @@
             if (isEditMode) {
                 const editableStyles = `
                     <style id="editor-styles">
-                        .editable-hover { outline: 2px dashed #22c55e; cursor: text; }
-                        .editable-active { outline: 2px solid #22c55e; }
+                        .editable-hover { outline: 2px dashed #f97316; cursor: text; }
+                        .editable-active { outline: 2px solid #f97316; }
                         [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
                     </style>
                 `;
@@ -501,7 +444,7 @@
 
             const status = document.getElementById('save-status');
             status.textContent = "Publication sur GitHub...";
-            status.classList.add('text-blue-500');
+            status.classList.add('text-blue-600');
 
             try {
                 // Check if file exists to get SHA (needed for update)
@@ -538,8 +481,8 @@
 
                 if (putRes.ok) {
                     status.textContent = "Publié sur GitHub !";
-                    status.classList.remove('text-blue-500');
-                    status.classList.add('text-green-500');
+                    status.classList.remove('text-blue-600');
+                    status.classList.add('text-green-600');
                     setTimeout(() => status.textContent = "", 3000);
                 } else {
                     const err = await putRes.json();
@@ -549,8 +492,8 @@
             } catch (e) {
                 console.error("GitHub Error:", e);
                 status.textContent = "Erreur GitHub";
-                status.classList.remove('text-blue-500');
-                status.classList.add('text-red-500');
+                status.classList.remove('text-blue-600');
+                status.classList.add('text-red-600');
                 alert(`Erreur lors de la publication GitHub: ${e.message}`);
             }
         }
@@ -559,3 +502,4 @@
 </body>
 
 </html>
+```

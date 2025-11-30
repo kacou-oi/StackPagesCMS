@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDE - Iziweb.studio</title>
+    <title>IDE - Pages Frame IDE - StackPages CMS</title>
     <link rel="icon" type="image/x-icon" href="https://stackpages.net/img/logo.png">
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,25 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: {
-                            850: '#1e293b', // Custom dark shade
-                            900: '#0f172a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Monaco Editor container */
@@ -43,149 +27,107 @@
             height: 100%;
             min-height: 400px;
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        .dark ::-webkit-scrollbar-thumb {
-            background: #334155;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
     </style>
 </head>
 
-<body
-    class="font-sans antialiased bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 h-screen flex flex-col overflow-hidden selection:bg-green-500 selection:text-white transition-colors duration-300">
+<body class="font-sans antialiased bg-[#1e1e1e]">
     <!-- Header -->
-    <header
-        class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white shadow-lg z-20 transition-colors duration-300">
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg border-b border-slate-700">
         <div class="flex items-center justify-between px-6 py-4">
             <div class="flex items-center gap-4">
-                <a href="/admin/dashboard.html" class="text-slate-400 hover:text-green-500 transition"
+                <a href="/admin/dashboard.html" class="text-slate-400 hover:text-orange-500 transition"
                     title="Retour au dashboard">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </a>
                 <div>
-                    <h1 class="text-xl font-bold flex items-center gap-2">
-                        <span class="font-extrabold text-green-600 dark:text-green-400">Iziweb</span>
-                        <span class="font-extrabold text-blue-600 dark:text-blue-500">.IDE</span>
-                    </h1>
-                    <p class="text-sm text-slate-500 dark:text-slate-400" id="page-status">Nouvelle page</p>
+                    <h1 class="text-xl font-bold text-white">Pages Frame IDE</h1>
+                    <p class="text-sm text-slate-400" id="page-status">Nouvelle page</p>
                 </div>
             </div>
 
             <!-- Domain Display -->
             <div class="flex-1 flex justify-center">
-                <span id="site-domain"
-                    class="text-xl font-bold text-slate-300 dark:text-slate-700 tracking-wide opacity-50"></span>
+                <span id="site-domain" class="text-2xl font-bold text-white tracking-wide"></span>
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Theme Switcher -->
-                <button onclick="toggleTheme()"
-                    class="p-2 rounded-lg text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-green-400 transition bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 mr-2">
-                    <i class="fas fa-sun hidden dark:inline"></i>
-                    <i class="fas fa-moon inline dark:hidden"></i>
-                </button>
-
                 <button onclick="previewPageNewTab()"
-                    class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-white rounded-lg font-medium transition flex items-center gap-2 border border-slate-300 dark:border-slate-600">
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center gap-2">
                     <i class="fas fa-external-link-alt"></i> Aperçu
                 </button>
                 <button onclick="savePage('draft')"
-                    class="px-4 py-2 bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-white rounded-lg font-medium transition flex items-center gap-2 border border-slate-300 dark:border-slate-500">
+                    class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition flex items-center gap-2">
                     <i class="far fa-save"></i> Brouillon
                 </button>
                 <button onclick="savePage('published')"
-                    class="px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2 shadow-green-500/20">
+                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2">
                     <i class="fas fa-check"></i> Publier
                 </button>
             </div>
-        </div>
     </header>
 
     <!-- Main Layout -->
-    <main class="flex flex-1 overflow-hidden">
+    <main class="flex" style="height: calc(100vh - 73px);">
         <!-- Left Panel - Page Settings -->
-        <div
-            class="w-80 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto flex-shrink-0 custom-scrollbar transition-colors duration-300">
+        <div class="w-80 bg-[#252526] border-r border-slate-700 overflow-y-auto flex-shrink-0">
             <div class="p-6">
-                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
-                    <i class="fas fa-cog text-green-500"></i>
+                <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-cog text-orange-400"></i>
                     Paramètres de la Page
                 </h2>
 
                 <form id="page-creator-form" class="space-y-4">
                     <!-- Title -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                            Titre de la Page <span class="text-red-500 dark:text-red-400">*</span>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
+                            Titre de la Page <span class="text-red-400">*</span>
                         </label>
                         <input type="text" id="page-title" required placeholder="Ex: À propos de nous"
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
                     </div>
 
                     <!-- Slug -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
                             Slug URL
                         </label>
                         <input type="text" id="page-slug" readonly placeholder="a-propos-de-nous"
-                            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-850 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 cursor-not-allowed">
+                            class="w-full px-3 py-2 bg-[#333333] border border-slate-600 rounded-lg text-slate-400 cursor-not-allowed">
                         <p class="text-xs text-slate-500 mt-1">Généré automatiquement</p>
                     </div>
 
                     <!-- Meta Description -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
                             Meta Description
                         </label>
                         <textarea id="page-meta-desc" rows="3"
                             placeholder="Description courte pour les moteurs de recherche..."
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition resize-none"></textarea>
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition resize-none"></textarea>
                     </div>
 
                     <!-- Meta Keywords -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
                             Meta Keywords
                         </label>
                         <input type="text" id="page-meta-keywords" placeholder="mot-clé1, mot-clé2, mot-clé3"
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
                     </div>
 
                     <!-- Thumbnail -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">
                             Image Thumbnail (URL)
                         </label>
                         <input type="url" id="page-thumbnail" placeholder="https://example.com/image.jpg"
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            class="w-full px-3 py-2 bg-[#1e1e1e] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
                     </div>
 
-                    <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="pt-4 border-t border-slate-700">
                         <!-- Reset Button -->
                         <button type="button" onclick="clearPageForm()"
-                            class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-white rounded-lg font-medium transition flex items-center justify-center gap-2 border border-slate-300 dark:border-slate-600">
+                            class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center justify-center gap-2">
                             <i class="fas fa-redo"></i> Réinitialiser le formulaire
                         </button>
                     </div>
@@ -196,54 +138,48 @@
         </div>
 
         <!-- Right Panel - Code Editor -->
-        <div class="flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+        <div class="flex-1 flex flex-col bg-[#1e1e1e]">
             <!-- Code Editor Header -->
-            <div
-                class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex justify-between items-center transition-colors duration-300">
-                <h3 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                    <i class="fas fa-code text-green-500"></i>
+            <div class="px-6 py-4 border-b border-slate-700 bg-[#252526] flex justify-between items-center">
+                <h3 class="font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fas fa-code text-orange-500"></i>
                     Éditeur HTML
                 </h3>
 
                 <!-- Gemini Branding -->
-                <div
-                    class="flex items-center gap-3 bg-slate-50 dark:bg-slate-900 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-3 bg-[#1e1e1e] px-4 py-1.5 rounded-full border border-slate-700">
                     <img src="https://img.icons8.com/fluency/48/gemini-ai.png" alt="Gemini" class="w-5 h-5">
-                    <span class="font-bold text-slate-600 dark:text-slate-200 text-sm">Powered by Google Gemini</span>
-                    <button onclick="openGeminiConfig()"
-                        class="ml-2 text-slate-400 hover:text-blue-600 dark:hover:text-white transition"
+                    <span class="font-bold text-slate-200 text-sm">Powered by Google Gemini</span>
+                    <button onclick="openGeminiConfig()" class="ml-2 text-slate-400 hover:text-white transition"
                         title="Configurer l'API Gemini">
                         <i class="fas fa-cog text-lg hover:rotate-90 transition-transform duration-500"></i>
                     </button>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span id="html-char-count" class="text-xs text-slate-500 dark:text-slate-400 mr-2">0
-                        caractères</span>
+                    <span id="html-char-count" class="text-xs text-slate-400 mr-2">0 caractères</span>
                     <button onclick="openPromptModal()"
-                        class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition flex items-center gap-2">
-                        <i class="fas fa-magic text-purple-500 dark:text-purple-400"></i> Prompt
+                        class="px-3 py-1.5 bg-[#333333] border border-slate-600 rounded-md text-sm text-slate-200 hover:bg-[#444444] transition flex items-center gap-2">
+                        <i class="fas fa-magic"></i> Prompt
                     </button>
                 </div>
             </div>
             <!-- Monaco Editor -->
-            <div
-                class="flex-1 bg-white dark:bg-[#1e1e1e] overflow-hidden border-b border-slate-200 dark:border-slate-700">
+            <div class="flex-1 bg-[#1e2a3a] overflow-hidden">
                 <div id="monaco-editor-container"></div>
             </div>
 
-            <div
-                class="px-6 py-3 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
-                <span class="text-xs text-slate-500 dark:text-slate-400">
-                    <i class="fas fa-keyboard text-green-500 dark:text-green-400 mr-1"></i>
+            <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
+                <span class="text-xs text-slate-400">
+                    <i class="fas fa-keyboard text-orange-400 mr-1"></i>
                     Monaco Editor - Coloration syntaxique automatique
                 </span>
                 <div class="flex items-center gap-4">
-                    <span id="page-status-badge"
-                        class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                    <span id="page-status-badge" class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
                         <i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i>
                         Prêt
                     </span>
+                    <span id="html-char-count" class="text-xs text-slate-500">0 caractères</span>
                 </div>
             </div>
         </div>
@@ -251,19 +187,15 @@
 
     <!-- Modal Preview -->
     <div id="preview-modal"
-        class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div
-            class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div
-                class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-850">
-                <h3 id="modal-title" class="font-bold text-lg text-slate-800 dark:text-white truncate pr-4">Aperçu de la
-                    page</h3>
-                <button onclick="closeModal()"
-                    class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-title" class="font-bold text-lg text-slate-800 truncate pr-4">Aperçu de la page</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <div id="modal-content" class="p-8 overflow-y-auto prose dark:prose-invert max-w-none">
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-orange max-w-none">
                 <!-- Content -->
             </div>
         </div>
@@ -271,40 +203,37 @@
 
     <!-- Prompt Modal -->
     <div id="prompt-modal"
-        class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div
-            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl border border-slate-200 dark:border-slate-700 transform transition-all scale-100 flex flex-col max-h-[90vh]">
-            <div
-                class="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-850 rounded-t-xl">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <i class="fas fa-magic text-purple-500 dark:text-purple-400"></i>
+            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700 transform transition-all scale-100 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center bg-[#252526] rounded-t-xl">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-magic text-purple-400"></i>
                     Générer avec Gemini
                 </h3>
-                <button onclick="closePromptModal()"
-                    class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+                <button onclick="closePromptModal()" class="text-slate-400 hover:text-white transition">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
 
             <div class="p-6 flex-1 overflow-y-auto">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
                         Décrivez la page ou le composant que vous souhaitez créer
                     </label>
                     <textarea id="gemini-prompt-input" rows="6"
                         placeholder="Ex: Crée une landing page moderne pour un café avec une section héro, une galerie de photos et un formulaire de contact. Utilise des couleurs chaudes."
-                        class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition resize-none text-base"></textarea>
+                        class="w-full px-4 py-3 bg-[#252526] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition resize-none text-base"></textarea>
                 </div>
 
                 <div id="generation-error"
-                    class="hidden mb-4 p-3 bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-700 rounded-lg text-red-700 dark:text-red-200 text-sm flex items-center gap-2">
+                    class="hidden mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm flex items-center gap-2">
                     <i class="fas fa-exclamation-circle"></i>
                     <span id="generation-error-msg">Une erreur est survenue.</span>
                 </div>
 
-                <div
-                    class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-2">
-                    <p class="text-sm text-blue-700 dark:text-blue-200 flex items-start gap-2">
+                <div class="bg-blue-900/20 border border-blue-800 rounded-lg p-4 mb-2">
+                    <p class="text-sm text-blue-200 flex items-start gap-2">
                         <i class="fas fa-info-circle mt-0.5"></i>
                         <span>Le code généré remplacera le contenu actuel de l'éditeur. Assurez-vous d'avoir sauvegardé
                             votre travail si nécessaire.</span>
@@ -312,10 +241,9 @@
                 </div>
             </div>
 
-            <div
-                class="p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-850 rounded-b-xl flex justify-end gap-3">
+            <div class="p-6 border-t border-slate-700 bg-[#252526] rounded-b-xl flex justify-end gap-3">
                 <button onclick="closePromptModal()"
-                    class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-white rounded-lg font-medium transition border border-slate-300 dark:border-slate-600">
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition">
                     Annuler
                 </button>
                 <button onclick="generateCode()" id="generate-btn"
@@ -330,44 +258,49 @@
 
     <!-- Gemini Config Modal -->
     <div id="gemini-modal"
-        class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div
-            class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md border border-slate-200 dark:border-slate-700 transform transition-all scale-100">
+            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-md border border-slate-700 transform transition-all scale-100">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
                         <img src="https://img.icons8.com/fluency/48/gemini-ai.png" alt="Gemini" class="w-6 h-6">
                         Configuration Gemini
                     </h3>
-                    <button onclick="closeGeminiConfig()"
-                        class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+                    <button onclick="closeGeminiConfig()" class="text-slate-400 hover:text-white transition">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
 
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Clé API
-                            Gemini</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Clé API Gemini</label>
                         <div class="relative">
                             <input type="password" id="gemini-api-key" placeholder="Collez votre clé API ici..."
-                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-slate-400 dark:placeholder-slate-500">
+                                class="w-full pl-10 pr-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition placeholder-slate-500">
                             <i class="fas fa-key absolute left-3 top-3 text-slate-500"></i>
                         </div>
                     </div>
 
-                    <div
-                        class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
-                        <p class="text-sm text-slate-600 dark:text-slate-300 mb-2 font-medium">Comment obtenir une clé :
-                        </p>
-                        <ol
-                            class="list-decimal list-inside space-y-1.5 text-sm text-slate-500 dark:text-slate-400 ml-1">
+                    <div class="bg-[#252526] rounded-lg p-4 border border-slate-700">
+                        <p class="text-sm text-slate-300 mb-2 font-medium">Comment obtenir une clé :</p>
+                        <ol class="list-decimal list-inside space-y-1.5 text-sm text-slate-400 ml-1">
                             <li>Allez sur <a href="https://makersuite.google.com/app/apikey" target="_blank"
-                                    class="text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 hover:underline">Google
-                                    AI Studio</a></li>
+                                    class="text-blue-400 hover:text-blue-300 hover:underline">Google AI Studio</a></li>
                             <li>Créez une clé API gratuite</li>
                             <li>Copiez et collez-la ci-dessus</li>
                         </ol>
+                    </div>
+
+                    <div class="pt-1">
+                        <a href="https://www.youtube.com/watch?v=example" target="_blank"
+                            class="flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-medium group">
+                            <div
+                                class="w-6 h-6 bg-red-500/10 rounded-full flex items-center justify-center group-hover:bg-red-500/20 transition">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            VIDEO TUTO : Comment configurer Gemini
+                        </a>
                     </div>
 
                     <button onclick="saveGeminiConfig()"
@@ -386,57 +319,6 @@
         let monacoEditor = null;
         window.monacoEditor = null;
 
-        // Initialize theme when DOM is ready
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Check localStorage for theme preference
-            const savedTheme = localStorage.getItem('stackpages_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-
-            await checkAuth();
-
-            // Display site domain
-            const domainEl = document.getElementById('site-domain');
-            if (domainEl) {
-                domainEl.textContent = window.location.hostname || 'localhost';
-            }
-
-            // Initialize Monaco Editor
-            initMonacoEditor('');
-
-            // Check if editing existing page
-            const urlParams = new URLSearchParams(window.location.search);
-            const pageSlug = urlParams.get('page');
-
-            if (pageSlug) {
-                // Wait a bit for Monaco to be ready before loading page
-                setTimeout(() => loadPageBySlug(pageSlug), 500);
-            }
-        });
-
-        // Toggle Theme Function
-        function toggleTheme() {
-            const html = document.documentElement;
-            let isDark = false;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('stackpages_theme', 'light');
-                isDark = false;
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('stackpages_theme', 'dark');
-                isDark = true;
-            }
-
-            // Update Monaco Theme
-            if (window.monaco) {
-                monaco.editor.setTheme(isDark ? 'vs-dark' : 'vs');
-            }
-        }
-
         // Initialize Monaco Editor
         function initMonacoEditor(initialValue = '') {
             require.config({
@@ -446,11 +328,10 @@
             });
 
             require(['vs/editor/editor.main'], function () {
-                const isDark = document.documentElement.classList.contains('dark');
                 monacoEditor = monaco.editor.create(document.getElementById('monaco-editor-container'), {
                     value: initialValue,
                     language: 'html',
-                    theme: isDark ? 'vs-dark' : 'vs',
+                    theme: 'vs-dark',
                     automaticLayout: true,
                     fontSize: 14,
                     lineNumbers: 'on',
@@ -498,7 +379,7 @@
                 const content = monacoEditor.getValue();
                 if (statusBadge && content.length > 0) {
                     statusBadge.innerHTML = '<i class="fas fa-circle text-yellow-500 mr-1" style="font-size: 6px;"></i> Modifié';
-                    statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700';
+                    statusBadge.className = 'text-xs px-2 py-1 rounded bg-yellow-900 text-yellow-300';
                 }
             }
         }
@@ -753,6 +634,29 @@ ${htmlContent}
             }
         }
 
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+
+            // Display site domain
+            const domainEl = document.getElementById('site-domain');
+            if (domainEl) {
+                domainEl.textContent = window.location.hostname || 'localhost';
+            }
+
+            // Initialize Monaco Editor
+            initMonacoEditor('');
+
+            // Check if editing existing page
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageSlug = urlParams.get('page');
+
+            if (pageSlug) {
+                // Wait a bit for Monaco to be ready before loading page
+                setTimeout(() => loadPageBySlug(pageSlug), 500);
+            }
+        });
+
         // Load page by slug from localStorage
         function loadPageBySlug(slug) {
             let pages = [];
@@ -793,10 +697,10 @@ ${htmlContent}
             const statusBadge = document.getElementById('page-status-badge');
             if (statusBadge && page.status === 'draft') {
                 statusBadge.innerHTML = '<i class="fas fa-circle text-orange-500 mr-1" style="font-size: 6px;"></i> Brouillon';
-                statusBadge.className = 'text-xs px-2 py-1 rounded bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 border border-orange-200 dark:border-orange-700';
+                statusBadge.className = 'text-xs px-2 py-1 rounded bg-orange-900 text-orange-300';
             } else if (statusBadge) {
                 statusBadge.innerHTML = '<i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i> Publié';
-                statusBadge.className = 'text-xs px-2 py-1 rounded bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 border border-green-200 dark:border-green-700';
+                statusBadge.className = 'text-xs px-2 py-1 rounded bg-green-900 text-green-300';
             }
 
             // Update character count
