@@ -1,100 +1,125 @@
-# StackPages Portal
+# StackPages Portal (SaaS Edition)
 
-Un CMS léger et performant propulsé par **Cloudflare Workers**, conçu pour transformer votre newsletter Substack en un site web dynamique avec une interface d'administration moderne.
+StackPages est un CMS "headless" et un agrégateur de contenus (RSS, YouTube, Podcast) conçu pour être déployé sur **Cloudflare Workers**.
+Cette version "SaaS" inclut une gestion des utilisateurs via **Google OAuth** et une base de données **Cloudflare D1**.
 
-## 🚀 Fonctionnalités
+## Prérequis
 
-*   **Synchronisation Substack** : Récupère et met en cache automatiquement vos articles via RSS.
-*   **API JSON** : Expose vos données via des endpoints rapides (`/api/posts`, `/api/metadata`).
-*   **Interface Admin** : Tableau de bord moderne pour visualiser vos stats et gérer la configuration.
-*   **Authentification** : Système de login sécurisé pour protéger l'admin.
-*   **Configuration Dynamique** : Modifiez le titre, l'auteur et le SEO sans redéployer (via Cloudflare KV).
+-   Un compte [Cloudflare](https://dash.cloudflare.com/)
+-   [Node.js](https://nodejs.org/) et npm installés
+-   [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) installé (`npm install -g wrangler`)
+-   Un projet [Google Cloud](https://console.cloud.google.com/) pour l'authentification OAuth
 
----
+## Installation & Configuration
 
-## 🛠️ Prérequis
-
-*   Un compte [Cloudflare](https://dash.cloudflare.com/).
-*   [Node.js](https://nodejs.org/) et `npm` installés.
-*   [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) installé globalement :
-    ```bash
-    npm install -g wrangler
-    ```
-
----
-
-## ⚙️ Configuration Rapide
-
-### 1. Variables d'Environnement
-Ce projet nécessite certaines variables pour fonctionner.
-
-*   **En Local** : Créez un fichier `.dev.vars` à la racine du projet :
-    ```env
-    SUBSTACK_FEED_URL="https://votre-substack.substack.com/feed"
-    ADMIN_PASSWORD="votre-mot-de-passe-securise"
-    ```
-
-*   **En Production (Cloudflare Dashboard)** :
-    Allez dans **Settings > Variables and Secrets** de votre projet Workers/Pages et ajoutez les mêmes variables.
-
-### 2. Base de Données (KV Namespace)
-Pour sauvegarder la configuration (Titre du site, SEO...) depuis l'admin, vous devez créer un KV Namespace.
-
-1.  Créez le namespace :
-    ```bash
-    npx wrangler kv:namespace create "STACKPAGES_CONFIG"
-    ```
-2.  Copiez l'ID retourné et ajoutez-le à votre `wrangler.toml` (si vous en avez un) ou liez-le via le dashboard Cloudflare dans **Settings > Functions > KV Namespace Bindings**.
-    *   **Variable Name** : `STACKPAGES_CONFIG`
-    *   **KV Namespace** : Sélectionnez celui que vous venez de créer.
-
----
-
-## 🏃‍♂️ Démarrage Local
-
-Pour lancer le projet sur votre machine :
+### 1. Cloner le projet
 
 ```bash
-npx wrangler dev
+git clone https://github.com/votre-repo/stackpages-portal.git
+cd stackpages-portal
+npm install
 ```
 
-Accédez ensuite à :
-*   **Site** : `http://localhost:8787` (Si vous avez un frontend)
-*   **Admin** : `http://localhost:8787/admin/index.html`
-*   **API** : `http://localhost:8787/api/posts`
+### 2. Configurer la Base de Données (Cloudflare D1)
 
----
-
-## 📦 Déploiement
-
-Déployez votre projet sur le réseau mondial de Cloudflare :
+Créez une base de données D1 pour stocker les utilisateurs :
 
 ```bash
-npx wrangler deploy
+wrangler d1 create stackpages-users
 ```
 
----
+Copiez l'`database_id` retourné par cette commande et collez-le dans votre fichier `wrangler.toml` :
 
-## 🖥️ Guide de l'Interface Admin
+```toml
+[[d1_databases]]
+binding = "DB"
+database_name = "stackpages-users"
+database_id = "VOTRE_ID_ICI"
+```
 
-1.  **Connexion** : Accédez à `/admin/index.html`. Entrez le mot de passe défini dans `ADMIN_PASSWORD`.
-2.  **Tableau de Bord** : Visualisez le nombre d'articles et la dernière mise à jour.
-3.  **Articles** : Parcourez vos articles, recherchez par titre et prévisualisez le contenu.
-4.  **Configuration** :
-    *   Allez dans l'onglet **Configuration**.
-    *   Modifiez le nom du site, l'auteur, ou les métadonnées SEO.
-    *   Cliquez sur **Sauvegarder**. Les changements sont immédiats via l'API.
-5.  **API Explorer** : Testez les routes API directement depuis l'interface pour vérifier les données brutes.
+Appliquez la migration pour créer la table des utilisateurs :
 
----
+```bash
+wrangler d1 migrations apply stackpages-users --local
+```
+*(Pour la production, retirez `--local`)*
 
-## 🔒 Sécurité
+### 3. Configurer l'Authentification Google (OAuth 2.0)
 
-*   L'interface admin est protégée par un cookie de session (`HttpOnly`).
-*   Assurez-vous de définir un mot de passe fort pour `ADMIN_PASSWORD` en production.
-*   Le code source du Worker (`_worker.js`) contient la logique de validation.
+1.  Allez sur la [Google Cloud Console](https://console.cloud.google.com/).
+2.  Créez un nouveau projet.
+3.  Allez dans **APIs & Services > Credentials**.
+4.  Créez un **OAuth Client ID** (Type: Web Application).
+5.  Ajoutez l'URI de redirection autorisée :
+    *   Local : `http://localhost:8787/auth/callback`
+    *   Prod : `https://votre-worker.workers.dev/auth/callback`
+6.  Copiez le `Client ID` et le `Client Secret`.
 
----
+Ajoutez le `Client ID` dans `wrangler.toml` :
 
-**Auteur** : Kacou Oi
-**Licence** : MIT
+```toml
+[vars]
+GOOGLE_CLIENT_ID = "votre-client-id.apps.googleusercontent.com"
+```
+
+Ajoutez le `Client Secret` de manière sécurisée via Wrangler :
+
+```bash
+wrangler secret put GOOGLE_CLIENT_SECRET
+# Collez votre secret quand demandé
+```
+
+### 4. Configuration Générale (`wrangler.toml`)
+
+Renommez `draft-wrangler.toml` en `wrangler.toml` si ce n'est pas déjà fait, et configurez vos variables :
+
+```toml
+[vars]
+# URLs de vos flux
+SUBSTACK_FEED_URL = "https://votre-substack.com/feed"
+YOUTUBE_FEED_URL = "..."
+
+# Admin Legacy (Secours)
+ADMIN_EMAIL = "admin@example.com"
+ADMIN_PASSWORD = "..."
+```
+
+### 5. Lancement Local
+
+Pour tester en local avec la base de données D1 locale :
+
+```bash
+npm start
+# ou
+wrangler dev
+```
+
+Accédez à `http://localhost:8787`.
+
+### 6. Déploiement
+
+Pour déployer sur Cloudflare Workers :
+
+1.  Appliquez les migrations D1 en production :
+    ```bash
+    wrangler d1 migrations apply stackpages-users
+    ```
+2.  Publiez le worker :
+    ```bash
+    npm run deploy
+    # ou
+    wrangler deploy
+    ```
+
+## Architecture
+
+-   **`/admin`** : Dashboard Super-Admin (gestion globale).
+-   **`/app`** : Dashboard Utilisateur (gestion des pages perso).
+-   **`/auth/*`** : Routes d'authentification (Google OAuth).
+-   **`_worker.js`** : Backend (API, Auth, SSR).
+-   **`migrations/`** : Schémas SQL pour D1.
+
+## Développement
+
+-   **Frontend** : HTML/Tailwind (fichiers dans `admin/`, `app/`, `core/`).
+-   **Backend** : Cloudflare Worker (`_worker.js`).
