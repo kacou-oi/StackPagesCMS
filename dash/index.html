@@ -56,18 +56,7 @@
     </div>
 
     <script>
-        // Check if already authenticated (User), redirect to app
-        // Note: Admin auth is separate now
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const res = await fetch('/api/user');
-                if (res.ok) {
-                    window.location.href = '/app';
-                }
-            } catch (e) {
-                // Not logged in, stay here
-            }
-        });
+        // No automatic redirects - users can navigate manually after login
     </script>
 </body>
 
