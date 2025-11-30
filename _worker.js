@@ -690,49 +690,54 @@ export default {
         }
         */
 
-        // Admin Login -> OAuth/index.html (Renamed from admin/)
-        if (path === "/OAuth" || path === "/OAuth/") {
-            return await env.ASSETS.fetch(new Request(new URL("/OAuth/index.html", url), {
+        // Google Login (SaaS) -> dash/index.html (Root)
+        if (path === "/" || path === "/index.html") {
+            return await env.ASSETS.fetch(new Request(new URL("/dash/index.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
         }
 
-        // Redirect /admin to /OAuth for compatibility
-        if (path === "/admin" || path === "/admin/") {
-            return Response.redirect(url.origin + "/OAuth", 301);
-        }
-
-        // Dashboard -> OAuth/dashboard.html
+        // Admin Login / Dashboard -> dash/dashboard.html
         if (path === "/dashboard" || path === "/dashboard/") {
-            return await env.ASSETS.fetch(new Request(new URL("/OAuth/dashboard.html", url), {
+            return await env.ASSETS.fetch(new Request(new URL("/dash/dashboard.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
         }
 
-        // App (User Dashboard) -> OAuth/app.html
+        // App (User Dashboard) -> dash/app.html
         if (path === "/app" || path === "/app/") {
-            return await env.ASSETS.fetch(new Request(new URL("/OAuth/app.html", url), {
+            return await env.ASSETS.fetch(new Request(new URL("/dash/app.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
         }
 
-        // Visual Editor -> OAuth/visual-editor.html
+        // Visual Editor -> dash/visual-editor.html
         if (path === "/visual-editor" || path === "/visual-editor/") {
-            return await env.ASSETS.fetch(new Request(new URL("/OAuth/visual-editor.html", url), {
+            return await env.ASSETS.fetch(new Request(new URL("/dash/visual-editor.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
         }
 
-        // IDE -> OAuth/IDE.html
+        // IDE -> dash/IDE.html
         if (path === "/ide" || path === "/ide/") {
-            return await env.ASSETS.fetch(new Request(new URL("/OAuth/IDE.html", url), {
+            return await env.ASSETS.fetch(new Request(new URL("/dash/IDE.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
+        }
+
+        // Redirect /admin to /dashboard (Legacy compatibility)
+        if (path === "/admin" || path === "/admin/") {
+            return Response.redirect(url.origin + "/dashboard", 301);
+        }
+
+        // Redirect /OAuth to /dashboard (Cleanup)
+        if (path === "/OAuth" || path === "/OAuth/") {
+            return Response.redirect(url.origin + "/dashboard", 301);
         }
 
         // Custom Pages Loader -> /p/*

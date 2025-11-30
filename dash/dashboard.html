@@ -1009,6 +1009,43 @@
         </div>
     </div>
 
+    <!-- Login Overlay (Hidden by default) -->
+    <div id="login-overlay"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md mx-4">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-slate-800">Connexion Admin</h2>
+                <p class="text-slate-500 text-sm mt-2">Veuillez vous identifier pour accéder au tableau de bord.</p>
+            </div>
+
+            <form id="dashboard-login-form" class="space-y-6">
+                <div>
+                    <label for="dash-email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" id="dash-email" required
+                        class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        placeholder="admin@example.com">
+                </div>
+
+                <div>
+                    <label for="dash-password" class="block text-sm font-medium text-slate-700 mb-1">Mot de
+                        passe</label>
+                    <input type="password" id="dash-password" required
+                        class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        placeholder="••••••••">
+                </div>
+
+                <div id="dash-login-error" class="hidden text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">
+                    Identifiants incorrects.
+                </div>
+
+                <button type="submit"
+                    class="w-full py-2.5 px-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-medium rounded-lg shadow-sm transition transform hover:scale-[1.02]">
+                    Se connecter
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script src="./../core/admin.js"></script>
     <script>
         // Dark Mode Toggle

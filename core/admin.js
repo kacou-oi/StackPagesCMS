@@ -8,10 +8,13 @@ const appState = {
 };
 
 // Init
+// Init
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
-    await loadConfig(); // load config first
-    await loadData();
+    const isAuth = await checkAuth();
+    if (isAuth) {
+        await loadConfig(); // load config first
+        await loadData();
+    }
 });
 
 // Search Listeners
@@ -33,35 +36,81 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Auth Check
+// Auth Check
 async function checkAuth() {
-    // Only check auth on dashboard page, not on login page
+    // Only check auth on dashboard page
     const currentPath = window.location.pathname;
-    if (currentPath === '/OAuth' || currentPath === '/OAuth/' || currentPath === '/OAuth/index.html') {
-        // We're on the login page, don't redirect
-        return;
-    }
 
+    // If we are on the dashboard and NOT authenticated
     const authKey = localStorage.getItem('stackpages_auth');
+
     if (!authKey) {
-        window.location.href = '/OAuth';
-        return;
+        // Show login overlay if it exists
+        const overlay = document.getElementById('login-overlay');
+        if (overlay) {
+            overlay.classList.remove('hidden');
+            // Prevent scrolling on body
+            document.body.style.overflow = 'hidden';
+
+            // Bind login form if not already bound (simple check)
+            const form = document.getElementById('dashboard-login-form');
+            if (form && !form.dataset.bound) {
+                form.dataset.bound = "true";
+                form.addEventListener('submit', handleDashboardLogin);
+            }
+        } else {
+            // Fallback if overlay is missing (should not happen on dashboard)
+            console.warn("Login overlay missing on dashboard");
+        }
+        return false; // Not authenticated
     }
 
-    // Optional: Verify with server if needed, but for now just trust existence + API 401s
-    /*
+    return true; // Authenticated
+}
+
+async function handleDashboardLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('dash-email').value;
+    const password = document.getElementById('dash-password').value;
+    const errorDiv = document.getElementById('dash-login-error');
+    const btn = e.target.querySelector('button');
+    const originalBtnContent = btn.innerHTML;
+
+    // Reset UI
+    errorDiv.classList.add('hidden');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+
     try {
-        const res = await fetch('/api/check-auth', { 
-            headers: { 'X-Auth-Key': authKey }
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         });
-        const data = await res.json();
-        if (!data.authenticated) {
-            localStorage.removeItem('stackpages_auth');
-            window.location.href = '/admin';
+
+        if (res.ok) {
+            localStorage.setItem('stackpages_auth', password);
+            // Hide overlay and reload data
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.body.style.overflow = '';
+            btn.disabled = false;
+            btn.innerHTML = originalBtnContent;
+
+            // Trigger data load
+            await loadConfig();
+            await loadData();
+        } else {
+            errorDiv.textContent = "Identifiants incorrects.";
+            errorDiv.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = originalBtnContent;
         }
-    } catch (e) {
-        window.location.href = '/admin';
+    } catch (err) {
+        errorDiv.textContent = "Erreur de connexion.";
+        errorDiv.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = originalBtnContent;
     }
-    */
 }
 
 // Navigation
