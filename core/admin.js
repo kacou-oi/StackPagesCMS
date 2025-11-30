@@ -36,14 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
 async function checkAuth() {
     // Only check auth on dashboard page, not on login page
     const currentPath = window.location.pathname;
-    if (currentPath === '/admin' || currentPath === '/admin/' || currentPath === '/admin/index.html') {
+    if (currentPath === '/OAuth' || currentPath === '/OAuth/' || currentPath === '/OAuth/index.html') {
         // We're on the login page, don't redirect
         return;
     }
 
     const authKey = localStorage.getItem('stackpages_auth');
     if (!authKey) {
-        window.location.href = '/admin';
+        window.location.href = '/OAuth';
         return;
     }
 
@@ -1217,7 +1217,7 @@ function loadPublishedPages() {
                         <i class="far fa-clock mr-1"></i> ${date}
                     </span>
                     <div class="flex gap-2">
-                        <a href="/admin/IDE.html?page=${encodeURIComponent(page.slug)}" 
+                        <a href="/ide?page=${encodeURIComponent(page.slug)}" 
                            class="text-blue-600 hover:text-blue-800 font-medium text-xs uppercase tracking-wide">
                             Éditer
                         </a>

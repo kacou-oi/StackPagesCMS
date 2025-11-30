@@ -690,25 +690,46 @@ export default {
         }
         */
 
-        // Admin Login -> admin/index.html
+        // Admin Login -> OAuth/index.html (Renamed from admin/)
+        if (path === "/OAuth" || path === "/OAuth/") {
+            return await env.ASSETS.fetch(new Request(new URL("/OAuth/index.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
+        // Redirect /admin to /OAuth for compatibility
         if (path === "/admin" || path === "/admin/") {
-            return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
+            return Response.redirect(url.origin + "/OAuth", 301);
         }
 
-        // Dashboard -> admin/dashboard.html
+        // Dashboard -> OAuth/dashboard.html
         if (path === "/dashboard" || path === "/dashboard/") {
-            return await env.ASSETS.fetch(new Request(new URL("/admin/dashboard.html", url), {
+            return await env.ASSETS.fetch(new Request(new URL("/OAuth/dashboard.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));
         }
 
-        // Visual Editor -> admin/visual-editor.html
-        if (path === "/admin/visual-editor.html") {
-            return await env.ASSETS.fetch(new Request(new URL("/admin/visual-editor.html", url), {
+        // App (User Dashboard) -> OAuth/app.html
+        if (path === "/app" || path === "/app/") {
+            return await env.ASSETS.fetch(new Request(new URL("/OAuth/app.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
+        // Visual Editor -> OAuth/visual-editor.html
+        if (path === "/visual-editor" || path === "/visual-editor/") {
+            return await env.ASSETS.fetch(new Request(new URL("/OAuth/visual-editor.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
+        // IDE -> OAuth/IDE.html
+        if (path === "/ide" || path === "/ide/") {
+            return await env.ASSETS.fetch(new Request(new URL("/OAuth/IDE.html", url), {
                 method: 'GET',
                 headers: req.headers
             }));

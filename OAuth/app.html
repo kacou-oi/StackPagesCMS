@@ -70,7 +70,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <h2 class="font-semibold text-slate-800">Vos Pages</h2>
-                <a href="/admin/visual-editor.html"
+                <a href="/visual-editor"
                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-md shadow-blue-500/20 flex items-center gap-2">
                     <i class="fas fa-plus"></i> Nouvelle Page
                 </a>
@@ -99,77 +99,7 @@
 
     </main>
 
-    <script>
-        async function init() {
-            try {
-                const res = await fetch('/api/user');
-                if (!res.ok) {
-                    window.location.href = '/admin/index.html';
-                    return;
-                }
-                const user = await res.json();
-
-                document.getElementById('user-name').textContent = user.name;
-                document.getElementById('welcome-name').textContent = user.name.split(' ')[0];
-                if (user.avatar_url) document.getElementById('user-avatar').src = user.avatar_url;
-
-                loadPages();
-
-            } catch (e) {
-                console.error("Auth Error:", e);
-                window.location.href = '/admin/index.html';
-            }
-        }
-
-        async function loadPages() {
-            // For now, loading from localStorage as per current architecture
-            // In a real SaaS, this would fetch from /api/pages which would query D1 based on user ID
-            const stored = localStorage.getItem('stackpages_custom_pages');
-            const pages = stored ? JSON.parse(stored) : [];
-
-            const tbody = document.getElementById('pages-table-body');
-            document.getElementById('stats-pages').textContent = pages.length;
-
-            if (pages.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-slate-400">
-                            Aucune page créée pour le moment.
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            tbody.innerHTML = pages.map(page => `
-                <tr class="hover:bg-slate-50 transition group">
-                    <td class="px-6 py-4 font-medium text-slate-900">${page.title || 'Sans titre'}</td>
-                    <td class="px-6 py-4 font-mono text-xs text-slate-500">/${page.slug}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded-full text-xs font-medium ${page.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
-                            ${page.status === 'published' ? 'Publié' : 'Brouillon'}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
-                            <a href="/p/${page.slug}" target="_blank" class="p-2 text-slate-400 hover:text-blue-600 transition" title="Voir">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                            <a href="/admin/visual-editor.html?page=${page.slug}" class="p-2 text-slate-400 hover:text-orange-500 transition" title="Éditer">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        async function logout() {
-            await fetch('/api/logout');
-            window.location.href = '/admin/index.html';
-        }
-
-        init();
-    </script>
+    <script src="/core/app.js"></script>
 </body>
 
 </html>
