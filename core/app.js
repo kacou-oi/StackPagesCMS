@@ -2,7 +2,17 @@ async function init() {
     try {
         const res = await fetch('/api/user');
         if (!res.ok) {
-            window.location.href = '/OAuth';
+            // Check if admin is logged in (fallback)
+            const adminAuth = localStorage.getItem('stackpages_auth');
+            if (adminAuth) {
+                // Admin is logged in, show admin info
+                document.getElementById('user-name').textContent = 'Admin';
+                document.getElementById('welcome-name').textContent = 'Admin';
+                loadPages();
+                return;
+            }
+            // Not logged in at all, redirect to login
+            window.location.href = '/';
             return;
         }
         const user = await res.json();
@@ -15,7 +25,15 @@ async function init() {
 
     } catch (e) {
         console.error("Auth Error:", e);
-        window.location.href = '/OAuth';
+        // Check if admin is logged in (fallback)
+        const adminAuth = localStorage.getItem('stackpages_auth');
+        if (adminAuth) {
+            document.getElementById('user-name').textContent = 'Admin';
+            document.getElementById('welcome-name').textContent = 'Admin';
+            loadPages();
+            return;
+        }
+        window.location.href = '/';
     }
 }
 
@@ -63,7 +81,8 @@ async function loadPages() {
 
 async function logout() {
     await fetch('/api/logout');
-    window.location.href = '/OAuth';
+    localStorage.removeItem('stackpages_auth'); // Clear admin auth too
+    window.location.href = '/';
 }
 
 init();
