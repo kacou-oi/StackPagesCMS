@@ -366,20 +366,6 @@ export default {
 
         // --- ROUTES API PUBLIC ---
 
-        // 0. Auth Routes (Google OAuth)
-        if (path === '/auth/google') {
-            return handleGoogleLogin(env, req);
-        }
-        if (path === '/auth/callback') {
-            return handleGoogleCallback(req, env);
-        }
-        if (path === '/api/logout') {
-            return handleLogout();
-        }
-        if (path === '/api/user') {
-            return handleGetUser(req, env);
-        }
-
         // 1. Login (Validation email + password)
         if (path === "/api/login" && req.method === "POST") {
             try {
@@ -690,54 +676,28 @@ export default {
         }
         */
 
-        // Google Login (SaaS) -> dash/index.html (Root)
-        if (path === "/" || path === "/index.html") {
-            return await env.ASSETS.fetch(new Request(new URL("/dash/index.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
-        }
-
-        // Admin Login / Dashboard -> dash/dashboard.html
-        if (path === "/dashboard" || path === "/dashboard/") {
-            return await env.ASSETS.fetch(new Request(new URL("/dash/dashboard.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
-        }
-
-        // App (User Dashboard) -> dash/app.html
-        if (path === "/app" || path === "/app/") {
-            return await env.ASSETS.fetch(new Request(new URL("/dash/app.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
-        }
-
-        // Visual Editor -> dash/visual-editor.html
-        if (path === "/visual-editor" || path === "/visual-editor/") {
-            return await env.ASSETS.fetch(new Request(new URL("/dash/visual-editor.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
-        }
-
-        // IDE -> dash/IDE.html
-        if (path === "/ide" || path === "/ide/") {
-            return await env.ASSETS.fetch(new Request(new URL("/dash/IDE.html", url), {
-                method: 'GET',
-                headers: req.headers
-            }));
-        }
-
-        // Redirect /admin to /dashboard (Legacy compatibility)
+        // Admin Login -> admin/index.html
         if (path === "/admin" || path === "/admin/") {
-            return Response.redirect(url.origin + "/dashboard", 301);
+            return await env.ASSETS.fetch(new Request(new URL("/admin/index.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
         }
 
-        // Redirect /OAuth to /dashboard (Cleanup)
-        if (path === "/OAuth" || path === "/OAuth/") {
-            return Response.redirect(url.origin + "/dashboard", 301);
+        // Dashboard -> admin/dashboard.html
+        if (path === "/dashboard" || path === "/dashboard/") {
+            return await env.ASSETS.fetch(new Request(new URL("/admin/dashboard.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
+        }
+
+        // Visual Editor -> admin/visual-editor.html
+        if (path === "/admin/visual-editor.html") {
+            return await env.ASSETS.fetch(new Request(new URL("/admin/visual-editor.html", url), {
+                method: 'GET',
+                headers: req.headers
+            }));
         }
 
         // Custom Pages Loader -> /p/*
@@ -912,211 +872,3 @@ export default {
         }
     }
 };
-
-// ====================================================================
-// 8. AUTHENTICATION HELPERS (Google OAuth & JWT)
-// ====================================================================
-
-async function handleGoogleLogin(env, request) {
-    const client_id = env.GOOGLE_CLIENT_ID;
-    if (!client_id) return new Response("Google Client ID not configured", { status: 500 });
-
-    const url = new URL(request.url);
-    const redirect_uri = `${url.origin}/auth/callback`;
-
-    const params = new URLSearchParams({
-        client_id: client_id,
-        redirect_uri: redirect_uri,
-        response_type: "code",
-        scope: "openid email profile",
-        access_type: "offline",
-        prompt: "consent"
-    });
-
-    return Response.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`, 302);
-}
-
-async function handleGoogleCallback(request, env) {
-    const url = new URL(request.url);
-    const code = url.searchParams.get("code");
-
-    if (!code) return new Response("Missing code", { status: 400 });
-
-    const client_id = env.GOOGLE_CLIENT_ID;
-    const client_secret = env.GOOGLE_CLIENT_SECRET;
-    const redirect_uri = `${url.origin}/auth/callback`;
-
-    // Exchange code for token
-    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-            code,
-            client_id,
-            client_secret,
-            redirect_uri,
-            grant_type: "authorization_code"
-        })
-    });
-
-    const tokenData = await tokenResponse.json();
-    if (tokenData.error) return new Response(JSON.stringify(tokenData), { status: 400 });
-
-    // Get User Info
-    const userResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-        headers: { Authorization: `Bearer ${tokenData.access_token}` }
-    });
-    const userData = await userResponse.json();
-
-    // DB Logic (D1)
-    let user = await getUserByEmail(env.DB, userData.email);
-    if (!user) {
-        user = await createUser(env.DB, userData);
-    }
-
-    // Create Session (JWT)
-    const sessionToken = await createSessionToken(user, env.JWT_SECRET || "default-secret-change-me");
-
-    // Redirect based on role
-    const targetPath = user.role === 'admin' ? '/admin/dashboard.html' : '/app/index.html';
-
-    return new Response(null, {
-        status: 302,
-        headers: {
-            "Location": targetPath,
-            "Set-Cookie": `auth_token=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`
-        }
-    });
-}
-
-async function handleLogout() {
-    return new Response(null, {
-        status: 302,
-        headers: {
-            "Location": "/admin/index.html",
-            "Set-Cookie": "auth_token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-        }
-    });
-}
-
-async function handleGetUser(request, env) {
-    const user = await getUserFromRequest(request, env);
-    if (!user) return new Response("Unauthorized", { status: 401 });
-    return new Response(JSON.stringify(user), { headers: { "Content-Type": "application/json" } });
-}
-
-// --- DB Helpers ---
-
-async function getUserByEmail(db, email) {
-    if (!db) return null;
-    try {
-        const { results } = await db.prepare("SELECT * FROM users WHERE email = ?").bind(email).all();
-        return results && results.length > 0 ? results[0] : null;
-    } catch (e) {
-        console.error("DB Error (getUserByEmail):", e);
-        return null;
-    }
-}
-
-async function createUser(db, googleUser) {
-    const newUser = {
-        id: googleUser.id,
-        email: googleUser.email,
-        name: googleUser.name,
-        avatar_url: googleUser.picture,
-        role: 'user', // Default role
-        created_at: Math.floor(Date.now() / 1000)
-    };
-
-    if (db) {
-        try {
-            await db.prepare(
-                "INSERT INTO users (id, email, name, avatar_url, role, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-            ).bind(newUser.id, newUser.email, newUser.name, newUser.avatar_url, newUser.role, newUser.created_at).run();
-        } catch (e) {
-            console.error("DB Error (createUser):", e);
-        }
-    }
-    return newUser;
-}
-
-// --- JWT Helpers ---
-
-async function createSessionToken(user, secret) {
-    const header = { alg: "HS256", typ: "JWT" };
-    const payload = {
-        sub: user.id,
-        email: user.email,
-        role: user.role,
-        name: user.name,
-        avatar: user.avatar_url,
-        exp: Math.floor(Date.now() / 1000) + 86400
-    };
-
-    const encodedHeader = btoa(JSON.stringify(header)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-    const encodedPayload = btoa(JSON.stringify(payload)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-
-    const key = await crypto.subtle.importKey(
-        "raw",
-        new TextEncoder().encode(secret),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"]
-    );
-
-    const signature = await crypto.subtle.sign(
-        "HMAC",
-        key,
-        new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`)
-    );
-
-    const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-
-    return `${encodedHeader}.${encodedPayload}.${encodedSignature}`;
-}
-
-async function getUserFromRequest(request, env) {
-    const cookieHeader = request.headers.get("Cookie");
-    if (!cookieHeader) return null;
-
-    const cookies = Object.fromEntries(cookieHeader.split('; ').map(c => c.split('=')));
-    const token = cookies['auth_token'];
-    if (!token) return null;
-
-    return await verifySessionToken(token, env.JWT_SECRET || "default-secret-change-me");
-}
-
-async function verifySessionToken(token, secret) {
-    try {
-        const parts = token.split('.');
-        if (parts.length !== 3) return null;
-
-        const [encodedHeader, encodedPayload, encodedSignature] = parts;
-
-        const key = await crypto.subtle.importKey(
-            "raw",
-            new TextEncoder().encode(secret),
-            { name: "HMAC", hash: "SHA-256" },
-            false,
-            ["verify"]
-        );
-
-        const signature = Uint8Array.from(atob(encodedSignature.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
-
-        const isValid = await crypto.subtle.verify(
-            "HMAC",
-            key,
-            signature,
-            new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`)
-        );
-
-        if (!isValid) return null;
-
-        const payload = JSON.parse(atob(encodedPayload.replace(/-/g, "+").replace(/_/g, "/")));
-        if (payload.exp < Math.floor(Date.now() / 1000)) return null;
-
-        return payload;
-    } catch (e) {
-        return null;
-    }
-}

@@ -18,14 +18,9 @@ META_TITLE = "StackPages Portal"
 META_DESCRIPTION = "Portail de contenus agrégés"
 META_KEYWORDS = "stackpages, portal, cms, rss"
 
-# Authentification Admin (Legacy / Fallback)
+# Authentification Admin
 ADMIN_EMAIL = "admin@example.com"
 ADMIN_PASSWORD = "change_me_please"
-
-# Authentification Google OAuth (SaaS)
-GOOGLE_CLIENT_ID = "votre-client-id-google"
-# GOOGLE_CLIENT_SECRET doit être défini via `wrangler secret put GOOGLE_CLIENT_SECRET`
-
 
 # Reverse Proxy (Optionnel)
 # Si défini, le site affichera le contenu de cette URL (ex: un site Webstudio publié)
@@ -40,10 +35,3 @@ ALLOWED_DOMAIN = ""
 # [[kv_namespaces]]
 # binding = "CONTENT_ARCHIVE"
 # id = "votre-id-kv"
-
-# Configuration D1 Database (Pour les utilisateurs)
-[[d1_databases]]
-binding = "DB" # Le nom disponible dans votre Worker via env.DB
-database_name = "stackpages-users"
-database_id = "REMPLACER_PAR_VOTRE_DATABASE_ID" # ID obtenu via `wrangler d1 create stackpages-users`
-
