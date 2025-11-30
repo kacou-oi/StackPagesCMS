@@ -63,6 +63,13 @@
                     class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg font-medium transition shadow-md hover:shadow-lg flex items-center gap-2">
                     <i class="fas fa-check"></i> Publier
                 </button>
+
+                <!-- Switch Mode Button -->
+                <button onclick="switchToVisual()"
+                    class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg font-medium transition flex items-center gap-2 border border-slate-600 ml-2">
+                    <i class="fas fa-paint-brush"></i>
+                    <span>Switch to Visual</span>
+                </button>
             </div>
     </header>
 
@@ -712,6 +719,50 @@ ${htmlContent}
             document.getElementById('preview-modal').classList.add('hidden');
             const content = document.getElementById('modal-content');
             content.innerHTML = '';
+        }
+
+        function switchToVisual() {
+            const slug = document.getElementById('page-slug').value;
+            if (slug) {
+                // Save draft before switching
+                // We can reuse savePage('draft') logic but we need to be careful about async
+                // Let's manually save to localStorage to be sure
+
+                const title = document.getElementById('page-title').value;
+                const htmlContent = monacoEditor ? monacoEditor.getValue() : '';
+                const metaDesc = document.getElementById('page-meta-desc').value;
+                const metaKeywords = document.getElementById('page-meta-keywords').value;
+                const thumbnail = document.getElementById('page-thumbnail').value;
+
+                try {
+                    const stored = localStorage.getItem('stackpages_custom_pages');
+                    const pages = stored ? JSON.parse(stored) : [];
+                    const pageIndex = pages.findIndex(p => p.slug === slug);
+
+                    if (pageIndex !== -1) {
+                        pages[pageIndex].title = title;
+                        pages[pageIndex].htmlContent = htmlContent;
+                        pages[pageIndex].metaDesc = metaDesc;
+                        pages[pageIndex].metaKeywords = metaKeywords;
+                        pages[pageIndex].thumbnail = thumbnail;
+                        pages[pageIndex].updatedAt = new Date().toISOString();
+                        // Keep status as is or set to draft? Let's keep as is.
+
+                        localStorage.setItem('stackpages_custom_pages', JSON.stringify(pages));
+
+                        // Redirect
+                        window.location.href = `/admin/visual-editor.html?page=${slug}`;
+                    } else {
+                        // New page not saved yet?
+                        alert("Veuillez d'abord sauvegarder la page (Brouillon) avant de changer de mode.");
+                    }
+                } catch (e) {
+                    console.error("Error saving before switch:", e);
+                    alert("Erreur lors de la sauvegarde avant le changement de mode.");
+                }
+            } else {
+                window.location.href = '/admin/visual-editor.html';
+            }
         }
     </script>
 </body>
