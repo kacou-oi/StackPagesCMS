@@ -113,6 +113,18 @@
                     </div>
                 </div>
 
+                <!-- Tabs -->
+                <div class="flex px-6 border-b border-slate-100 bg-slate-50 gap-6">
+                    <button onclick="switchImageTab('pexels')" id="tab-pexels"
+                        class="py-3 text-sm font-medium text-orange-600 border-b-2 border-orange-600 transition">
+                        Photos Gratuites (Pexels)
+                    </button>
+                    <button onclick="switchImageTab('upload')" id="tab-upload"
+                        class="py-3 text-sm font-medium text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition">
+                        Upload GitHub
+                    </button>
+                </div>
+
                 <!-- Settings Panel (Hidden by default) -->
                 <div id="image-settings-panel" class="hidden bg-slate-100 p-4 border-b border-slate-200">
                     <label class="block text-sm font-medium text-slate-700 mb-2">Clé API Pexels</label>
@@ -130,34 +142,82 @@
                     </p>
                 </div>
 
-                <!-- Search Bar -->
-                <div class="p-4 border-b border-slate-100 flex gap-2 bg-white">
-                    <div class="relative flex-1">
-                        <i class="fas fa-search absolute left-3 top-3 text-slate-400"></i>
-                        <input type="text" id="image-search-input"
-                            placeholder="Rechercher des photos (ex: nature, bureau, tech...)"
-                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition"
-                            onkeypress="if(event.key === 'Enter') searchImages()">
+                <!-- Pexels Panel -->
+                <div id="panel-pexels" class="flex flex-col flex-1 overflow-hidden">
+                    <!-- Search Bar -->
+                    <div class="p-4 border-b border-slate-100 flex gap-2 bg-white">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-3 top-3 text-slate-400"></i>
+                            <input type="text" id="image-search-input"
+                                placeholder="Rechercher des photos (ex: nature, bureau, tech...)"
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-orange-500 focus:border-orange-500 transition"
+                                onkeypress="if(event.key === 'Enter') searchImages()">
+                        </div>
+                        <button onclick="searchImages()"
+                            class="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition shadow-sm">
+                            Rechercher
+                        </button>
                     </div>
-                    <button onclick="searchImages()"
-                        class="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition shadow-sm">
-                        Rechercher
-                    </button>
+
+                    <!-- Results Grid -->
+                    <div id="image-results"
+                        class="flex-1 overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-slate-50">
+                        <!-- Empty State -->
+                        <div class="col-span-full flex flex-col items-center justify-center text-slate-400 py-20">
+                            <i class="fas fa-images text-4xl mb-4 opacity-50"></i>
+                            <p>Recherchez des images pour commencer</p>
+                        </div>
+                    </div>
+
+                    <!-- Loading State (Hidden) -->
+                    <div id="image-loading" class="hidden col-span-full flex justify-center py-10">
+                        <i class="fas fa-circle-notch fa-spin text-3xl text-orange-500"></i>
+                    </div>
                 </div>
 
-                <!-- Results Grid -->
-                <div id="image-results"
-                    class="flex-1 overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-slate-50">
-                    <!-- Empty State -->
-                    <div class="col-span-full flex flex-col items-center justify-center text-slate-400 py-20">
-                        <i class="fas fa-images text-4xl mb-4 opacity-50"></i>
-                        <p>Recherchez des images pour commencer</p>
-                    </div>
-                </div>
+                <!-- Upload Panel -->
+                <div id="panel-upload"
+                    class="hidden flex-col flex-1 overflow-hidden p-8 items-center justify-center bg-slate-50">
+                    <div class="w-full max-w-md bg-white border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-orange-400 transition cursor-pointer group"
+                        onclick="document.getElementById('file-upload').click()"
+                        ondragover="event.preventDefault(); this.classList.add('border-orange-400', 'bg-orange-50')"
+                        ondragleave="this.classList.remove('border-orange-400', 'bg-orange-50')"
+                        ondrop="handleDrop(event)">
 
-                <!-- Loading State (Hidden) -->
-                <div id="image-loading" class="hidden col-span-full flex justify-center py-10">
-                    <i class="fas fa-circle-notch fa-spin text-3xl text-orange-500"></i>
+                        <div
+                            class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                            <i
+                                class="fas fa-cloud-upload-alt text-3xl text-slate-400 group-hover:text-orange-500 transition"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-slate-700 mb-2">Glissez une image ici</h3>
+                        <p class="text-slate-500 text-sm mb-6">ou cliquez pour sélectionner</p>
+
+                        <input type="file" id="file-upload" class="hidden" accept="image/*"
+                            onchange="handleFileSelect(event)">
+
+                        <button
+                            class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 font-medium text-sm shadow-sm">
+                            Sélectionner un fichier
+                        </button>
+                    </div>
+
+                    <div id="upload-progress" class="hidden w-full max-w-md mt-6">
+                        <div class="flex justify-between text-xs text-slate-500 mb-1">
+                            <span>Upload en cours...</span>
+                            <span id="upload-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2">
+                            <div id="upload-bar" class="bg-orange-500 h-2 rounded-full transition-all duration-300"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-xs text-slate-400">
+                            Les images seront uploadées dans le dossier <code>content/images/</code> de votre dépôt
+                            GitHub.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -405,8 +465,8 @@
                         img.style.cursor = 'pointer';
                         img.addEventListener('click', (e) => {
                             e.preventDefault();
-                            const newUrl = prompt("URL de l'image:", img.src);
-                            if (newUrl) img.src = newUrl;
+                            currentImageSelection = img; // Store reference
+                            openImageBank(); // Open bank instead of prompt
                         });
                     });
 
@@ -453,8 +513,9 @@
             }
 
             function promptImage() {
-                const url = prompt("Entrez l'URL de l'image:");
-                if (url) execCmd('insertImage', url);
+                // Use Image Bank instead of prompt
+                currentImageSelection = null; // Ensure we are inserting new
+                openImageBank();
             }
 
             // --- Saving ---
@@ -654,14 +715,21 @@
             function openImageBank() {
                 document.getElementById('image-bank-modal').classList.remove('hidden');
                 const key = localStorage.getItem('stackpages_pexels_key');
-                if (!key) {
-                    document.getElementById('image-settings-panel').classList.remove('hidden');
+                // If opening for replacement, maybe we don't need to force settings if they just want to upload
+                // But let's keep it simple.
+                if (!key && !document.getElementById('tab-upload').classList.contains('text-orange-600')) {
+                    // Only show settings if on Pexels tab and no key (optional refinement)
                 }
+
+                // If we are replacing an image, maybe switch to upload tab by default?
+                // Or keep last state. Let's keep last state or default.
+
                 document.getElementById('image-search-input').focus();
             }
 
             function closeImageBank() {
                 document.getElementById('image-bank-modal').classList.add('hidden');
+                currentImageSelection = null; // Reset selection on close to avoid stuck state
             }
 
             function toggleImageSettings() {
@@ -744,8 +812,139 @@
             }
 
             function selectImage(url, alt) {
-                execCmd('insertImage', url);
+                if (currentImageSelection) {
+                    // Replace existing image
+                    currentImageSelection.src = url;
+                    if (alt) currentImageSelection.alt = alt;
+                    currentImageSelection = null; // Reset
+                } else {
+                    // Insert new image
+                    execCmd('insertImage', url);
+                }
                 closeImageBank();
+            }
+
+            // --- Tab Switching ---
+            function switchImageTab(tab) {
+                const pexelsBtn = document.getElementById('tab-pexels');
+                const uploadBtn = document.getElementById('tab-upload');
+                const pexelsPanel = document.getElementById('panel-pexels');
+                const uploadPanel = document.getElementById('panel-upload');
+
+                if (tab === 'pexels') {
+                    pexelsBtn.classList.add('text-orange-600', 'border-orange-600');
+                    pexelsBtn.classList.remove('text-slate-500', 'border-transparent');
+                    uploadBtn.classList.remove('text-orange-600', 'border-orange-600');
+                    uploadBtn.classList.add('text-slate-500', 'border-transparent');
+
+                    pexelsPanel.classList.remove('hidden');
+                    uploadPanel.classList.add('hidden');
+                    uploadPanel.classList.remove('flex');
+                } else {
+                    uploadBtn.classList.add('text-orange-600', 'border-orange-600');
+                    uploadBtn.classList.remove('text-slate-500', 'border-transparent');
+                    pexelsBtn.classList.remove('text-orange-600', 'border-orange-600');
+                    pexelsBtn.classList.add('text-slate-500', 'border-transparent');
+
+                    uploadPanel.classList.remove('hidden');
+                    uploadPanel.classList.add('flex');
+                    pexelsPanel.classList.add('hidden');
+                }
+            }
+
+            // --- GitHub Upload Logic ---
+            function handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('border-orange-400', 'bg-orange-50');
+
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    uploadFileToGitHub(e.dataTransfer.files[0]);
+                }
+            }
+
+            function handleFileSelect(e) {
+                if (e.target.files && e.target.files[0]) {
+                    uploadFileToGitHub(e.target.files[0]);
+                }
+            }
+
+            async function uploadFileToGitHub(file) {
+                // 1. Check Config
+                const ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+                if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+                    alert("Configuration GitHub manquante. Veuillez la configurer dans le tableau de bord.");
+                    return;
+                }
+
+                // 2. Prepare UI
+                const progressDiv = document.getElementById('upload-progress');
+                const progressBar = document.getElementById('upload-bar');
+                const progressPercent = document.getElementById('upload-percent');
+
+                progressDiv.classList.remove('hidden');
+                progressBar.style.width = '10%';
+                progressPercent.textContent = '10%';
+
+                try {
+                    // 3. Read File
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+
+                    reader.onload = async () => {
+                        const base64Content = reader.result.split(',')[1];
+
+                        progressBar.style.width = '40%';
+                        progressPercent.textContent = '40%';
+
+                        // 4. Generate Filename
+                        const timestamp = new Date().getTime();
+                        const cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '-').toLowerCase();
+                        const filename = `${timestamp}-${cleanName}`;
+                        const path = `content/images/${filename}`;
+
+                        // 5. Upload to GitHub
+                        const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+
+                        const res = await fetch(url, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `token ${ghConfig.token}`,
+                                'Accept': 'application/vnd.github.v3+json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: `Upload image: ${filename}`,
+                                content: base64Content
+                            })
+                        });
+
+                        if (!res.ok) {
+                            const err = await res.json();
+                            throw new Error(err.message);
+                        }
+
+                        const data = await res.json();
+
+                        progressBar.style.width = '100%';
+                        progressPercent.textContent = '100%';
+
+                        // 6. Insert Image
+                        // Use raw.githubusercontent.com or the download_url from response
+                        // data.content.download_url is usually the raw link
+                        const imageUrl = data.content.download_url;
+
+                        setTimeout(() => {
+                            selectImage(imageUrl, file.name);
+                            progressDiv.classList.add('hidden');
+                            progressBar.style.width = '0%';
+                        }, 500);
+                    };
+
+                } catch (e) {
+                    console.error("Upload Error:", e);
+                    alert(`Erreur lors de l'upload: ${e.message}`);
+                    progressDiv.classList.add('hidden');
+                }
             }
 
             // Close modal on click outside
