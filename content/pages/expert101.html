@@ -1,0 +1,942 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Site SPA - Élégant &amp; Moderne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        .page-section {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .page-section.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            z-index: 20;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transform: translateY(20px);
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .modal-active .modal-content {
+            transform: translateY(0);
+        }
+        /* Tailwind Prose for content readability */
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        @layer components {
+            .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+                @apply text-gray-900 font-extrabold;
+            }
+            .prose p {
+                @apply text-gray-800 leading-relaxed;
+            }
+            .prose a {
+                @apply text-indigo-600 hover:underline;
+            }
+            .prose ul, .prose ol {
+                @apply list-inside;
+            }
+            .prose ul li {
+                @apply list-disc;
+            }
+            .prose ol li {
+                @apply list-decimal;
+            }
+            .prose strong {
+                @apply font-semibold;
+            }
+            .prose em {
+                @apply italic;
+            }
+            .prose img {
+                @apply rounded-lg shadow-md max-w-full h-auto mx-auto;
+            }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.left-0{left:0px}.right-4{right:1rem}.right-6{right:1.5rem}.top-0{top:0px}.top-4{top:1rem}.top-6{top:1.5rem}.z-0{z-index:0}.z-10{z-index:10}.z-50{z-index:50}.z-\[100\]{z-index:100}.mx-auto{margin-left:auto;margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-3{margin-left:0.75rem}.mr-2{margin-right:0.5rem}.mr-3{margin-right:0.75rem}.mr-4{margin-right:1rem}.mt-10{margin-top:2.5rem}.mt-12{margin-top:3rem}.mt-20{margin-top:5rem}.mt-8{margin-top:2rem}.mb-3{margin-bottom:0.75rem}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-0\.5{height:0.125rem}.h-10{height:2.5rem}.h-16{height:4rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-64{height:16rem}.h-8{height:2rem}.h-80{height:20rem}.h-auto{height:auto}.h-full{height:100%}.h-52{height:13rem}.min-h-\[500px\]{min-height:500px}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-16{width:4rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.max-w-none{max-width:none}.flex-grow{flex-grow:1}.origin-left{transform-origin:left}.translate-y-20{--tw-translate-y:5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-x-0{--tw-scale-x:0;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-6 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1.5rem * var(--tw-space-x-reverse));margin-left:calc(1.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t-xl{border-top-left-radius:0.75rem;border-top-right-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-t{border-top-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-indigo-500{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-indigo-500\/80{--tw-gradient-from:rgb(99 102 241 / 0.8) var(--tw-gradient-from-position);--tw-gradient-to:rgb(99 102 241 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-teal-500{--tw-gradient-from:#14b8a6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(20 184 166 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-cyan-600{--tw-gradient-to:#0891b2 var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-purple-600\/80{--tw-gradient-to:rgb(147 51 234 / 0.8) var(--tw-gradient-to-position)}.object-cover{object-fit:cover}.object-center{object-position:center}.p-16{padding:4rem}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pr-4{padding-right:1rem}.pt-24{padding-top:6rem}.pt-\[56\.25\%\]{padding-top:56.25%}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/90{color:rgb(255 255 255 / 0.9)}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-0{opacity:0}.opacity-90{opacity:0.9}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-200{transition-delay:200ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.hover\:-translate-y-1:hover{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-125:hover{--tw-scale-x:1.25;--tw-scale-y:1.25;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.hover\:text-blue-500:hover{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.hover\:text-blue-700:hover{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.hover\:text-cyan-700:hover{--tw-text-opacity:1;color:rgb(14 116 144 / var(--tw-text-opacity, 1))}.hover\:text-gray-900:hover{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.hover\:text-indigo-600:hover{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.hover\:text-indigo-700:hover{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.hover\:shadow-2xl:hover{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-lg:hover{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:opacity-50:disabled{opacity:0.5}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-x-100{--tw-scale-x:1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 640px){.sm\:flex-row{flex-direction:row}.sm\:space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.sm\:space-y-0 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0px * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0px * var(--tw-space-y-reverse))}}@media (min-width: 768px){.md\:h-96{height:24rem}.md\:w-1\/2{width:50%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:p-12{padding:3rem}.md\:p-24{padding:6rem}.md\:text-left{text-align:left}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-7xl{font-size:4.5rem;line-height:1}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:gap-16{gap:4rem}}</style>
+                            
+                        
+                            
+                        
+                            
+                        </head>
+<body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <img id="header-logo" src="https://images.pexels.com/photos/6584748/pexels-photo-6584748.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940" alt="Confident man in glasses with a stylish hat smiling indoors." class="h-10 w-10 mr-3 rounded-full object-cover" style="">
+                <span id="site-title" class="text-2xl font-bold text-indigo-700">Lexpert101</span>
+            </div>
+            <div class="flex-grow flex justify-center space-x-8">
+                <a href="#" data-page="home" class="nav-link text-lg font-medium text-gray-600 hover:text-indigo-600 transition duration-300 relative group">Accueil
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="#" data-page="publications" class="nav-link text-lg font-medium text-gray-600 hover:text-indigo-600 transition duration-300 relative group">Publications
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="#" data-page="videos" class="nav-link text-lg font-medium text-gray-600 hover:text-indigo-600 transition duration-300 relative group">Vidéos
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a href="#" data-page="contact" class="nav-link text-lg font-medium text-gray-600 hover:text-indigo-600 transition duration-300 relative group">Contact
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+            </div>
+            <div class="">
+                <a href="#" data-page="contact" class="nav-link px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300">Contactez-moi</a>
+            </div>
+        </nav>
+    </header>
+
+    <main id="spa-container" class="relative pt-24 min-h-screen">
+
+        <section id="home-page" class="page-section container mx-auto px-6 py-16 active">
+            <div class="relative overflow-hidden rounded-3xl p-16 md:p-24 flex flex-col items-center justify-center text-center text-white min-h-[500px]" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/80 to-purple-600/80 opacity-90 backdrop-blur-sm z-0"></div>
+                <div class="relative z-10">
+                    <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-up">
+                        Votre Partenaire Digital pour l'Excellence
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-10 opacity-90 max-w-3xl animate-fade-in-up delay-200"><ul><li>
+                        Transformons ensemble vos idées en solutions numériques innovantes et performantes.
+                    </li></ul></p>
+                    <a href="#" data-page="contact" class="nav-link inline-flex items-center justify-center px-10 py-4 bg-white text-indigo-700 font-bold text-lg rounded-full shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                        Commencer un Projet
+                        <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-20 py-16 bg-white rounded-3xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 lg:gap-16">
+                <div class="md:w-1/2 flex justify-center">
+                    <img src="https://images.pexels.com/photos/6584748/pexels-photo-6584748.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940" alt="Confident man in glasses with a stylish hat smiling indoors." class="rounded-2xl shadow-lg object-cover w-full h-80 md:h-96 transform hover:scale-105 transition-transform duration-500 ease-in-out" style="">
+                </div>
+                <div class="md:w-1/2 text-center md:text-left">
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-6">À Propos de Moi</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Passionné par le développement web et les technologies émergentes, je crée des expériences utilisateur fluides et des solutions robustes. Mon expertise s'étend de la conception front-end élégante à l'architecture back-end performante, avec une attention particulière aux détails et à l'innovation.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        Je m'engage à livrer des projets qui non seulement répondent aux attentes mais les dépassent, en apportant une valeur ajoutée significative à chaque collaboration.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-20 py-16 text-center">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-12">Mes Domaines d'Expertise</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3M15 10V5a3 3 0 00-3-3H9a3 3 0 00-3 3v5m-4 0h12a2 2 0 012 2v6a2 2 0 01-2 2H2a2 2 0 01-2-2v-6a2 2 0 012-2z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Développement Web Front-end</h3>
+                        <p class="text-gray-600">Création d'interfaces utilisateur intuitives et réactives avec les dernières technologies (React, Vue, Angular).</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Développement Web Back-end</h3>
+                        <p class="text-gray-600">Conception et implémentation de serveurs robustes et d'APIs efficaces (Node.js, Python, PHP).</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Optimisation &amp; SEO</h3>
+                        <p class="text-gray-600">Amélioration des performances des sites et optimisation pour les moteurs de recherche pour une meilleure visibilité.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Gestion de Bases de Données</h3>
+                        <p class="text-gray-600">Conception et maintenance de bases de données relationnelles et NoSQL (SQL, MongoDB).</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2v2.219a2 2 0 00.5 1.54l3.061 3.06A6 6 0 0113.81 21M9 6v3a2 2 0 00.5 1.54l3.06 3.06M22 10.5h-2M21 12a9 9 0 11-18 0M3.05 11h2.9M2.05 13.05h2.9M12 4.01V2.1"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Cloud &amp; DevOps</h3>
+                        <p class="text-gray-600">Déploiement et gestion d'infrastructures sur le cloud (AWS, Azure, GCP) et automatisation (CI/CD).</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 hover:shadow-2xl transition duration-500 ease-in-out group">
+                        <div class="text-indigo-600 mb-6 group-hover:text-purple-700 transition duration-300">
+                            <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17L3 11m0 0l6-6m-6 6h12a6 6 0 010 12H3"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Design UX/UI</h3>
+                        <p class="text-gray-600">Conception d'expériences utilisateur centrées sur l'humain et d'interfaces attrayantes et fonctionnelles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20 py-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-3xl text-center shadow-xl p-8 md:p-12">
+                <h2 class="text-4xl font-extrabold text-white mb-8">Découvrez mon Travail</h2>
+                <p class="text-xl text-white/90 max-w-2xl mx-auto mb-10">
+                    Explorez mes dernières réflexions et tutoriels ou plongez dans ma collection de vidéos pour voir mes projets en action.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-6 sm:space-y-0 sm:space-x-8">
+                    <a href="#" data-page="publications" class="nav-link px-10 py-4 bg-white text-teal-700 font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                        Mes Publications
+                        <svg class="ml-3 w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m7 0V4m0 0l3 3m-3-3l-3 3"></path></svg>
+                    </a>
+                    <a href="#" data-page="videos" class="nav-link px-10 py-4 bg-transparent border-2 border-white text-white font-bold text-lg rounded-full shadow-lg hover:bg-white hover:text-cyan-700 transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                        Mes Vidéos
+                        <svg class="ml-3 w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="publications-page" class="page-section container mx-auto px-6 py-16 hidden">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Mes Dernières Publications</h2>
+            <div id="posts-loading" class="text-center text-lg text-gray-600 animate-pulse py-10 hidden">Chargement des articles...</div>
+            <div id="posts-error" class="text-center text-lg text-red-600 hidden py-10">Une erreur est survenue lors du chargement des articles. Veuillez réessayer plus tard.</div>
+            <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/serverless-limitless-liberez-le-potentiel" data-post-title="Serverless%20%3D%20Limitless%20%3A%20Lib%C3%A9rez%20le%20potentiel%20de%20votre%20d%C3%A9veloppement%20%F0%9F%9A%80" data-post-content="%3Cp%3EL%E2%80%99architecture%20%3Cstrong%3EServerless%3C%2Fstrong%3E%20(sans%20serveur)%20est%20apparue%20non%20seulement%20comme%20une%20tendance%2C%20mais%20comme%20une%20transformation%20fondamentale%20de%20la%20mani%C3%A8re%20dont%20les%20applications%20sont%20construites%20et%20d%C3%A9ploy%C3%A9es.%20Ce%20n%E2%80%99est%20pas%20seulement%20une%20question%20d%E2%80%99absence%20de%20serveurs%20physiques%20(ils%20sont%20toujours%20l%C3%A0%2C%20g%C3%A9r%C3%A9s%20par%20votre%20fournisseur%20de%20cloud)%20%3B%20c%E2%80%99est%20une%20philosophie%20qui%20propulse%20le%20d%C3%A9veloppement%20vers%20de%20nouveaux%20sommets%20de%20%3Cstrong%3Egrandeur%3C%2Fstrong%3E.%3C%2Fp%3E%3Ch2%3E%EF%92%B0%20R%C3%A9duction%20des%20Co%C3%BBts%20et%20Optimisation%20Financi%C3%A8re%3C%2Fh2%3E%3Cp%3EL%E2%80%99un%20des%20arguments%20les%20plus%20convaincants%20en%20faveur%20du%20Serverless%20est%20son%20mod%C3%A8le%20de%20facturation%20%3A%20le%20%3Cstrong%3Epaiement%20%C3%A0%20l%E2%80%99usage%20r%C3%A9el%3C%2Fstrong%3E.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EFin%20des%20d%C3%A9penses%20d%E2%80%99inactivit%C3%A9%20%3A%3C%2Fstrong%3E%20Contrairement%20aux%20serveurs%20traditionnels%20(machines%20virtuelles%20ou%20conteneurs%20persistants)%20qui%20co%C3%BBtent%20de%20l%E2%80%99argent%20m%C3%AAme%20lorsqu%E2%80%99ils%20ne%20traitent%20aucune%20demande%2C%20le%20Serverless%20vous%20facture%20uniquement%20lorsque%20votre%20code%20s%E2%80%99ex%C3%A9cute.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EAdieu%20la%20sur-provisionnement%20%3A%3C%2Fstrong%3E%20Vous%20n%E2%80%99avez%20plus%20besoin%20de%20deviner%20la%20capacit%C3%A9%20maximale%20et%20de%20payer%20pour%20un%20surplus%20de%20ressources.%20Le%20fournisseur%20de%20cloud%20g%C3%A8re%20automatiquement%20la%20mise%20%C3%A0%20l%E2%80%99%C3%A9chelle.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Cp%3ECette%20approche%20permet%20une%20%3Cstrong%3Eoptimisation%20financi%C3%A8re%3C%2Fstrong%3E%20drastique%2C%20surtout%20pour%20les%20applications%20avec%20un%20trafic%20fluctuant.%3C%2Fp%3E%3Ch2%3E%E2%9A%A1%20Mise%20%C3%A0%20l%E2%80%99%C3%89chelle%20Automatique%20et%20%C3%89lastique%3C%2Fh2%3E%3Cp%3ELa%20gestion%20de%20la%20mont%C3%A9e%20en%20charge%20est%20historiquement%20un%20d%C3%A9fi%20majeur%20en%20ing%C3%A9nierie.%20Le%20Serverless%20r%C3%A9sout%20ce%20probl%C3%A8me%20de%20mani%C3%A8re%20%C3%A9l%C3%A9gante.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EScalabilit%C3%A9%20native%20%3A%3C%2Fstrong%3E%20Le%20fournisseur%20de%20cloud%20(AWS%20Lambda%2C%20Azure%20Functions%2C%20Google%20Cloud%20Functions%2C%20etc.)%20g%C3%A8re%20l%E2%80%99%3Cstrong%3E%C3%A9lasticit%C3%A9%3C%2Fstrong%3E%20de%20votre%20application.%20Si%20le%20trafic%20augmente%20soudainement%2C%20la%20plateforme%20cr%C3%A9e%20automatiquement%20les%20instances%20n%C3%A9cessaires%20pour%20g%C3%A9rer%20les%20requ%C3%AAtes.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EPerformance%20et%20fiabilit%C3%A9%20%3A%3C%2Fstrong%3E%20Cette%20mise%20%C3%A0%20l%E2%80%99%C3%A9chelle%20instantan%C3%A9e%20assure%20que%20votre%20application%20reste%20%3Cstrong%3Eperformante%3C%2Fstrong%3E%20et%20%3Cstrong%3Efiable%3C%2Fstrong%3E%2C%20m%C3%AAme%20sous%20une%20charge%20impr%C3%A9vue%2C%20garantissant%20une%20meilleure%20exp%C3%A9rience%20utilisateur.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch2%3E%EF%A7%91%E2%80%8D%EF%92%BB%20Focus%20sur%20le%20Code%2C%20Pas%20sur%20l%E2%80%99Infrastructure%3C%2Fh2%3E%3Cp%3EL%E2%80%99essence%20du%20Serverless%20est%20de%20lib%C3%A9rer%20les%20d%C3%A9veloppeurs%20des%20t%C3%A2ches%20op%C3%A9rationnelles%20fastidieuses.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EMoins%20d%E2%80%99Ops%2C%20plus%20de%20Dev%20%3A%3C%2Fstrong%3E%20Les%20d%C3%A9veloppeurs%20n%E2%80%99ont%20plus%20%C3%A0%20s%E2%80%99occuper%20de%20la%20gestion%20des%20correctifs%20de%20s%C3%A9curit%C3%A9%2C%20de%20la%20mise%20%C3%A0%20jour%20des%20syst%C3%A8mes%20d%E2%80%99exploitation%20(OS)%2C%20de%20la%20configuration%20des%20serveurs%2C%20ou%20de%20l%E2%80%99%C3%A9quilibrage%20de%20charge.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ECycle%20de%20d%C3%A9veloppement%20acc%C3%A9l%C3%A9r%C3%A9%20%3A%3C%2Fstrong%3E%20En%20se%20concentrant%20uniquement%20sur%20la%20%3Cstrong%3Elogique%20m%C3%A9tier%3C%2Fstrong%3E%20(le%20code%20qui%20apporte%20de%20la%20valeur)%2C%20les%20%C3%A9quipes%20peuvent%20it%C3%A9rer%20plus%20rapidement%2C%20ce%20qui%20se%20traduit%20par%20un%20%3Cstrong%3Etemps%20de%20mise%20sur%20le%20march%C3%A9%20(Time-to-Market)%3C%2Fstrong%3E%20consid%C3%A9rablement%20r%C3%A9duit.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch2%3E%EF%9B%A1%EF%B8%8F%20S%C3%A9curit%C3%A9%20et%20Tol%C3%A9rance%20aux%20Pannes%20Int%C3%A9gr%C3%A9es%3C%2Fh2%3E%3Cp%3ELes%20fournisseurs%20de%20cloud%20investissent%20massivement%20dans%20la%20s%C3%A9curit%C3%A9%20et%20la%20r%C3%A9silience%2C%20des%20avantages%20dont%20vous%20h%C3%A9ritez%20automatiquement%20avec%20le%20Serverless.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3ES%C3%A9curit%C3%A9%20g%C3%A9r%C3%A9e%20%3A%3C%2Fstrong%3E%20Les%20mises%20%C3%A0%20jour%20de%20l%E2%80%99infrastructure%20sous-jacente%20et%20les%20correctifs%20de%20s%C3%A9curit%C3%A9%20sont%20appliqu%C3%A9s%20par%20le%20fournisseur%2C%20r%C3%A9duisant%20la%20surface%20d%E2%80%99attaque%20et%20la%20charge%20de%20travail%20de%20votre%20%C3%A9quipe%20de%20s%C3%A9curit%C3%A9.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EHaute%20Disponibilit%C3%A9%20%3A%3C%2Fstrong%3E%20Les%20fonctions%20sont%20con%C3%A7ues%20pour%20%C3%AAtre%20%3Cstrong%3Etol%C3%A9rantes%20aux%20pannes%3C%2Fstrong%3E%20et%20sont%20r%C3%A9parties%20sur%20plusieurs%20zones%20de%20disponibilit%C3%A9%2C%20assurant%20une%20haute%20disponibilit%C3%A9%20sans%20effort%20d%E2%80%99ing%C3%A9nierie%20suppl%C3%A9mentaire%20de%20votre%20part.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch2%3E%EF%94%91%20Conclusion%20%3A%20L%E2%80%99Avenir%20est%20%C3%A0%20la%20Fonction%3C%2Fh2%3E%3Cp%3EL%E2%80%99architecture%20Serverless%20n%E2%80%99est%20pas%20une%20solution%20universelle%2C%20mais%20pour%20de%20nombreux%20cas%20d%E2%80%99usage%2C%20en%20particulier%20les%20API%20Web%2C%20le%20traitement%20de%20donn%C3%A9es%20en%20temps%20r%C3%A9el%2C%20les%20t%C3%A2ches%20planifi%C3%A9es%20ou%20les%20back-ends%20mobiles%2C%20elle%20repr%C3%A9sente%20un%20%3Cstrong%3Ebond%20en%20avant%3C%2Fstrong%3E%20en%20mati%C3%A8re%20d%E2%80%99efficacit%C3%A9%20op%C3%A9rationnelle%20et%20de%20vitesse%20de%20d%C3%A9veloppement.%3C%2Fp%3E%3Cp%3EEn%20d%C3%A9l%C3%A9guant%20la%20gestion%20de%20l%E2%80%99infrastructure%20%C3%A0%20votre%20fournisseur%2C%20votre%20%C3%A9quipe%20peut%20se%20concentrer%20sur%20ce%20qui%20compte%20le%20plus%20%3A%20l%E2%80%99innovation%20et%20la%20cr%C3%A9ation%20de%20valeur%20pour%20vos%20utilisateurs.%20Serverless%20n%E2%80%99est%20pas%20seulement%20g%C3%A9nial%20(%3Cstrong%3Egreatness%3C%2Fstrong%3E)%2C%20c%E2%80%99est%20l%E2%80%99%3Cstrong%3Earchitecture%20de%20demain%3C%2Fstrong%3E%20qui%20rend%20les%20d%C3%A9veloppeurs%20plus%20productifs%20et%20les%20entreprises%20plus%20agiles.%3C%2Fp%3E" data-post-image="https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F83490ecb-3e81-41d0-b339-be46e76a50e5_1200x540.png" data-post-author="Inconnu" data-post-pubdate="Tue%2C%2025%20Nov%202025%2010%3A59%3A45%20GMT">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/83490ecb-3e81-41d0-b339-be46e76a50e5_1200x540.png" alt="Serverless = Limitless : Libérez le potentiel de votre développement 🚀" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Serverless = Limitless : Libérez le potentiel de votre développement 🚀</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Dans le paysage numérique en constante évolution, les entreprises cherchent sans cesse des moyens d’améliorer l’efficacité, de réduire les coûts et d’accélérer le temps de mise sur le marché.</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>25/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/webstudio-la-plateforme-de-developpement" data-post-title="Webstudio%20%3A%20La%20Plateforme%20de%20D%C3%A9veloppement%20Visuel%20Open%20Source" data-post-content="%3Ch3%3EUne%20Approche%20Orient%C3%A9e%20Contr%C3%B4le%20Technique%3C%2Fh3%3E%3Cp%3ECe%20qui%20distingue%20Webstudio%2C%20c%E2%80%99est%20son%20engagement%20%C3%A0%20offrir%20un%20%3Cstrong%3Econtr%C3%B4le%20total%20sur%20le%20code%20CSS%2C%20HTML%20et%20JavaScript%3C%2Fstrong%3E.%20Bien%20qu%E2%80%99il%20utilise%20une%20interface%20de%20glisser-d%C3%A9poser%2C%20l%E2%80%99%C3%A9diteur%20visuel%20est%20construit%20pour%20refl%C3%A9ter%20les%20meilleures%20pratiques%20du%20d%C3%A9veloppement%20web%20moderne.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EContr%C3%B4le%20CSS%20Avanc%C3%A9%3A%3C%2Fstrong%3E%20L%E2%80%99utilisateur%20a%20acc%C3%A8s%20%C3%A0%20%3Cem%3Etoutes%3C%2Fem%3E%20les%20propri%C3%A9t%C3%A9s%20CSS%20et%20les%20attributs%20HTML%2C%20permettant%20un%20design%20au%20pixel%20pr%C3%A8s%20et%20une%20personnalisation%20sans%20restriction%2C%20contrairement%20%C3%A0%20de%20nombreux%20constructeurs%20limitant%20les%20options.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ESyst%C3%A8me%20de%20Style%20R%C3%A9utilisable%20(Tokens)%3A%3C%2Fstrong%3E%20Webstudio%20innove%20avec%20un%20syst%C3%A8me%20de%20%3Cem%3EDesign%20Tokens%3C%2Fem%3E%20qui%20remplace%20les%20classes%20CSS%20traditionnelles.%20Cela%20permet%20de%20cr%C3%A9er%20des%20styles%20coh%C3%A9rents%20et%20r%C3%A9utilisables%20%C3%A0%20l%E2%80%99%C3%A9chelle%20du%20site%20sans%20les%20probl%C3%A8mes%20de%20sp%C3%A9cificit%C3%A9%20et%20de%20gestion%20complexes%20des%20classes%20combin%C3%A9es.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EExpression%20Editor%3A%3C%2Fstrong%3E%20Il%20int%C3%A8gre%20un%20%C3%A9diteur%20d%E2%80%99expressions%20logiques%20directement%20dans%20l%E2%80%99interface%20pour%20g%C3%A9rer%20l%E2%80%99affichage%20conditionnel%2C%20les%20valeurs%20de%20repli%20ou%20la%20concat%C3%A9nation%20de%20donn%C3%A9es%2C%20ouvrant%20la%20voie%20%C3%A0%20des%20interactions%20et%20des%20logiques%20dynamiques%20sans%20quitter%20l%E2%80%99environnement%20visuel.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch3%3EFlexibilit%C3%A9%20et%20%C3%89cosyst%C3%A8me%20Ouvert%3C%2Fh3%3E%3Cp%3EL%E2%80%99architecture%20de%20Webstudio%20est%20r%C3%A9solument%20tourn%C3%A9e%20vers%20l%E2%80%99ouverture%20et%20la%20flexibilit%C3%A9%2C%20deux%20atouts%20majeurs%20pour%20les%20%C3%A9quipes%20multidisciplinaires%20et%20les%20projets%20complexes.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EOpen%20Source%3A%3C%2Fstrong%3E%20Le%20code%20source%20est%20enti%C3%A8rement%20ouvert%2C%20permettant%20aux%20utilisateurs%20d%E2%80%99auditer%2C%20de%20modifier%20et%20de%20contribuer%20au%20projet.%20Cette%20transparence%20est%20un%20gage%20de%20s%C3%A9curit%C3%A9%20et%20d%E2%80%99absence%20de%20%3Cem%3Everrouillage%3C%2Fem%3E%20(vendor%20lock-in).%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EInt%C3%A9gration%20CMS%20Headless%3A%3C%2Fstrong%3E%20La%20plateforme%20est%20con%C3%A7ue%20pour%20se%20connecter%20nativement%20%C3%A0%20%3Cem%3En%E2%80%99importe%20quel%3C%2Fem%3E%20syst%C3%A8me%20de%20gestion%20de%20contenu%20(CMS)%20%3Cem%3Eheadless%3C%2Fem%3E%20(comme%20Strapi%2C%20Contentful%20ou%20Sanity)%20via%20des%20API.%20Cela%20permet%20aux%20utilisateurs%20d%E2%80%99utiliser%20Webstudio%20pour%20le%20front-end%20tout%20en%20g%C3%A9rant%20le%20contenu%20dynamique%20avec%20l%E2%80%99outil%20de%20leur%20choix.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EH%C3%A9bergement%20au%20Choix%20(Self-Hosting)%3A%3C%2Fstrong%3E%20Les%20utilisateurs%20peuvent%20choisir%20d%E2%80%99utiliser%20la%20version%20h%C3%A9berg%C3%A9e%20par%20Webstudio%20ou%20de%20d%C3%A9ployer%20leur%20propre%20instance%20sur%20des%20plateformes%20comme%20Vercel%2C%20Netlify%20ou%20Cloudflare.%20L%E2%80%99utilisateur%20garde%20ainsi%20la%20propri%C3%A9t%C3%A9%20et%20le%20contr%C3%B4le%20de%20ses%20donn%C3%A9es%20et%20de%20son%20infrastructure.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch3%3EFonctionnalit%C3%A9s%20Cl%C3%A9s%20de%20l%E2%80%99%C3%89diteur%3C%2Fh3%3E%3Cp%3EL%E2%80%99%C3%A9diteur%20visuel%20de%20Webstudio%20offre%20un%20ensemble%20de%20fonctionnalit%C3%A9s%20puissantes%20pour%20le%20d%C3%A9veloppement%20front-end%20%3A%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EDesign%20Responsif%20Pr%C3%A9cis%3A%3C%2Fstrong%3E%20Il%20permet%20de%20d%C3%A9finir%20des%20%3Cem%3Epoints%20de%20rupture%3C%2Fem%3E%20(breakpoints)%20personnalis%C3%A9s%20pour%20adapter%20le%20design%20%C3%A0%20chaque%20appareil.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EAnimations%20Avanc%C3%A9es%3A%3C%2Fstrong%3E%20L%E2%80%99outil%20prend%20en%20charge%20les%20animations%20bas%C3%A9es%20sur%20le%20d%C3%A9filement%20(scroll-driven%20animations)%20pour%20cr%C3%A9er%20des%20effets%20fluides%20et%20natifs%20au%20navigateur.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EComposants%20R%C3%A9utilisables%20(Slots)%3A%3C%2Fstrong%3E%20La%20fonctionnalit%C3%A9%20%3Cem%3ESlot%3C%2Fem%3E%20permet%20d%E2%80%99envelopper%20des%20sections%20(comme%20les%20pieds%20de%20page%20ou%20les%20navigations)%20pour%20les%20r%C3%A9utiliser%20facilement%20%C3%A0%20travers%20le%20site.%20Toute%20modification%20apport%C3%A9e%20%C3%A0%20une%20instance%20est%20instantan%C3%A9ment%20refl%C3%A9t%C3%A9e%20partout%20ailleurs.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ESEO%20et%20Performance%3A%3C%2Fstrong%3E%20L%E2%80%99accent%20est%20mis%20sur%20l%E2%80%99alignement%20avec%20les%20standards%20web%20modernes%20pour%20garantir%20des%20performances%20%C3%A9lev%C3%A9es%20et%20une%20optimisation%20pour%20les%20moteurs%20de%20recherche%20(SEO).%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Cp%3EEn%20conclusion%2C%20Webstudio%20est%20un%20outil%20puissant%20qui%20comble%20le%20foss%C3%A9%20entre%20la%20simplicit%C3%A9%20du%20design%20visuel%20et%20les%20exigences%20de%20performance%20et%20de%20contr%C3%B4le%20du%20d%C3%A9veloppement%20web%20professionnel.%20Il%20s%E2%80%99adresse%20particuli%C3%A8rement%20aux%20d%C3%A9veloppeurs%20et%20aux%20designers%20exp%C3%A9riment%C3%A9s%20qui%20souhaitent%20la%20productivit%C3%A9%20d%E2%80%99un%20%C3%A9diteur%20visuel%20sans%20sacrifier%20la%20libert%C3%A9%20technique%20de%20l%E2%80%99open%20source.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Cp%3EVoudriez-vous%20que%20j%E2%80%99approfondisse%20un%20aspect%20sp%C3%A9cifique%20de%20Webstudio%2C%20comme%20son%20syst%C3%A8me%20de%20%3Cem%3EDesign%20Tokens%3C%2Fem%3E%20ou%20son%20int%C3%A9gration%20avec%20les%20CMS%20headless%20%3F%3C%2Fp%3E" data-post-image="https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4375ef05-d830-4a95-aaa2-0b13308ad927_1600x800.webp" data-post-author="Inconnu" data-post-pubdate="Sun%2C%2023%20Nov%202025%2003%3A10%3A30%20GMT">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/4375ef05-d830-4a95-aaa2-0b13308ad927_1600x800.webp" alt="Webstudio : La Plateforme de Développement Visuel Open Source" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Webstudio : La Plateforme de Développement Visuel Open Source</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Webstudio s’est rapidement imposé comme une plateforme de développement visuel d’avant-garde, conçue pour répondre aux besoins des développeurs et des designers. Il se positionne comme une alternati</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>23/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/ajouter-un-event-onclick-javascript" data-post-title="Ajouter%20un%20Event%20%22OnClick%22%20Javascript%20sur%20un%20bouton%20webstudio" data-post-content="%3Cdiv%20class%3D%22captioned-image-container%22%3E%3Cfigure%3E%3Ca%20class%3D%22image-link%20image2%20is-viewable-img%22%20target%3D%22_blank%22%20href%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%22%20data-component-name%3D%22Image2ToDOM%22%3E%3Cdiv%20class%3D%22image2-inset%22%3E%3Cpicture%3E%3Csource%20type%3D%22image%2Fwebp%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_424%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_848%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_1272%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_1456%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%201456w%22%20sizes%3D%22100vw%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%22%20width%3D%221200%22%20height%3D%22628%22%20data-attrs%3D%22%7B%22src%22%3A%22https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%22%2C%22srcNoWatermark%22%3Anull%2C%22fullscreen%22%3Anull%2C%22imageSize%22%3Anull%2C%22height%22%3A628%2C%22width%22%3A1200%2C%22resizeWidth%22%3Anull%2C%22bytes%22%3A27083%2C%22alt%22%3Anull%2C%22title%22%3Anull%2C%22type%22%3A%22image%2Fpng%22%2C%22href%22%3Anull%2C%22belowTheFold%22%3Afalse%2C%22topImage%22%3Atrue%2C%22internalRedirect%22%3A%22https%3A%2F%2Fkacou-oi.com%2Fi%2F179688968%3Fimg%3Dhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%22%2C%22isProcessing%22%3Afalse%2C%22align%22%3Anull%2C%22offset%22%3Afalse%7D%22%20class%3D%22sizing-normal%22%20alt%3D%22%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_424%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_848%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_1272%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png%201456w%22%20sizes%3D%22100vw%22%20fetchpriority%3D%22high%22%3E%3C%2Fpicture%3E%3Cdiv%20class%3D%22image-link-expand%22%3E%3Cdiv%20class%3D%22pencraft%20pc-display-flex%20pc-gap-8%20pc-reset%22%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20restack-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-refresh-cw%22%3E%3Cpath%20d%3D%22M3%2012a9%209%200%200%201%209-9%209.75%209.75%200%200%201%206.74%202.74L21%208%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203v5h-5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%2012a9%209%200%200%201-9%209%209.75%209.75%200%200%201-6.74-2.74L3%2016%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8%2016H3v5%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20view-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-maximize2%20lucide-maximize-2%22%3E%3Cpolyline%20points%3D%2215%203%2021%203%2021%209%22%3E%3C%2Fpolyline%3E%3Cpolyline%20points%3D%229%2021%203%2021%203%2015%22%3E%3C%2Fpolyline%3E%3Cline%20x1%3D%2221%22%20x2%3D%2214%22%20y1%3D%223%22%20y2%3D%2210%22%3E%3C%2Fline%3E%3Cline%20x1%3D%223%22%20x2%3D%2210%22%20y1%3D%2221%22%20y2%3D%2214%22%3E%3C%2Fline%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fa%3E%3C%2Ffigure%3E%3C%2Fdiv%3E%3Cp%3ECependant%2C%20dans%20un%20outil%20comme%20Webstudio%2C%20cette%20approche%20est%20%3Cstrong%3Efortement%20d%C3%A9conseill%C3%A9e%3C%2Fstrong%3E%20pour%20lier%20des%20variables%20d%E2%80%99%C3%A9tat%20(comme%20%3Ccode%3EisModalOpen%3C%2Fcode%3E%20ou%20%3Ccode%3ESelectedPost%3C%2Fcode%3E)%20car%20elle%20n%C3%A9cessite%20de%20conna%C3%AEtre%20et%20d%E2%80%99interagir%20directement%20avec%20l%E2%80%99API%20interne%20JavaScript%20de%20Webstudio%2C%20qui%20n%E2%80%99est%20g%C3%A9n%C3%A9ralement%20pas%20document%C3%A9e%20ou%20stable.%3C%2Fp%3E%3Cp%3EVoici%20la%20comparaison%20des%20deux%20m%C3%A9thodes%20%3A%3C%2Fp%3E%3Cdiv%20class%3D%22subscription-widget-wrap-editor%22%20data-attrs%3D%22%7B%22url%22%3A%22https%3A%2F%2Fkacouoi.substack.com%2Fsubscribe%3F%22%2C%22text%22%3A%22S'abonner%22%2C%22language%22%3A%22fr%22%7D%22%20data-component-name%3D%22SubscribeWidgetToDOM%22%3E%3Cdiv%20class%3D%22subscription-widget%20show-subscribe%22%3E%3Cdiv%20class%3D%22preamble%22%3E%3Cp%20class%3D%22cta-caption%22%3EMerci%20d'avoir%20lu%20M.%20Kacou%20Oi%20-%20Digital%2C%20FinTech%20%26%20Assurances%20!%20Abonnez-vous%20gratuitement%20pour%20recevoir%20de%20nouveaux%20posts%20et%20soutenir%20mon%20travail.%3C%2Fp%3E%3C%2Fdiv%3E%3Cform%20class%3D%22subscription-widget-subscribe%22%3E%3Cinput%20type%3D%22email%22%20class%3D%22email-input%22%20name%3D%22email%22%20placeholder%3D%22Tapez%20votre%20e-mail%E2%80%A6%22%20tabindex%3D%22-1%22%3E%3Cinput%20type%3D%22submit%22%20class%3D%22button%20primary%22%20value%3D%22S'abonner%22%3E%3Cdiv%20class%3D%22fake-input-wrapper%22%3E%3Cdiv%20class%3D%22fake-input%22%3E%3C%2Fdiv%3E%3Cdiv%20class%3D%22fake-button%22%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fform%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch2%3E%EF%86%9A%20M%C3%A9thode%20Recommand%C3%A9e%20(Interface%20Webstudio)%3C%2Fh2%3E%3Cp%3EC%E2%80%99est%20la%20m%C3%A9thode%20que%20nous%20avons%20d%C3%A9taill%C3%A9e%2C%20qui%20utilise%20les%20fonctionnalit%C3%A9s%20natives%20de%20l%E2%80%99%C3%A9diteur%20Webstudio.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EO%C3%B9%20l%E2%80%99appliquer%20%3A%3C%2Fstrong%3E%20Sur%20l%E2%80%99%C3%A9l%C3%A9ment%20r%C3%A9el%20du%20bouton%20%3Cstrong%3E%E2%80%9CLire%20l%E2%80%99article%E2%80%9D%3C%2Fstrong%3E%20dans%20le%20mod%C3%A8le%20de%20la%20Collection.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EAvantages%20%3A%3C%2Fstrong%3E%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EStabilit%C3%A9%20et%20S%C3%A9curit%C3%A9%20%3A%3C%2Fstrong%3E%20Utilise%20l%E2%80%99API%20officielle%20de%20Webstudio%20pour%20manipuler%20les%20variables%2C%20garantissant%20que%20votre%20logique%20ne%20sera%20pas%20rompue%20par%20des%20mises%20%C3%A0%20jour%20internes%20de%20la%20plateforme.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EMaintenance%20Facile%20%3A%3C%2Fstrong%3E%20La%20logique%20est%20visible%20et%20modifiable%20directement%20dans%20l%E2%80%99interface%20graphique%20(panneau%20%3Cstrong%3EInteractions%3C%2Fstrong%3E).%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EAcc%C3%A8s%20Direct%20aux%20Variables%20%3A%3C%2Fstrong%3E%20Vous%20avez%20un%20acc%C3%A8s%20direct%20et%20intuitif%20%C3%A0%20%3Ccode%3EcollectionItem%3C%2Fcode%3E%2C%20%3Ccode%3ESelectedPost%3C%2Fcode%3E%20et%20%3Ccode%3EisModalOpen%3C%2Fcode%3E.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EInconv%C3%A9nients%20%3A%3C%2Fstrong%3E%20N%C3%A9cessite%20de%20localiser%20le%20bon%20onglet%20(%E2%80%9DInteractions%E2%80%9D%20%2F%20%E2%80%9CEvents%E2%80%9D)%20dans%20l%E2%80%99interface%20Webstudio.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch2%3E%EF%92%BB%20M%C3%A9thode%20Alternative%20(Widget%20HTML%20avec%20JavaScript)%3C%2Fh2%3E%3Cp%3ECette%20m%C3%A9thode%20est%20utilis%C3%A9e%20uniquement%20si%20l%E2%80%99interface%20d%E2%80%99interaction%20de%20Webstudio%20est%20trop%20limit%C3%A9e%20ou%20si%20vous%20devez%20ex%C3%A9cuter%20une%20logique%20complexe%20avant%20d%E2%80%99ouvrir%20la%20modale.%3C%2Fp%3E%3Ch3%3E1.%20Structure%20du%20Code%3C%2Fh3%3E%3Cp%3EVous%20placeriez%20ce%20code%20JavaScript%20%3Cstrong%3Esous%3C%2Fstrong%3E%20le%20HTML%20de%20votre%20modale%20dans%20le%20Widget%20HTML%20%3A%3C%2Fp%3E%3Cp%3EHTML%3C%2Fp%3E%3Cpre%3E%3Ccode%3E%3Ccode%3E%3Cscript%3E%0A%20%20%20%20%2F%2F%20NOTE%3A%20C%E2%80%99est%20du%20PSEUDO-CODE.%20Le%20nom%20exact%20des%20fonctions%20(Webstudio.setVariable)%0A%20%20%20%20%2F%2F%20d%C3%A9pend%20de%20l%E2%80%99API%20JavaScript%20interne%20de%20Webstudio%20et%20pourrait%20ne%20pas%20fonctionner.%0A%0A%20%20%20%20document.addEventListener(%E2%80%99DOMContentLoaded%E2%80%99%2C%20function()%20%7B%0A%20%20%20%20%20%20%20%20const%20modalBackdrop%20%3D%20document.getElementById(%E2%80%99custom-blog-modal-backdrop%E2%80%99)%3B%0A%20%20%20%20%20%20%20%20const%20closeButton%20%3D%20document.getElementById(%E2%80%99modal-close-button%E2%80%99)%3B%0A%0A%20%20%20%20%20%20%20%20%2F%2F%20%C3%89v%C3%A9nement%20de%20Fermeture%20dans%20le%20Widget%20HTML%0A%20%20%20%20%20%20%20%20if%20(closeButton)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20closeButton.addEventListener(%E2%80%99click%E2%80%99%2C%20function()%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20Tenter%20d%E2%80%99appeler%20l%E2%80%99API%20interne%20pour%20d%C3%A9finir%20la%20variable%20%C3%A0%20FALSE%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(typeof%20Webstudio%20!%3D%3D%20%E2%80%98undefined%E2%80%99%20%26%26%20Webstudio.setVariable)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Webstudio.setVariable(%E2%80%99isModalOpen%E2%80%99%2C%20false)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2F%20Solution%20de%20secours%20(ne%20met%20pas%20%C3%A0%20jour%20la%20variable%20Webstudio)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20modalBackdrop.style.display%20%3D%20%E2%80%98none%E2%80%99%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%2F%2F%20La%20VRAIE%20DIFFICULT%C3%89%20est%20de%20lier%20le%20bouton%20%E2%80%9CLire%20l%E2%80%99article%E2%80%9D%20de%20la%20COLLECTION%0A%20%20%20%20%20%20%20%20%2F%2F%20%C3%A0%20ce%20code%20sans%20casser%20l%E2%80%99isolation%20des%20composants%20de%20Webstudio.%0A%0A%20%20%20%20%7D)%3B%0A%3C%2Fscript%3E%0A%3C%2Fcode%3E%3C%2Fcode%3E%3C%2Fpre%3E%3Ch3%3E2.%20Le%20Probl%C3%A8me%20de%20l%E2%80%99Acc%C3%A8s%20aux%20Donn%C3%A9es%3C%2Fh3%3E%3Cp%3ELe%20plus%20grand%20d%C3%A9fi%20est%20que%20le%20Widget%20HTML%20est%20isol%C3%A9%20du%20contexte%20de%20la%20%3Cstrong%3ECollection%3C%2Fstrong%3E.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3EProbl%C3%A8me%201%20(Le%20Clic)%20%3A%3C%2Fstrong%3E%20Si%20vous%20mettez%20le%20JavaScript%20du%20clic%20dans%20le%20Widget%20HTML%2C%20il%20ne%20saura%20pas%20identifier%20quel%20bouton%20a%20%C3%A9t%C3%A9%20cliqu%C3%A9%20dans%20la%20Collection.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EProbl%C3%A8me%202%20(Les%20Variables)%20%3A%3C%2Fstrong%3E%20M%C3%AAme%20si%20vous%20capturez%20le%20clic%2C%20vous%20ne%20savez%20pas%20comment%20dire%20%C3%A0%20Webstudio%20%3A%20%3Cstrong%3E%E2%80%9CCopie%20les%20donn%C3%A9es%20de%20%3C%2Fstrong%3E%3Ccode%3EcollectionItem%3C%2Fcode%3E%3Cstrong%3E%20dans%20%3C%2Fstrong%3E%3Ccode%3ESelectedPost%3C%2Fcode%3E%3Cstrong%3E.%E2%80%9D%3C%2Fstrong%3E%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch3%3EConclusion%3C%2Fh3%3E%3Cp%3E%3Cstrong%3EUtilisez%20toujours%20le%20panneau%20%E2%80%9CInteractions%E2%80%9D%20(ou%20%E2%80%9CEvents%E2%80%9D)%20de%20Webstudio%3C%2Fstrong%3E%20pour%20lier%20l%E2%80%99%C3%A9v%C3%A9nement%20%3Cstrong%3EClick%3C%2Fstrong%3E%20et%20d%C3%A9finir%20les%20variables.%20Le%20Widget%20HTML%20doit%20%C3%AAtre%20r%C3%A9serv%C3%A9%20uniquement%20%C3%A0%20l%E2%80%99affichage%20du%20HTML%2FCSS%20de%20la%20modale%20et%2C%20occasionnellement%2C%20%C3%A0%20des%20scripts%20tiers.%3C%2Fp%3E%3Cdiv%20class%3D%22subscription-widget-wrap-editor%22%20data-attrs%3D%22%7B%22url%22%3A%22https%3A%2F%2Fkacouoi.substack.com%2Fsubscribe%3F%22%2C%22text%22%3A%22S'abonner%22%2C%22language%22%3A%22fr%22%7D%22%20data-component-name%3D%22SubscribeWidgetToDOM%22%3E%3Cdiv%20class%3D%22subscription-widget%20show-subscribe%22%3E%3Cdiv%20class%3D%22preamble%22%3E%3Cp%20class%3D%22cta-caption%22%3EMerci%20d'avoir%20lu%20M.%20Kacou%20Oi%20-%20Digital%2C%20FinTech%20%26%20Assurances%20!%20Abonnez-vous%20gratuitement%20pour%20recevoir%20de%20nouveaux%20posts%20et%20soutenir%20mon%20travail.%3C%2Fp%3E%3C%2Fdiv%3E%3Cform%20class%3D%22subscription-widget-subscribe%22%3E%3Cinput%20type%3D%22email%22%20class%3D%22email-input%22%20name%3D%22email%22%20placeholder%3D%22Tapez%20votre%20e-mail%E2%80%A6%22%20tabindex%3D%22-1%22%3E%3Cinput%20type%3D%22submit%22%20class%3D%22button%20primary%22%20value%3D%22S'abonner%22%3E%3Cdiv%20class%3D%22fake-input-wrapper%22%3E%3Cdiv%20class%3D%22fake-input%22%3E%3C%2Fdiv%3E%3Cdiv%20class%3D%22fake-button%22%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fform%3E%3C%2Fdiv%3E%3C%2Fdiv%3E" data-post-image="https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!dy_t!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png" data-post-author="Inconnu" data-post-pubdate="Sun%2C%2023%20Nov%202025%2000%3A48%3A35%20GMT">
+                                <img src="https://substackcdn.com/image/fetch/$s_!dy_t!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png" alt="Ajouter un Event " onclick"="" javascript="" sur="" un="" bouton="" webstudio"="" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Ajouter un Event "OnClick" Javascript sur un bouton webstudio</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Oui, il est techniquement possible d’ajouter l’événement “Click” (et toute autre logique) dans un Widget HTML en utilisant du code JavaScript pur.</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>23/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/lassurance-auto-expliquee-en-5-minutes" data-post-title="L'Assurance%20auto%20expliqu%C3%A9e%20en%205%20minutes" data-post-content="%3Cp%3E%3Cstrong%3EBienvenue%20dans%20cet%20%C3%A9pisode%20podcast%20essentiel%20pour%20d%C3%A9crypter%20les%20m%C3%A9canismes%20complexes%20de%20l%E2%80%99assurance%20des%20V%C3%A9hicules%20Terrestres%20%C3%A0%20Moteur%20(VTM).%3C%2Fstrong%3E%3C%2Fp%3E%3Cp%3ECon%C3%A7u%20%C3%A0%20partir%20d%E2%80%99une%20expertise%20pointue%20en%20conseil%20et%20formation%2C%20ce%20podcast%2C%20structur%C3%A9%20en%20modules%20clairs%2C%20vous%20offre%20les%20cl%C3%A9s%20pour%20comprendre%20et%20appliquer%20les%20r%C3%A8gles%20fondamentales%20de%20l%E2%80%99assurance%20automobile.%3C%2Fp%3E%3Ch3%3EAu%20programme%20de%20cet%20expert-podcast%20%3A%3C%2Fh3%3E%3Ch4%3EI.%20La%20Tarification%20Automobile%20%3A%20D%C3%A9terminer%20la%20Prime%20Juste%3C%2Fh4%3E%3Cp%3EExplorez%20les%20crit%C3%A8res%20techniques%20qui%20r%C3%A9gissent%20le%20calcul%20de%20la%20prime%20d%E2%80%99assurance.%20Nous%20d%C3%A9taillerons%20%3A%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3ELes%20crit%C3%A8res%20li%C3%A9s%20au%20v%C3%A9hicule%20%3A%3C%2Fstrong%3E%20L%E2%80%99usage%20(distinguant%2012%20cat%C3%A9gories%2C%20comme%20les%20v%C3%A9hicules%20de%20tourisme%20priv%C3%A9s%2Fprofessionnels%2C%20les%20v%C3%A9hicules%20de%20transport%20de%20marchandises%2C%20les%20auto-%C3%A9coles%20ou%20les%20taxis-ville)%2C%20ainsi%20que%20les%20caract%C3%A9ristiques%20comme%20la%20puissance%20(chevaux-vapeur)%2C%20la%20source%20d%E2%80%99%C3%A9nergie%2C%20le%20nombre%20de%20places%2C%20la%20charge%20utile%2C%20et%20la%20valeur%20v%C3%A9nale%20ou%20neuve.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ELes%20crit%C3%A8res%20li%C3%A9s%20au%20conducteur%20%3A%3C%2Fstrong%3E%20L%E2%80%99analyse%20de%20la%20sinistralit%C3%A9%20en%20fonction%20de%20l%E2%80%99%C3%A2ge%20(plus%20forte%20chez%20les%20moins%20de%2025%20ans)%2C%20le%20sexe%20(g%C3%A9n%C3%A9ralement%20plus%20%C3%A9lev%C3%A9e%20chez%20les%20hommes)%2C%20la%20situation%20familiale%20(c%C3%A9libataires)%2C%20l%E2%80%99anciennet%C3%A9%20du%20permis%20(novices)%20et%20le%20statut%20socioprofessionnel%20(d%C3%A9l%C3%A9gu%C3%A9s%20m%C3%A9dicaux%2C%20agents%20commerciaux).%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ELes%20r%C3%A8gles%20sp%C3%A9cifiques%20%3A%3C%2Fstrong%3E%20Comprenez%20l%E2%80%99application%20des%20bar%C3%A8mes%20pour%20les%20assurances%20de%20%3Cstrong%3Ecourtes%20dur%C3%A9es%3C%2Fstrong%3E%2C%20les%20r%C3%A9ductions%20de%20primes%20accord%C3%A9es%20aux%20%3Cstrong%3Eflottes%3C%2Fstrong%3E%20(sous%20conditions%20strictes)%2C%20et%20le%20m%C3%A9canisme%20de%20la%20clause%20%3Cstrong%3Ebonus-malus%20(BNS)%3C%2Fstrong%3E%2C%20y%20compris%20le%20calcul%20sp%C3%A9cifique%20pour%20les%20polices%20flottes.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch4%3EII.%20Le%20Cadre%20L%C3%A9gal%20et%20les%20Garanties%3C%2Fh4%3E%3Cp%3ENous%20abordons%20le%20socle%20de%20l%E2%80%99assurance%20auto%2C%20en%20d%C3%A9finissant%20les%20concepts%20l%C3%A9gaux%20incontournables%20%3A%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3ED%C3%A9finitions%20Cl%C3%A9s%20%3A%3C%2Fstrong%3E%20Nous%20%C3%A9claircirons%20les%20notions%20de%20sinistre%2C%20de%20franchise%20(son%20r%C3%B4le%20moralisateur%20et%20le%20fait%20qu%E2%80%99elle%20n%E2%80%99est%20pas%20opposable%20aux%20tiers)%2C%20de%20d%C3%A9ch%C3%A9ance%2C%20de%20prescription%20(biennale%2C%20d%C3%A9cennale%2C%20quinquennale)%2C%20et%20de%20subrogation.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3EL%E2%80%99Obligation%20d%E2%80%99Assurance%20%3A%3C%2Fstrong%3E%20Qui%20est%20assujetti%20(toute%20personne%20dont%20la%20RC%20peut%20%C3%AAtre%20recherch%C3%A9e%20du%20fait%20des%20dommages%20caus%C3%A9s%20par%20un%20VTM%2C%20y%20compris%20remorques)%2C%20les%20sanctions%20en%20cas%20de%20non-respect%2C%20et%20les%20exclusions%20de%20garantie%20sp%C3%A9cifiques%20(comme%20les%20dommages%20caus%C3%A9s%20par%20faute%20intentionnelle%20ou%20le%20d%C3%A9faut%20de%20permis%20de%20conduire).%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ELes%20Garanties%20%3A%3C%2Fstrong%3E%20D%C3%A9tail%20de%20la%20Responsabilit%C3%A9%20Civile%20(RC)%20obligatoire%20et%20des%20garanties%20facultatives%2C%20telles%20que%20la%20Tierce%20Compl%C3%A8te%20(ou%20Tous%20Risques)%2C%20le%20Vol%20%26%20Vol%20%C3%A0%20Main%20Arm%C3%A9e%2C%20l%E2%80%99Incendie%2C%20le%20Bris%20de%20Glace%2C%20et%20l%E2%80%99Individuelle%20Conducteur%2FPersonnes%20Transport%C3%A9es.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch4%3EIII.%20Gestion%20des%20Sinistres%20%3A%20De%20la%20D%C3%A9claration%20au%20R%C3%A8glement%3C%2Fh4%3E%3Cp%3ED%C3%A9couvrez%20les%20proc%C3%A9dures%20d%E2%80%99indemnisation%20pour%20les%20sinistres%20mat%C3%A9riels%20et%20corporels.%3C%2Fp%3E%3Cul%3E%3Cli%3E%3Cp%3E%3Cstrong%3ESinistres%20Mat%C3%A9riels%20(RC)%20%3A%3C%2Fstrong%3E%20Les%20pi%C3%A8ces%20de%20r%C3%A9clamation%20essentielles%20(constat%20d%E2%80%99accident%2C%20rapport%20d%E2%80%99expertise%20ou%20facture%20vis%C3%A9e%20par%20un%20expert)%20et%20le%20processus%20de%20gestion%20inter-compagnies%2C%20incluant%20la%20%3Cstrong%3Econtre-expertise%3C%2Fstrong%3E%20et%20le%20recours%20%C3%A0%20la%20Commission%20Nationale%20d%E2%80%99Arbitrage.%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ESinistres%20Corporels%20(RC)%20%3A%3C%2Fstrong%3E%20La%20distinction%20entre%20victimes%20conductrices%20et%20non-conductrices%20(ces%20derni%C3%A8res%20ne%20subissent%20pas%20l%E2%80%99incidence%20de%20leur%20faute%20sur%20l%E2%80%99indemnisation%20corporelle%2C%20sauf%20si%20la%20faute%20est%20volontaire).%20Nous%20d%C3%A9taillerons%20les%20chefs%20de%20pr%C3%A9judice%20indemnisables%20selon%20le%20code%20C.I.M.A.%20(frais%20de%20traitement%2C%20incapacit%C3%A9%20temporaire%2Fpermanente%2C%20souffrance%20physique%2C%20pr%C3%A9judice%20%C3%A9conomique%20pour%20ayants%20droit).%3C%2Fp%3E%3C%2Fli%3E%3Cli%3E%3Cp%3E%3Cstrong%3ETransaction%20et%20R%C3%A8glement%20%3A%3C%2Fstrong%3E%20Les%20%C3%A9tapes%20cl%C3%A9s%2C%20de%20l%E2%80%99offre%20d%E2%80%99indemnit%C3%A9%20%C3%A0%20la%20signature%20du%20proc%C3%A8s-verbal%20de%20transaction%2C%20et%20le%20d%C3%A9lai%20de%2015%20jours%20pour%20la%20d%C3%A9nonciation%20et%20le%20r%C3%A8glement.%3C%2Fp%3E%3C%2Fli%3E%3C%2Ful%3E%3Ch4%3EIV.%20Le%20Fonds%20de%20Garantie%20Automobile%20(FGA)%3C%2Fh4%3E%3Cp%3ENous%20cl%C3%B4turerons%20par%20l%E2%80%99%C3%A9tude%20du%20FGA%2C%20cr%C3%A9%C3%A9%20pour%20l%E2%80%99indemnisation%20des%20victimes%20d%E2%80%99accidents%20corporels%20lorsque%20l%E2%80%99auteur%20est%20inconnu%2C%20non%20assur%C3%A9%2C%20ou%20si%20son%20contrat%20est%20nul%20ou%20suspendu.%20Vous%20comprendrez%20le%20financement%20du%20FGA%20(notamment%20la%20contribution%20des%20assur%C3%A9s%20%C3%A0%20hauteur%20de%202%25%20de%20la%20prime%20RC%20nette)%20et%20constaterez%20que%20ses%20bases%20d%E2%80%99indemnisation%20(plafonds%20et%20exclusions)%20sont%20r%C3%A9duites%20par%20rapport%20au%20code%20C.I.M.A.%2C%20compte%20tenu%20de%20ses%20ressources%20limit%C3%A9es.%3C%2Fp%3E%3Cp%3ERejoignez-nous%20pour%20transformer%20la%20complexit%C3%A9%20de%20l%E2%80%99assurance%20automobile%20en%20un%20savoir%20ma%C3%AEtris%C3%A9%20et%20partag%C3%A9%20!%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Cp%3EPenser%20%C3%A0%20l%E2%80%99assurance%20automobile%20comme%20%C3%A0%20un%20%3Cstrong%3Esyst%C3%A8me%20de%20navigation%20complexe%3C%2Fstrong%3E%20peut%20%C3%AAtre%20utile%20%3A%20la%20tarification%20repr%C3%A9sente%20les%20cartes%20et%20les%20coordonn%C3%A9es%20initiales%20que%20vous%20entrez%20(d%C3%A9finies%20par%20le%20v%C3%A9hicule%20et%20le%20conducteur)%2C%20tandis%20que%20la%20gestion%20des%20sinistres%20est%20le%20processus%20de%20correction%20de%20cap%20et%20de%20r%C3%A9paration%20des%20dommages%20lorsque%20l%E2%80%99impr%C3%A9vu%20survient%2C%20le%20tout%20guid%C3%A9%20par%20un%20code%20de%20la%20route%20strict%20(le%20cadre%20C.I.M.A.).%3C%2Fp%3E" data-post-image="" data-post-author="Inconnu" data-post-pubdate="Sun%2C%2009%20Nov%202025%2010%3A44%3A58%20GMT">
+                                <img src="https://via.placeholder.com/400x250?text=Article+Image" alt="L'Assurance auto expliquée en 5 minutes" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">L'Assurance auto expliquée en 5 minutes</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Bienvenue dans cet épisode podcast essentiel pour décrypter les mécanismes complexes de l’assurance des Véhicules Terrestres à Moteur (VTM).</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>09/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/le-code-cima-expliquee-simplement" data-post-title="Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes" data-post-content="%3Cp%3ELes%20extraits%20du%20document%20%3Cstrong%3ECODE-CIMA-2019%20%3C%2Fstrong%3Epr%C3%A9sentent%20la%20l%C3%A9gislation%20uniforme%20et%20int%C3%A9gr%C3%A9e%20r%C3%A9gissant%20l%E2%80%99industrie%20des%20assurances%20dans%20les%20%C3%89tats%20africains%20membres%20de%20la%20%3Cstrong%3ECIMA%20(Conf%C3%A9rence%20Interafricaine%20des%20March%C3%A9s%20d%E2%80%99Assurances)%3C%2Fstrong%3E.%20Ce%20code%20d%C3%A9taille%20les%20objectifs%20de%20l%E2%80%99organisation%2C%20notamment%20la%20%3Cstrong%3Erationalisation%20des%20march%C3%A9s%3C%2Fstrong%3E%20et%20le%20%3Cstrong%3Erenforcement%20de%20la%20protection%20des%20assur%C3%A9s%3C%2Fstrong%3E%2C%20tout%20en%20d%C3%A9finissant%20les%20r%C3%B4les%20du%20%3Cstrong%3EConseil%20des%20Ministres%3C%2Fstrong%3E%20et%20de%20la%20%3Cstrong%3ECommission%20R%C3%A9gionale%20de%20Contr%C3%B4le%20des%20Assurances%3C%2Fstrong%3E.%20Il%20%C3%A9tablit%20des%20r%C3%A8gles%20strictes%20concernant%20les%20%3Cstrong%3Econtrats%20d%E2%80%99assurance%3C%2Fstrong%3E%20(vie%2C%20dommages%2C%20automobile)%2C%20la%20%3Cstrong%3Ecomptabilit%C3%A9%3C%2Fstrong%3E%2C%20la%20%3Cstrong%3Esolvabilit%C3%A9%3C%2Fstrong%3E%20des%20entreprises%2C%20les%20%3Cstrong%3Einterm%C3%A9diaires%3C%2Fstrong%3E%2C%20et%20les%20%3Cstrong%3Esanctions%3C%2Fstrong%3E%20en%20cas%20d%E2%80%99infraction.%20Le%20texte%20inclut%20%C3%A9galement%20des%20dispositions%20sp%C3%A9cifiques%20%C3%A0%20la%20%3Cstrong%3Er%C3%A9assurance%3C%2Fstrong%3E%2C%20aux%20%3Cstrong%3Ecomptes%20consolid%C3%A9s%3C%2Fstrong%3E%2C%20et%20%C3%A0%20la%20%3Cstrong%3Elutte%20contre%20le%20blanchiment%20de%20capitaux%3C%2Fstrong%3E%20pour%20garantir%20une%20industrie%20fiable%20et%20comp%C3%A9titive.%3C%2Fp%3E" data-post-image="" data-post-author="Inconnu" data-post-pubdate="Fri%2C%2007%20Nov%202025%2009%3A11%3A05%20GMT">
+                                <img src="https://via.placeholder.com/400x250?text=Article+Image" alt="Le Code CIMA expliqué simplement en 15 Minutes" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Le Code CIMA expliqué simplement en 15 Minutes</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Les extraits du document CODE-CIMA-2019 présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains membres de la CIMA (Conférence Interafricaine des Marchés d’Assurances). Ce code détaille les objectifs de l’organisation, notamment la</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>07/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee" data-post-title="La%20Finance%20de%20l'Assurance%20expliqu%C3%A9e" data-post-content="%3Cp%3ELes%20extraits%20du%20document%20%3Cstrong%3ECODE-CIMA-2019%20%3C%2Fstrong%3Epr%C3%A9sentent%20la%20l%C3%A9gislation%20uniforme%20et%20int%C3%A9gr%C3%A9e%20r%C3%A9gissant%20l%E2%80%99industrie%20des%20assurances%20dans%20les%20%C3%89tats%20africains%20membres%20de%20la%20%3Cstrong%3ECIMA%20(Conf%C3%A9rence%20Interafricaine%20des%20March%C3%A9s%20d%E2%80%99Assurances)%3C%2Fstrong%3E.%20Ce%20code%20d%C3%A9taille%20les%20objectifs%20de%20l%E2%80%99organisation%2C%20notamment%20la%20%3Cstrong%3Erationalisation%20des%20march%C3%A9s%3C%2Fstrong%3E%20et%20le%20%3Cstrong%3Erenforcement%20de%20la%20protection%20des%20assur%C3%A9s%3C%2Fstrong%3E%2C%20tout%20en%20d%C3%A9finissant%20les%20r%C3%B4les%20du%20%3Cstrong%3EConseil%20des%20Ministres%3C%2Fstrong%3E%20et%20de%20la%20%3Cstrong%3ECommission%20R%C3%A9gionale%20de%20Contr%C3%B4le%20des%20Assurances%3C%2Fstrong%3E.%20Il%20%C3%A9tablit%20des%20r%C3%A8gles%20strictes%20concernant%20les%20%3Cstrong%3Econtrats%20d%E2%80%99assurance%3C%2Fstrong%3E%20(vie%2C%20dommages%2C%20automobile)%2C%20la%20%3Cstrong%3Ecomptabilit%C3%A9%3C%2Fstrong%3E%2C%20la%20%3Cstrong%3Esolvabilit%C3%A9%3C%2Fstrong%3E%20des%20entreprises%2C%20les%20%3Cstrong%3Einterm%C3%A9diaires%3C%2Fstrong%3E%2C%20et%20les%20%3Cstrong%3Esanctions%3C%2Fstrong%3E%20en%20cas%20d%E2%80%99infraction.%20Le%20texte%20inclut%20%C3%A9galement%20des%20dispositions%20sp%C3%A9cifiques%20%C3%A0%20la%20%3Cstrong%3Er%C3%A9assurance%3C%2Fstrong%3E%2C%20aux%20%3Cstrong%3Ecomptes%20consolid%C3%A9s%3C%2Fstrong%3E%2C%20et%20%C3%A0%20la%20%3Cstrong%3Elutte%20contre%20le%20blanchiment%20de%20capitaux%3C%2Fstrong%3E%20pour%20garantir%20une%20industrie%20fiable%20et%20comp%C3%A9titive.%3C%2Fp%3E" data-post-image="" data-post-author="Inconnu" data-post-pubdate="Fri%2C%2007%20Nov%202025%2008%3A48%3A49%20GMT">
+                                <img src="https://via.placeholder.com/400x250?text=Article+Image" alt="La Finance de l'Assurance expliquée" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">La Finance de l'Assurance expliquée</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Les extraits du document CODE-CIMA-2019 présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains membres de la CIMA (Conférence Interafricaine des Marchés d’Assurances). Ce code détaille les objectifs de l’organisation, notamment la</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>07/11/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/jamstack-larchitecture-web-moderne" data-post-title="JAMstack%20%3A%20l%E2%80%99architecture%20web%20moderne%20qui%20allie%20vitesse%2C%20s%C3%A9curit%C3%A9%20et%20flexibilit%C3%A9" data-post-content="%3Cp%3EDepuis%20quelques%20ann%C3%A9es%2C%20la%20mani%C3%A8re%20de%20concevoir%20des%20sites%20web%20%C3%A9volue%20rapidement.%20Les%20utilisateurs%20veulent%20des%20pages%20plus%20rapides%2C%20plus%20s%C3%A9curis%C3%A9es%20et%20accessibles%20partout%2C%20tandis%20que%20les%20d%C3%A9veloppeurs%20cherchent%20des%20m%C3%A9thodes%20plus%20efficaces%20pour%20cr%C3%A9er%20et%20maintenir%20ces%20projets.%20C%E2%80%99est%20dans%20ce%20contexte%20qu%E2%80%99est%20n%C3%A9e%20la%20%3Cstrong%3EJAMstack%3C%2Fstrong%3E%2C%20une%20architecture%20web%20moderne%20qui%20repense%20totalement%20la%20fa%C3%A7on%20de%20livrer%20le%20contenu%20en%20ligne.%3C%2Fp%3E%3Cdiv%20class%3D%22captioned-image-container%22%3E%3Cfigure%3E%3Ca%20class%3D%22image-link%20image2%20is-viewable-img%22%20target%3D%22_blank%22%20href%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%22%20data-component-name%3D%22Image2ToDOM%22%3E%3Cdiv%20class%3D%22image2-inset%22%3E%3Cpicture%3E%3Csource%20type%3D%22image%2Fwebp%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_424%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_848%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_1272%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_1456%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%201456w%22%20sizes%3D%22100vw%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%22%20width%3D%221200%22%20height%3D%22674%22%20data-attrs%3D%22%7B%22src%22%3A%22https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%22%2C%22srcNoWatermark%22%3Anull%2C%22fullscreen%22%3Anull%2C%22imageSize%22%3Anull%2C%22height%22%3A674%2C%22width%22%3A1200%2C%22resizeWidth%22%3Anull%2C%22bytes%22%3A29470%2C%22alt%22%3Anull%2C%22title%22%3Anull%2C%22type%22%3A%22image%2Fjpeg%22%2C%22href%22%3Anull%2C%22belowTheFold%22%3Afalse%2C%22topImage%22%3Atrue%2C%22internalRedirect%22%3A%22https%3A%2F%2Fkacouoi.substack.com%2Fi%2F170549026%3Fimg%3Dhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%22%2C%22isProcessing%22%3Afalse%2C%22align%22%3Anull%2C%22offset%22%3Afalse%7D%22%20class%3D%22sizing-normal%22%20alt%3D%22%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_424%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_848%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_1272%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg%201456w%22%20sizes%3D%22100vw%22%20fetchpriority%3D%22high%22%3E%3C%2Fpicture%3E%3Cdiv%20class%3D%22image-link-expand%22%3E%3Cdiv%20class%3D%22pencraft%20pc-display-flex%20pc-gap-8%20pc-reset%22%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20restack-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-refresh-cw%22%3E%3Cpath%20d%3D%22M3%2012a9%209%200%200%201%209-9%209.75%209.75%200%200%201%206.74%202.74L21%208%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203v5h-5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%2012a9%209%200%200%201-9%209%209.75%209.75%200%200%201-6.74-2.74L3%2016%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8%2016H3v5%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20view-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-maximize2%20lucide-maximize-2%22%3E%3Cpolyline%20points%3D%2215%203%2021%203%2021%209%22%3E%3C%2Fpolyline%3E%3Cpolyline%20points%3D%229%2021%203%2021%203%2015%22%3E%3C%2Fpolyline%3E%3Cline%20x1%3D%2221%22%20x2%3D%2214%22%20y1%3D%223%22%20y2%3D%2210%22%3E%3C%2Fline%3E%3Cline%20x1%3D%223%22%20x2%3D%2210%22%20y1%3D%2221%22%20y2%3D%2214%22%3E%3C%2Fline%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fa%3E%3C%2Ffigure%3E%3C%2Fdiv%3E%3Cp%3E%3C%2Fp%3E%3Ch2%3E1.%20Qu%E2%80%99est-ce%20que%20la%20JAMstack%20%3F%3C%2Fh2%3E%3Cp%3ELa%20%3Cstrong%3EJAMstack%3C%2Fstrong%3E%20repose%20sur%20trois%20piliers%20%3A%20%3Cstrong%3EJavaScript%3C%2Fstrong%3E%2C%20%3Cstrong%3EAPIs%3C%2Fstrong%3E%20et%20%3Cstrong%3EMarkup%3C%2Fstrong%3E.%20Contrairement%20aux%20approches%20classiques%20o%C3%B9%20le%20serveur%20construit%20les%20pages%20%C3%A0%20chaque%20requ%C3%AAte%2C%20cette%20m%C3%A9thode%20g%C3%A9n%C3%A8re%20des%20fichiers%20statiques%20%C3%A0%20l%E2%80%99avance%20et%20les%20diffuse%20via%20un%20CDN.%20Le%20r%C3%A9sultat%20%3A%20un%20site%20plus%20rapide%2C%20plus%20s%C3%BBr%20et%20plus%20facile%20%C3%A0%20faire%20%C3%A9voluer%2C%20tout%20en%20s%C3%A9parant%20clairement%20le%20frontend%20et%20le%20backend.%3C%2Fp%3E%3Ch1%3E2.%20Les%20avantages%20de%20la%20JAMstack%3C%2Fh1%3E%3Cp%3ESon%20premier%20avantage%20est%20la%20%3Cstrong%3Eperformance%3C%2Fstrong%3E%2C%20car%20les%20fichiers%20statiques%20se%20chargent%20presque%20instantan%C3%A9ment.%20Elle%20offre%20%C3%A9galement%20une%20%3Cstrong%3Emeilleure%20s%C3%A9curit%C3%A9%3C%2Fstrong%3E%2C%20puisque%20le%20serveur%20est%20r%C3%A9duit%20%C3%A0%20sa%20plus%20simple%20expression%2C%20limitant%20ainsi%20les%20failles%20potentielles.%20De%20plus%2C%20elle%20est%20%3Cstrong%3Ehautement%20scalable%3C%2Fstrong%3E%20%3A%20un%20m%C3%AAme%20site%20peut%20servir%20des%20millions%20de%20visiteurs%20sans%20n%C3%A9cessiter%20une%20infrastructure%20lourde%20et%20co%C3%BBteuse.%3C%2Fp%3E%3Ch1%3E3.%20Les%20technologies%20cl%C3%A9s%20de%20l%E2%80%99%C3%A9cosyst%C3%A8me%3C%2Fh1%3E%3Cp%3ELa%20JAMstack%20s%E2%80%99appuie%20sur%20%3Cstrong%3EJavaScript%3C%2Fstrong%3E%20pour%20la%20logique%20c%C3%B4t%C3%A9%20client%2C%20sur%20les%20%3Cstrong%3EAPIs%3C%2Fstrong%3E%20pour%20la%20r%C3%A9cup%C3%A9ration%20de%20donn%C3%A9es%20dynamiques%2C%20et%20sur%20le%20%3Cstrong%3EMarkup%3C%2Fstrong%3E%20pour%20les%20pages%20pr%C3%A9-g%C3%A9n%C3%A9r%C3%A9es.%20Des%20outils%20comme%20%3Cstrong%3ENext.js%3C%2Fstrong%3E%2C%20%3Cstrong%3EGatsby%3C%2Fstrong%3E%20ou%20%3Cstrong%3EEleventy%3C%2Fstrong%3E%20facilitent%20ce%20processus%2C%20souvent%20associ%C3%A9s%20%C3%A0%20des%20CMS%20headless%20comme%20%3Cstrong%3EContentful%3C%2Fstrong%3E%2C%20%3Cstrong%3ESanity%3C%2Fstrong%3E%20ou%20%3Cstrong%3EDirectus%3C%2Fstrong%3E%20pour%20g%C3%A9rer%20le%20contenu%20sans%20serveur%20monolithique.%3C%2Fp%3E%3Ch1%3E4.%20Un%20choix%20strat%C3%A9gique%20pour%20le%20futur%20du%20web%3C%2Fh1%3E%3Cp%3ELa%20JAMstack%20r%C3%A9pond%20aux%20exigences%20modernes%20%3A%20rapidit%C3%A9%2C%20s%C3%A9curit%C3%A9%20et%20flexibilit%C3%A9.%20Elle%20attire%20les%20entreprises%20qui%20veulent%20offrir%20une%20exp%C3%A9rience%20utilisateur%20optimale%20tout%20en%20r%C3%A9duisant%20la%20complexit%C3%A9%20de%20leurs%20syst%C3%A8mes.%20Avec%20l%E2%80%99essor%20des%20architectures%20%3Cstrong%3EAPI-first%3C%2Fstrong%3E%20et%20des%20CMS%20headless%2C%20la%20JAMstack%20semble%20destin%C3%A9e%20%C3%A0%20jouer%20un%20r%C3%B4le%20central%20dans%20le%20d%C3%A9veloppement%20web%20de%20demain.%3C%2Fp%3E" data-post-image="https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!OGvc!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg" data-post-author="Inconnu" data-post-pubdate="Sat%2C%2009%20Aug%202025%2017%3A55%3A19%20GMT">
+                                <img src="https://substackcdn.com/image/fetch/$s_!OGvc!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg" alt="JAMstack : l’architecture web moderne qui allie vitesse, sécurité et flexibilité" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">JAMstack : l’architecture web moderne qui allie vitesse, sécurité et flexibilité</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Depuis quelques années, la manière de concevoir des sites web évolue rapidement.</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>09/08/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/video-vers-podcast" data-post-title="Demo%20Vid%C3%A9o%20vers%20podcast" data-post-content="%3Cp%3ECet%20%C3%A9pisode%20a%20%C3%A9t%C3%A9%20g%C3%A9n%C3%A9r%C3%A9%20%C3%A0%20partie%20d%E2%80%99une%20vid%C3%A9o%3C%2Fp%3E" data-post-image="" data-post-author="Inconnu" data-post-pubdate="Sun%2C%2013%20Jul%202025%2001%3A19%3A45%20GMT">
+                                <img src="https://via.placeholder.com/400x250?text=Article+Image" alt="Demo Vidéo vers podcast" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Demo Vidéo vers podcast</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Episode issue d'une vidéo</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>13/07/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="https://kacouoi.substack.com/p/update-top-10-des-startups-digitales" data-post-title="Top%2010%20des%20startups%20digitales%20africaines%20%C3%A0%20suivre%20en%202025" data-post-content="%3Cp%3ELoin%20des%20clich%C3%A9s%2C%20l'Afrique%20est%20aujourd%E2%80%99hui%20l%E2%80%99un%20des%20continents%20les%20plus%20dynamiques%20en%20mati%C3%A8re%20d%E2%80%99innovation%20num%C3%A9rique.%20De%20la%20fintech%20%C3%A0%20l%E2%80%99agritech%20en%20passant%20par%20la%20e-sant%C3%A9%20et%20l%E2%80%99edtech%2C%20des%20startups%20africaines%20bousculent%20les%20codes%2C%20attirent%20les%20investisseurs%20et%20changent%20la%20vie%20des%20populations.%3C%2Fp%3E%3Cp%3EVoici%20%3Cstrong%3E10%20startups%20africaines%3C%2Fstrong%3E%20%C3%A0%20surveiller%20de%20pr%C3%A8s%20en%202025%20%E2%80%93%20elles%20pourraient%20bien%20fa%C3%A7onner%20le%20futur%20du%20continent.%3C%2Fp%3E%3Cdiv%20class%3D%22captioned-image-container%22%3E%3Cfigure%3E%3Ca%20class%3D%22image-link%20image2%20is-viewable-img%22%20target%3D%22_blank%22%20href%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%22%20data-component-name%3D%22Image2ToDOM%22%3E%3Cdiv%20class%3D%22image2-inset%22%3E%3Cpicture%3E%3Csource%20type%3D%22image%2Fwebp%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_424%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_848%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_1272%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_1456%2Cc_limit%2Cf_webp%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%201456w%22%20sizes%3D%22100vw%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%22%20width%3D%22640%22%20height%3D%22360%22%20data-attrs%3D%22%7B%22src%22%3A%22https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%22%2C%22srcNoWatermark%22%3Anull%2C%22fullscreen%22%3Anull%2C%22imageSize%22%3Anull%2C%22height%22%3A360%2C%22width%22%3A640%2C%22resizeWidth%22%3Anull%2C%22bytes%22%3A27952%2C%22alt%22%3Anull%2C%22title%22%3Anull%2C%22type%22%3A%22image%2Fjpeg%22%2C%22href%22%3Anull%2C%22belowTheFold%22%3Afalse%2C%22topImage%22%3Atrue%2C%22internalRedirect%22%3A%22https%3A%2F%2Fkacouoi.substack.com%2Fi%2F160661470%3Fimg%3Dhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%22%2C%22isProcessing%22%3Afalse%2C%22align%22%3Anull%2C%22offset%22%3Afalse%7D%22%20class%3D%22sizing-normal%22%20alt%3D%22%22%20srcset%3D%22https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_424%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%20424w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_848%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%20848w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_1272%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%201272w%2C%20https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg%201456w%22%20sizes%3D%22100vw%22%20fetchpriority%3D%22high%22%3E%3C%2Fpicture%3E%3Cdiv%20class%3D%22image-link-expand%22%3E%3Cdiv%20class%3D%22pencraft%20pc-display-flex%20pc-gap-8%20pc-reset%22%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20restack-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-refresh-cw%22%3E%3Cpath%20d%3D%22M3%2012a9%209%200%200%201%209-9%209.75%209.75%200%200%201%206.74%202.74L21%208%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203v5h-5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%2012a9%209%200%200%201-9%209%209.75%209.75%200%200%201-6.74-2.74L3%2016%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8%2016H3v5%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3Cbutton%20tabindex%3D%220%22%20type%3D%22button%22%20class%3D%22pencraft%20pc-reset%20pencraft%20icon-container%20view-image%22%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-maximize2%20lucide-maximize-2%22%3E%3Cpolyline%20points%3D%2215%203%2021%203%2021%209%22%3E%3C%2Fpolyline%3E%3Cpolyline%20points%3D%229%2021%203%2021%203%2015%22%3E%3C%2Fpolyline%3E%3Cline%20x1%3D%2221%22%20x2%3D%2214%22%20y1%3D%223%22%20y2%3D%2210%22%3E%3C%2Fline%3E%3Cline%20x1%3D%223%22%20x2%3D%2210%22%20y1%3D%2221%22%20y2%3D%2214%22%3E%3C%2Fline%3E%3C%2Fsvg%3E%3C%2Fbutton%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fdiv%3E%3C%2Fa%3E%3C%2Ffigure%3E%3C%2Fdiv%3E%3Cp%3E%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E1.%20%3Cstrong%3EChipper%20Cash%3C%2Fstrong%3E%20(Ouganda%20%EF%87%BA%EF%87%AC%20%2F%20Ghana%20%EF%87%AC%EF%87%AD)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Fintech%3C%2Fstrong%3E%3Cbr%3EApplication%20de%20transfert%20d%E2%80%99argent%20sans%20frais%20entre%20pays%20africains.%20D%C3%A9j%C3%A0%20implant%C3%A9e%20dans%20plusieurs%20pays%2C%20elle%20facilite%20les%20paiements%20transfrontaliers%20et%20a%20lev%C3%A9%20des%20centaines%20de%20millions%20de%20dollars.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20Devenir%20le%20PayPal%20de%20l%E2%80%99Afrique.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E2.%20%3Cstrong%3E54gene%3C%2Fstrong%3E%20(Nigeria%20%EF%87%B3%EF%87%AC)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20HealthTech%20%2F%20Biotech%3C%2Fstrong%3E%3Cbr%3E54gene%20collecte%20et%20analyse%20des%20donn%C3%A9es%20g%C3%A9n%C3%A9tiques%20africaines%20pour%20faire%20avancer%20la%20m%C3%A9decine%20de%20pr%C3%A9cision%20sur%20le%20continent.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20D%C3%A9velopper%20la%20recherche%20m%C3%A9dicale%20africaine%20%C3%A0%20l%E2%80%99%C3%A9chelle%20mondiale.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E3.%20%3Cstrong%3EWasoko%3C%2Fstrong%3E%20(ex-Sokowatch)%20%E2%80%93%20(Kenya%20%EF%87%B0%EF%87%AA)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20E-commerce%20B2B%20%2F%20Logistique%3C%2Fstrong%3E%3Cbr%3EPermet%20aux%20petits%20commer%C3%A7ants%20d%E2%80%99acc%C3%A9der%20%C3%A0%20des%20produits%20en%20gros%20via%20une%20application%20mobile%20avec%20livraison.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20Num%C3%A9riser%20la%20distribution%20traditionnelle%20en%20Afrique.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E4.%20%3Cstrong%3EYassir%3C%2Fstrong%3E%20(Alg%C3%A9rie%20%EF%87%A9%EF%87%BF)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Mobilit%C3%A9%20%2F%20Super%20App%3C%2Fstrong%3E%3Cbr%3E%C3%80%20la%20fois%20VTC%2C%20livraison%2C%20et%20paiement%20mobile.%20Pr%C3%A9sente%20dans%20plusieurs%20pays%20du%20Maghreb%20et%20en%20pleine%20expansion%20en%20Afrique%20subsaharienne.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20%C3%8Atre%20l%E2%80%99%C3%A9quivalent%20de%20Gojek%20ou%20Grab%20pour%20l%E2%80%99Afrique.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E5.%20%3Cstrong%3ELori%20Systems%3C%2Fstrong%3E%20(Kenya%20%EF%87%B0%EF%87%AA)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Logistique%20%2F%20Supply%20Chain%3C%2Fstrong%3E%3Cbr%3EOptimise%20le%20transport%20de%20marchandises%20gr%C3%A2ce%20%C3%A0%20une%20plateforme%20connectant%20exp%C3%A9diteurs%20et%20transporteurs.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20R%C3%A9duire%20les%20co%C3%BBts%20logistiques%20en%20Afrique%20de%20l%E2%80%99Est%20et%20de%20l%E2%80%99Ouest.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E6.%20%3Cstrong%3EFlutterwave%3C%2Fstrong%3E%20(Nigeria%20%EF%87%B3%EF%87%AC)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Fintech%3C%2Fstrong%3E%3Cbr%3EFournit%20une%20infrastructure%20de%20paiements%20pour%20les%20entreprises%20africaines.%20Partenaire%20de%20g%C3%A9ants%20comme%20PayPal%20ou%20Uber.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20Devenir%20l%E2%80%99infrastructure%20financi%C3%A8re%20par%20d%C3%A9faut%20en%20Afrique.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E7.%20%3Cstrong%3EPaps%3C%2Fstrong%3E%20(S%C3%A9n%C3%A9gal%20%EF%87%B8%EF%87%B3)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Logistique%20urbaine%3C%2Fstrong%3E%3Cbr%3EPlateforme%20de%20livraison%20urbaine%20et%20d%E2%80%99e-commerce%20pour%20les%20PME%20d%E2%80%99Afrique%20de%20l%E2%80%99Ouest.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20Structurer%20la%20cha%C3%AEne%20logistique%20du%20dernier%20kilom%C3%A8tre.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E8.%20%3Cstrong%3EZindi%3C%2Fstrong%3E%20(Afrique%20du%20Sud%20%EF%87%BF%EF%87%A6)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Data%20Science%20%2F%20IA%3C%2Fstrong%3E%3Cbr%3EPlateforme%20de%20comp%C3%A9titions%20de%20science%20des%20donn%C3%A9es%2C%20avec%20des%20challenges%20li%C3%A9s%20aux%20probl%C3%A9matiques%20africaines%20(sant%C3%A9%2C%20agriculture%2C%20%C3%A9ducation%E2%80%A6).%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20Former%20une%20g%C3%A9n%C3%A9ration%20de%20data%20scientists%20africains.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E9.%20%3Cstrong%3EBrass%3C%2Fstrong%3E%20(Nigeria%20%EF%87%B3%EF%87%AC)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Fintech%20%2F%20Banque%20pro%3C%2Fstrong%3E%3Cbr%3EOffre%20des%20services%20bancaires%20digitaux%20sp%C3%A9cialement%20pens%C3%A9s%20pour%20les%20PME%20africaines.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20%C3%8Atre%20la%20premi%C3%A8re%20banque%20100%20%25%20digitale%20pour%20les%20entreprises%20africaines.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E10.%20%3Cstrong%3EGebeya%3C%2Fstrong%3E%20(%C3%89thiopie%20%EF%87%AA%EF%87%B9)%3C%2Fh3%3E%3Cp%3E%3Cstrong%3ESecteur%20%3A%20Talents%20Tech%20%2F%20Freelance%3C%2Fstrong%3E%3Cbr%3EMarketplace%20de%20talents%20tech%20africains.%20Forme%20et%20connecte%20d%C3%A9veloppeurs%2C%20designers%20et%20experts%20%C3%A0%20des%20missions%20partout%20dans%20le%20monde.%3Cbr%3E%E2%9E%A1%EF%B8%8F%20%3Cstrong%3EObjectif%202025%3C%2Fstrong%3E%20%3A%20%C3%8Atre%20le%20Toptal%20ou%20Upwork%20de%20l%E2%80%99Afrique.%3C%2Fp%3E%3Cdiv%3E%3Chr%3E%3C%2Fdiv%3E%3Ch3%3E%EF%8C%8D%20Une%20dynamique%20continentale%20%C3%A0%20fort%20potentiel%3C%2Fh3%3E%3Cp%3EL%E2%80%99avenir%20du%20digital%20africain%20s%E2%80%99%C3%A9crit%20d%C3%A8s%20maintenant%2C%20et%20ces%20startups%20en%20sont%20la%20preuve.%20Port%C3%A9es%20par%20des%20entrepreneurs%20visionnaires%2C%20elles%20r%C3%A9solvent%20des%20probl%C3%A8mes%20locaux%20avec%20des%20solutions%20innovantes%2C%20souvent%20plus%20agiles%20que%20les%20mod%C3%A8les%20occidentaux.%3C%2Fp%3E%3Cp%3E%EF%92%A1%20%3Cstrong%3E%C3%80%20retenir%3C%2Fstrong%3E%20%3A%20L%E2%80%99%C3%A9cosyst%C3%A8me%20tech%20africain%20n%E2%80%99en%20est%20qu%E2%80%99%C3%A0%20ses%20d%C3%A9buts.%20Investir%2C%20collaborer%20ou%20simplement%20s%E2%80%99en%20inspirer%20pourrait%20bien%20%C3%AAtre%20un%20pari%20gagnant%3C%2Fp%3E%3Cp%3E.%3C%2Fp%3E" data-post-image="https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_!-y0P!%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg" data-post-author="Inconnu" data-post-pubdate="Sat%2C%2005%20Apr%202025%2018%3A15%3A41%20GMT">
+                                <img src="https://substackcdn.com/image/fetch/$s_!-y0P!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg" alt="Top 10 des startups digitales africaines à suivre en 2025" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">Top 10 des startups digitales africaines à suivre en 2025</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">Loin des clichés, l'Afrique est aujourd’hui l’un des continents les plus dynamiques en matière d’innovation numérique.</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>Auteur inconnu</span>
+                                        <span>05/04/2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            <div id="posts-pagination" class="flex justify-center mt-12 space-x-4">
+                <button id="posts-prev" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">Précédent</button>
+                <button id="posts-next" class="px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+            </div>
+        </section>
+
+        <section id="videos-page" class="page-section container mx-auto px-6 py-16 hidden">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Ma Derniéres Vidéos</h2>
+            <div id="videos-loading" class="text-center text-lg text-gray-600 animate-pulse py-10 hidden">Chargement des vidéos...</div>
+            <div id="videos-error" class="text-center text-lg text-red-600 hidden py-10">Une erreur est survenue lors du chargement des vidéos. Veuillez réessayer plus tard.</div>
+            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=BluapOJy9Og" data-video-title="StackPages%20Live%20Nocode%20Page%20Editor%20-%20Quick%20Overview" data-video-description="">
+                                <img src="https://i3.ytimg.com/vi/BluapOJy9Og/hqdefault.jpg" alt="StackPages Live Nocode Page Editor - Quick Overview" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">StackPages Live Nocode Page Editor - Quick Overview</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3"></p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=4xfP139WWwo" data-video-title="StackPages%20AI%20Code%20Editor%20-%20IDE%20Quick%20Demo" data-video-description="">
+                                <img src="https://i1.ytimg.com/vi/4xfP139WWwo/hqdefault.jpg" alt="StackPages AI Code Editor - IDE Quick Demo" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">StackPages AI Code Editor - IDE Quick Demo</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3"></p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=vnz3uzvjNO4" data-video-title="StackPages%20Headlass%20CMS%20Quick%20Overview" data-video-description="">
+                                <img src="https://i3.ytimg.com/vi/vnz3uzvjNO4/hqdefault.jpg" alt="StackPages Headlass CMS Quick Overview" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">StackPages Headlass CMS Quick Overview</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3"></p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=EP-ZhTSmJ8M" data-video-title="in%20Action%3A%20Switch%20From%20Code%20editor%20to%20Visual%20Builder" data-video-description="">
+                                <img src="https://i2.ytimg.com/vi/EP-ZhTSmJ8M/hqdefault.jpg" alt="in Action: Switch From Code editor to Visual Builder" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">in Action: Switch From Code editor to Visual Builder</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3"></p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=_pJCo_H4YO4" data-video-title="L'usage%20change%20tout%20%23substack%20%23shorts" data-video-description="This%20is%20a%20clip%20from%20https%3A%2F%2Fkacou-oi.com%2Fp%2Flassurance-auto-expliquee-en-5-minutes%3Futm_source%3Dyoutube_shorts%0A%0ASee%20the%20full%20video%3A%20https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dns0D7dEv678%0A%0A%23shorts%20%23substack">
+                                <img src="https://i4.ytimg.com/vi/_pJCo_H4YO4/hqdefault.jpg" alt="L'usage change tout #substack #shorts" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">L'usage change tout #substack #shorts</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">This is a clip from https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube_shorts
+
+See the full video: https://www.youtube.com/watch?v=ns0D7dEv678
+
+#shorts #substack</p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=puKZY6cqxwY" data-video-title="Le%20filet%3A%20Fonds%20de%20garantie%20%23substack%20%23shorts" data-video-description="This%20is%20a%20clip%20from%20https%3A%2F%2Fkacou-oi.com%2Fp%2Flassurance-auto-expliquee-en-5-minutes%3Futm_source%3Dyoutube_shorts%0A%0ASee%20the%20full%20video%3A%20https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dns0D7dEv678%0A%0A%23shorts%20%23substack">
+                                <img src="https://i1.ytimg.com/vi/puKZY6cqxwY/hqdefault.jpg" alt="Le filet: Fonds de garantie #substack #shorts" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">Le filet: Fonds de garantie #substack #shorts</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">This is a clip from https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube_shorts
+
+See the full video: https://www.youtube.com/watch?v=ns0D7dEv678
+
+#shorts #substack</p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=ns0D7dEv678" data-video-title="L'Assurance%20auto%20expliqu%C3%A9e%20en%205%20minutes" data-video-description="https%3A%2F%2Fkacou-oi.com%2Fp%2Flassurance-auto-expliquee-en-5-minutes%3Futm_source%3Dyoutube">
+                                <img src="https://i3.ytimg.com/vi/ns0D7dEv678/hqdefault.jpg" alt="L'Assurance auto expliquée en 5 minutes" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">L'Assurance auto expliquée en 5 minutes</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube</p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=1xSHxiXAVrc" data-video-title="Provisions%3A%20promises%20on%20paper%20%23substack%20%23shorts" data-video-description="This%20is%20a%20clip%20from%20https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fla-finance-de-lassurance-expliquee%3Futm_source%3Dyoutube_shorts%0A%0ASee%20the%20full%20video%3A%20https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Diu8HKA1H-Dg%0A%0A%23shorts%20%23substack">
+                                <img src="https://i2.ytimg.com/vi/1xSHxiXAVrc/hqdefault.jpg" alt="Provisions: promises on paper #substack #shorts" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">Provisions: promises on paper #substack #shorts</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">This is a clip from https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee?utm_source=youtube_shorts
+
+See the full video: https://www.youtube.com/watch?v=iu8HKA1H-Dg
+
+#shorts #substack</p>
+                                </div>
+                            </div>
+                        
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card" data-video-link="https://www.youtube.com/watch?v=iu8HKA1H-Dg" data-video-title="La%20Finance%20de%20l'Assurance%20expliqu%C3%A9e" data-video-description="https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fla-finance-de-lassurance-expliquee%3Futm_source%3Dyoutube">
+                                <img src="https://i2.ytimg.com/vi/iu8HKA1H-Dg/hqdefault.jpg" alt="La Finance de l'Assurance expliquée" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" style="">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">La Finance de l'Assurance expliquée</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee?utm_source=youtube</p>
+                                </div>
+                            </div>
+                        </div>
+            <div id="videos-pagination" class="flex justify-center mt-12 space-x-4">
+                <button id="videos-prev" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">Précédent</button>
+                <button id="videos-next" class="px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
+            </div>
+        </section>
+
+        <section id="contact-page" class="page-section container mx-auto px-6 py-16 hidden">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Contactez-Moi</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white rounded-3xl shadow-xl p-8 md:p-12">
+                <div>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">Envoyez-moi un message</h3>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nom Complet</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300" placeholder="Votre nom">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Adresse E-mail</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300" placeholder="votre@email.com">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Votre Message</label>
+                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300" placeholder="Écrivez votre message ici..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
+                            Envoyer le Message
+                        </button>
+                    </form>
+                </div>
+
+                <div class="">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">Mes Coordonnées</h3>
+                    <div class="space-y-6 text-lg text-gray-700">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-17 4v7a2 2 0 002 2h12a2 2 0 002-2v-7"></path></svg>
+                            <span class="">lexpert101.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                            <span>+33 6 12 34 56 78</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-indigo-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span>123 Rue de la Création, 75000 Paris</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10">
+                        <h3 class="text-3xl font-bold text-gray-900 mb-6">Suivez-moi</h3>
+                        <div class="flex space-x-6">
+                            <a href="#" target="_blank" class="text-gray-500 hover:text-blue-500 transition duration-300 transform hover:scale-125">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.273 4.117 4.117 0 001.27 5.477A4.072 4.072 0 012 10.702v.055a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.12 4.12 0 003.834 2.85A8.233 8.233 0 012 18.271a11.644 11.644 0 006.29 1.984"></path></svg>
+                            </a>
+                            <a href="#" target="_blank" class="text-gray-500 hover:text-blue-700 transition duration-300 transform hover:scale-125">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.24.195 2.24.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22H12c5.523 0 10-4.477 10-10z" clip-rule="evenodd"></path></svg>
+                            </a>
+                            <a href="#" target="_blank" class="text-gray-500 hover:text-indigo-700 transition duration-300 transform hover:scale-125">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.313.454.085.62-.238.62-.533v-2.884c-2.651.567-3.227-1.21-3.227-1.21-.437-1.114-.925-1.424-.925-1.424-.766-.52.069-.509.069-.509.847.062 1.292.867 1.292.867.756 1.292 1.972.91 2.44.695.071-.53.293-.91.534-1.115-2.282-.259-4.682-1.149-4.682-5.094 0-1.125.39-2.039 1.029-2.753-.103-.259-.444-1.302.098-2.715 0 0 .84-.26 2.75.829.79-.221 1.63-.332 2.47-.332.84 0 1.68.11 2.47.332 1.91-1.089 2.75-.829 2.75-.829.542 1.413.201 2.456.098 2.715.64.714 1.029 1.628 1.029 2.753 0 3.956-2.399 4.834-4.691 5.088.32.276.629.846.629 1.706v2.54c0 .299.165.618.625.532C19.364 20.093 22 16.476 22 12h-.001Z" clip-rule="evenodd"></path></svg>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div></section>
+    </main>
+
+    <div id="post-modal" class="fixed inset-0 z-[100] hidden items-center justify-center modal-overlay opacity-0 transition-opacity duration-300">
+        <div class="relative w-full h-full bg-white modal-content transform translate-y-20 opacity-0 overflow-y-auto max-w-7xl mx-auto flex flex-col rounded-xl shadow-2xl">
+            <button id="close-post-modal" class="absolute top-6 right-6 z-10 p-3 bg-white rounded-full shadow-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="post-modal-content-area" class="flex-grow flex flex-col">
+                <img id="post-modal-image" src="" alt="Article Cover" class="w-full h-64 md:h-96 object-cover object-center rounded-t-xl mb-8" style="">
+                <div class="container mx-auto px-6 py-4 flex-grow flex flex-col">
+                    <h3 id="post-modal-title" class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight"></h3>
+                    <div class="flex items-center text-gray-600 text-sm mb-8">
+                        <span id="post-modal-author" class="mr-4"></span>
+                        <span id="post-modal-pubdate"></span>
+                    </div>
+                    <div id="post-modal-body" class="prose prose-lg max-w-none text-gray-800 leading-relaxed flex-grow overflow-y-auto pr-4">
+                    </div>
+                    <div class="flex justify-center space-x-6 mt-8 py-6 border-t border-gray-200">
+                        <a href="#" target="_blank" class="share-btn flex items-center text-gray-600 hover:text-blue-500 transition duration-300">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.273 4.117 4.117 0 001.27 5.477A4.072 4.072 0 012 10.702v.055a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.12 4.12 0 003.834 2.85A8.233 8.233 0 012 18.271a11.644 11.644 0 006.29 1.984"></path></svg>
+                            Twitter
+                        </a>
+                        <a href="#" target="_blank" class="share-btn flex items-center text-gray-600 hover:text-blue-700 transition duration-300">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.24.195 2.24.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22H12c5.523 0 10-4.477 10-10z" clip-rule="evenodd"></path></svg>
+                            Facebook
+                        </a>
+                        <a href="#" target="_blank" class="share-btn flex items-center text-gray-600 hover:text-indigo-700 transition duration-300">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.313.454.085.62-.238.62-.533v-2.884c-2.651.567-3.227-1.21-3.227-1.21-.437-1.114-.925-1.424-.925-1.424-.766-.52.069-.509.069-.509.847.062 1.292.867 1.292.867.756 1.292 1.972.91 2.44.695.071-.53.293-.91.534-1.115-2.282-.259-4.682-1.149-4.682-5.094 0-1.125.39-2.039 1.029-2.753-.103-.259-.444-1.302.098-2.715 0 0 .84-.26 2.75.829.79-.221 1.63-.332 2.47-.332.84 0 1.68.11 2.47.332 1.91-1.089 2.75-.829 2.75-.829.542 1.413.201 2.456.098 2.715.64.714 1.029 1.628 1.029 2.753 0 3.956-2.399 4.834-4.691 5.088.32.276.629.846.629 1.706v2.54c0 .299.165.618.625.532C19.364 20.093 22 16.476 22 12h-.001Z" clip-rule="evenodd"></path></svg>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden items-center justify-center modal-overlay opacity-0 transition-opacity duration-300">
+        <div class="relative w-full max-w-4xl mx-auto h-auto bg-black modal-content transform translate-y-20 opacity-0 rounded-lg shadow-2xl overflow-hidden">
+            <button id="close-video-modal" class="absolute top-4 right-4 z-10 p-3 bg-white rounded-full shadow-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="relative pt-[56.25%]">
+                <iframe id="video-modal-iframe" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen=""></iframe>
+            </div>
+            <div id="video-modal-details" class="p-6 text-white bg-gray-900">
+                <h3 id="video-modal-title" class="text-2xl font-bold mb-2"></h3>
+                <p id="video-modal-description" class="text-gray-400 text-sm"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+
+            const headerLogo = document.getElementById('header-logo');
+            const siteTitle = document.getElementById('site-title');
+
+            const postsContainer = document.getElementById('posts-container');
+            const postsLoading = document.getElementById('posts-loading');
+            const postsError = document.getElementById('posts-error');
+            const postsPrevBtn = document.getElementById('posts-prev');
+            const postsNextBtn = document.getElementById('posts-next');
+            let allPosts = [];
+            let currentPostPage = 0;
+            const postsPerPage = 9;
+
+            const postModal = document.getElementById('post-modal');
+            const closePostModal = document.getElementById('close-post-modal');
+            const postModalImage = document.getElementById('post-modal-image');
+            const postModalTitle = document.getElementById('post-modal-title');
+            const postModalAuthor = document.getElementById('post-modal-author');
+            const postModalPubDate = document.getElementById('post-modal-pubdate');
+            const postModalBody = document.getElementById('post-modal-body');
+            const shareButtons = document.querySelectorAll('.share-btn');
+
+            const videosContainer = document.getElementById('videos-container');
+            const videosLoading = document.getElementById('videos-loading');
+            const videosError = document.getElementById('videos-error');
+            const videosPrevBtn = document.getElementById('videos-prev');
+            const videosNextBtn = document.getElementById('videos-next');
+            let allVideos = [];
+            let currentVideoPage = 0;
+            const videosPerPage = 9;
+
+            const videoModal = document.getElementById('video-modal');
+            const closeVideoModal = document.getElementById('close-video-modal');
+            const videoModalIframe = document.getElementById('video-modal-iframe');
+            const videoModalTitle = document.getElementById('video-modal-title');
+            const videoModalDescription = document.getElementById('video-modal-description');
+
+            function showPage(pageId) {
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                    section.classList.add('hidden');
+                });
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.remove('hidden');
+                    void activePage.offsetWidth; // Trigger reflow for transition
+                    activePage.classList.add('active');
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (pageId === 'publications-page' && allPosts.length === 0) {
+                    fetchPosts();
+                }
+                if (pageId === 'videos-page' && allVideos.length === 0) {
+                    fetchVideos();
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page') + '-page';
+                    showPage(pageId);
+                });
+            });
+
+            showPage('home-page');
+
+            async function fetchMetadata() {
+                try {
+                    const response = await fetch(window.location.origin + '/api/metadata');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (data) {
+                        siteTitle.textContent = data.title || 'Mon Site';
+                        headerLogo.src = data.logo || 'https://via.placeholder.com/40';
+                        headerLogo.alt = data.title ? `${data.title} Logo` : 'Logo';
+                        document.title = data.title ? `${data.title} - Élégant & Moderne` : 'Mon Site SPA - Élégant & Moderne';
+                    }
+                } catch (error) {
+                    console.error("Error fetching metadata:", error);
+                    siteTitle.textContent = 'Mon Site';
+                    headerLogo.src = 'https://via.placeholder.com/40';
+                    headerLogo.alt = 'Default Logo';
+                    document.title = 'Mon Site SPA - Élégant & Moderne';
+                }
+            }
+
+            async function fetchPosts() {
+                postsLoading.classList.remove('hidden');
+                postsError.classList.add('hidden');
+                postsContainer.innerHTML = '';
+                try {
+                    const response = await fetch(window.location.origin + '/api/posts');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        allPosts = data.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                        renderPosts();
+                    } else {
+                        postsContainer.innerHTML = '<p class="text-center text-gray-600 col-span-full">Aucun article trouvé.</p>';
+                        postsPrevBtn.disabled = true;
+                        postsNextBtn.disabled = true;
+                    }
+                } catch (error) {
+                    console.error("Error fetching posts:", error);
+                    postsError.classList.remove('hidden');
+                    postsContainer.innerHTML = '';
+                    postsPrevBtn.disabled = true;
+                    postsNextBtn.disabled = true;
+                } finally {
+                    postsLoading.classList.add('hidden');
+                }
+            }
+
+            function renderPosts() {
+                postsContainer.innerHTML = '';
+                const start = currentPostPage * postsPerPage;
+                const end = start + postsPerPage;
+                const postsToDisplay = allPosts.slice(start, end);
+
+                if (postsToDisplay.length === 0) {
+                    postsContainer.innerHTML = '<p class="text-center text-gray-600 col-span-full">Aucun article à afficher sur cette page.</p>';
+                } else {
+                    postsToDisplay.forEach(post => {
+                        const postCard = `
+                            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer" data-post-link="${post.link}" data-post-title="${encodeURIComponent(post.title)}" data-post-content="${encodeURIComponent(post.content)}" data-post-image="${encodeURIComponent(post.image || '')}" data-post-author="${encodeURIComponent(post.author || 'Inconnu')}" data-post-pubdate="${encodeURIComponent(post.pubDate || '')}">
+                                <img src="${post.image || 'https://via.placeholder.com/400x250?text=Article+Image'}" alt="${post.title}" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-indigo-600 transition duration-300 line-clamp-2">${post.title}</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">${post.description}</p>
+                                    <div class="flex items-center justify-between text-gray-500 text-xs">
+                                        <span>${post.author || 'Auteur inconnu'}</span>
+                                        <span>${new Date(post.pubDate).toLocaleDateString('fr-FR')}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        postsContainer.innerHTML += postCard;
+                    });
+
+                    postsContainer.querySelectorAll('.group.cursor-pointer').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const link = card.getAttribute('data-post-link');
+                            const title = decodeURIComponent(card.getAttribute('data-post-title'));
+                            const content = decodeURIComponent(card.getAttribute('data-post-content'));
+                            const image = decodeURIComponent(card.getAttribute('data-post-image'));
+                            const author = decodeURIComponent(card.getAttribute('data-post-author'));
+                            const pubDate = decodeURIComponent(card.getAttribute('data-post-pubdate'));
+                            openPostModal(link, title, content, image, author, pubDate);
+                        });
+                    });
+                }
+                updatePostPaginationButtons();
+            }
+
+            function updatePostPaginationButtons() {
+                postsPrevBtn.disabled = currentPostPage === 0;
+                postsNextBtn.disabled = (currentPostPage + 1) * postsPerPage >= allPosts.length;
+            }
+
+            postsPrevBtn.addEventListener('click', () => {
+                if (currentPostPage > 0) {
+                    currentPostPage--;
+                    renderPosts();
+                }
+            });
+
+            postsNextBtn.addEventListener('click', () => {
+                if ((currentPostPage + 1) * postsPerPage < allPosts.length) {
+                    currentPostPage++;
+                    renderPosts();
+                }
+            });
+
+            function openPostModal(link, title, content, image, author, pubDate) {
+                postModalImage.src = image || 'https://via.placeholder.com/1200x600?text=Article+Cover';
+                postModalTitle.textContent = title;
+                postModalAuthor.textContent = `Par ${author}`;
+                postModalPubDate.textContent = new Date(pubDate).toLocaleDateString('fr-FR');
+                postModalBody.innerHTML = content;
+
+                const tweetText = encodeURIComponent(`"${title}" by ${author} #webdev #blog`);
+                const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}&text=${tweetText}`;
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+                const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(postModalBody.textContent.substring(0, 150) + '...')}&source=${encodeURIComponent(window.location.origin)}`;
+
+                shareButtons[0].href = twitterUrl;
+                shareButtons[1].href = facebookUrl;
+                shareButtons[2].href = linkedinUrl;
+
+                postModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                void postModal.offsetWidth;
+                postModal.classList.add('modal-active');
+                postModal.style.opacity = '1';
+                postModal.querySelector('.modal-content').style.transform = 'translateY(0)';
+                postModal.querySelector('.modal-content').style.opacity = '1';
+            }
+
+            closePostModal.addEventListener('click', () => {
+                closePostModalFunc();
+            });
+
+            postModal.addEventListener('click', (e) => {
+                if (e.target === postModal) {
+                    closePostModalFunc();
+                }
+            });
+
+            function closePostModalFunc() {
+                postModal.classList.remove('modal-active');
+                postModal.style.opacity = '0';
+                postModal.querySelector('.modal-content').style.transform = 'translateY(20px)';
+                postModal.querySelector('.modal-content').style.opacity = '0';
+                setTimeout(() => {
+                    postModal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }, 300);
+            }
+
+            async function fetchVideos() {
+                videosLoading.classList.remove('hidden');
+                videosError.classList.add('hidden');
+                videosContainer.innerHTML = '';
+                try {
+                    const response = await fetch(window.location.origin + '/api/videos');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        allVideos = data.sort((a, b) => new Date(b.published) - new Date(a.published));
+                        renderVideos();
+                    } else {
+                        videosContainer.innerHTML = '<p class="text-center text-gray-600 col-span-full">Aucune vidéo trouvée.</p>';
+                        videosPrevBtn.disabled = true;
+                        videosNextBtn.disabled = true;
+                    }
+                } catch (error) {
+                    console.error("Error fetching videos:", error);
+                    videosError.classList.remove('hidden');
+                    videosContainer.innerHTML = '';
+                    videosPrevBtn.disabled = true;
+                    videosNextBtn.disabled = true;
+                } finally {
+                    videosLoading.classList.add('hidden');
+                }
+            }
+
+            function getYouTubeEmbedUrl(url) {
+                const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/g;
+                const match = regExp.exec(url);
+                return match && match[1] ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0` : null;
+            }
+
+            function renderVideos() {
+                videosContainer.innerHTML = '';
+                const start = currentVideoPage * videosPerPage;
+                const end = start + videosPerPage;
+                const videosToDisplay = allVideos.slice(start, end);
+
+                if (videosToDisplay.length === 0) {
+                    videosContainer.innerHTML = '<p class="text-center text-gray-600 col-span-full">Aucune vidéo à afficher sur cette page.</p>';
+                } else {
+                    videosToDisplay.forEach(video => {
+                        const videoCard = `
+                            <div class="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group cursor-pointer video-card"
+                                 data-video-link="${video.link}" data-video-title="${encodeURIComponent(video.title)}" data-video-description="${encodeURIComponent(video.description || '')}">
+                                <img src="${video.thumbnail || 'https://via.placeholder.com/400x250?text=Video+Thumbnail'}" alt="${video.title}" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg class="w-16 h-16 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">${video.title}</h3>
+                                    <p class="text-gray-600 text-sm line-clamp-3">${video.description}</p>
+                                </div>
+                            </div>
+                        `;
+                        videosContainer.innerHTML += videoCard;
+                    });
+
+                    videosContainer.querySelectorAll('.video-card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const link = card.getAttribute('data-video-link');
+                            const title = decodeURIComponent(card.getAttribute('data-video-title'));
+                            const description = decodeURIComponent(card.getAttribute('data-video-description'));
+                            openVideoModal(link, title, description);
+                        });
+                    });
+                }
+                updateVideoPaginationButtons();
+            }
+
+            function updateVideoPaginationButtons() {
+                videosPrevBtn.disabled = currentVideoPage === 0;
+                videosNextBtn.disabled = (currentVideoPage + 1) * videosPerPage >= allVideos.length;
+            }
+
+            videosPrevBtn.addEventListener('click', () => {
+                if (currentVideoPage > 0) {
+                    currentVideoPage--;
+                    renderVideos();
+                }
+            });
+
+            videosNextBtn.addEventListener('click', () => {
+                if ((currentVideoPage + 1) * videosPerPage < allVideos.length) {
+                    currentVideoPage++;
+                    renderVideos();
+                }
+            });
+
+            function openVideoModal(link, title, description) {
+                const embedUrl = getYouTubeEmbedUrl(link);
+                if (embedUrl) {
+                    videoModalIframe.src = embedUrl;
+                    videoModalTitle.textContent = title;
+                    videoModalDescription.textContent = description;
+
+                    videoModal.classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
+                    void videoModal.offsetWidth;
+                    videoModal.classList.add('modal-active');
+                    videoModal.style.opacity = '1';
+                    videoModal.querySelector('.modal-content').style.transform = 'translateY(0)';
+                    videoModal.querySelector('.modal-content').style.opacity = '1';
+                } else {
+                    alert('Lien vidéo non valide ou non supporté.');
+                }
+            }
+
+            closeVideoModal.addEventListener('click', () => {
+                closeVideoModalFunc();
+            });
+
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeVideoModalFunc();
+                }
+            });
+
+            function closeVideoModalFunc() {
+                videoModal.classList.remove('modal-active');
+                videoModal.style.opacity = '0';
+                videoModal.querySelector('.modal-content').style.transform = 'translateY(20px)';
+                videoModal.querySelector('.modal-content').style.opacity = '0';
+                setTimeout(() => {
+                    videoModal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                    videoModalIframe.src = '';
+                }, 300);
+            }
+
+            fetchMetadata();
+        });
+    </script>
+
+
+                
+            </body></html>
