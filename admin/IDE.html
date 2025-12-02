@@ -591,22 +591,26 @@ ${htmlContent}
 
                     "API ENDPOINTS:\n\n" +
                     "1. /api/posts - Substack Articles\n" +
-                    "   Response: { posts: [{ title, subtitle, url, date, author }] }\n\n" +
+                    "   Response: Array of objects [{ title, description, content, link, pubDate, author, image }]\n" +
+                    "   Note: Use 'content' for full HTML body, 'image' for cover image, 'link' for URL.\n\n" +
 
                     "2. /api/videos - YouTube Videos\n" +
-                    "   Response: { videos: [{ title, description, url, thumbnail, publishedAt }] }\n\n" +
+                    "   Response: Array of objects [{ title, description, link, thumbnail, published }]\n" +
+                    "   Note: Use 'link' for URL (convert to embed if needed), 'published' for date.\n\n" +
 
                     "3. /api/podcasts - Podcast Episodes\n" +
-                    "   Response: { podcasts: [{ title, description, url, audioUrl, date }] }\n\n" +
+                    "   Response: Array of objects [{ title, description, link, audioUrl, pubDate }]\n" +
+                    "   Note: Use 'link' for page URL, 'audioUrl' for mp3 source.\n\n" +
 
                     "4. /api/metadata - Site Metadata\n" +
-                    "   Response: { title, description, author, logo, keywords[] }\n\n" +
+                    "   Response: Object { title, description, author, logo, keywords[] }\n\n" +
 
                     "CODE PATTERN:\n" +
                     "When user requests dynamic content, use this pattern:\n" +
                     "- Create a container div with an ID\n" +
                     "- Add a loading message initially\n" +
                     "- Use fetch() with ABSOLUTE URL: window.location.origin + '/api/endpoint'\n" +
+                    "- Check if data is array: if (Array.isArray(data) && data.length > 0)\n" +
                     "- Map the data array to HTML\n" +
                     "- Include error handling with catch()\n\n" +
 
@@ -631,7 +635,8 @@ ${htmlContent}
                     "- Do NOT use external libraries except TailwindCSS\n" +
                     "- Make sure all IDs match between HTML and JavaScript\n" +
                     "- ALWAYS use window.location.origin + '/api/...' for API calls\n" +
-                    "- Verify JSON path access (data.posts, data.videos, etc.)";
+                    "- API returns ARRAYS (except metadata), so iterate directly on data, NOT data.posts\n" +
+                    "- Use correct field names: 'link' (not url), 'pubDate'/'published' (not date/publishedAt)";
 
                 const fullPrompt = systemInstruction + "\n\nUser Request: " + prompt;
 
