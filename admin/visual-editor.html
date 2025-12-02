@@ -256,13 +256,12 @@
                 </button>
                 <div class="relative group">
                     <button onclick="document.getElementById('color-picker').click()"
-                        class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10 flex items-center gap-1" title="Couleur du texte">
+                        class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10 flex items-center gap-1"
+                        title="Couleur du texte">
                         <i class="fas fa-palette text-sm"></i>
                     </button>
-                    <input type="color" id="color-picker" 
-                        class="absolute opacity-0 w-0 h-0" 
-                        onchange="execCmd('foreColor', this.value)" 
-                        value="#000000">
+                    <input type="color" id="color-picker" class="absolute opacity-0 w-0 h-0"
+                        onchange="execCmd('foreColor', this.value)" value="#000000">
                 </div>
             </div>
 
@@ -315,6 +314,11 @@
                 <button onclick="openImageBank()"
                     class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Banque d'images">
                     <i class="fas fa-cloud-download-alt text-sm"></i>
+                </button>
+                <button onclick="duplicateElement()"
+                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Dupliquer l'élément">
+                    <i class="fas fa-copy text-sm"></i>
                 </button>
             </div>
         </div>
@@ -526,6 +530,132 @@
                 // Use Image Bank instead of prompt
                 currentImageSelection = null; // Ensure we are inserting new
                 openImageBank();
+            }
+
+            function duplicateElement() {
+                const iframe = document.getElementById('editor-frame');
+                const doc = iframe.contentWindow.document;
+                const selection = doc.getSelection();
+
+                if (!selection || !selection.anchorNode) {
+                    alert("Veuillez sélectionner un élément à dupliquer");
+                    return;
+                }
+
+                // Find the closest block-level element to duplicate
+                let elementToDuplicate = selection.anchorNode;
+
+                // If it's a text node, get its parent element
+                if (elementToDuplicate.nodeType === Node.TEXT_NODE) {
+                    elementToDuplicate = elementToDuplicate.parentElement;
+                }
+
+                // Try to find a meaningful block element (not body or html)
+                while (elementToDuplicate &&
+                    elementToDuplicate.tagName !== 'P' &&
+                    elementToDuplicate.tagName !== 'DIV' &&
+                    elementToDuplicate.tagName !== 'H1' &&
+                    elementToDuplicate.tagName !== 'H2' &&
+                    elementToDuplicate.tagName !== 'H3' &&
+                    elementToDuplicate.tagName !== 'H4' &&
+                    elementToDuplicate.tagName !== 'H5' &&
+                    elementToDuplicate.tagName !== 'H6' &&
+                    elementToDuplicate.tagName !== 'LI' &&
+                    elementToDuplicate.tagName !== 'BLOCKQUOTE' &&
+                    elementToDuplicate.tagName !== 'IMG' &&
+                    elementToDuplicate.tagName !== 'SECTION' &&
+                    elementToDuplicate.tagName !== 'ARTICLE' &&
+                    elementToDuplicate.tagName !== 'HEADER' &&
+                    elementToDuplicate.tagName !== 'FOOTER' &&
+                    elementToDuplicate.tagName !== 'ASIDE' &&
+                    elementToDuplicate.tagName !== 'UL' &&
+                    elementToDuplicate.tagName !== 'OL' &&
+                    elementToDuplicate.tagName !== 'BODY') {
+                    elementToDuplicate = elementToDuplicate.parentElement;
+                }
+
+                // Don't duplicate body or html
+                if (!elementToDuplicate || elementToDuplicate.tagName === 'BODY' || elementToDuplicate.tagName === 'HTML') {
+                    alert("Impossible de dupliquer cet élément");
+                    return;
+                }
+
+                // Clone the element
+                const clonedElement = elementToDuplicate.cloneNode(true);
+
+                // Insert the clone after the original
+                elementToDuplicate.parentNode.insertBefore(clonedElement, elementToDuplicate.nextSibling);
+
+                // Re-enable editing on the new element if in edit mode
+                if (isEditMode) {
+                    const selector = 'h1, h2, h3, h4, h5, h6, p, span, div, li, a, blockquote';
+                    const elements = clonedElement.querySelectorAll(selector);
+
+                    elements.forEach(el => {
+                        if (el.children.length === 0 || el.tagName === 'P' || el.tagName === 'DIV') {
+                            el.setAttribute('contenteditable', 'true');
+
+                            el.addEventListener('focus', () => {
+                                el.classList.add('editable-active');
+                            });
+                            el.addEventListener('blur', () => {
+                                el.classList.remove('editable-active');
+                            });
+                            el.addEventListener('mouseover', () => {
+                                if (doc.activeElement !== el) el.classList.add('editable-hover');
+                            });
+                            el.addEventListener('mouseout', () => {
+                                el.classList.remove('editable-hover');
+                            });
+                        }
+                    });
+
+                    // Handle images in the cloned element
+                    const images = clonedElement.querySelectorAll('img');
+                    images.forEach(img => {
+                        img.style.cursor = 'pointer';
+                        img.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentImageSelection = img;
+                            openImageBank();
+                        });
+                    });
+
+                    // Handle links in the cloned element
+                    const links = clonedElement.querySelectorAll('a');
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                        });
+                    });
+
+                    // If the cloned element itself is editable
+                    if (clonedElement.matches(selector)) {
+                        if (clonedElement.children.length === 0 || clonedElement.tagName === 'P' || clonedElement.tagName === 'DIV') {
+                            clonedElement.setAttribute('contenteditable', 'true');
+
+                            clonedElement.addEventListener('focus', () => {
+                                clonedElement.classList.add('editable-active');
+                            });
+                            clonedElement.addEventListener('blur', () => {
+                                clonedElement.classList.remove('editable-active');
+                            });
+                            clonedElement.addEventListener('mouseover', () => {
+                                if (doc.activeElement !== clonedElement) clonedElement.classList.add('editable-hover');
+                            });
+                            clonedElement.addEventListener('mouseout', () => {
+                                clonedElement.classList.remove('editable-hover');
+                            });
+                        }
+                    }
+                }
+
+                // Scroll to the duplicated element and highlight it briefly
+                clonedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                clonedElement.style.outline = '3px solid #f97316';
+                setTimeout(() => {
+                    clonedElement.style.outline = '';
+                }, 1500);
             }
 
             // --- Saving ---
