@@ -171,92 +171,10 @@
                     </button>
                 </div>
             </div>
-
-            <!-- CMS Navigation Tabs -->
-            <div class="px-6 py-3 border-b border-slate-700 bg-[#252526] flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button onclick="switchView('templates')" id="tab-templates"
-                        class="px-4 py-2 rounded-md font-medium transition flex items-center gap-2 bg-slate-700 text-white">
-                        <i class="fas fa-layer-group"></i> Templates
-                    </button>
-                    <button onclick="switchView('contents')" id="tab-contents"
-                        class="px-4 py-2 rounded-md font-medium transition flex items-center gap-2 bg-transparent hover:bg-slate-700 text-slate-400">
-                        <i class="fas fa-file-alt"></i> Contenus
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-3">
-                    <!-- Backup Actions -->
-                    <div class="flex items-center gap-1 mr-4 border-r border-slate-600 pr-4">
-                        <button onclick="exportCMS()" title="Exporter Backup JSON"
-                            class="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <button onclick="document.getElementById('import-file').click()" title="Importer Backup JSON"
-                            class="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition">
-                            <i class="fas fa-upload"></i>
-                        </button>
-                        <input type="file" id="import-file" accept=".json" style="display: none;"
-                            onchange="importCMS(this)">
-                    </div>
-
-                    <button onclick="createNewTemplate()" id="btn-new-template"
-                        class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-md font-medium transition flex items-center gap-2 shadow-lg">
-                        <i class="fas fa-magic"></i> Générer Template avec IA
-                    </button>
-
-                    <button onclick="createNewContent()" id="btn-new-content" style="display: none;"
-                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Nouveau Contenu
-                    </button>
-                </div>
+            <!-- Monaco Editor -->
+            <div class="flex-1 bg-[#1e2a3a] overflow-hidden">
+                <div id="monaco-editor-container"></div>
             </div>
-
-            <!-- Views Container -->
-            <div class="flex-1 overflow-hidden flex flex-col">
-                <!-- Templates View -->
-                <div id="view-templates" class="flex-1 overflow-y-auto p-6 bg-[#1e1e1e]">
-                    <div id="templates-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Templates will be rendered here -->
-                        <div class="col-span-full text-center py-12 text-slate-500">
-                            <i class="fas fa-layer-group text-6xl mb-4 opacity-20"></i>
-                            <p class="text-lg">Aucun template pour le moment</p>
-                            <p class="text-sm mt-2">Cliquez sur "Générer Template avec IA" pour commencer</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contents View -->
-                <div id="view-contents" style="display: none;" class="flex-1 overflow-y-auto p-6 bg-[#1e1e1e]">
-                    <div class="mb-6 flex flex-col md:flex-row gap-4 justify-between">
-                        <div class="flex-1 max-w-md relative">
-                            <i
-                                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500"></i>
-                            <input type="text" id="search-content" oninput="renderContents()"
-                                placeholder="Rechercher un contenu..."
-                                class="w-full pl-10 pr-4 py-2 bg-[#252526] border border-slate-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <label class="text-sm text-slate-400">Filtrer par template :</label>
-                            <select id="filter-template" onchange="renderContents()"
-                                class="w-64 px-3 py-2 bg-[#252526] border border-slate-600 rounded-md text-white focus:ring-2 focus:ring-blue-500">
-                                <option value="">Tous les templates</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="contents-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Contents will be rendered here -->
-                        <div class="col-span-full text-center py-12 text-slate-500">
-                            <i class="fas fa-file-alt text-6xl mb-4 opacity-20"></i>
-                            <p class="text-lg">Aucun contenu pour le moment</p>
-                            <p class="text-sm mt-2">Créez d'abord un template, puis ajoutez des contenus</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
             <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
                 <span class="text-xs text-slate-400">
@@ -402,70 +320,6 @@
         </div>
     </div>
 
-    <!-- Content Creation/Edition Modal -->
-    <div id="content-modal"
-        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <div
-            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-3xl border border-slate-700 flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-700 flex justify-between items-center bg-[#252526] rounded-t-xl">
-                <h3 id="content-modal-title" class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-file-alt text-blue-400"></i>
-                    Nouveau Contenu
-                </h3>
-                <button onclick="closeContentModal()" class="text-slate-400 hover:text-white transition">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-
-            <div class="p-6 flex-1 overflow-y-auto space-y-4">
-                <!-- Template Selection -->
-                <div id="template-selection-div">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">
-                        Template <span class="text-red-400">*</span>
-                    </label>
-                    <select id="content-template-select" onchange="loadTemplateFields()"
-                        class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">
-                        <option value="">Sélectionnez un template...</option>
-                    </select>
-                </div>
-
-                <!-- Slug -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">
-                        Slug URL <span class="text-slate-500 text-xs">(généré automatiquement si vide)</span>
-                    </label>
-                    <input type="text" id="content-slug" placeholder="mon-article"
-                        class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500">
-                </div>
-
-                <!-- Dynamic Fields Container -->
-                <div id="content-fields-container" class="space-y-4">
-                    <div class="text-center py-8 text-slate-500">
-                        <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
-                        <p>Sélectionnez un template pour voir les champs</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-6 border-t border-slate-700 bg-[#252526] rounded-b-xl flex justify-between gap-3">
-                <button onclick="closeContentModal()"
-                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition">
-                    Annuler
-                </button>
-                <div class="flex gap-3">
-                    <button onclick="saveContent('draft')" id="save-draft-btn"
-                        class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition">
-                        <i class="far fa-save"></i> Brouillon
-                    </button>
-                    <button onclick="saveContent('published')" id="publish-btn"
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition shadow-lg">
-                        <i class="fas fa-check"></i> Publier
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="./../core/admin.js"></script>
     <script>
         // Global Monaco Editor instance (accessible from admin.js)
@@ -513,731 +367,6 @@
                 updateCharacterCount();
             });
         }
-
-        // ====================================================================
-        // CMS ARCHITECTURE - TEMPLATES & CONTENTS
-        // ====================================================================
-
-        // ============= TEMPLATE RENDERER =============
-        class TemplateRenderer {
-            /**
-             * Renders a template with data
-             * Supports {{field}} and {{{htmlField}}} syntax
-             */
-            render(htmlTemplate, data) {
-                if (!htmlTemplate || !data) return '';
-
-                let result = htmlTemplate;
-
-                // Replace {{field}} with escaped data
-                Object.keys(data).forEach(key => {
-                    const escapedValue = this.escapeHtml(data[key]);
-                    const regex = new RegExp(`{{${key}}}`, 'g');
-                    result = result.replace(regex, escapedValue);
-                });
-
-                // Replace {{{field}}} with raw HTML
-                Object.keys(data).forEach(key => {
-                    const rawValue = data[key] || '';
-                    const regex = new RegExp(`{{{${key}}}}`, 'g');
-                    result = result.replace(regex, rawValue);
-                });
-
-                return result;
-            }
-
-            escapeHtml(text) {
-                if (typeof text !== 'string') return text;
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-        }
-
-        // ============= TEMPLATE MANAGER =============
-        class TemplateManager {
-            constructor() {
-                this.templates = [];
-                this.load();
-            }
-
-            generateId() {
-                return 'template_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            }
-
-            create(data) {
-                const template = {
-                    id: this.generateId(),
-                    name: data.name || 'New Template',
-                    description: data.description || '',
-                    category: data.category || 'content',
-                    fields: data.fields || [],
-                    htmlTemplate: data.htmlTemplate || '',
-                    createdAt: new Date().toISOString()
-                };
-
-                this.templates.push(template);
-                this.save();
-                return template;
-            }
-
-            update(id, data) {
-                const index = this.templates.findIndex(t => t.id === id);
-                if (index === -1) return null;
-
-                this.templates[index] = {
-                    ...this.templates[index],
-                    ...data,
-                    id: id, // Preserve ID
-                    updatedAt: new Date().toISOString()
-                };
-
-                this.save();
-                return this.templates[index];
-            }
-
-            delete(id) {
-                const index = this.templates.findIndex(t => t.id === id);
-                if (index === -1) return false;
-
-                this.templates.splice(index, 1);
-                this.save();
-                return true;
-            }
-
-            get(id) {
-                return this.templates.find(t => t.id === id);
-            }
-
-            list() {
-                return this.templates;
-            }
-
-            save() {
-                localStorage.setItem('cms_templates', JSON.stringify(this.templates));
-            }
-
-            load() {
-                const stored = localStorage.getItem('cms_templates');
-                if (stored) {
-                    try {
-                        this.templates = JSON.parse(stored);
-                    } catch (e) {
-                        console.error('Error loading templates:', e);
-                        this.templates = [];
-                    }
-                }
-            }
-        }
-
-        // ============= CONTENT MANAGER =============
-        class ContentManager {
-            constructor() {
-                this.contents = [];
-                this.load();
-            }
-
-            generateId() {
-                return 'content_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            }
-
-            generateSlug(title) {
-                return title.toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/(^-|-$)/g, '');
-            }
-
-            create(templateId, data, slug = null) {
-                const content = {
-                    id: this.generateId(),
-                    templateId: templateId,
-                    status: 'draft',
-                    data: data,
-                    slug: slug || this.generateSlug(data.title || 'untitled'),
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-
-                this.contents.push(content);
-                this.save();
-                return content;
-            }
-
-            update(id, updates) {
-                const index = this.contents.findIndex(c => c.id === id);
-                if (index === -1) return null;
-
-                this.contents[index] = {
-                    ...this.contents[index],
-                    ...updates,
-                    id: id, // Preserve ID
-                    updatedAt: new Date().toISOString()
-                };
-
-                this.save();
-                return this.contents[index];
-            }
-
-            delete(id) {
-                const index = this.contents.findIndex(c => c.id === id);
-                if (index === -1) return false;
-
-                this.contents.splice(index, 1);
-                this.save();
-                return true;
-            }
-
-            get(id) {
-                return this.contents.find(c => c.id === id);
-            }
-
-            listByTemplate(templateId) {
-                return this.contents.filter(c => c.templateId === templateId);
-            }
-
-            list() {
-                return this.contents;
-            }
-
-            publish(id) {
-                return this.update(id, { status: 'published' });
-            }
-
-            unpublish(id) {
-                return this.update(id, { status: 'draft' });
-            }
-
-            save() {
-                localStorage.setItem('cms_contents', JSON.stringify(this.contents));
-            }
-
-            load() {
-                const stored = localStorage.getItem('cms_contents');
-                if (stored) {
-                    try {
-                        this.contents = JSON.parse(stored);
-                    } catch (e) {
-                        console.error('Error loading contents:', e);
-                        this.contents = [];
-                    }
-                }
-            }
-        }
-
-        // ============= GLOBAL INSTANCES =============
-        let templateManager = null;
-        let contentManager = null;
-        let templateRenderer = null;
-
-        // Initialize CMS
-        function initCMS() {
-            templateManager = new TemplateManager();
-            contentManager = new ContentManager();
-            templateRenderer = new TemplateRenderer();
-
-            console.log('CMS initialized:', {
-                templates: templateManager.list().length,
-                contents: contentManager.list().length
-            });
-        }
-
-        // ====================================================================
-        // VIEW MANAGEMENT (Templates / Contents)
-        // ====================================================================
-
-        let currentView = 'templates';
-
-        function switchView(viewName) {
-            currentView = viewName;
-
-            // Hide all views
-            document.getElementById('view-templates').style.display = 'none';
-            document.getElementById('view-contents').style.display = 'none';
-
-            // Show selected view
-            document.getElementById(`view-${viewName}`).style.display = 'flex';
-
-            // Update tab styles
-            document.getElementById('tab-templates').className = 'px-4 py-2 rounded-md font-medium transition flex items-center gap-2 ' +
-                (viewName === 'templates' ? 'bg-slate-700 text-white' : 'bg-transparent hover:bg-slate-700 text-slate-400');
-            document.getElementById('tab-contents').className = 'px-4 py-2 rounded-md font-medium transition flex items-center gap-2 ' +
-                (viewName === 'contents' ? 'bg-slate-700 text-white' : 'bg-transparent hover:bg-slate-700 text-slate-400');
-
-            // Toggle action buttons
-            document.getElementById('btn-new-template').style.display = viewName === 'templates' ? 'flex' : 'none';
-            document.getElementById('btn-new-content').style.display = viewName === 'contents' ? 'flex' : 'none';
-
-            // Render appropriate content
-            if (viewName === 'templates') {
-                renderTemplates();
-            } else if (viewName === 'contents') {
-                renderContents();
-            }
-        }
-
-        // Render templates list
-        function renderTemplates() {
-            const container = document.getElementById('templates-list');
-            const templates = templateManager.list();
-
-            if (templates.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 text-slate-500">
-                        <i class="fas fa-layer-group text-6xl mb-4 opacity-20"></i>
-                        <p class="text-lg">Aucun template pour le moment</p>
-                        <p class="text-sm mt-2">Cliquez sur "Générer Template avec IA" pour commencer</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = templates.map(template => {
-                const contentCount = contentManager.listByTemplate(template.id).length;
-                return `
-                    <div class="bg-[#252526] rounded-lg border border-slate-700 hover:border-slate-600 transition p-4">
-                        <div class="flex items-start justify-between mb-3">
-                            <div>
-                                <h3 class="text-white font-semibold text-lg">${template.name}</h3>
-                                <p class="text-slate-400 text-sm mt-1">${template.description || 'Aucune description'}</p>
-                            </div>
-                            <span class="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded">${template.fields.length} champs</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
-                            <span><i class="fas fa-file-alt mr-1"></i>${contentCount} contenu(s)</span>
-                            <span>${new Date(template.createdAt).toLocaleDateString()}</span>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button onclick= "editTemplate('${template.id}')" class="flex-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
-                                <i class="fas fa-edit"></i> Éditer
-                            </button>
-                            <button onclick="duplicateTemplate('${template.id}')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <button onclick="deleteTemplate('${template.id}')" class="px-3 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-sm rounded transition">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Render contents list
-        function renderContents() {
-            const container = document.getElementById('contents-list');
-            const filterSelect = document.getElementById('filter-template');
-            const searchInput = document.getElementById('search-content');
-
-            const selectedTemplate = filterSelect.value;
-            const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
-
-            let contents = contentManager.list();
-
-            // Filter by template
-            if (selectedTemplate) {
-                contents = contentManager.listByTemplate(selectedTemplate);
-            }
-
-            // Filter by search query
-            if (searchQuery) {
-                contents = contents.filter(c => {
-                    const title = (c.data.title || '').toLowerCase();
-                    const slug = (c.slug || '').toLowerCase();
-                    const desc = (c.data.description || '').toLowerCase();
-                    return title.includes(searchQuery) || slug.includes(searchQuery) || desc.includes(searchQuery);
-                });
-            }
-
-            // Update filter dropdown
-            const templates = templateManager.list();
-            filterSelect.innerHTML = '<option value="">Tous les templates</option>' +
-                templates.map(t => `<option value="${t.id}" ${selectedTemplate === t.id ? 'selected' : ''}>${t.name}</option>`).join('');
-
-            if (contents.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 text-slate-500">
-                        <i class="fas fa-file-alt text-6xl mb-4 opacity-20"></i>
-                        <p class="text-lg">Aucun contenu trouvé</p>
-                        <p class="text-sm mt-2">${templates.length === 0 ? 'Créez d\'abord un template, puis ajoutez des contenus' : 'Essayez de modifier vos filtres'}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = contents.map(content => {
-                const template = templateManager.get(content.templateId);
-                const statusColor = content.status === 'published' ? 'text-green-300 bg-green-900/30' : 'text-orange-300 bg-orange-900/30';
-
-                return `
-                    <div class="bg-[#252526] rounded-lg border border-slate-700 hover:border-slate-600 transition p-4">
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="flex-1">
-                                <h3 class="text-white font-semibold">${content.data.title || 'Sans titre'}</h3>
-                                <p class="text-slate-500 text-xs mt-1">${template?.name || 'Template inconnu'}</p>
-                            </div>
-                            <span class="px-2 py-1 text-xs rounded ${statusColor}">${content.status === 'published' ? 'Publié' : 'Brouillon'}</span>
-                        </div>
-                        
-                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">${content.data.description || content.data.content?.substring(0, 100) || 'Pas de description'}</p>
-                        
-                        <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
-                            <span>${new Date(content.updatedAt).toLocaleDateString()}</span>
-                            <span class="text-blue-400">/${content.slug}</span>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button onclick="editContent('${content.id}')" class="flex-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
-                                <i class="fas fa-edit"></i> Éditer
-                            </button>
-                            <button onclick="previewContent('${content.id}')" class="px-3 py-1.5 bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 text-sm rounded transition">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button onclick="deleteContent('${content.id}')" class="px-3 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-sm rounded transition">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ====================================================================
-        // BACKUP & RESTORE
-        // ====================================================================
-
-        function exportCMS() {
-            const data = {
-                templates: templateManager.list(),
-                contents: contentManager.list(),
-                exportedAt: new Date().toISOString(),
-                version: '1.0'
-            };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `cms_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function importCMS(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-
-                    if (!data.templates || !data.contents) {
-                        throw new Error('Format de fichier invalide');
-                    }
-
-                    if (!confirm(`Restaurer ce backup ?\n${data.templates.length} templates, ${data.contents.length} contenus.\nATTENTION : Cela écrasera les données actuelles !`)) {
-                        input.value = '';
-                        return;
-                    }
-
-                    // Restore data
-                    localStorage.setItem('cms_templates', JSON.stringify(data.templates));
-                    localStorage.setItem('cms_contents', JSON.stringify(data.contents));
-
-                    // Reload
-                    initCMS();
-                    renderTemplates();
-                    renderContents();
-
-                    alert('Restauration effectuée avec succès !');
-
-                } catch (error) {
-                    console.error('Import error:', error);
-                    alert('Erreur lors de l\'import : ' + error.message);
-                }
-                input.value = '';
-            };
-            reader.readAsText(file);
-        }
-
-        // ====================================================================
-        // TEMPLATE ACTIONS
-        // ====================================================================
-
-        function createNewTemplate() {
-            // Open Gemini prompt modal
-            openPromptModal();
-        }
-
-        function editTemplate(id) {
-            const template = templateManager.get(id);
-            if (!template) return;
-
-            // For now, just show an alert - to be implemented later
-            alert('Édition de template à implémenter dans la prochaine phase');
-        }
-
-        function duplicateTemplate(id) {
-            const template = templateManager.get(id);
-            if (!template) return;
-
-            const newTemplate = templateManager.create({
-                ...template,
-                name: template.name + ' (Copie)'
-            });
-
-            renderTemplates();
-        }
-
-        function deleteTemplate(id) {
-            const template = templateManager.get(id);
-            if (!template) return;
-
-            if (!confirm(`Supprimer le template "${template.name}" ?\nTous les contenus associés seront également supprimés.`)) return;
-
-            // Delete all contents using this template
-            const contents = contentManager.listByTemplate(id);
-            contents.forEach(c => contentManager.delete(c.id));
-
-            templateManager.delete(id);
-            renderTemplates();
-        }
-
-        // ====================================================================
-        // CONTENT ACTIONS
-        // ==================================================================== 
-
-        let editingContentId = null; // Track if we're editing or creating
-
-        function createNewContent() {
-            const templates = templateManager.list();
-            if (templates.length === 0) {
-                alert('Veuillez d\'abord créer un template');
-                return;
-            }
-
-            editingContentId = null;
-            document.getElementById('content-modal-title').innerHTML = '<i class="fas fa-file-alt text-blue-400"></i> Nouveau Contenu';
-
-            // Populate template dropdown
-            const select = document.getElementById('content-template-select');
-            select.innerHTML = '<option value="">Sélectionnez un template...</option>' +
-                templates.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-
-            // Show template selection
-            document.getElementById('template-selection-div').style.display = 'block';
-
-            // Clear fields
-            document.getElementById('content-slug').value = '';
-            document.getElementById('content-fields-container').innerHTML = `
-                <div class="text-center py-8 text-slate-500">
-                    <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
-                    <p>Sélectionnez un template pour voir les champs</p>
-                </div>
-            `;
-
-            // Show modal
-            document.getElementById('content-modal').classList.remove('hidden');
-        }
-
-        function editContent(id) {
-            const content = contentManager.get(id);
-            if (!content) return;
-
-            editingContentId = id;
-            document.getElementById('content-modal-title').innerHTML = '<i class="fas fa-edit text-blue-400"></i> Éditer Contenu';
-
-            // Populate template dropdown (disabled since template can't change)
-            const templates = templateManager.list();
-            const select = document.getElementById('content-template-select');
-            select.innerHTML = templates.map(t =>
-                `<option value="${t.id}" ${t.id === content.templateId ? 'selected' : ''}>${t.name}</option>`
-            ).join('');
-            select.disabled = true;
-
-            // Hide template selection label (editing, template is locked)
-            document.getElementById('template-selection-div').style.display = 'none';
-
-            // Load slug
-            document.getElementById('content-slug').value = content.slug;
-
-            // Generate fields for this template and populate with content data
-            loadTemplateFields(content.data);
-
-            // Show modal
-            document.getElementById('content-modal').classList.remove('hidden');
-        }
-
-        function closeContentModal() {
-            document.getElementById('content-modal').classList.add('hidden');
-            document.getElementById('content-template-select').disabled = false;
-            editingContentId = null;
-        }
-
-        function loadTemplateFields(existingData = {}) {
-            const templateId = document.getElementById('content-template-select').value;
-            if (!templateId) {
-                document.getElementById('content-fields-container').innerHTML = `
-                    <div class="text-center py-8 text-slate-500">
-                        <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
-                        <p>Sélectionnez un template pour voir les champs</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const template = templateManager.get(templateId);
-            if (!template || !template.fields) return;
-
-            const container = document.getElementById('content-fields-container');
-            container.innerHTML = '';
-
-            template.fields.forEach(field => {
-                const fieldDiv = document.createElement('div');
-                const value = existingData[field.name] || '';
-
-                const label = `
-                    <label class="block text-sm font-medium text-slate-300 mb-2">
-                        ${field.name} ${field.required ? '<span class="text-red-400">*</span>' : ''}
-                        <span class="text-slate-500 text-xs ml-2">(${field.type})</span>
-                    </label>
-                `;
-
-                let input = '';
-                switch (field.type) {
-                    case 'text':
-                        input = `<input type="text" id="field-${field.name}" value="${value}" 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
-                            ${field.required ? 'required' : ''}>`;
-                        break;
-                    case 'richtext':
-                        input = `<textarea id="field-${field.name}" rows="8" 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 font-mono text-sm" 
-                            ${field.required ? 'required' : ''}>${value}</textarea>
-                            <p class="text-xs text-slate-500 mt-1">HTML autorisé</p>`;
-                        break;
-                    case 'date':
-                        input = `<input type="date" id="field-${field.name}" value="${value}" 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
-                            ${field.required ? 'required' : ''}>`;
-                        break;
-                    case 'image':
-                        input = `<input type="url" id="field-${field.name}" value="${value}" placeholder="https://..." 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
-                            ${field.required ? 'required' : ''}>
-                            <p class="text-xs text-slate-500 mt-1">URL de l'image</p>`;
-                        break;
-                    case 'array':
-                        const arrayValues = Array.isArray(value) ? value.join(', ') : value;
-                        input = `<input type="text" id="field-${field.name}" value="${arrayValues}" placeholder="tag1, tag2, tag3" 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">
-                            <p class="text-xs text-slate-500 mt-1">Séparez par des virgules</p>`;
-                        break;
-                    default:
-                        input = `<input type="text" id="field-${field.name}" value="${value}" 
-                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">`;
-                }
-
-                fieldDiv.innerHTML = label + input;
-                container.appendChild(fieldDiv);
-            });
-        }
-
-        function saveContent(status) {
-            const templateId = document.getElementById('content-template-select').value;
-            if (!templateId) {
-                alert('Veuillez sélectionner un template');
-                return;
-            }
-
-            const template = templateManager.get(templateId);
-            if (!template) return;
-
-            // Collect data from all fields
-            const data = {};
-            template.fields.forEach(field => {
-                const input = document.getElementById(`field-${field.name}`);
-                if (!input) return;
-
-                let value = input.value;
-
-                // Handle array type
-                if (field.type === 'array' && value) {
-                    value = value.split(',').map(v => v.trim()).filter(v => v);
-                }
-
-                // Validation
-                if (field.required && (!value || value.length === 0)) {
-                    alert(`Le champ "${field.name}" est requis`);
-                    input.focus();
-                    throw new Error('Validation failed');
-                }
-
-                data[field.name] = value;
-            });
-
-            const slug = document.getElementById('content-slug').value;
-
-            if (editingContentId) {
-                // Update existing content
-                contentManager.update(editingContentId, { data, slug, status });
-            } else {
-                // Create new content
-                contentManager.create(templateId, data, slug || null);
-            }
-
-            closeContentModal();
-            renderContents();
-
-            // Show success notification
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-            notification.textContent = editingContentId ? 'Contenu mis à jour !' : 'Contenu créé !';
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 2000);
-        }
-
-        function previewContent(id) {
-            const content = contentManager.get(id);
-            const template = templateManager.get(content.templateId);
-
-            if (!content || !template) return;
-
-            // Render content with template
-            const rendered = templateRenderer.render(template.htmlTemplate, content.data);
-
-            // Open in modal or new window
-            const w = window.open('', '_blank');
-            w.document.write(rendered);
-            w.document.close();
-        }
-
-        function deleteContent(id) {
-            const content = contentManager.get(id);
-            if (!content) return;
-
-            if (!confirm(`Supprimer ce contenu ?`)) return;
-
-            contentManager.delete(id);
-            renderContents();
-        }
-
-        // Listen to title changes
-        document.addEventListener('DOMContentLoaded', function () {
-            const titleInput = document.getElementById('page-title');
-            const slugInput = document.getElementById('page-slug');
-
-            if (titleInput) {
-                titleInput.addEventListener('input', updatePageMetadata);
-            }
-            if (slugInput) {
-                slugInput.addEventListener('input', updatePageMetadata);
-            }
-        });
 
         // Update character count
         function updateCharacterCount() {
@@ -1430,7 +559,7 @@ ${htmlContent}
 
             // Validation
             if (!prompt) {
-                showError('Veuillez décrire le template que vous souhaitez générer.');
+                showError('Veuillez décrire ce que vous souhaitez générer.');
                 return;
             }
 
@@ -1441,51 +570,73 @@ ${htmlContent}
 
             // UI Loading State
             if (generateBtn) generateBtn.disabled = true;
-            if (btnText) btnText.textContent = 'Génération du template...';
+            if (btnText) btnText.textContent = 'Génération en cours...';
             if (btnIcon) btnIcon.classList.add('hidden');
             if (loadingIcon) loadingIcon.classList.remove('hidden');
             if (errorDiv) errorDiv.classList.add('hidden');
 
             try {
-                // Construct the API request with CMS Template instruction
-                const systemInstruction = "You are an expert CMS Architect specialized in creating reusable web templates.\n\n" +
-                    "YOUR GOAL: Generate a CMS Template based on the user's description.\n" +
-                    "OUTPUT FORMAT: You must return a SINGLE VALID JSON object. Do not include markdown formatting like ```json ... ```.\n\n" +
+                // Construct the API request with enriched system instruction
+                const systemInstruction = "You are an expert web developer specialized in creating dynamic web pages.\n\n" +
+                    "IMPORTANT RULES:\n" +
+                    "1. Generate ONLY valid HTML code with Tailwind CSS classes\n" +
+                    "2. Do NOT include markdown backticks\n" +
+                    "3. Do NOT include explanations or comments outside the code\n" +
+                    "4. The code should be complete body content or a full HTML page if requested\n" +
+                    "5. Use modern Tailwind CSS utility classes for styling\n" +
+                    "6. Always implement loading states and error handling for API calls\n\n" +
 
-                    "JSON STRUCTURE:\n" +
-                    "{\n" +
-                    "  \"name\": \"Template Name\",\n" +
-                    "  \"description\": \"Brief description of what this template is for\",\n" +
-                    "  \"category\": \"content\",\n" +
-                    "  \"fields\": [\n" +
-                    "    { \"name\": \"title\", \"type\": \"text\", \"required\": true },\n" +
-                    "    { \"name\": \"content\", \"type\": \"richtext\", \"required\": true },\n" +
-                    "    { \"name\": \"coverImage\", \"type\": \"image\", \"required\": false },\n" +
-                    "    { \"name\": \"publishDate\", \"type\": \"date\", \"required\": true },\n" +
-                    "    { \"name\": \"tags\", \"type\": \"array\", \"required\": false }\n" +
-                    "  ],\n" +
-                    "  \"htmlTemplate\": \"<!DOCTYPE html><html>...<body><h1>{{title}}</h1><img src='{{coverImage}}'><div>{{{content}}}</div></body></html>\"\n" +
-                    "}\n\n" +
+                    "STACKPAGES CMS INTERNAL API:\n" +
+                    "This CMS has an internal API that provides dynamic content. When the user requests content like blog, videos, podcasts, you MUST use these endpoints:\n\n" +
 
-                    "AVAILABLE FIELD TYPES:\n" +
-                    "- 'text': Single line text input (titles, names)\n" +
-                    "- 'richtext': Multi-line HTML editor (article body, descriptions)\n" +
-                    "- 'date': Date picker\n" +
-                    "- 'image': Image URL input\n" +
-                    "- 'array': Comma-separated list (tags, categories)\n\n" +
+                    "API ENDPOINTS:\n\n" +
+                    "1. /api/posts - Substack Articles\n" +
+                    "   Response: Array of objects [{ title, description, content, link, pubDate, author, image }]\n" +
+                    "   Note: Use 'content' for full HTML body, 'image' for cover image, 'link' for URL.\n\n" +
 
-                    "HTML TEMPLATE RULES:\n" +
-                    "- Use {{fieldName}} for escaped text (safe)\n" +
-                    "- Use {{{fieldName}}} for raw HTML (rich text content)\n" +
-                    "- Use Tailwind CSS for styling\n" +
-                    "- Make it responsive and modern\n" +
-                    "- Include a placeholder for every field defined in 'fields'\n" +
-                    "- Do NOT include dummy data, use the {{placeholders}}\n\n" +
+                    "2. /api/videos - YouTube Videos\n" +
+                    "   Response: Array of objects [{ title, description, link, thumbnail, published }]\n" +
+                    "   Note: Use 'link' for URL (convert to embed if needed), 'published' for date.\n\n" +
 
-                    "DESIGN GUIDELINES:\n" +
-                    "- Use a dark mode compatible design by default (slate-900 bg, white text)\n" +
-                    "- Use modern typography and spacing\n" +
-                    "- Ensure the layout handles empty optional fields gracefully";
+                    "3. /api/podcasts - Podcast Episodes\n" +
+                    "   Response: Array of objects [{ title, description, link, audioUrl, pubDate }]\n" +
+                    "   Note: Use 'link' for page URL, 'audioUrl' for mp3 source.\n\n" +
+
+                    "4. /api/metadata - Site Metadata\n" +
+                    "   Response: Object { title, description, author, logo, keywords[] }\n\n" +
+
+                    "CODE PATTERN:\n" +
+                    "When user requests dynamic content, use this pattern:\n" +
+                    "- Create a container div with an ID\n" +
+                    "- Add a loading message initially\n" +
+                    "- Use fetch() with ABSOLUTE URL: window.location.origin + '/api/endpoint'\n" +
+                    "- Check if data is array: if (Array.isArray(data) && data.length > 0)\n" +
+                    "- Map the data array to HTML\n" +
+                    "- Include error handling with catch()\n\n" +
+
+                    "CRITICAL - API CALLS:\n" +
+                    "ALWAYS use absolute URLs for API calls:\n" +
+                    "fetch(window.location.origin + '/api/posts')\n" +
+                    "NOT just fetch('/api/posts')\n\n" +
+
+                    "EXAMPLE:\n" +
+                    "User asks for 'blog' → Generate HTML with fetch(window.location.origin + '/api/posts')\n" +
+                    "User asks for 'videos' → Generate HTML with fetch(window.location.origin + '/api/videos')\n" +
+                    "User asks for 'podcasts' → Generate HTML with fetch(window.location.origin + '/api/podcasts')\n\n" +
+
+                    "STYLING:\n" +
+                    "- Use Tailwind CSS utility classes\n" +
+                    "- Make designs modern and responsive\n" +
+                    "- Include animations and hover effects\n" +
+                    "- Always add loading states and error handling\n\n" +
+
+                    "CRITICAL:\n" +
+                    "- JavaScript code MUST be inside script tags at the end\n" +
+                    "- Do NOT use external libraries except TailwindCSS\n" +
+                    "- Make sure all IDs match between HTML and JavaScript\n" +
+                    "- ALWAYS use window.location.origin + '/api/...' for API calls\n" +
+                    "- API returns ARRAYS (except metadata), so iterate directly on data, NOT data.posts\n" +
+                    "- Use correct field names: 'link' (not url), 'pubDate'/'published' (not date/publishedAt)";
 
                 const fullPrompt = systemInstruction + "\n\nUser Request: " + prompt;
 
@@ -1513,34 +664,20 @@ ${htmlContent}
                 let generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
                 // Clean up markdown if present
-                generatedText = generatedText.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '');
+                generatedText = generatedText.replace(/^```html\s*/i, '').replace(/```\s*$/i, '');
 
-                let templateData;
-                try {
-                    templateData = JSON.parse(generatedText);
-                } catch (e) {
-                    console.error('Failed to parse JSON:', generatedText);
-                    throw new Error('L\'IA n\'a pas généré un format JSON valide. Veuillez réessayer.');
+                if (generatedText) {
+                    // Update editor
+                    if (monacoEditor) {
+                        monacoEditor.setValue(generatedText);
+                    }
+                    closePromptModal();
+
+                    // Show success notification (optional)
+                    // alert('Code généré avec succès !');
+                } else {
+                    throw new Error('Aucun code n\'a été généré.');
                 }
-
-                // Validate structure
-                if (!templateData.name || !templateData.fields || !templateData.htmlTemplate) {
-                    throw new Error('Le template généré est incomplet (nom, champs ou HTML manquants).');
-                }
-
-                // Create the template
-                const newTemplate = templateManager.create(templateData);
-
-                // Refresh UI
-                renderTemplates();
-                closePromptModal();
-
-                // Show success notification
-                const notification = document.createElement('div');
-                notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                notification.textContent = `Template "${newTemplate.name}" généré avec succès ! ✨`;
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 3000);
 
             } catch (error) {
                 console.error('Gemini Error:', error);
@@ -1548,7 +685,7 @@ ${htmlContent}
             } finally {
                 // Reset UI
                 if (generateBtn) generateBtn.disabled = false;
-                if (btnText) btnText.textContent = 'Générer le template';
+                if (btnText) btnText.textContent = 'Générer le code';
                 if (btnIcon) btnIcon.classList.remove('hidden');
                 if (loadingIcon) loadingIcon.classList.add('hidden');
             }
@@ -1572,12 +709,6 @@ ${htmlContent}
             if (domainEl) {
                 domainEl.textContent = window.location.hostname || 'localhost';
             }
-
-            // Initialize CMS system
-            initCMS();
-
-            // Render initial Templates view
-            renderTemplates();
 
             // Initialize Monaco Editor
             initMonacoEditor('');
