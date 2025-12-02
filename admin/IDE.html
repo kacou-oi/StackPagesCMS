@@ -171,6 +171,21 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Tabs Bar for Multi-Page Support -->
+            <div class="px-6 py-2 border-b border-slate-700 bg-[#1e1e1e] flex items-center justify-between">
+                <div
+                    class="flex items-center gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent flex-1">
+                    <div id="page-tabs" class="flex items-center gap-2">
+                        <!-- Tabs will be dynamically inserted here -->
+                    </div>
+                </div>
+                <button onclick="addNewPage()"
+                    class="ml-4 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-plus"></i> Nouvelle Page
+                </button>
+            </div>
+
             <!-- Monaco Editor -->
             <div class="flex-1 bg-[#1e2a3a] overflow-hidden">
                 <div id="monaco-editor-container"></div>
@@ -367,6 +382,247 @@
                 updateCharacterCount();
             });
         }
+
+        // ====================================================================
+        // MULTI-PAGE PROJECT MANAGEMENT
+        // ====================================================================
+
+        // Project State
+        let currentProject = {
+            name: "Mon Projet",
+            pages: [
+                {
+                    id: generatePageId(),
+                    title: "Accueil",
+                    slug: "index",
+                    content: ""
+                }
+            ],
+            activePageId: null,
+            sharedDesign: {
+                extracted: false,
+                colorScheme: "",
+                components: {}
+            }
+        };
+
+        // Generate unique page ID
+        function generatePageId() {
+            return 'page_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Initialize project (on page load)
+        function initProject() {
+            loadProject();
+            if (currentProject.pages.length > 0) {
+                currentProject.activePageId = currentProject.pages[0].id;
+            }
+            renderTabs();
+            loadActivePage();
+        }
+
+        // Load project from localStorage
+        function loadProject() {
+            const stored = localStorage.getItem('multiPageProject');
+            if (stored) {
+                try {
+                    currentProject = JSON.parse(stored);
+                    // Ensure at least one page exists
+                    if (!currentProject.pages || currentProject.pages.length === 0) {
+                        currentProject.pages = [{
+                            id: generatePageId(),
+                            title: "Accueil",
+                            slug: "index",
+                            content: ""
+                        }];
+                    }
+                } catch (e) {
+                    console.error('Error loading project:', e);
+                }
+            }
+        }
+
+        // Save project to localStorage
+        function saveProject() {
+            // Save current page content before saving
+            saveCurrentPageContent();
+            localStorage.setItem('multiPageProject', JSON.stringify(currentProject));
+            console.log('Project saved:', currentProject);
+        }
+
+        // Save current page content to project
+        function saveCurrentPageContent() {
+            if (!monacoEditor || !currentProject.activePageId) return;
+
+            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
+            if (activePage) {
+                activePage.content = monacoEditor.getValue();
+            }
+        }
+
+        // Load active page content into editor
+        function loadActivePage() {
+            if (!currentProject.activePageId) return;
+
+            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
+            if (activePage && monacoEditor) {
+                monacoEditor.setValue(activePage.content || '');
+
+                // Update page title input
+                const titleInput = document.getElementById('page-title');
+                const slugInput = document.getElementById('page-slug');
+                if (titleInput) titleInput.value = activePage.title || '';
+                if (slugInput) slugInput.value = activePage.slug || '';
+            }
+        }
+
+        // Switch to a different page
+        function switchToPage(pageId) {
+            if (pageId === currentProject.activePageId) return;
+
+            // Save current page before switching
+            saveCurrentPageContent();
+
+            // Update active page
+            currentProject.activePageId = pageId;
+
+            // Load new page
+            loadActivePage();
+
+            // Re-render tabs to update active state
+            renderTabs();
+
+            // Save project
+            saveProject();
+        }
+
+        // Add new page
+        function addNewPage() {
+            const newPage = {
+                id: generatePageId(),
+                title: `Page ${currentProject.pages.length + 1}`,
+                slug: `page-${currentProject.pages.length + 1}`,
+                content: ""
+            };
+
+            currentProject.pages.push(newPage);
+            switchToPage(newPage.id);
+            renderTabs();
+            saveProject();
+
+            // Focus on title input for renaming
+            setTimeout(() => {
+                const titleInput = document.getElementById('page-title');
+                if (titleInput) {
+                    titleInput.focus();
+                    titleInput.select();
+                }
+            }, 100);
+        }
+
+        // Close/Delete page
+        function closePage(pageId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            // Prevent closing last page
+            if (currentProject.pages.length === 1) {
+                alert('Vous ne pouvez pas supprimer la dernière page.');
+                return;
+            }
+
+            // Confirm deletion
+            const page = currentProject.pages.find(p => p.id === pageId);
+            if (!confirm(`Voulez-vous vraiment supprimer la page "${page?.title || 'Sans titre'}" ?`)) {
+                return;
+            }
+
+            // Remove page
+            const pageIndex = currentProject.pages.findIndex(p => p.id === pageId);
+            currentProject.pages.splice(pageIndex, 1);
+
+            // If closing active page, switch to another
+            if (currentProject.activePageId === pageId) {
+                const newActivePage = currentProject.pages[Math.max(0, pageIndex - 1)];
+                currentProject.activePageId = newActivePage.id;
+                loadActivePage();
+            }
+
+            renderTabs();
+            saveProject();
+        }
+
+        // Render tabs in UI
+        function renderTabs() {
+            const tabsContainer = document.getElementById('page-tabs');
+            if (!tabsContainer) return;
+
+            tabsContainer.innerHTML = '';
+
+            currentProject.pages.forEach(page => {
+                const isActive = page.id === currentProject.activePageId;
+
+                const tab = document.createElement('div');
+                tab.className = `
+                    group relative flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer transition-all
+                    ${isActive
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}
+                `;
+                tab.onclick = () => switchToPage(page.id);
+
+                // Page title
+                const title = document.createElement('span');
+                title.className = 'text-sm font-medium select-none';
+                title.textContent = page.title || 'Sans titre';
+                tab.appendChild(title);
+
+                // Close button
+                if (currentProject.pages.length > 1) {
+                    const closeBtn = document.createElement('button');
+                    closeBtn.className = `
+                        text-xs opacity-0 group-hover:opacity-100 transition-opacity
+                        ${isActive ? 'text-white hover:text-red-200' : 'text-slate-400 hover:text-red-400'}
+                    `;
+                    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    closeBtn.onclick = (e) => closePage(page.id, e);
+                    tab.appendChild(closeBtn);
+                }
+
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        // Update page metadata (title, slug)
+        function updatePageMetadata() {
+            if (!currentProject.activePageId) return;
+
+            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
+            if (!activePage) return;
+
+            const titleInput = document.getElementById('page-title');
+            const slugInput = document.getElementById('page-slug');
+
+            if (titleInput) activePage.title = titleInput.value || 'Sans titre';
+            if (slugInput) activePage.slug = slugInput.value || 'page';
+
+            renderTabs();
+            saveProject();
+        }
+
+        // Listen to title changes
+        document.addEventListener('DOMContentLoaded', function () {
+            const titleInput = document.getElementById('page-title');
+            const slugInput = document.getElementById('page-slug');
+
+            if (titleInput) {
+                titleInput.addEventListener('input', updatePageMetadata);
+            }
+            if (slugInput) {
+                slugInput.addEventListener('input', updatePageMetadata);
+            }
+        });
 
         // Update character count
         function updateCharacterCount() {
@@ -638,7 +894,20 @@ ${htmlContent}
                     "- API returns ARRAYS (except metadata), so iterate directly on data, NOT data.posts\n" +
                     "- Use correct field names: 'link' (not url), 'pubDate'/'published' (not date/publishedAt)";
 
-                const fullPrompt = systemInstruction + "\n\nUser Request: " + prompt;
+                // Multi-page context for AI
+                let multiPageContext = "";
+                if (currentProject.pages.length > 1) {
+                    const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
+                    const otherPages = currentProject.pages.filter(p => p.id !== currentProject.activePageId);
+
+                    multiPageContext = "\n\nMULTI-PAGE PROJECT:\n" +
+                        "- Total pages: " + currentProject.pages.length + "\n" +
+                        "- Current page: " + (activePage?.title || 'Untitled') + "\n" +
+                        "- Other pages: " + otherPages.map(p => p.title).join(', ') + "\n" +
+                        "- MAINTAIN same visual style (colors, fonts, spacing) across all pages\n";
+                }
+
+                const fullPrompt = systemInstruction + multiPageContext + "\n\nUser Request: " + prompt;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
@@ -709,6 +978,9 @@ ${htmlContent}
             if (domainEl) {
                 domainEl.textContent = window.location.hostname || 'localhost';
             }
+
+            // Initialize multi-page project
+            initProject();
 
             // Initialize Monaco Editor
             initMonacoEditor('');
