@@ -1,0 +1,967 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">Mon Site Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .modal-fade-enter-active, .modal-fade-leave-active {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-fade-enter-from, .modal-fade-leave-to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-fade-enter-to, .modal-fade-leave-from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .article-content a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        .article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6 {
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1a202c; /* gray-900 */
+        }
+        .article-content h1 { font-size: 2.25rem; } /* text-4xl */
+        .article-content h2 { font-size: 2rem; }   /* text-3xl */
+        .article-content h3 { font-size: 1.75rem; } /* text-2xl */
+        .article-content h4 { font-size: 1.5rem; }  /* text-xl */
+        .article-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #4a5568; /* gray-700 */
+        }
+        .article-content ul, .article-content ol {
+            list-style-position: outside;
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: #4a5568; /* gray-700 */
+        }
+        .article-content ul li {
+            list-style-type: disc;
+            margin-bottom: 0.5rem;
+        }
+        .article-content ol li {
+            list-style-type: decimal;
+            margin-bottom: 0.5rem;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #cbd5e1;
+            padding-left: 1rem;
+            margin-left: 0.5rem;
+            font-style: italic;
+            color: #64748b;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .article-content pre {
+            background-color: #e2e8f0; /* gray-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .article-content code {
+            font-family: monospace;
+            background-color: #e2e8f0; /* gray-200 */
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .article-content th, .article-content td {
+            border: 1px solid #e2e8f0; /* gray-200 */
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .article-content th {
+            background-color: #f8fafc; /* gray-50 */
+            font-weight: 600;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-top-10{top:-2.5rem}.bottom-0{bottom:0px}.left-0{left:0px}.right-0{right:0px}.right-4{right:1rem}.top-0{top:0px}.top-4{top:1rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.col-span-full{grid-column:1 / -1}.mx-auto{margin-left:auto;margin-right:auto}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mr-2{margin-right:0.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-8{margin-bottom:2rem}.mt-12{margin-top:3rem}.mb-2{margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mr-3{margin-right:0.75rem}.mt-1{margin-top:0.25rem}.mt-10{margin-top:2.5rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16 / 9}.h-0\.5{height:0.125rem}.h-10{height:2.5rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-64{height:16rem}.h-8{height:2rem}.h-full{height:100%}.h-16{height:4rem}.h-12{height:3rem}.h-48{height:12rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-0{width:0px}.w-10{width:2.5rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-8{width:2rem}.w-full{width:100%}.w-16{width:4rem}.w-12{width:3rem}.max-w-4xl{max-width:56rem}.max-w-none{max-width:none}.max-w-3xl{max-width:48rem}.flex-grow{flex-grow:1}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.gap-12{gap:3rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded-t-lg{border-top-left-radius:0.5rem;border-top-right-radius:0.5rem}.border-4{border-width:4px}.border{border-width:1px}.border-t{border-top-width:1px}.border-b-4{border-bottom-width:4px}.border-t-4{border-top-width:4px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-black\/90{background-color:rgb(0 0 0 / 0.9)}.bg-blue-400{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-blue-700{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-600{--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-800{--tw-bg-opacity:1;background-color:rgb(30 64 175 / var(--tw-bg-opacity, 1))}.bg-cyan-500{--tw-bg-opacity:1;background-color:rgb(6 182 212 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-gray-700{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.bg-gradient-to-t{background-image:linear-gradient(to top, var(--tw-gradient-stops))}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-cyan-50{--tw-gradient-from:#ecfeff var(--tw-gradient-from-position);--tw-gradient-to:rgb(236 254 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-50{--tw-gradient-from:#f0fdf4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(240 253 244 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-50{--tw-gradient-from:#faf5ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 245 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-red-50{--tw-gradient-from:#fef2f2 var(--tw-gradient-from-position);--tw-gradient-to:rgb(254 242 242 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-yellow-50{--tw-gradient-from:#fefce8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(254 252 232 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-black\/80{--tw-gradient-from:rgb(0 0 0 / 0.8) var(--tw-gradient-from-position);--tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-blue-100{--tw-gradient-to:#dbeafe var(--tw-gradient-to-position)}.to-indigo-100{--tw-gradient-to:#e0e7ff var(--tw-gradient-to-position)}.to-orange-100{--tw-gradient-to:#ffedd5 var(--tw-gradient-to-position)}.to-pink-100{--tw-gradient-to:#fce7f3 var(--tw-gradient-to-position)}.to-purple-500{--tw-gradient-to:#a855f7 var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-teal-100{--tw-gradient-to:#ccfbf1 var(--tw-gradient-to-position)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.pt-20{padding-top:5rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-10{opacity:0.1}.opacity-90{opacity:0.9}.opacity-50{opacity:0.5}.opacity-0{opacity:0}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-200{transition-delay:200ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.duration-200{transition-duration:200ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.hover\:-translate-y-2:hover{--tw-translate-y:-0.5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:-translate-y-1:hover{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-800:hover{--tw-bg-opacity:1;background-color:rgb(30 64 175 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-800:hover{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.hover\:bg-red-700:hover{--tw-bg-opacity:1;background-color:rgb(185 28 28 / var(--tw-bg-opacity, 1))}.hover\:text-blue-600:hover{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.hover\:text-gray-300:hover{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:w-full{width:100%}.group:hover .group-hover\:rotate-6{--tw-rotate:6deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 768px){.md\:block{display:block}.md\:flex{display:flex}.md\:hidden{display:none}.md\:w-1\/2{width:50%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:justify-start{justify-content:flex-start}.md\:p-8{padding:2rem}.md\:p-12{padding:3rem}.md\:py-24{padding-top:6rem;padding-bottom:6rem}.md\:py-32{padding-top:8rem;padding-bottom:8rem}.md\:py-16{padding-top:4rem;padding-bottom:4rem}.md\:text-left{text-align:left}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:p-10{padding:2.5rem}.lg\:p-16{padding:4rem}}</style><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-top-10{top:-2.5rem}.bottom-0{bottom:0px}.left-0{left:0px}.right-0{right:0px}.right-4{right:1rem}.top-0{top:0px}.top-4{top:1rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.col-span-full{grid-column:1 / -1}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mr-2{margin-right:0.5rem}.mr-3{margin-right:0.75rem}.mt-1{margin-top:0.25rem}.mt-10{margin-top:2.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.mb-10{margin-bottom:2.5rem}.mb-8{margin-bottom:2rem}.mt-12{margin-top:3rem}.mb-1{margin-bottom:0.25rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16 / 9}.h-0\.5{height:0.125rem}.h-10{height:2.5rem}.h-12{height:3rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-64{height:16rem}.h-8{height:2rem}.h-full{height:100%}.h-16{height:4rem}.h-48{height:12rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-0{width:0px}.w-10{width:2.5rem}.w-12{width:3rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-8{width:2rem}.w-full{width:100%}.w-16{width:4rem}.max-w-4xl{max-width:56rem}.max-w-none{max-width:none}.max-w-3xl{max-width:48rem}.flex-grow{flex-grow:1}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded-t-lg{border-top-left-radius:0.5rem;border-top-right-radius:0.5rem}.border{border-width:1px}.border-4{border-width:4px}.border-t{border-top-width:1px}.border-b-4{border-bottom-width:4px}.border-t-4{border-top-width:4px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-black\/90{background-color:rgb(0 0 0 / 0.9)}.bg-blue-400{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-blue-700{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-600{--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.bg-gray-700{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-800{--tw-bg-opacity:1;background-color:rgb(30 64 175 / var(--tw-bg-opacity, 1))}.bg-cyan-500{--tw-bg-opacity:1;background-color:rgb(6 182 212 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.bg-gradient-to-t{background-image:linear-gradient(to top, var(--tw-gradient-stops))}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-cyan-50{--tw-gradient-from:#ecfeff var(--tw-gradient-from-position);--tw-gradient-to:rgb(236 254 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-50{--tw-gradient-from:#f0fdf4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(240 253 244 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-50{--tw-gradient-from:#faf5ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 245 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-red-50{--tw-gradient-from:#fef2f2 var(--tw-gradient-from-position);--tw-gradient-to:rgb(254 242 242 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-yellow-50{--tw-gradient-from:#fefce8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(254 252 232 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-black\/80{--tw-gradient-from:rgb(0 0 0 / 0.8) var(--tw-gradient-from-position);--tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-blue-100{--tw-gradient-to:#dbeafe var(--tw-gradient-to-position)}.to-indigo-100{--tw-gradient-to:#e0e7ff var(--tw-gradient-to-position)}.to-orange-100{--tw-gradient-to:#ffedd5 var(--tw-gradient-to-position)}.to-pink-100{--tw-gradient-to:#fce7f3 var(--tw-gradient-to-position)}.to-purple-500{--tw-gradient-to:#a855f7 var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-teal-100{--tw-gradient-to:#ccfbf1 var(--tw-gradient-to-position)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-8{padding-left:2rem;padding-right:2rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pt-20{padding-top:5rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-10{opacity:0.1}.opacity-90{opacity:0.9}.opacity-50{opacity:0.5}.opacity-0{opacity:0}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-200{transition-delay:200ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.duration-200{transition-duration:200ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.hover\:-translate-y-2:hover{--tw-translate-y:-0.5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:-translate-y-1:hover{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-800:hover{--tw-bg-opacity:1;background-color:rgb(30 64 175 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-800:hover{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.hover\:bg-red-700:hover{--tw-bg-opacity:1;background-color:rgb(185 28 28 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:text-blue-600:hover{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.hover\:text-gray-300:hover{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:w-full{width:100%}.group:hover .group-hover\:rotate-6{--tw-rotate:6deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 768px){.md\:block{display:block}.md\:flex{display:flex}.md\:hidden{display:none}.md\:w-1\/2{width:50%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:justify-start{justify-content:flex-start}.md\:p-12{padding:3rem}.md\:p-8{padding:2rem}.md\:py-16{padding-top:4rem;padding-bottom:4rem}.md\:py-24{padding-top:6rem;padding-bottom:6rem}.md\:py-32{padding-top:8rem;padding-bottom:8rem}.md\:text-left{text-align:left}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:p-10{padding:2.5rem}.lg\:p-16{padding:4rem}}</style>
+                            
+                        
+                            
+                        </head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="#home" class="flex items-center text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors" id="header-logo-link">
+                    <img id="header-logo" src="" alt="Logo" class="h-8 mr-2 transition-transform hover:scale-105" onerror="this.style.display='none';" style="display: none;">
+                    <span id="header-site-name" class="">Mon Site Web</span>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Accueil
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#publications" class="nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Publications
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#videos" class="nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Vidéos
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#contact" class="nav-link hover:text-blue-600 transition-colors relative group py-2 text-blue-600 font-semibold">
+                    Contact
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+                </a>
+            </div>
+            <button class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md" id="mobile-menu-button">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <a href="#contact" class="hidden md:block bg-blue-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                Me Contacter
+            </a>
+        </nav>
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+        <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="close-mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="mt-8 flex flex-col space-y-4">
+                    <a href="#home" class="nav-link text-lg text-gray-700 hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100 text-gray-600">Accueil</a>
+                    <a href="#publications" class="nav-link text-lg text-gray-700 hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100 text-gray-600">Publications</a>
+                    <a href="#videos" class="nav-link text-lg text-gray-700 hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100 text-gray-600">Vidéos</a>
+                    <a href="#contact" class="nav-link text-lg text-gray-700 hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100 text-blue-600 font-semibold">Contact</a>
+                    <a href="#contact" class="bg-blue-600 text-white text-center px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors mt-4">Me Contacter</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow pt-20">
+                <section class="container mx-auto px-6 py-10 md:py-16">
+                    <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-12">Me Contacter</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white rounded-xl shadow-xl p-8 md:p-12 lg:p-16">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Envoyez-moi un message</h3>
+                            <form class="space-y-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nom Complet</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Votre nom">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Adresse E-mail</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="votre.email@example.com">
+                                </div>
+                                <div>
+                                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                    <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Sujet de votre message">
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Votre Message</label>
+                                    <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Écrivez votre message ici..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
+                                    Envoyer le Message
+                                </button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Informations de Contact</h3>
+                            <div class="space-y-6 text-gray-700 text-lg">
+                                <p class="flex items-center">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-1 12H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2z"></path></svg>
+                                    <a href="mailto:contact@example.com" class="hover:text-blue-600 transition-colors">contact@example.com</a>
+                                </p>
+                                <p class="flex items-center">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <a href="tel:+33123456789" class="hover:text-blue-600 transition-colors">+33 1 23 45 67 89</a>
+                                </p>
+                                <p class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span>
+                                        123 Rue de l'Innovation<br>
+                                        75000 Paris, France
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="mt-10">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">Suivez-moi sur les Réseaux</h3>
+                                <div class="flex space-x-4 justify-center md:justify-start">
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-colors transform hover:scale-110" aria-label="LinkedIn">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M20.447 20.452h-3.518v-5.595c0-1.332-.51-2.247-1.684-2.247-1.282 0-2.007.868-2.333 1.708-.12.302-.15.725-.15 1.157v4.977h-3.519s.047-9.664 0-10.648h3.519v1.503c-.027.051-.054.09-.08.13-.393-.683-.872-1.397-2.185-1.397-2.668 0-4.665 1.789-4.665 5.595v5.807H3.882V9.804h3.519v1.503a3.52 3.52 0 0 0 .15-.13c.42-.69.878-1.397 2.277-1.397 2.916 0 5.105 2.156 5.105 6.777v5.807h3.518V14.15c0-2.31-.01-3.6-0.01-3.6zM6.92 5.275a2.27 2.27 0 1 1-4.54 0 2.27 2.27 0 0 1 4.54 0z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-400 text-white shadow-md hover:bg-blue-500 transition-colors transform hover:scale-110" aria-label="X (Twitter)">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M18.244 2.25h3.308l-7.227 8.26L21.602 22H15.6L10.957 13.992L4.397 22H0L7.735 13.143L0.99 2.25h7.227L12.987 9.847L18.244 2.25Zm-2.349 1.4L7.404 21.006h2.842L17.595 3.65H15.895Z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-600 text-white shadow-md hover:bg-red-700 transition-colors transform hover:scale-110" aria-label="YouTube">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M21.5 7.18c-.3-.88-.97-1.64-1.85-1.94C18.42 5 12 5 12 5s-6.42 0-7.65.24c-.88.3-1.55 1.06-1.85 1.94-.25.74-.25 1.93-.25 4.82s0 4.08.25 4.82c.3.88.97 1.64 1.85 1.94C5.58 19 12 19 12 19s6.42 0 7.65-.24c.88-.3 1.55-1.06 1.85-1.94.25-.74.25-1.93.25-4.82s0-4.08-.25-4.82zM9.5 15.5V8.5L16 12l-6.5 3.5z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-700 text-white shadow-md hover:bg-gray-800 transition-colors transform hover:scale-110" aria-label="GitHub">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.883-.013-1.724-2.782.605-3.37-1.34-3.37-1.34-.454-1.158-1.11-1.46-1.11-1.46-.908-.62.069-.608.069-.608 1.007.07 1.532 1.033 1.532 1.033.89 1.529 2.336 1.087 2.903.832.091-.645.35-1.087.636-1.339-2.22-.253-4.555-1.113-4.555-4.93 0-1.091.39-1.984 1.029-2.685-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.558 9.558 0 0112 5.042c.85.004 1.705.114 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.379.203 2.398.099 2.65.64.701 1.028 1.594 1.028 2.685 0 3.826-2.339 4.675-4.566 4.921.357.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.481C21.137 20.19 24 16.438 24 12.017 24 6.484 19.522 2 14 2H12z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+    <!-- Article Modal -->
+    <div id="article-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 overflow-y-auto hidden modal-fade-leave-to">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative transform transition-all duration-300">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10" id="close-article-modal">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="article-modal-content" class="relative">
+                <img id="modal-article-image" src="https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture" alt="A sleek black car parked on a cobblestone street in an urban setting, featuring brick buildings." class="w-full h-64 object-cover rounded-t-lg mb-6" style="">
+                <div class="p-6 md:p-8 lg:p-10">
+                    <h2 id="modal-article-title" class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">Le Code CIMA expliqué simplement en 15 Minutes</h2>
+                    <p class="text-gray-500 text-sm mb-6">
+                        Par <span id="modal-article-author" class="font-medium">Inconnu</span> le <span id="modal-article-pubdate">7 novembre 2025 à 09:11</span>
+                    </p>
+                    <div id="modal-article-body" class="max-w-none text-gray-700 leading-relaxed article-content"><p>Les extraits du document <strong>CODE-CIMA-2019 </strong>présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains membres de la <strong>CIMA (Conférence Interafricaine des Marchés d’Assurances)</strong>. Ce code détaille les objectifs de l’organisation, notamment la <strong>rationalisation des marchés</strong> et le <strong>renforcement de la protection des assurés</strong>, tout en définissant les rôles du <strong>Conseil des Ministres</strong> et de la <strong>Commission Régionale de Contrôle des Assurances</strong>. Il établit des règles strictes concernant les <strong>contrats d’assurance</strong> (vie, dommages, automobile), la <strong>comptabilité</strong>, la <strong>solvabilité</strong> des entreprises, les <strong>intermédiaires</strong>, et les <strong>sanctions</strong> en cas d’infraction. Le texte inclut également des dispositions spécifiques à la <strong>réassurance</strong>, aux <strong>comptes consolidés</strong>, et à la <strong>lutte contre le blanchiment de capitaux</strong> pour garantir une industrie fiable et compétitive.</p></div>
+                    <div class="mt-8 pt-6 border-t border-gray-200 flex flex-wrap gap-4 items-center justify-center">
+                        <span class="text-gray-600 text-lg font-semibold mr-2">Partager:</span>
+                        <a id="share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fle-code-cima-expliquee-simplement" target="_blank" class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors transform hover:scale-110" aria-label="Partager sur Facebook">
+                            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5"><path d="M14 13.5h2.001l.4-2.001H14v-1.144c0-.573.284-.856.856-.856h1.145V8.001h-2.001c-2.4 0-3.145 1.745-3.145 3.145V13.5H9.5V15.5h2.501V22h3.999V15.5H18L17 13.5h-3z"></path></svg>
+                        </a>
+                        <a id="share-twitter" href="https://twitter.com/intent/tweet?text=Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes&amp;url=https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fle-code-cima-expliquee-simplement" target="_blank" class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors transform hover:scale-110" aria-label="Partager sur X (Twitter)">
+                            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5"><path d="M18.244 2.25h3.308l-7.227 8.26L21.602 22H15.6L10.957 13.992L4.397 22H0L7.735 13.143L0.99 2.25h7.227L12.987 9.847L18.244 2.25Zm-2.349 1.4L7.404 21.006h2.842L17.595 3.65H15.895Z"></path></svg>
+                        </a>
+                        <a id="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fle-code-cima-expliquee-simplement&amp;title=Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes&amp;summary=Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes" target="_blank" class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors transform hover:scale-110" aria-label="Partager sur LinkedIn">
+                            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5"><path d="M20.447 20.452h-3.518v-5.595c0-1.332-.51-2.247-1.684-2.247-1.282 0-2.007.868-2.333 1.708-.12.302-.15.725-.15 1.157v4.977h-3.519s.047-9.664 0-10.648h3.519v1.503c-.027.051-.054.09-.08.13-.393-.683-.872-1.397-2.185-1.397-2.668 0-4.665 1.789-4.665 5.595v5.807H3.882V9.804h3.519v1.503a3.52 3.52 0 0 0 .15-.13c.42-.69.878-1.397 2.277-1.397 2.916 0 5.105 2.156 5.105 6.777v5.807h3.518V14.15c0-2.31-.01-3.6-0.01-3.6zM6.92 5.275a2.27 2.27 0 1 1-4.54 0 2.27 2.27 0 0 1 4.54 0z"></path></svg>
+                        </a>
+                        <a id="share-mail" href="mailto:?subject=Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes&amp;body=Découvrez cet article: Le%20Code%20CIMA%20expliqu%C3%A9%20simplement%20en%2015%20Minutes - https%3A%2F%2Fkacouoi.substack.com%2Fp%2Fle-code-cima-expliquee-simplement" target="_blank" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors transform hover:scale-110" aria-label="Partager par E-mail">
+                            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden modal-fade-leave-to">
+        <div class="relative w-full max-w-4xl aspect-video bg-gray-900 rounded-lg shadow-xl transform transition-all duration-300">
+            <button class="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10" id="close-video-modal">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-lg" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400">© 2025 <span id="footer-site-name-copyright">Mon Site Web</span>. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        const mainContent = document.getElementById('main-content');
+        const siteTitleElem = document.getElementById('site-title');
+        const headerLogo = document.getElementById('header-logo');
+        const headerLogoLink = document.getElementById('header-logo-link');
+        const headerSiteName = document.getElementById('header-site-name');
+        const footerSiteNameCopyright = document.getElementById('footer-site-name-copyright');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        let allPosts = [];
+        let allVideos = [];
+        const itemsPerPage = 9;
+        let currentPostsPage = 1;
+        let currentVideosPage = 1;
+
+        const articleModal = document.getElementById('article-modal');
+        const closeArticleModal = document.getElementById('close-article-modal');
+        const videoModal = document.getElementById('video-modal');
+        const closeVideoModal = document.getElementById('close-video-modal');
+        const videoPlayer = document.getElementById('video-player');
+
+        async function fetchMetadata() {
+            try {
+                const response = await fetch(window.location.origin + '/api/metadata');
+                if (!response.ok) throw new Error('Failed to fetch metadata');
+                const metadata = await response.json();
+                siteTitleElem.textContent = metadata.title || 'Mon Site Web';
+                headerSiteName.textContent = metadata.title || 'Mon Site Web';
+                footerSiteNameCopyright.textContent = metadata.title || 'Mon Site Web';
+                if (metadata.logo) {
+                    headerLogo.src = metadata.logo;
+                    headerLogo.style.display = 'block';
+                } else {
+                    headerLogo.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching metadata:', error);
+                siteTitleElem.textContent = 'Erreur de chargement';
+                headerSiteName.textContent = 'Mon Site Web';
+                footerSiteNameCopyright.textContent = 'Mon Site Web';
+                headerLogo.style.display = 'none';
+            }
+        }
+
+        function closeAllModals() {
+            articleModal.classList.add('hidden', 'modal-fade-leave-to');
+            articleModal.classList.remove('modal-fade-enter-to');
+            videoModal.classList.add('hidden', 'modal-fade-leave-to');
+            videoModal.classList.remove('modal-fade-enter-to');
+            if (videoPlayer) videoPlayer.src = '';
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        closeArticleModal.addEventListener('click', closeAllModals);
+        articleModal.addEventListener('click', (e) => {
+            if (e.target === articleModal) closeAllModals();
+        });
+
+        closeVideoModal.addEventListener('click', closeAllModals);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) closeAllModals();
+        });
+
+        function showLoading() {
+            mainContent.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-blue-600">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+                    <p class="mt-4 text-xl font-semibold">Chargement du contenu...</p>
+                </div>
+            `;
+            window.scrollTo(0, 0);
+        }
+
+        function renderHomePage() {
+            mainContent.innerHTML = `
+                <section class="relative bg-gradient-to-br from-blue-500 to-purple-600 text-white py-20 md:py-32 overflow-hidden shadow-xl">
+                    <div class="absolute inset-0 bg-pattern opacity-10"></div>
+                    <div class="container mx-auto px-6 relative z-10 text-center">
+                        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-up">
+                            Bienvenue sur mon univers digital
+                        </h1>
+                        <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto opacity-90 animate-fade-in-up delay-200">
+                            Explorez mes publications, découvrez mes projets et connectons-nous.
+                        </p>
+                        <a href="#contact" class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 inline-block animate-fade-in-up delay-400">
+                            Me Contacter
+                        </a>
+                    </div>
+                </section>
+
+                <section class="py-16 md:py-24 bg-gray-50">
+                    <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+                        <div class="md:w-1/2">
+                            <img src="https://via.placeholder.com/600x400/edf2f7/4a5568?text=Votre+Photo" alt="À propos de moi" class="rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-500 ease-in-out border-4 border-white">
+                        </div>
+                        <div class="md:w-1/2 text-center md:text-left">
+                            <h2 class="text-4xl font-extrabold text-gray-900 mb-6">À Propos de Moi</h2>
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                Passionné par le développement web dynamique et l'innovation technologique, je mets mon expertise au service de projets ambitieux. Mon parcours est jalonné de succès dans la création de solutions digitales performantes et esthétiques, toujours à la pointe des dernières tendances.
+                            </p>
+                            <p class="text-lg text-gray-700 leading-relaxed">
+                                J'aime transformer des idées complexes en expériences utilisateur fluides et intuitives. Chaque projet est une opportunité de repousser les limites et de créer de la valeur durable pour mes clients et utilisateurs.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-16 md:py-24 bg-white">
+                    <div class="container mx-auto px-6">
+                        <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-12">Mes Domaines d'Expertise</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-blue-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-3 1h2m0-11V9a2 2 0 00-2-2L6 5V4c0-1.105.895-2 2-2h4c1.105 0 2 .895 2 2v2l-1-1h-2a2 2 0 00-2 2v2m0 0a2 2 0 012 2v2a2 2 0 01-2 2H9a2 2 0 01-2-2v-2a2 2 0 012-2m-1 9L6 20"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Développement Front-end</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Création d'interfaces utilisateur réactives et intuitives avec les dernières technologies (React, Vue, Angular, Tailwind CSS).
+                                </p>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-50 to-pink-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-purple-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Développement Back-end</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Conception et implémentation de systèmes robustes et scalables (Node.js, Python, PHP, bases de données).
+                                </p>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-50 to-teal-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17L15 7M15 7L21 7M15 7L15 13"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">API & Intégrations</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Création d'APIs RESTful et intégration fluide avec des services tiers pour des écosystèmes connectés.
+                                </p>
+                            </div>
+                            <div class="bg-gradient-to-br from-yellow-50 to-orange-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Performance & SEO</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Optimisation des performances web et des stratégies SEO pour une meilleure visibilité et expérience utilisateur.
+                                </p>
+                            </div>
+                             <div class="bg-gradient-to-br from-red-50 to-orange-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-red-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V6m0 10v2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">UX/UI Design</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Conception d'expériences utilisateur exceptionnelles et d'interfaces intuitives et esthétiques.
+                                </p>
+                            </div>
+                             <div class="bg-gradient-to-br from-cyan-50 to-blue-100 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
+                                <div class="flex items-center justify-center w-16 h-16 bg-cyan-500 text-white rounded-full mb-6 mx-auto group-hover:rotate-6 transition-transform duration-300">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Gestion de Projets</h3>
+                                <p class="text-gray-700 text-center leading-relaxed">
+                                    Pilotage de projets web de A à Z, de l'idée à la mise en ligne, avec méthodologie agile.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-16 md:py-24 bg-gradient-to-tr from-blue-500 to-purple-500 text-white shadow-inner">
+                    <div class="container mx-auto px-6 text-center">
+                        <h2 class="text-4xl font-extrabold mb-8">Prêt à explorer davantage ?</h2>
+                        <div class="flex flex-col md:flex-row justify-center gap-6">
+                            <a href="#publications" class="load-page-btn bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:bg-gray-100 hover:scale-105 transition-all duration-300">
+                                Voir mes Publications
+                            </a>
+                            <a href="#videos" class="load-page-btn bg-blue-800 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:bg-blue-700 hover:scale-105 transition-all duration-300">
+                                Découvrir mes Vidéos
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            `;
+            attachLoadPageButtons();
+        }
+
+        async function renderPublicationsPage(page = 1) {
+            mainContent.innerHTML = `
+                <section class="container mx-auto px-6 py-10 md:py-16">
+                    <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-12">Mes Dernières Publications</h2>
+                    <div id="publications-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-blue-600">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+                            <p class="text-lg font-semibold">Chargement des articles...</p>
+                        </div>
+                    </div>
+                    <div id="publications-pagination" class="flex justify-center mt-12 space-x-2"></div>
+                </section>
+            `;
+            const publicationsContainer = document.getElementById('publications-container');
+            const publicationsPagination = document.getElementById('publications-pagination');
+
+            if (allPosts.length === 0) {
+                try {
+                    const response = await fetch(window.location.origin + '/api/posts');
+                    if (!response.ok) throw new Error('Failed to fetch posts');
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        allPosts = data.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                    } else {
+                        publicationsContainer.innerHTML = `<p class="col-span-full text-center text-gray-600 p-8">Aucune publication trouvée pour le moment.</p>`;
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error fetching posts:', error);
+                    publicationsContainer.innerHTML = `
+                        <div class="col-span-full text-center text-red-600 p-8">
+                            <svg class="w-12 h-12 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-lg font-semibold">Erreur lors du chargement des publications.</p>
+                            <p class="text-gray-600">Veuillez réessayer plus tard.</p>
+                        </div>
+                    `;
+                    return;
+                }
+            }
+
+            currentPostsPage = page;
+            renderPosts(currentPostsPage);
+            renderPostsPagination();
+
+            function renderPosts(pageNumber) {
+                publicationsContainer.innerHTML = '';
+                const startIndex = (pageNumber - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const postsToDisplay = allPosts.slice(startIndex, endIndex);
+
+                if (postsToDisplay.length === 0) {
+                    publicationsContainer.innerHTML = `<p class="col-span-full text-center text-gray-600 p-8">Aucune publication trouvée pour cette page.</p>`;
+                    return;
+                }
+
+                postsToDisplay.forEach(post => {
+                    const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group';
+                    card.innerHTML = `
+                        <img src="${post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article'}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${post.title}</h3>
+                            <p class="text-gray-600 text-sm mb-4">${post.description ? post.description.substring(0, 120) + '...' : ''}</p>
+                            <div class="flex justify-between items-center text-gray-500 text-xs">
+                                <span>Par ${post.author || 'Inconnu'}</span>
+                                <span>${postDate}</span>
+                            </div>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openArticleModal(post));
+                    publicationsContainer.appendChild(card);
+                });
+            }
+
+            function renderPostsPagination() {
+                publicationsPagination.innerHTML = '';
+                const totalPages = Math.ceil(allPosts.length / itemsPerPage);
+
+                if (totalPages <= 1) return;
+
+                const createButton = (text, pageNum, isActive = false, isDisabled = false) => {
+                    const button = document.createElement('button');
+                    button.textContent = text;
+                    button.className = `px-4 py-2 rounded-lg transition-colors duration-200 ${
+                        isActive ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`;
+                    button.disabled = isDisabled;
+                    if (!isDisabled && !isActive) {
+                        button.addEventListener('click', () => renderPublicationsPage(pageNum));
+                    }
+                    return button;
+                };
+
+                publicationsPagination.appendChild(createButton('Précédent', currentPostsPage - 1, false, currentPostsPage === 1));
+
+                const maxPagesToShow = 5;
+                let startPage = Math.max(1, currentPostsPage - Math.floor(maxPagesToShow / 2));
+                let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+                if (endPage - startPage + 1 < maxPagesToShow) {
+                    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+                }
+
+                if (startPage > 1) {
+                    publicationsPagination.appendChild(createButton('1', 1));
+                    if (startPage > 2) {
+                        const dots = document.createElement('span');
+                        dots.className = 'px-4 py-2 text-gray-500';
+                        dots.textContent = '...';
+                        publicationsPagination.appendChild(dots);
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    publicationsPagination.appendChild(createButton(i.toString(), i, i === currentPostsPage));
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        const dots = document.createElement('span');
+                        dots.className = 'px-4 py-2 text-gray-500';
+                        dots.textContent = '...';
+                        publicationsPagination.appendChild(dots);
+                    }
+                    publicationsPagination.appendChild(createButton(totalPages.toString(), totalPages));
+                }
+
+                publicationsPagination.appendChild(createButton('Suivant', currentPostsPage + 1, false, currentPostsPage === totalPages));
+            }
+        }
+
+        function openArticleModal(post) {
+            document.getElementById('modal-article-image').src = post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture';
+            document.getElementById('modal-article-title').textContent = post.title;
+            document.getElementById('modal-article-author').textContent = post.author || 'Inconnu';
+            document.getElementById('modal-article-pubdate').textContent = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            document.getElementById('modal-article-body').innerHTML = post.content || '<p class="text-gray-500">Contenu de l\'article non disponible.</p>';
+
+            const encodedTitle = encodeURIComponent(post.title);
+            const encodedUrl = encodeURIComponent(post.link);
+
+            document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+            document.getElementById('share-linkedin').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedTitle}`;
+            document.getElementById('share-mail').href = `mailto:?subject=${encodedTitle}&body=Découvrez cet article: ${encodedTitle} - ${encodedUrl}`;
+
+            articleModal.classList.remove('hidden', 'modal-fade-leave-to');
+            articleModal.classList.add('modal-fade-enter-to');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        async function renderVideosPage(page = 1) {
+            mainContent.innerHTML = `
+                <section class="container mx-auto px-6 py-10 md:py-16">
+                    <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-12">Mes Vidéos YouTube</h2>
+                    <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-blue-600">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+                            <p class="text-lg font-semibold">Chargement des vidéos...</p>
+                        </div>
+                    </div>
+                    <div id="videos-pagination" class="flex justify-center mt-12 space-x-2"></div>
+                </section>
+            `;
+            const videosContainer = document.getElementById('videos-container');
+            const videosPagination = document.getElementById('videos-pagination');
+
+            if (allVideos.length === 0) {
+                try {
+                    const response = await fetch(window.location.origin + '/api/videos');
+                    if (!response.ok) throw new Error('Failed to fetch videos');
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        allVideos = data.sort((a, b) => new Date(b.published) - new Date(a.published));
+                    } else {
+                        videosContainer.innerHTML = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée pour le moment.</p>`;
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error fetching videos:', error);
+                    videosContainer.innerHTML = `
+                        <div class="col-span-full text-center text-red-600 p-8">
+                            <svg class="w-12 h-12 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-lg font-semibold">Erreur lors du chargement des vidéos.</p>
+                            <p class="text-gray-600">Veuillez réessayer plus tard.</p>
+                        </div>
+                    `;
+                    return;
+                }
+            }
+
+            currentVideosPage = page;
+            renderVideos(currentVideosPage);
+            renderVideosPagination();
+
+            function renderVideos(pageNumber) {
+                videosContainer.innerHTML = '';
+                const startIndex = (pageNumber - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const videosToDisplay = allVideos.slice(startIndex, endIndex);
+
+                if (videosToDisplay.length === 0) {
+                    videosContainer.innerHTML = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée pour cette page.</p>`;
+                    return;
+                }
+
+                videosToDisplay.forEach(video => {
+                    const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                    const card = document.createElement('div');
+                    card.className = 'relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group aspect-video';
+                    card.innerHTML = `
+                        <img src="${video.thumbnail || 'https://via.placeholder.com/480x360/edf2f7/4a5568?text=Vidéo+YouTube'}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg class="w-16 h-16 text-white bg-blue-600 rounded-full p-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"></path></svg>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
+                            <h3 class="text-lg font-semibold mb-1">${video.title}</h3>
+                            <p class="text-xs text-gray-300">${videoDate}</p>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openVideoModal(video.link));
+                    videosContainer.appendChild(card);
+                });
+            }
+
+            function renderVideosPagination() {
+                videosPagination.innerHTML = '';
+                const totalPages = Math.ceil(allVideos.length / itemsPerPage);
+
+                if (totalPages <= 1) return;
+
+                const createButton = (text, pageNum, isActive = false, isDisabled = false) => {
+                    const button = document.createElement('button');
+                    button.textContent = text;
+                    button.className = `px-4 py-2 rounded-lg transition-colors duration-200 ${
+                        isActive ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`;
+                    button.disabled = isDisabled;
+                    if (!isDisabled && !isActive) {
+                        button.addEventListener('click', () => renderVideosPage(pageNum));
+                    }
+                    return button;
+                };
+
+                videosPagination.appendChild(createButton('Précédent', currentVideosPage - 1, false, currentVideosPage === 1));
+
+                const maxPagesToShow = 5;
+                let startPage = Math.max(1, currentVideosPage - Math.floor(maxPagesToShow / 2));
+                let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+                if (endPage - startPage + 1 < maxPagesToShow) {
+                    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+                }
+
+                if (startPage > 1) {
+                    videosPagination.appendChild(createButton('1', 1));
+                    if (startPage > 2) {
+                        const dots = document.createElement('span');
+                        dots.className = 'px-4 py-2 text-gray-500';
+                        dots.textContent = '...';
+                        videosPagination.appendChild(dots);
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    videosPagination.appendChild(createButton(i.toString(), i, i === currentVideosPage));
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        const dots = document.createElement('span');
+                        dots.className = 'px-4 py-2 text-gray-500';
+                        dots.textContent = '...';
+                        videosPagination.appendChild(dots);
+                    }
+                    videosPagination.appendChild(createButton(totalPages.toString(), totalPages));
+                }
+
+                videosPagination.appendChild(createButton('Suivant', currentVideosPage + 1, false, currentVideosPage === totalPages));
+            }
+        }
+
+        function getYouTubeEmbedUrl(url) {
+            const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/;
+            const match = url.match(regExp);
+            return (match && match[1]) ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0` : '';
+        }
+
+        function openVideoModal(videoLink) {
+            const embedUrl = getYouTubeEmbedUrl(videoLink);
+            if (embedUrl) {
+                videoPlayer.src = embedUrl;
+                videoModal.classList.remove('hidden', 'modal-fade-leave-to');
+                videoModal.classList.add('modal-fade-enter-to');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                alert("Le lien vidéo n'est pas un format YouTube valide.");
+            }
+        }
+
+        function renderContactPage() {
+            mainContent.innerHTML = `
+                <section class="container mx-auto px-6 py-10 md:py-16">
+                    <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-12">Me Contacter</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white rounded-xl shadow-xl p-8 md:p-12 lg:p-16">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Envoyez-moi un message</h3>
+                            <form class="space-y-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nom Complet</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Votre nom">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Adresse E-mail</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="votre.email@example.com">
+                                </div>
+                                <div>
+                                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                    <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Sujet de votre message">
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Votre Message</label>
+                                    <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Écrivez votre message ici..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
+                                    Envoyer le Message
+                                </button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-6">Informations de Contact</h3>
+                            <div class="space-y-6 text-gray-700 text-lg">
+                                <p class="flex items-center">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-1 12H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2z"></path></svg>
+                                    <a href="mailto:contact@example.com" class="hover:text-blue-600 transition-colors">contact@example.com</a>
+                                </p>
+                                <p class="flex items-center">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <a href="tel:+33123456789" class="hover:text-blue-600 transition-colors">+33 1 23 45 67 89</a>
+                                </p>
+                                <p class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span>
+                                        123 Rue de l'Innovation<br>
+                                        75000 Paris, France
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="mt-10">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">Suivez-moi sur les Réseaux</h3>
+                                <div class="flex space-x-4 justify-center md:justify-start">
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-colors transform hover:scale-110" aria-label="LinkedIn">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M20.447 20.452h-3.518v-5.595c0-1.332-.51-2.247-1.684-2.247-1.282 0-2.007.868-2.333 1.708-.12.302-.15.725-.15 1.157v4.977h-3.519s.047-9.664 0-10.648h3.519v1.503c-.027.051-.054.09-.08.13-.393-.683-.872-1.397-2.185-1.397-2.668 0-4.665 1.789-4.665 5.595v5.807H3.882V9.804h3.519v1.503a3.52 3.52 0 0 0 .15-.13c.42-.69.878-1.397 2.277-1.397 2.916 0 5.105 2.156 5.105 6.777v5.807h3.518V14.15c0-2.31-.01-3.6-0.01-3.6zM6.92 5.275a2.27 2.27 0 1 1-4.54 0 2.27 2.27 0 0 1 4.54 0z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-400 text-white shadow-md hover:bg-blue-500 transition-colors transform hover:scale-110" aria-label="X (Twitter)">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M18.244 2.25h3.308l-7.227 8.26L21.602 22H15.6L10.957 13.992L4.397 22H0L7.735 13.143L0.99 2.25h7.227L12.987 9.847L18.244 2.25Zm-2.349 1.4L7.404 21.006h2.842L17.595 3.65H15.895Z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-600 text-white shadow-md hover:bg-red-700 transition-colors transform hover:scale-110" aria-label="YouTube">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M21.5 7.18c-.3-.88-.97-1.64-1.85-1.94C18.42 5 12 5 12 5s-6.42 0-7.65.24c-.88.3-1.55 1.06-1.85 1.94-.25.74-.25 1.93-.25 4.82s0 4.08.25 4.82c.3.88.97 1.64 1.85 1.94C5.58 19 12 19 12 19s6.42 0 7.65-.24c.88-.3 1.55-1.06 1.85-1.94.25-.74.25-1.93.25-4.82s0-4.08-.25-4.82zM9.5 15.5V8.5L16 12l-6.5 3.5z"></path></svg>
+                                    </a>
+                                    <a href="#" target="_blank" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-700 text-white shadow-md hover:bg-gray-800 transition-colors transform hover:scale-110" aria-label="GitHub">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.883-.013-1.724-2.782.605-3.37-1.34-3.37-1.34-.454-1.158-1.11-1.46-1.11-1.46-.908-.62.069-.608.069-.608 1.007.07 1.532 1.033 1.532 1.033.89 1.529 2.336 1.087 2.903.832.091-.645.35-1.087.636-1.339-2.22-.253-4.555-1.113-4.555-4.93 0-1.091.39-1.984 1.029-2.685-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.558 9.558 0 0112 5.042c.85.004 1.705.114 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.379.203 2.398.099 2.65.64.701 1.028 1.594 1.028 2.685 0 3.826-2.339 4.675-4.566 4.921.357.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.481C21.137 20.19 24 16.438 24 12.017 24 6.484 19.522 2 14 2H12z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function loadPage(pageName) {
+            closeAllModals();
+            showLoading();
+            let targetPage = pageName || 'home';
+
+            if (window.location.hash !== `#${targetPage}`) {
+                history.pushState({ page: targetPage }, '', `#${targetPage}`);
+            }
+
+            switch (targetPage) {
+                case 'home':
+                    renderHomePage();
+                    break;
+                case 'publications':
+                    renderPublicationsPage();
+                    break;
+                case 'videos':
+                    renderVideosPage();
+                    break;
+                case 'contact':
+                    renderContactPage();
+                    break;
+                default:
+                    renderHomePage();
+                    break;
+            }
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-blue-600', 'font-semibold');
+                link.classList.add('text-gray-600');
+                if (link.getAttribute('href') === `#${targetPage}`) {
+                    link.classList.add('text-blue-600', 'font-semibold');
+                    link.classList.remove('text-gray-600');
+                }
+            });
+
+            if (!mobileMenu.classList.contains('translate-x-full')) {
+                closeMobileMenuHandler();
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageName = link.getAttribute('href').substring(1);
+                loadPage(pageName);
+            });
+        });
+        headerLogoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadPage('home');
+        });
+
+        function attachLoadPageButtons() {
+            document.querySelectorAll('.load-page-btn').forEach(button => {
+                button.removeEventListener('click', handleLoadPageButtonClick);
+                button.addEventListener('click', handleLoadPageButtonClick);
+            });
+        }
+
+        function handleLoadPageButtonClick(e) {
+            e.preventDefault();
+            const pageName = e.currentTarget.getAttribute('href').substring(1);
+            loadPage(pageName);
+        }
+
+        window.addEventListener('popstate', (event) => {
+            const pageName = event.state && event.state.page ? event.state.page : (window.location.hash ? window.location.hash.substring(1) : 'home');
+            loadPage(pageName);
+        });
+
+        function openMobileMenuHandler() {
+            mobileMenu.classList.remove('translate-x-full');
+            mobileMenu.classList.add('translate-x-0');
+            mobileMenuOverlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMobileMenuHandler() {
+            mobileMenu.classList.remove('translate-x-0');
+            mobileMenu.classList.add('translate-x-full');
+            mobileMenuOverlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        mobileMenuButton.addEventListener('click', openMobileMenuHandler);
+        closeMobileMenu.addEventListener('click', closeMobileMenuHandler);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenuHandler);
+        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                closeMobileMenuHandler();
+                const pageName = link.getAttribute('href').substring(1);
+                loadPage(pageName);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMetadata().then(() => {
+                const initialPage = window.location.hash ? window.location.hash.substring(1) : 'home';
+                loadPage(initialPage);
+            });
+        });
+    </script>
+
+
+                
+            
+                
+            </body></html>
