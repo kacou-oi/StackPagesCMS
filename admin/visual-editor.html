@@ -401,6 +401,19 @@
                     .editable-hover { outline: 2px dashed #f97316; cursor: text; }
                     .editable-active { outline: 2px solid #f97316; }
                     [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
+                    .draggable-element { cursor: move; position: relative; }
+                    .draggable-element:hover::before { 
+                        content: '⋮⋮'; 
+                        position: absolute; 
+                        left: -20px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        color: #f97316; 
+                        font-size: 18px; 
+                        opacity: 0.5;
+                    }
+                    .drag-over { border-top: 3px solid #f97316 !important; }
+                    .dragging { opacity: 0.5; }
                 </style>
             `;
 
@@ -446,6 +459,10 @@
                 const selector = 'h1, h2, h3, h4, h5, h6, p, span, div, li, a, blockquote';
                 const elements = doc.querySelectorAll(selector);
 
+                // Select draggable block elements
+                const draggableSelector = 'p, h1, h2, h3, h4, h5, h6, div, section, article, header, footer, aside, blockquote, ul, ol';
+                const draggableElements = doc.querySelectorAll(draggableSelector);
+
                 if (enable) {
                     // Show toolbar
                     // toolbar.classList.remove('opacity-0', 'pointer-events-none'); // Always visible now
@@ -473,6 +490,84 @@
                         }
                     });
 
+                    // Enable drag & drop for block elements
+                    draggableElements.forEach(el => {
+                        // Skip if element is inside another draggable element (avoid nested drag)
+                        let parent = el.parentElement;
+                        let hasNestedDraggable = false;
+                        while (parent && parent.tagName !== 'BODY') {
+                            if (parent.matches(draggableSelector) && parent.draggable) {
+                                hasNestedDraggable = true;
+                                break;
+                            }
+                            parent = parent.parentElement;
+                        }
+
+                        if (!hasNestedDraggable && el.tagName !== 'BODY') {
+                            el.draggable = true;
+                            el.classList.add('draggable-element');
+
+                            // Drag start
+                            el.addEventListener('dragstart', function (e) {
+                                this.classList.add('dragging');
+                                e.dataTransfer.effectAllowed = 'move';
+                                e.dataTransfer.setData('text/html', this.innerHTML);
+                            });
+
+                            // Drag end
+                            el.addEventListener('dragend', function (e) {
+                                this.classList.remove('dragging');
+                                // Remove all drag-over classes
+                                doc.querySelectorAll('.drag-over').forEach(item => {
+                                    item.classList.remove('drag-over');
+                                });
+                            });
+
+                            // Drag over
+                            el.addEventListener('dragover', function (e) {
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+
+                                const draggingElement = doc.querySelector('.dragging');
+                                if (draggingElement && draggingElement !== this) {
+                                    this.classList.add('drag-over');
+                                }
+                            });
+
+                            // Drag leave
+                            el.addEventListener('dragleave', function (e) {
+                                this.classList.remove('drag-over');
+                            });
+
+                            // Drop
+                            el.addEventListener('drop', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                this.classList.remove('drag-over');
+                                const draggingElement = doc.querySelector('.dragging');
+
+                                if (draggingElement && draggingElement !== this) {
+                                    // Get the bounding rectangles
+                                    const rect = this.getBoundingClientRect();
+                                    const draggingRect = draggingElement.getBoundingClientRect();
+
+                                    // Determine if we should insert before or after based on mouse position
+                                    const mouseY = e.clientY;
+                                    const elementMiddle = rect.top + (rect.height / 2);
+
+                                    if (mouseY < elementMiddle) {
+                                        // Insert before
+                                        this.parentNode.insertBefore(draggingElement, this);
+                                    } else {
+                                        // Insert after
+                                        this.parentNode.insertBefore(draggingElement, this.nextSibling);
+                                    }
+                                }
+                            });
+                        }
+                    });
+
                     // Image handling
                     const images = doc.querySelectorAll('img');
                     images.forEach(img => {
@@ -493,16 +588,16 @@
                     });
 
                 } else {
-                    // Hide toolbar
-                    // toolbar.classList.add('opacity-0', 'pointer-events-none'); // Always visible now
-
                     // Cleanup
                     elements.forEach(el => {
                         el.removeAttribute('contenteditable');
                         el.classList.remove('editable-active', 'editable-hover');
-                        // Remove listeners (cloning node is a cheap way to remove listeners)
-                        // But we want to keep the changes. 
-                        // Actually, removing contenteditable is enough to stop editing.
+                    });
+
+                    // Remove drag & drop
+                    draggableElements.forEach(el => {
+                        el.draggable = false;
+                        el.classList.remove('draggable-element', 'dragging', 'drag-over');
                     });
                 }
             }
