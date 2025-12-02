@@ -181,7 +181,7 @@
                     </div>
                 </div>
                 <button onclick="addNewPage()"
-                    class="ml-4 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
+                    class="ml-4 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
                     <i class="fas fa-plus"></i> Nouvelle Page
                 </button>
             </div>
@@ -567,7 +567,7 @@
                 tab.className = `
                     group relative flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer transition-all
                     ${isActive
-                        ? 'bg-blue-600 text-white shadow-md'
+                        ? 'bg-slate-700 text-white shadow-md border border-slate-600'
                         : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}
                 `;
                 tab.onclick = () => switchToPage(page.id);
