@@ -1,0 +1,860 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Expert - Mon Profil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+        .scroll-container {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .loader {
+            border-top-color: #3498db;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @-webkit-keyframes spinner {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.right-4{right:1rem}.top-4{top:1rem}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-4{margin-bottom:1rem}.mb-8{margin-bottom:2rem}.mr-4{margin-right:1rem}.mb-3{margin-bottom:0.75rem}.mt-4{margin-top:1rem}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-video{aspect-ratio:16 / 9}.h-12{height:3rem}.h-full{height:100%}.h-16{height:4rem}.h-48{height:12rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-full{width:100%}.w-16{width:4rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.flex-grow{flex-grow:1}.scale-95{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-8{gap:2rem}.space-y-16 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(4rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(4rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.rounded-lg{border-radius:0.5rem}.rounded-t-xl{border-top-left-radius:0.75rem;border-top-right-radius:0.75rem}.border-4{border-width:4px}.border-t-4{border-top-width:4px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.bg-gray-800\/60{background-color:rgb(31 41 55 / 0.6)}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-gray-800\/40{background-color:rgb(31 41 55 / 0.4)}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-opacity-40{--tw-bg-opacity:0.4}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-blue-400{--tw-gradient-from:#60a5fa var(--tw-gradient-from-position);--tw-gradient-to:rgb(96 165 250 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-gray-950{--tw-gradient-from:#030712 var(--tw-gradient-from-position);--tw-gradient-to:rgb(3 7 18 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-400{--tw-gradient-from:#4ade80 var(--tw-gradient-from-position);--tw-gradient-to:rgb(74 222 128 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-400{--tw-gradient-from:#c084fc var(--tw-gradient-from-position);--tw-gradient-to:rgb(192 132 252 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-red-400{--tw-gradient-from:#f87171 var(--tw-gradient-from-position);--tw-gradient-to:rgb(248 113 113 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-cyan-500{--tw-gradient-to:#06b6d4 var(--tw-gradient-to-position)}.to-emerald-500{--tw-gradient-to:#10b981 var(--tw-gradient-to-position)}.to-gray-800{--tw-gradient-to:#1f2937 var(--tw-gradient-to-position)}.to-orange-500{--tw-gradient-to:#f97316 var(--tw-gradient-to-position)}.to-pink-600{--tw-gradient-to:#db2777 var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.text-center{text-align:center}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-light{font-weight:300}.font-semibold{font-weight:600}.leading-tight{line-height:1.25}.text-gray-100{--tw-text-opacity:1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-80{opacity:0.8}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.drop-shadow-lg{--tw-drop-shadow:drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-lg{--tw-backdrop-blur:blur(16px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-100{transition-delay:100ms}.delay-200{transition-delay:200ms}.delay-300{transition-delay:300ms}.duration-200{transition-duration:200ms}.duration-300{transition-duration:300ms}.ease-linear{transition-timing-function:linear}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-purple-300:hover{--tw-text-opacity:1;color:rgb(216 180 254 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.group:hover .group-hover\:bg-opacity-20{--tw-bg-opacity:0.2}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:p-8{padding:2rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-6xl{font-size:3.75rem;line-height:1}}@media (min-width: 1024px){.lg\:col-span-3{grid-column:span 3 / span 3}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}</style>
+                            
+                        </head>
+<body class="bg-gradient-to-br from-gray-950 to-gray-800 text-gray-100 min-h-screen p-4 md:p-8">
+
+    <!-- Header Section -->
+    <header class="text-center mb-12 animate-fadeIn">
+        <h1 id="siteTitle" class="text-5xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">Mister Le Pro</h1>
+        <p id="siteDescription" class="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto"><font color="#30d9a6">Découvrez mes dernières réflexions, vidéos et épisodes de podcast.</font></p>
+    </header>
+
+    <main class="max-w-7xl mx-auto space-y-16">
+
+        <!-- Blog Section -->
+        <section class="animate-fadeIn delay-100">
+            <h2 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-500 drop-shadow-lg">
+                Derniers Articles de Blog
+            </h2>
+            <div id="blogContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/serverless-limitless-liberez-le-potentiel">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/83490ecb-3e81-41d0-b339-be46e76a50e5_1200x540.png" alt="Serverless = Limitless : Libérez le potentiel de votre développement 🚀" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Serverless = Limitless : Libérez le potentiel de votre développement 🚀</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Dans le paysage numérique en constante évolution, les entreprises cherchent sans cesse des moyens d’améliorer l’efficacité, de réduire les coûts et d’...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>25 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/webstudio-la-plateforme-de-developpement">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/4375ef05-d830-4a95-aaa2-0b13308ad927_1600x800.webp" alt="Webstudio : La Plateforme de Développement Visuel Open Source" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Webstudio : La Plateforme de Développement Visuel Open Source</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Webstudio s’est rapidement imposé comme une plateforme de développement visuel d’avant-garde, conçue pour répondre aux besoins des développeurs et des...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>23 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/ajouter-un-event-onclick-javascript">
+                                <img src="https://substackcdn.com/image/fetch/$s_!dy_t!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5a814832-0baa-4d25-a4c3-8bd0234417f0_1200x628.png" alt="Ajouter un Event " onclick"="" javascript="" sur="" un="" bouton="" webstudio"="" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Ajouter un Event "OnClick" Javascript sur un bouton webstudio</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Oui, il est techniquement possible d’ajouter l’événement “Click” (et toute autre logique) dans un Widget HTML en utilisant du code JavaScript pur....</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>23 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/lassurance-auto-expliquee-en-5-minutes">
+                                
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L'Assurance auto expliquée en 5 minutes</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Bienvenue dans cet épisode podcast essentiel pour décrypter les mécanismes complexes de l’assurance des Véhicules Terrestres à Moteur (VTM)....</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>9 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/le-code-cima-expliquee-simplement">
+                                
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Le Code CIMA expliqué simplement en 15 Minutes</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Les extraits du document CODE-CIMA-2019 présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains m...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee">
+                                
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">La Finance de l'Assurance expliquée</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Les extraits du document CODE-CIMA-2019 présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains m...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/jamstack-larchitecture-web-moderne">
+                                <img src="https://substackcdn.com/image/fetch/$s_!OGvc!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb7aa1007-b80f-41db-95c4-6d2b93d872f7_1200x674.jpeg" alt="JAMstack : l’architecture web moderne qui allie vitesse, sécurité et flexibilité" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">JAMstack : l’architecture web moderne qui allie vitesse, sécurité et flexibilité</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Depuis quelques années, la manière de concevoir des sites web évolue rapidement....</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>9 août 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/video-vers-podcast">
+                                
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Demo Vidéo vers podcast</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Episode issue d'une vidéo...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>13 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/update-top-10-des-startups-digitales">
+                                <img src="https://substackcdn.com/image/fetch/$s_!-y0P!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd6edb965-cbc0-4a3f-b192-b6f5cc93aa80_640x360.jpeg" alt="Top 10 des startups digitales africaines à suivre en 2025" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Top 10 des startups digitales africaines à suivre en 2025</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Loin des clichés, l'Afrique est aujourd’hui l’un des continents les plus dynamiques en matière d’innovation numérique....</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/lessor-de-le-commerce-en-afrique">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/7c20426a-64cb-42dc-9033-29da8d3b8d6a_640x427.jpeg" alt="L’essor de l’e-commerce en Afrique : Opportunités et défis" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L’essor de l’e-commerce en Afrique : Opportunités et défis</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">L’e-commerce : Un secteur en pleine croissance...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/le-role-de-la-cybersecurite-dans">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/6b1d3f73-790d-49e0-80fa-33ea95d5feae_640x427.jpeg" alt="Le rôle de la cybersécurité dans la transformation digitale en Afrique" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Le rôle de la cybersécurité dans la transformation digitale en Afrique</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"> La cybersécurité, un pilier fondamental de la transformation numérique...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/les-tendances-du-marketing-digital">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/70f127ef-44f4-4946-b5d0-3a747f7bbee9_640x427.jpeg" alt="Les tendances du marketing digital en Afrique en 2025" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Les tendances du marketing digital en Afrique en 2025</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"> L’évolution rapide du marketing digital en Afrique...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/lintelligence-artificielle-en-afrique">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/10d10ada-8f1b-41c3-b54a-48a5d0c8c6cd_640x360.jpeg" alt="L’intelligence artificielle en Afrique : usages, défis et perspectives" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L’intelligence artificielle en Afrique : usages, défis et perspectives</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"> Une technologie clé pour l’avenir de l’Afrique...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/comment-lancer-son-agence-digitale">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/c33529a5-4a38-4d4d-9e05-bb18a80fff87_640x427.jpeg" alt="Comment lancer son agence digitale en Afrique avec peu de moyens" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Comment lancer son agence digitale en Afrique avec peu de moyens</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"> Une opportunité à saisir : le marché du digital en Afrique...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="https://kacouoi.substack.com/p/le-numerique-en-afrique-un-levier">
+                                <img src="https://substack-post-media.s3.amazonaws.com/public/images/25aa0af2-74de-4b6f-b13b-15e73008a495_640x427.jpeg" alt="Le numérique en Afrique : un levier de développement à ne pas sous-estimer" class="w-full h-48 object-cover rounded-t-xl" style="">
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Le numérique en Afrique : un levier de développement à ne pas sous-estimer</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"> Une révolution silencieuse en marche...</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        
+                                        <span>5 avril 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section class="animate-fadeIn delay-200">
+            <h2 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-orange-500 drop-shadow-lg">
+                Mes Vidéos Récentes
+            </h2>
+            <div id="videosContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=BluapOJy9Og">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i3.ytimg.com/vi/BluapOJy9Og/hqdefault.jpg" alt="StackPages Live Nocode Page Editor - Quick Overview" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">StackPages Live Nocode Page Editor - Quick Overview</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>1 décembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=4xfP139WWwo">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i1.ytimg.com/vi/4xfP139WWwo/hqdefault.jpg" alt="StackPages AI Code Editor - IDE Quick Demo" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">StackPages AI Code Editor - IDE Quick Demo</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>1 décembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=vnz3uzvjNO4">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i3.ytimg.com/vi/vnz3uzvjNO4/hqdefault.jpg" alt="StackPages Headlass CMS Quick Overview" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">StackPages Headlass CMS Quick Overview</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>1 décembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=EP-ZhTSmJ8M">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i2.ytimg.com/vi/EP-ZhTSmJ8M/hqdefault.jpg" alt="in Action: Switch From Code editor to Visual Builder" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">in Action: Switch From Code editor to Visual Builder</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>30 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=_pJCo_H4YO4">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i4.ytimg.com/vi/_pJCo_H4YO4/hqdefault.jpg" alt="L'usage change tout #substack #shorts" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L'usage change tout #substack #shorts</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">This is a clip from https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube_shorts
+
+See the full video: https://www.youtube.c...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>9 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=puKZY6cqxwY">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i1.ytimg.com/vi/puKZY6cqxwY/hqdefault.jpg" alt="Le filet: Fonds de garantie #substack #shorts" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Le filet: Fonds de garantie #substack #shorts</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">This is a clip from https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube_shorts
+
+See the full video: https://www.youtube.c...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>9 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=ns0D7dEv678">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i3.ytimg.com/vi/ns0D7dEv678/hqdefault.jpg" alt="L'Assurance auto expliquée en 5 minutes" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L'Assurance auto expliquée en 5 minutes</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">https://kacou-oi.com/p/lassurance-auto-expliquee-en-5-minutes?utm_source=youtube...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>9 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=1xSHxiXAVrc">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i2.ytimg.com/vi/1xSHxiXAVrc/hqdefault.jpg" alt="Provisions: promises on paper #substack #shorts" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Provisions: promises on paper #substack #shorts</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">This is a clip from https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee?utm_source=youtube_shorts
+
+See the full video: https://www.youtu...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=iu8HKA1H-Dg">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i2.ytimg.com/vi/iu8HKA1H-Dg/hqdefault.jpg" alt="La Finance de l'Assurance expliquée" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">La Finance de l'Assurance expliquée</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee?utm_source=youtube...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=6_jRBySS17M">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i3.ytimg.com/vi/6_jRBySS17M/hqdefault.jpg" alt="PRÉSENTATION GCA [PROJET SCS COURTAGE]" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">PRÉSENTATION GCA [PROJET SCS COURTAGE]</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>10 août 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=OzzFEWm7o0Y">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i4.ytimg.com/vi/OzzFEWm7o0Y/hqdefault.jpg" alt="VeoPub: IZIFLYING - Publicité réalisée avec l’IA." class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">VeoPub: IZIFLYING - Publicité réalisée avec l’IA.</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>25 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=yMSdh46BXig">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i2.ytimg.com/vi/yMSdh46BXig/hqdefault.jpg" alt="VeoPub: ÉLIXIR BLACK - Publicité réalisée avec l’IA" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">VeoPub: ÉLIXIR BLACK - Publicité réalisée avec l’IA</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>21 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=tYShSG6VXS4">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i1.ytimg.com/vi/tYShSG6VXS4/hqdefault.jpg" alt="VeoPub: BOURSE KDO - Publicité réalisée avec l’IA" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">VeoPub: BOURSE KDO - Publicité réalisée avec l’IA</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>21 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=ImgbpZABgNY">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i2.ytimg.com/vi/ImgbpZABgNY/hqdefault.jpg" alt="VeoPub: MAX AUTO - Publicité réalisée avec l’IA" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">VeoPub: MAX AUTO - Publicité réalisée avec l’IA</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow"></p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>21 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="https://www.youtube.com/watch?v=xFo6hslBV64">
+                                <div class="relative w-full aspect-video">
+                                    <img src="https://i1.ytimg.com/vi/xFo6hslBV64/hqdefault.jpg" alt="Vidéo vers podcast" class="w-full h-full object-cover rounded-t-xl" style="">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Vidéo vers podcast</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">Episode issue d'une vidéo
+
+https://kacouoi.substack.com/p/video-vers-podcast?utm_source=youtube...</p>
+                                    <div class="text-gray-500 text-xs">
+                                        <span>13 juillet 2025</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+        </section>
+
+        <!-- Podcasts Section -->
+        <section class="animate-fadeIn delay-300">
+            <h2 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-500 drop-shadow-lg">
+                Épisodes de Podcast
+            </h2>
+            <div id="podcastsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">L'Assurance auto expliquée en 5 minutes</h3>
+                                    <p class="text-gray-400 text-sm mb-4"></p><p><strong>Bienvenue dans cet épisode podcast essentiel pour décrypter les mécanismes complexes de l’assurance des Véhicules Terrestres à Moteur (VTM).</strong></p><p>Conçu à partir d’une expertise po...</p>
+                                    <div class="text-gray-500 text-xs mb-4">
+                                        <span>9 novembre 2025</span>
+                                    </div>
+                                </div>
+                                
+                                    <audio controls="" class="w-full mt-4 bg-gray-900 rounded-lg">
+                                        <source src="https://api.substack.com/feed/podcast/178405795/7f0763261a3f9ee721645ae7fcb20bfb.mp3" type="audio/mpeg">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                
+                                <a href="https://kacouoi.substack.com/p/lassurance-auto-expliquee-en-5-minutes" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm">Voir la page de l'épisode</a>
+                            </article>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Le Code CIMA expliqué simplement en 15 Minutes</h3>
+                                    <p class="text-gray-400 text-sm mb-4"></p><p>Les extraits du document <strong>CODE-CIMA-2019 </strong>présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains membres de la <strong>CIMA (Con...</strong></p><strong>
+                                    <div class="text-gray-500 text-xs mb-4">
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </strong></div><strong>
+                                
+                                    <audio controls="" class="w-full mt-4 bg-gray-900 rounded-lg">
+                                        <source src="https://api.substack.com/feed/podcast/178254824/48835d507a7ffbfc992928e2eb0cc273.mp3" type="audio/mpeg">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                
+                                <a href="https://kacouoi.substack.com/p/le-code-cima-expliquee-simplement" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm">Voir la page de l'épisode</a>
+                            </strong></article><strong>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">La Finance de l'Assurance expliquée</h3>
+                                    <p class="text-gray-400 text-sm mb-4"></p><p>Les extraits du document <strong>CODE-CIMA-2019 </strong>présentent la législation uniforme et intégrée régissant l’industrie des assurances dans les États africains membres de la <strong>CIMA (Con...</strong></p><strong>
+                                    <div class="text-gray-500 text-xs mb-4">
+                                        <span>7 novembre 2025</span>
+                                    </div>
+                                </strong></div><strong>
+                                
+                                    <audio controls="" class="w-full mt-4 bg-gray-900 rounded-lg">
+                                        <source src="https://api.substack.com/feed/podcast/178253704/62535d752402fe1244cdebd19d1d60c7.mp3" type="audio/mpeg">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                
+                                <a href="https://kacouoi.substack.com/p/la-finance-de-lassurance-expliquee" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm">Voir la page de l'épisode</a>
+                            </strong></article><strong>
+                        
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">Demo Vidéo vers podcast</h3>
+                                    <p class="text-gray-400 text-sm mb-4"></p><p>Cet épisode a été généré à partie d’une vidéo</p> <br><br>This is a public episode. If you would like to discuss this with other subscribers or get access to bonus episodes, visit <a href="https:...&lt;/p&gt;
+                                    &lt;div class=" text-gray-500="" text-xs="" mb-4"="">
+                                        <span>13 juillet 2025</span>
+                                    </a></div><a href="https:...&lt;/p&gt;
+                                    &lt;div class=" text-gray-500="" text-xs="" mb-4"="">
+                                
+                                
+                                    <audio controls="" class="w-full mt-4 bg-gray-900 rounded-lg">
+                                        <source src="https://api.substack.com/feed/podcast/168183538/6cd84eed903b173286dc2ef8f79e85b7.mp3" type="audio/mpeg">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                
+                                </a><a href="https://kacouoi.substack.com/p/video-vers-podcast" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm">Voir la page de l'épisode</a>
+                            </article>
+                        </strong></strong></div>
+        </section>
+
+    </main>
+
+    <!-- Generic Modal for Blog Articles & Videos -->
+    <div id="genericModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 modal-overlay hidden">
+        <div class="bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <div class="relative flex flex-col h-full">
+                <button id="closeModal" class="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors duration-200 text-3xl font-light z-10 p-2">
+                    ×
+                </button>
+                <div id="modalContent" class="overflow-y-auto scroll-container p-6 md:p-8">
+                    <!-- Content will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const blogContainer = document.getElementById('blogContainer');
+            const videosContainer = document.getElementById('videosContainer');
+            const podcastsContainer = document.getElementById('podcastsContainer');
+            const genericModal = document.getElementById('genericModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const modalContent = document.getElementById('modalContent');
+            const siteTitleElement = document.getElementById('siteTitle');
+            const siteDescriptionElement = document.getElementById('siteDescription');
+
+            // --- Site Metadata Fetch ---
+            const fetchMetadata = async () => {
+                try {
+                    const response = await fetch(window.location.origin + '/api/metadata');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    if (data) {
+                        siteTitleElement.textContent = data.title || 'Mon Profil Expert';
+                        siteDescriptionElement.textContent = data.description || 'Découvrez mes dernières réflexions, vidéos et épisodes de podcast.';
+                        document.title = data.title ? `${data.title} - Page Expert` : 'Page Expert - Mon Profil';
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du chargement des métadonnées du site :", error);
+                    // Fallback to default titles
+                }
+            };
+            fetchMetadata();
+
+            // --- Blog Posts Fetch ---
+            const fetchBlogPosts = async () => {
+                blogContainer.innerHTML = `
+                    <div class="lg:col-span-3 flex justify-center items-center py-12 text-gray-400">
+                        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mr-4"></div>
+                        Chargement des articles...
+                    </div>
+                `;
+                try {
+                    const response = await fetch(window.location.origin + '/api/posts');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        blogContainer.innerHTML = data.map(post => `
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer flex flex-col overflow-hidden" data-type="blog" data-id="${post.link}">
+                                ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover rounded-t-xl"/>` : ''}
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">${post.title}</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">${post.description ? post.description.substring(0, 150) + '...' : ''}</p>
+                                    <div class="flex items-center text-gray-500 text-xs">
+                                        ${post.author ? `<span class="mr-2">${post.author}</span>` : ''}
+                                        ${post.pubDate ? `<span>${new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>` : ''}
+                                    </div>
+                                </div>
+                            </article>
+                        `).join('');
+                    } else {
+                        blogContainer.innerHTML = '<p class="lg:col-span-3 text-center text-gray-500 py-12">Aucun article de blog trouvé pour le moment.</p>';
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du chargement des articles de blog :", error);
+                    blogContainer.innerHTML = `
+                        <p class="lg:col-span-3 text-center text-red-400 py-12">
+                            Une erreur est survenue lors du chargement des articles. Veuillez réessayer plus tard.
+                        </p>
+                    `;
+                }
+            };
+            fetchBlogPosts();
+
+            // --- Videos Fetch ---
+            const fetchVideos = async () => {
+                videosContainer.innerHTML = `
+                    <div class="lg:col-span-3 flex justify-center items-center py-12 text-gray-400">
+                        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mr-4"></div>
+                        Chargement des vidéos...
+                    </div>
+                `;
+                try {
+                    const response = await fetch(window.location.origin + '/api/videos');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        videosContainer.innerHTML = data.map(video => `
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer group flex flex-col overflow-hidden" data-type="video" data-id="${video.link}">
+                                <div class="relative w-full aspect-video">
+                                    <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover rounded-t-xl"/>
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-300 ease-in-out">
+                                        <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">${video.title}</h3>
+                                    <p class="text-gray-400 text-sm mb-4 flex-grow">${video.description ? video.description.substring(0, 150) + '...' : ''}</p>
+                                    <div class="text-gray-500 text-xs">
+                                        ${video.published ? `<span>${new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>` : ''}
+                                    </div>
+                                </div>
+                            </article>
+                        `).join('');
+                    } else {
+                        videosContainer.innerHTML = '<p class="lg:col-span-3 text-center text-gray-500 py-12">Aucune vidéo trouvée pour le moment.</p>';
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du chargement des vidéos :", error);
+                    videosContainer.innerHTML = `
+                        <p class="lg:col-span-3 text-center text-red-400 py-12">
+                            Une erreur est survenue lors du chargement des vidéos. Veuillez réessayer plus tard.
+                        </p>
+                    `;
+                }
+            };
+            fetchVideos();
+
+            // --- Podcasts Fetch ---
+            const fetchPodcasts = async () => {
+                podcastsContainer.innerHTML = `
+                    <div class="md:col-span-2 flex justify-center items-center py-12 text-gray-400">
+                        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mr-4"></div>
+                        Chargement des podcasts...
+                    </div>
+                `;
+                try {
+                    const response = await fetch(window.location.origin + '/api/podcasts');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        podcastsContainer.innerHTML = data.map(podcast => `
+                            <article class="bg-gray-800/40 backdrop-blur-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-white mb-3 leading-tight">${podcast.title}</h3>
+                                    <p class="text-gray-400 text-sm mb-4">${podcast.description ? podcast.description.substring(0, 200) + '...' : ''}</p>
+                                    <div class="text-gray-500 text-xs mb-4">
+                                        ${podcast.pubDate ? `<span>${new Date(podcast.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${podcast.audioUrl ? `
+                                    <audio controls class="w-full mt-4 bg-gray-900 rounded-lg">
+                                        <source src="${podcast.audioUrl}" type="audio/mpeg">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                ` : '<p class="text-red-400 mt-4">Lecteur audio non disponible.</p>'}
+                                ${podcast.link ? `<a href="${podcast.link}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm">Voir la page de l'épisode</a>` : ''}
+                            </article>
+                        `).join('');
+                    } else {
+                        podcastsContainer.innerHTML = '<p class="md:col-span-2 text-center text-gray-500 py-12">Aucun épisode de podcast trouvé pour le moment.</p>';
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du chargement des podcasts :", error);
+                    podcastsContainer.innerHTML = `
+                        <p class="md:col-span-2 text-center text-red-400 py-12">
+                            Une erreur est survenue lors du chargement des podcasts. Veuillez réessayer plus tard.
+                        </p>
+                    `;
+                }
+            };
+            fetchPodcasts();
+
+            // --- Modal Logic ---
+            const openModal = () => {
+                genericModal.classList.remove('hidden');
+                setTimeout(() => {
+                    genericModal.querySelector(':first-child').classList.remove('scale-95', 'opacity-0');
+                    genericModal.querySelector(':first-child').classList.add('scale-100', 'opacity-100');
+                }, 10);
+            };
+
+            const closeModal = () => {
+                genericModal.querySelector(':first-child').classList.remove('scale-100', 'opacity-100');
+                genericModal.querySelector(':first-child').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    genericModal.classList.add('hidden');
+                    modalContent.innerHTML = ''; // Clear content on close
+                }, 300); // Match transition duration
+            };
+
+            closeModalButton.addEventListener('click', closeModal);
+            genericModal.addEventListener('click', (e) => {
+                if (e.target === genericModal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !genericModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+
+            // Handle clicks on blog posts and videos to open modal
+            document.addEventListener('click', async (e) => {
+                const targetArticle = e.target.closest('article[data-type]');
+                if (!targetArticle) return;
+
+                const dataType = targetArticle.dataset.type;
+                const dataId = targetArticle.dataset.id; // This will be the link for both
+
+                if (dataType === 'blog') {
+                    modalContent.innerHTML = `
+                        <div class="flex justify-center items-center py-12 text-gray-400">
+                            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mr-4"></div>
+                            Chargement de l'article...
+                        </div>
+                    `;
+                    openModal();
+                    try {
+                        const response = await fetch(window.location.origin + '/api/posts'); // Re-fetch all posts to find the specific one
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        const posts = await response.json();
+                        const post = posts.find(p => p.link === dataId);
+
+                        if (post) {
+                            const formattedDate = post.pubDate ? new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                            modalContent.innerHTML = `
+                                <div class="relative">
+                                    ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-72 object-cover rounded-lg mb-6 shadow-md"/>` : ''}
+                                    <h2 class="text-4xl font-extrabold text-white mb-4">${post.title}</h2>
+                                    <p class="text-gray-400 text-sm mb-6">
+                                        ${post.author ? `<span class="font-medium">${post.author}</span> - ` : ''}
+                                        ${formattedDate}
+                                    </p>
+                                    <div class="prose prose-invert max-w-none text-gray-200 leading-relaxed space-y-4 article-content">
+                                        ${post.content || post.description || 'Contenu de l\'article non disponible.'}
+                                    </div>
+                                    <div class="mt-8 pt-6 border-t border-gray-700 flex justify-center space-x-4">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(post.link || window.location.href)}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-500 transition-colors duration-200">
+                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.812c-3.235 0-3.978 2.055-3.978 4.167v3.833z"/></svg>
+                                        </a>
+                                        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link || window.location.href)}&text=${encodeURIComponent(post.title)}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.791-1.574 2.164-2.721-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.498 0-6.345 2.834-6.345 6.319 0 .495.056.975.161 1.437-5.271-.26-9.918-2.793-13.047-6.619-.544.93-.858 2.007-.858 3.142 0 2.181 1.116 4.103 2.808 5.234-.692-.022-1.348-.213-1.928-.53v.079c0 3.067 2.184 5.626 5.085 6.19-.532.146-1.094.225-1.665.225-.407 0-.806-.04-1.195-.114.804 2.503 3.13 4.332 5.903 4.381-2.179 1.79-4.908 2.87-7.87 2.87-.516 0-1.026-.03-1.528-.088 2.981 1.815 6.502 2.868 10.297 2.868 12.333 0 19.083-10.215 19.083-19.055 0-.292-.006-.583-.019-.872.995-.719 1.868-1.636 2.55-2.674z"/></svg>
+                                        </a>
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(post.link || window.location.href)}&title=${encodeURIComponent(post.title)}&summary=${encodeURIComponent(post.description || '')}&source=${encodeURIComponent(window.location.origin)}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-700 transition-colors duration-200">
+                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            modalContent.innerHTML = '<p class="text-red-400 py-12 text-center">Article non trouvé.</p>';
+                        }
+                    } catch (error) {
+                        console.error("Erreur lors du chargement de l'article :", error);
+                        modalContent.innerHTML = '<p class="text-red-400 py-12 text-center">Impossible de charger l\'article. Veuillez réessayer.</p>';
+                    }
+                } else if (dataType === 'video') {
+                    const embedLink = dataId.replace("watch?v=", "embed/") + "?autoplay=1";
+                    modalContent.innerHTML = `
+                        <div class="relative pb-[56.25%] h-0">
+                            <iframe
+                                src="${embedLink}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                                class="absolute top-0 left-0 w-full h-full rounded-lg shadow-xl"
+                            ></iframe>
+                        </div>
+                    `;
+                    openModal();
+                }
+            });
+        });
+    </script>
+
+
+                
+            </body></html>
