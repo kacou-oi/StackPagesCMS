@@ -606,14 +606,19 @@ ${htmlContent}
                     "When user requests dynamic content, use this pattern:\n" +
                     "- Create a container div with an ID\n" +
                     "- Add a loading message initially\n" +
-                    "- Use fetch() to call the appropriate API endpoint\n" +
+                    "- Use fetch() with ABSOLUTE URL: window.location.origin + '/api/endpoint'\n" +
                     "- Map the data array to HTML\n" +
                     "- Include error handling with catch()\n\n" +
 
+                    "CRITICAL - API CALLS:\n" +
+                    "ALWAYS use absolute URLs for API calls:\n" +
+                    "fetch(window.location.origin + '/api/posts')\n" +
+                    "NOT just fetch('/api/posts')\n\n" +
+
                     "EXAMPLE:\n" +
-                    "User asks for 'blog' → Generate HTML with fetch('/api/posts') displaying articles\n" +
-                    "User asks for 'videos' → Generate HTML with fetch('/api/videos') displaying video cards\n" +
-                    "User asks for 'podcasts' → Generate HTML with fetch('/api/podcasts')\n\n" +
+                    "User asks for 'blog' → Generate HTML with fetch(window.location.origin + '/api/posts')\n" +
+                    "User asks for 'videos' → Generate HTML with fetch(window.location.origin + '/api/videos')\n" +
+                    "User asks for 'podcasts' → Generate HTML with fetch(window.location.origin + '/api/podcasts')\n\n" +
 
                     "STYLING:\n" +
                     "- Use Tailwind CSS utility classes\n" +
@@ -625,6 +630,7 @@ ${htmlContent}
                     "- JavaScript code MUST be inside script tags at the end\n" +
                     "- Do NOT use external libraries except TailwindCSS\n" +
                     "- Make sure all IDs match between HTML and JavaScript\n" +
+                    "- ALWAYS use window.location.origin + '/api/...' for API calls\n" +
                     "- Verify JSON path access (data.posts, data.videos, etc.)";
 
                 const fullPrompt = systemInstruction + "\n\nUser Request: " + prompt;
