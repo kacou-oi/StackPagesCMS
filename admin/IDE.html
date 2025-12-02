@@ -180,12 +180,29 @@
                         <!-- Tabs will be dynamically inserted here -->
                     </div>
                 </div>
-                <button onclick="addNewPage()"
-                    class="ml-4 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
-                    <i class="fas fa-plus"></i> Nouvelle Page
-                </button>
-            </div>
 
+                <!-- SPA/Multi-page Mode Toggle -->
+                <div class="flex items-center gap-3 ml-4">
+                    <div class="flex items-center gap-2 bg-[#252526] px-3 py-1.5 rounded-md border border-slate-700">
+                        <span class="text-xs text-slate-400 font-medium">Mode:</span>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="page-mode" value="spa" checked onchange="updatePageMode()"
+                                class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600">
+                            <span class="text-sm text-white">SPA</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="page-mode" value="multipage" onchange="updatePageMode()"
+                                class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600">
+                            <span class="text-sm text-slate-300">Multi-pages</span>
+                        </label>
+                    </div>
+
+                    <button onclick="addNewPage()"
+                        class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
+                        <i class="fas fa-plus"></i> Nouvelle Page
+                    </button>
+                </div>
+            </div>
             <!-- Monaco Editor -->
             <div class="flex-1 bg-[#1e2a3a] overflow-hidden">
                 <div id="monaco-editor-container"></div>
@@ -611,6 +628,42 @@
             saveProject();
         }
 
+        // ====================================================================
+        // PAGE MODE MANAGEMENT (SPA vs Multi-page)
+        // ====================================================================
+
+        let pageMode = 'spa'; // Default mode
+
+        // Load page mode preference
+        function loadPageMode() {
+            const stored = localStorage.getItem('pageMode');
+            if (stored) {
+                pageMode = stored;
+                // Update radio buttons
+                const radios = document.querySelectorAll('input[name="page-mode"]');
+                radios.forEach(radio => {
+                    radio.checked = radio.value === pageMode;
+                });
+            }
+        }
+
+        // Update page mode
+        function updatePageMode() {
+            const selected = document.querySelector('input[name="page-mode"]:checked');
+            if (selected) {
+                pageMode = selected.value;
+                localStorage.setItem('pageMode', pageMode);
+                console.log('Page mode changed to:', pageMode);
+
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = pageMode === 'spa' ? 'Mode SPA activé ✨' : 'Mode Multi-pages activé 📄';
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 2000);
+            }
+        }
+
         // Listen to title changes
         document.addEventListener('DOMContentLoaded', function () {
             const titleInput = document.getElementById('page-title');
@@ -894,40 +947,64 @@ ${htmlContent}
                     "- API returns ARRAYS (except metadata), so iterate directly on data, NOT data.posts\n" +
                     "- Use correct field names: 'link' (not url), 'pubDate'/'published' (not date/publishedAt)";
 
-                // Multi-page context for AI
+                // Multi-page context for AI - Adapts based on mode
                 let multiPageContext = "";
+
                 if (currentProject.pages.length > 1) {
                     const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
                     const otherPages = currentProject.pages.filter(p => p.id !== currentProject.activePageId);
 
-                    multiPageContext = "\n\n=== MULTI-PAGE WEBSITE PROJECT ===\n" +
-                        "CRITICAL INSTRUCTIONS:\n" +
-                        "- This is a TRADITIONAL multi-page website, NOT a Single Page Application (SPA)\n" +
-                        "- Each page you create is a SEPARATE HTML file that will be saved independently\n" +
-                        "- DO NOT create JavaScript routing or page switching logic\n" +
-                        "- DO NOT put all content in one page with display:none toggles\n" +
-                        "- Each page should be a COMPLETE, STANDALONE HTML document\n\n" +
+                    if (pageMode === 'spa') {
+                        // SPA MODE - Encourage single-page application
+                        multiPageContext = "\n\n=== SINGLE PAGE APPLICATION (SPA) ===\n" +
+                            "RECOMMENDED APPROACH:\n" +
+                            "- Create a complete Single Page Application with client-side routing\n" +
+                            "- Use JavaScript to handle navigation between sections/pages\n" +
+                            "- Include all content in one HTML file with show/hide logic\n" +
+                            "- Implement smooth transitions between sections\n\n" +
 
-                        "CURRENT PAGE INFO:\n" +
-                        "- Page you are editing: " + (activePage?.title || 'Untitled') + "\n" +
-                        "- Total pages in project: " + currentProject.pages.length + "\n" +
-                        "- Other existing pages: " + otherPages.map(p => p.title).join(', ') + "\n\n" +
+                            "PROJECT STRUCTURE:\n" +
+                            "- Total sections: " + currentProject.pages.length + "\n" +
+                            "- Sections to include: " + currentProject.pages.map(p => p.title).join(', ') + "\n" +
+                            "- Current focus: " + (activePage?.title || 'Main page') + "\n\n" +
 
-                        "NAVIGATION BETWEEN PAGES:\n" +
-                        "- Use simple <a href='/page-slug.html'> links to navigate between pages\n" +
-                        "- Example: <a href='/index.html'>Home</a> | <a href='/about.html'>About</a>\n" +
-                        "- The user will manage URL routing separately\n\n" +
+                            "IMPLEMENTATION TIPS:\n" +
+                            "- Create navigation menu with smooth scroll or hash routing\n" +
+                            "- Use data-section attributes for easy section management\n" +
+                            "- Add animations/transitions when switching sections\n" +
+                            "- Mobile-friendly navigation (hamburger menu)\n\n" +
 
-                        "DESIGN CONSISTENCY:\n" +
-                        "- MAINTAIN the same visual identity (colors, fonts, spacing) across all pages\n" +
-                        "- Use the SAME header/navigation bar structure on every page\n" +
-                        "- Keep the same footer design\n" +
-                        "- Match the overall aesthetic of the first page\n\n" +
+                            "DESIGN CONSISTENCY:\n" +
+                            "- Unified color scheme throughout the SPA\n" +
+                            "- Consistent typography and spacing\n" +
+                            "- Same header/footer for all sections\n";
+                    } else {
+                        // MULTI-PAGE MODE - Traditional separate HTML files
+                        multiPageContext = "\n\n=== TRADITIONAL MULTI-PAGE WEBSITE ===\n" +
+                            "CRITICAL INSTRUCTIONS:\n" +
+                            "- This is a traditional multi-page website with separate HTML files\n" +
+                            "- Each page you create is a SEPARATE, STANDALONE HTML document\n" +
+                            "- DO NOT create JavaScript routing or page switching logic\n" +
+                            "- DO NOT put all content in one page with display:none toggles\n\n" +
 
-                        "WHAT TO GENERATE:\n" +
-                        "- Generate ONLY the content for: " + (activePage?.title || 'this page') + "\n" +
-                        "- Focus on making THIS PAGE unique while maintaining the overall design\n" +
-                        "- Do NOT try to include content from other pages\n";
+                            "CURRENT PAGE INFO:\n" +
+                            "- Page you are editing: " + (activePage?.title || 'Untitled') + "\n" +
+                            "- Total pages in project: " + currentProject.pages.length + "\n" +
+                            "- Other existing pages: " + otherPages.map(p => p.title).join(', ') + "\n\n" +
+
+                            "NAVIGATION BETWEEN PAGES:\n" +
+                            "- Use simple <a href='/page-slug.html'> links\n" +
+                            "- Example: <a href='/index.html'>Home</a> | <a href='/about.html'>About</a>\n\n" +
+
+                            "DESIGN CONSISTENCY:\n" +
+                            "- MAINTAIN the same visual identity across all pages\n" +
+                            "- Use the SAME header/navigation structure on every page\n" +
+                            "- Keep the same footer design\n\n" +
+
+                            "WHAT TO GENERATE:\n" +
+                            "- Generate ONLY the content for: " + (activePage?.title || 'this page') + "\n" +
+                            "- Do NOT include content from other pages\n";
+                    }
                 }
 
                 const fullPrompt = systemInstruction + multiPageContext + "\n\nUser Request: " + prompt;
@@ -1004,6 +1081,9 @@ ${htmlContent}
 
             // Initialize multi-page project
             initProject();
+
+            // Load page mode preference
+            loadPageMode();
 
             // Initialize Monaco Editor
             initMonacoEditor('');
