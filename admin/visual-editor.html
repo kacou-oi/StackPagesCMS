@@ -228,12 +228,12 @@
 
             <!-- History -->
             <div class="flex items-center gap-0.5">
-                <button onclick="execCmd('undo')"
-                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Annuler">
+                <button onclick="customUndo()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Annuler">
                     <i class="fas fa-undo text-sm"></i>
                 </button>
-                <button onclick="execCmd('redo')"
-                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Rétablir">
+                <button onclick="customRedo()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Rétablir">
                     <i class="fas fa-redo text-sm"></i>
                 </button>
             </div>
@@ -254,15 +254,10 @@
                     class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Souligné">
                     <i class="fas fa-underline text-sm"></i>
                 </button>
-                <div class="relative group">
-                    <button onclick="document.getElementById('color-picker').click()"
-                        class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10 flex items-center gap-1"
-                        title="Couleur du texte">
-                        <i class="fas fa-palette text-sm"></i>
-                    </button>
-                    <input type="color" id="color-picker" class="absolute opacity-0 w-0 h-0"
-                        onchange="execCmd('foreColor', this.value)" value="#000000">
-                </div>
+                <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Lien">
+                    <i class="fas fa-link text-sm"></i>
+                </button>
             </div>
 
             <div class="w-px h-5 bg-white/20 mx-1"></div>
@@ -303,10 +298,15 @@
 
             <!-- Inserts -->
             <div class="flex items-center gap-0.5">
-                <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
-                    title="Lien">
-                    <i class="fas fa-link text-sm"></i>
-                </button>
+                <div class="relative group">
+                    <button onclick="document.getElementById('color-picker').click()"
+                        class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10 flex items-center gap-1"
+                        title="Couleur du texte">
+                        <i class="fas fa-palette text-sm"></i>
+                    </button>
+                    <input type="color" id="color-picker" class="absolute opacity-0 w-0 h-0"
+                        onchange="execCmd('foreColor', this.value)" value="#000000">
+                </div>
                 <button onclick="promptImage()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
                     title="Image">
                     <i class="fas fa-image text-sm"></i>
@@ -328,6 +328,12 @@
             let isEditMode = false; // Initialize isEditMode
             let pexelsApiKey = localStorage.getItem('stackpages_pexels_key') || '';
             let currentImageSelection = null; // To store the image element being edited
+
+            // History management for undo/redo
+            let historyStack = [];
+            let historyIndex = -1;
+            let isRestoringState = false; // Flag to prevent saving during restore
+            const MAX_HISTORY = 50; // Limit history to prevent memory issues
 
             // --- Initialization ---
             document.addEventListener('DOMContentLoaded', () => {
@@ -401,6 +407,7 @@
                     .editable-hover { outline: 2px dashed #f97316; cursor: text; }
                     .editable-active { outline: 2px solid #f97316; }
                     [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
+                    /* DRAG & DROP DISABLED
                     .draggable-element { cursor: move; position: relative; }
                     .draggable-element:hover::before { 
                         content: '⋮⋮'; 
@@ -414,6 +421,7 @@
                     }
                     .drag-over { border-top: 3px solid #f97316 !important; }
                     .dragging { opacity: 0.5; }
+                    */
                 </style>
             `;
 
@@ -424,6 +432,8 @@
                 // Enable editing by default
                 setTimeout(() => {
                     enableVisualEditing(true);
+                    // Initialize history after page load
+                    initializeHistory();
                 }, 500);
             }
 
@@ -459,9 +469,9 @@
                 const selector = 'h1, h2, h3, h4, h5, h6, p, span, div, li, a, blockquote';
                 const elements = doc.querySelectorAll(selector);
 
-                // Select draggable block elements
-                const draggableSelector = 'p, h1, h2, h3, h4, h5, h6, div, section, article, header, footer, aside, blockquote, ul, ol';
-                const draggableElements = doc.querySelectorAll(draggableSelector);
+                // DRAG & DROP DISABLED
+                // const draggableSelector = 'p, h1, h2, h3, h4, h5, h6, div, section, article, header, footer, aside, blockquote, ul, ol';
+                // const draggableElements = doc.querySelectorAll(draggableSelector);
 
                 if (enable) {
                     // Show toolbar
@@ -490,6 +500,8 @@
                         }
                     });
 
+                    // DRAG & DROP DISABLED
+                    /*
                     // Enable drag & drop for block elements
                     draggableElements.forEach(el => {
                         // Skip if element is inside another draggable element (avoid nested drag)
@@ -567,6 +579,7 @@
                             });
                         }
                     });
+                    */
 
                     // Image handling
                     const images = doc.querySelectorAll('img');
@@ -594,11 +607,14 @@
                         el.classList.remove('editable-active', 'editable-hover');
                     });
 
+                    // DRAG & DROP DISABLED
+                    /*
                     // Remove drag & drop
                     draggableElements.forEach(el => {
                         el.draggable = false;
                         el.classList.remove('draggable-element', 'dragging', 'drag-over');
                     });
+                    */
                 }
             }
 
@@ -614,6 +630,94 @@
                 }
 
                 iframe.contentWindow.focus();
+
+                // Save state after command execution
+                setTimeout(() => saveState(), 100);
+            }
+
+            // --- History Management ---
+            function saveState() {
+                if (isRestoringState) return; // Don't save during restore
+
+                const iframe = document.getElementById('editor-frame');
+                if (!iframe || !iframe.contentWindow) return;
+
+                const doc = iframe.contentWindow.document;
+                if (!doc || !doc.body) return;
+
+                const currentState = doc.body.innerHTML;
+
+                // Don't save if state hasn't changed
+                if (historyIndex >= 0 && historyStack[historyIndex] === currentState) {
+                    return;
+                }
+
+                // Remove any redo history
+                historyStack = historyStack.slice(0, historyIndex + 1);
+
+                // Add new state
+                historyStack.push(currentState);
+                historyIndex++;
+
+                // Limit history size
+                if (historyStack.length > MAX_HISTORY) {
+                    historyStack.shift();
+                    historyIndex--;
+                }
+            }
+
+            function customUndo() {
+                if (historyIndex <= 0) return; // Nothing to undo
+
+                historyIndex--;
+                restoreState(historyStack[historyIndex]);
+            }
+
+            function customRedo() {
+                if (historyIndex >= historyStack.length - 1) return; // Nothing to redo
+
+                historyIndex++;
+                restoreState(historyStack[historyIndex]);
+            }
+
+            function restoreState(html) {
+                isRestoringState = true;
+
+                const iframe = document.getElementById('editor-frame');
+                const doc = iframe.contentWindow.document;
+
+                doc.body.innerHTML = html;
+
+                // Re-enable editing after restore
+                if (isEditMode) {
+                    setTimeout(() => {
+                        enableVisualEditing(true);
+                        isRestoringState = false;
+                    }, 50);
+                } else {
+                    isRestoringState = false;
+                }
+            }
+
+            function initializeHistory() {
+                const iframe = document.getElementById('editor-frame');
+                if (!iframe || !iframe.contentWindow) return;
+
+                const doc = iframe.contentWindow.document;
+                if (!doc || !doc.body) return;
+
+                // Save initial state
+                historyStack = [doc.body.innerHTML];
+                historyIndex = 0;
+
+                // Listen to input events for text editing
+                doc.addEventListener('input', () => {
+                    if (!isRestoringState) {
+                        // Debounce state saving
+                        clearTimeout(window.saveStateTimeout);
+                        window.saveStateTimeout = setTimeout(() => saveState(), 500);
+                    }
+                });
             }
 
             function promptLink() {
@@ -751,6 +855,9 @@
                 setTimeout(() => {
                     clonedElement.style.outline = '';
                 }, 1500);
+
+                // Save state after duplication
+                saveState();
             }
 
             // --- Saving ---
@@ -1057,6 +1164,9 @@
                     execCmd('insertImage', url);
                 }
                 closeImageBank();
+
+                // Save state after image insertion/replacement
+                setTimeout(() => saveState(), 100);
             }
 
             // --- Tab Switching ---
