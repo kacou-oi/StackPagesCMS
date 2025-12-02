@@ -172,41 +172,65 @@
                 </div>
             </div>
 
-            <!-- Tabs Bar for Multi-Page Support -->
-            <div class="px-6 py-2 border-b border-slate-700 bg-[#1e1e1e] flex items-center justify-between">
-                <div
-                    class="flex items-center gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent flex-1">
-                    <div id="page-tabs" class="flex items-center gap-2">
-                        <!-- Tabs will be dynamically inserted here -->
-                    </div>
-                </div>
-
-                <!-- SPA/Multi-page Mode Toggle -->
-                <div class="flex items-center gap-3 ml-4">
-                    <div class="flex items-center gap-2 bg-[#252526] px-3 py-1.5 rounded-md border border-slate-700">
-                        <span class="text-xs text-slate-400 font-medium">Mode:</span>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="page-mode" value="spa" checked onchange="updatePageMode()"
-                                class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600">
-                            <span class="text-sm text-white">SPA</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="page-mode" value="multipage" onchange="updatePageMode()"
-                                class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600">
-                            <span class="text-sm text-slate-300">Multi-pages</span>
-                        </label>
-                    </div>
-
-                    <button onclick="addNewPage()"
-                        class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm font-medium transition flex items-center gap-2 flex-shrink-0">
-                        <i class="fas fa-plus"></i> Nouvelle Page
+            <!-- CMS Navigation Tabs -->
+            <div class="px-6 py-3 border-b border-slate-700 bg-[#252526] flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('templates')" id="tab-templates"
+                        class="px-4 py-2 rounded-md font-medium transition flex items-center gap-2 bg-slate-700 text-white">
+                        <i class="fas fa-layer-group"></i> Templates
+                    </button>
+                    <button onclick="switchView('contents')" id="tab-contents"
+                        class="px-4 py-2 rounded-md font-medium transition flex items-center gap-2 bg-transparent hover:bg-slate-700 text-slate-400">
+                        <i class="fas fa-file-alt"></i> Contenus
                     </button>
                 </div>
+
+                <button onclick="createNewTemplate()" id="btn-new-template"
+                    class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-md font-medium transition flex items-center gap-2 shadow-lg">
+                    <i class="fas fa-magic"></i> Générer Template avec IA
+                </button>
+
+                <button onclick="createNewContent()" id="btn-new-content" style="display: none;"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Nouveau Contenu
+                </button>
             </div>
-            <!-- Monaco Editor -->
-            <div class="flex-1 bg-[#1e2a3a] overflow-hidden">
-                <div id="monaco-editor-container"></div>
+
+            <!-- Views Container -->
+            <div class="flex-1 overflow-hidden flex flex-col">
+                <!-- Templates View -->
+                <div id="view-templates" class="flex-1 overflow-y-auto p-6 bg-[#1e1e1e]">
+                    <div id="templates-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Templates will be rendered here -->
+                        <div class="col-span-full text-center py-12 text-slate-500">
+                            <i class="fas fa-layer-group text-6xl mb-4 opacity-20"></i>
+                            <p class="text-lg">Aucun template pour le moment</p>
+                            <p class="text-sm mt-2">Cliquez sur "Générer Template avec IA" pour commencer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contents View -->
+                <div id="view-contents" style="display: none;" class="flex-1 overflow-y-auto p-6 bg-[#1e1e1e]">
+                    <div class="mb-4">
+                        <label class="block text-sm text-slate-400 mb-2">Filtrer par template :</label>
+                        <select id="filter-template" onchange="renderContents()"
+                            class="w-64 px-3 py-2 bg-[#252526] border border-slate-600 rounded-md text-white">
+                            <option value="">Tous les templates</option>
+                        </select>
+                    </div>
+
+                    <div id="contents-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Contents will be rendered here -->
+                        <div class="col-span-full text-center py-12 text-slate-500">
+                            <i class="fas fa-file-alt text-6xl mb-4 opacity-20"></i>
+                            <p class="text-lg">Aucun contenu pour le moment</p>
+                            <p class="text-sm mt-2">Créez d'abord un template, puis ajoutez des contenus</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <div class="px-6 py-3 border-t border-slate-700 bg-[#252526] flex items-center justify-between">
                 <span class="text-xs text-slate-400">
@@ -352,6 +376,70 @@
         </div>
     </div>
 
+    <!-- Content Creation/Edition Modal -->
+    <div id="content-modal"
+        class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-[#1e1e1e] rounded-xl shadow-2xl w-full max-w-3xl border border-slate-700 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center bg-[#252526] rounded-t-xl">
+                <h3 id="content-modal-title" class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-file-alt text-blue-400"></i>
+                    Nouveau Contenu
+                </h3>
+                <button onclick="closeContentModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 flex-1 overflow-y-auto space-y-4">
+                <!-- Template Selection -->
+                <div id="template-selection-div">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        Template <span class="text-red-400">*</span>
+                    </label>
+                    <select id="content-template-select" onchange="loadTemplateFields()"
+                        class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">
+                        <option value="">Sélectionnez un template...</option>
+                    </select>
+                </div>
+
+                <!-- Slug -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        Slug URL <span class="text-slate-500 text-xs">(généré automatiquement si vide)</span>
+                    </label>
+                    <input type="text" id="content-slug" placeholder="mon-article"
+                        class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Dynamic Fields Container -->
+                <div id="content-fields-container" class="space-y-4">
+                    <div class="text-center py-8 text-slate-500">
+                        <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
+                        <p>Sélectionnez un template pour voir les champs</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-700 bg-[#252526] rounded-b-xl flex justify-between gap-3">
+                <button onclick="closeContentModal()"
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition">
+                    Annuler
+                </button>
+                <div class="flex gap-3">
+                    <button onclick="saveContent('draft')" id="save-draft-btn"
+                        class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition">
+                        <i class="far fa-save"></i> Brouillon
+                    </button>
+                    <button onclick="saveContent('published')" id="publish-btn"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition shadow-lg">
+                        <i class="fas fa-check"></i> Publier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="./../core/admin.js"></script>
     <script>
         // Global Monaco Editor instance (accessible from admin.js)
@@ -401,267 +489,639 @@
         }
 
         // ====================================================================
-        // MULTI-PAGE PROJECT MANAGEMENT
+        // CMS ARCHITECTURE - TEMPLATES & CONTENTS
         // ====================================================================
 
-        // Project State
-        let currentProject = {
-            name: "Mon Projet",
-            pages: [
-                {
-                    id: generatePageId(),
-                    title: "Accueil",
-                    slug: "index",
-                    content: ""
-                }
-            ],
-            activePageId: null,
-            sharedDesign: {
-                extracted: false,
-                colorScheme: "",
-                components: {}
-            }
-        };
+        // ============= TEMPLATE RENDERER =============
+        class TemplateRenderer {
+            /**
+             * Renders a template with data
+             * Supports {{field}} and {{{htmlField}}} syntax
+             */
+            render(htmlTemplate, data) {
+                if (!htmlTemplate || !data) return '';
 
-        // Generate unique page ID
-        function generatePageId() {
-            return 'page_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                let result = htmlTemplate;
+
+                // Replace {{field}} with escaped data
+                Object.keys(data).forEach(key => {
+                    const escapedValue = this.escapeHtml(data[key]);
+                    const regex = new RegExp(`{{${key}}}`, 'g');
+                    result = result.replace(regex, escapedValue);
+                });
+
+                // Replace {{{field}}} with raw HTML
+                Object.keys(data).forEach(key => {
+                    const rawValue = data[key] || '';
+                    const regex = new RegExp(`{{{${key}}}}`, 'g');
+                    result = result.replace(regex, rawValue);
+                });
+
+                return result;
+            }
+
+            escapeHtml(text) {
+                if (typeof text !== 'string') return text;
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
         }
 
-        // Initialize project (on page load)
-        function initProject() {
-            loadProject();
-            if (currentProject.pages.length > 0) {
-                currentProject.activePageId = currentProject.pages[0].id;
+        // ============= TEMPLATE MANAGER =============
+        class TemplateManager {
+            constructor() {
+                this.templates = [];
+                this.load();
             }
-            renderTabs();
-            loadActivePage();
-        }
 
-        // Load project from localStorage
-        function loadProject() {
-            const stored = localStorage.getItem('multiPageProject');
-            if (stored) {
-                try {
-                    currentProject = JSON.parse(stored);
-                    // Ensure at least one page exists
-                    if (!currentProject.pages || currentProject.pages.length === 0) {
-                        currentProject.pages = [{
-                            id: generatePageId(),
-                            title: "Accueil",
-                            slug: "index",
-                            content: ""
-                        }];
+            generateId() {
+                return 'template_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            create(data) {
+                const template = {
+                    id: this.generateId(),
+                    name: data.name || 'New Template',
+                    description: data.description || '',
+                    category: data.category || 'content',
+                    fields: data.fields || [],
+                    htmlTemplate: data.htmlTemplate || '',
+                    createdAt: new Date().toISOString()
+                };
+
+                this.templates.push(template);
+                this.save();
+                return template;
+            }
+
+            update(id, data) {
+                const index = this.templates.findIndex(t => t.id === id);
+                if (index === -1) return null;
+
+                this.templates[index] = {
+                    ...this.templates[index],
+                    ...data,
+                    id: id, // Preserve ID
+                    updatedAt: new Date().toISOString()
+                };
+
+                this.save();
+                return this.templates[index];
+            }
+
+            delete(id) {
+                const index = this.templates.findIndex(t => t.id === id);
+                if (index === -1) return false;
+
+                this.templates.splice(index, 1);
+                this.save();
+                return true;
+            }
+
+            get(id) {
+                return this.templates.find(t => t.id === id);
+            }
+
+            list() {
+                return this.templates;
+            }
+
+            save() {
+                localStorage.setItem('cms_templates', JSON.stringify(this.templates));
+            }
+
+            load() {
+                const stored = localStorage.getItem('cms_templates');
+                if (stored) {
+                    try {
+                        this.templates = JSON.parse(stored);
+                    } catch (e) {
+                        console.error('Error loading templates:', e);
+                        this.templates = [];
                     }
-                } catch (e) {
-                    console.error('Error loading project:', e);
                 }
             }
         }
 
-        // Save project to localStorage
-        function saveProject() {
-            // Save current page content before saving
-            saveCurrentPageContent();
-            localStorage.setItem('multiPageProject', JSON.stringify(currentProject));
-            console.log('Project saved:', currentProject);
-        }
-
-        // Save current page content to project
-        function saveCurrentPageContent() {
-            if (!monacoEditor || !currentProject.activePageId) return;
-
-            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
-            if (activePage) {
-                activePage.content = monacoEditor.getValue();
+        // ============= CONTENT MANAGER =============
+        class ContentManager {
+            constructor() {
+                this.contents = [];
+                this.load();
             }
-        }
 
-        // Load active page content into editor
-        function loadActivePage() {
-            if (!currentProject.activePageId) return;
-
-            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
-            if (activePage && monacoEditor) {
-                monacoEditor.setValue(activePage.content || '');
-
-                // Update page title input
-                const titleInput = document.getElementById('page-title');
-                const slugInput = document.getElementById('page-slug');
-                if (titleInput) titleInput.value = activePage.title || '';
-                if (slugInput) slugInput.value = activePage.slug || '';
+            generateId() {
+                return 'content_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             }
-        }
 
-        // Switch to a different page
-        function switchToPage(pageId) {
-            if (pageId === currentProject.activePageId) return;
+            generateSlug(title) {
+                return title.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/(^-|-$)/g, '');
+            }
 
-            // Save current page before switching
-            saveCurrentPageContent();
+            create(templateId, data, slug = null) {
+                const content = {
+                    id: this.generateId(),
+                    templateId: templateId,
+                    status: 'draft',
+                    data: data,
+                    slug: slug || this.generateSlug(data.title || 'untitled'),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
 
-            // Update active page
-            currentProject.activePageId = pageId;
+                this.contents.push(content);
+                this.save();
+                return content;
+            }
 
-            // Load new page
-            loadActivePage();
+            update(id, updates) {
+                const index = this.contents.findIndex(c => c.id === id);
+                if (index === -1) return null;
 
-            // Re-render tabs to update active state
-            renderTabs();
+                this.contents[index] = {
+                    ...this.contents[index],
+                    ...updates,
+                    id: id, // Preserve ID
+                    updatedAt: new Date().toISOString()
+                };
 
-            // Save project
-            saveProject();
-        }
+                this.save();
+                return this.contents[index];
+            }
 
-        // Add new page
-        function addNewPage() {
-            const newPage = {
-                id: generatePageId(),
-                title: `Page ${currentProject.pages.length + 1}`,
-                slug: `page-${currentProject.pages.length + 1}`,
-                content: ""
-            };
+            delete(id) {
+                const index = this.contents.findIndex(c => c.id === id);
+                if (index === -1) return false;
 
-            currentProject.pages.push(newPage);
-            switchToPage(newPage.id);
-            renderTabs();
-            saveProject();
+                this.contents.splice(index, 1);
+                this.save();
+                return true;
+            }
 
-            // Focus on title input for renaming
-            setTimeout(() => {
-                const titleInput = document.getElementById('page-title');
-                if (titleInput) {
-                    titleInput.focus();
-                    titleInput.select();
+            get(id) {
+                return this.contents.find(c => c.id === id);
+            }
+
+            listByTemplate(templateId) {
+                return this.contents.filter(c => c.templateId === templateId);
+            }
+
+            list() {
+                return this.contents;
+            }
+
+            publish(id) {
+                return this.update(id, { status: 'published' });
+            }
+
+            unpublish(id) {
+                return this.update(id, { status: 'draft' });
+            }
+
+            save() {
+                localStorage.setItem('cms_contents', JSON.stringify(this.contents));
+            }
+
+            load() {
+                const stored = localStorage.getItem('cms_contents');
+                if (stored) {
+                    try {
+                        this.contents = JSON.parse(stored);
+                    } catch (e) {
+                        console.error('Error loading contents:', e);
+                        this.contents = [];
+                    }
                 }
-            }, 100);
+            }
         }
 
-        // Close/Delete page
-        function closePage(pageId, event) {
-            if (event) {
-                event.stopPropagation();
-            }
+        // ============= GLOBAL INSTANCES =============
+        let templateManager = null;
+        let contentManager = null;
+        let templateRenderer = null;
 
-            // Prevent closing last page
-            if (currentProject.pages.length === 1) {
-                alert('Vous ne pouvez pas supprimer la dernière page.');
-                return;
-            }
+        // Initialize CMS
+        function initCMS() {
+            templateManager = new TemplateManager();
+            contentManager = new ContentManager();
+            templateRenderer = new TemplateRenderer();
 
-            // Confirm deletion
-            const page = currentProject.pages.find(p => p.id === pageId);
-            if (!confirm(`Voulez-vous vraiment supprimer la page "${page?.title || 'Sans titre'}" ?`)) {
-                return;
-            }
-
-            // Remove page
-            const pageIndex = currentProject.pages.findIndex(p => p.id === pageId);
-            currentProject.pages.splice(pageIndex, 1);
-
-            // If closing active page, switch to another
-            if (currentProject.activePageId === pageId) {
-                const newActivePage = currentProject.pages[Math.max(0, pageIndex - 1)];
-                currentProject.activePageId = newActivePage.id;
-                loadActivePage();
-            }
-
-            renderTabs();
-            saveProject();
-        }
-
-        // Render tabs in UI
-        function renderTabs() {
-            const tabsContainer = document.getElementById('page-tabs');
-            if (!tabsContainer) return;
-
-            tabsContainer.innerHTML = '';
-
-            currentProject.pages.forEach(page => {
-                const isActive = page.id === currentProject.activePageId;
-
-                const tab = document.createElement('div');
-                tab.className = `
-                    group relative flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer transition-all
-                    ${isActive
-                        ? 'bg-slate-700 text-white shadow-md border border-slate-600'
-                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}
-                `;
-                tab.onclick = () => switchToPage(page.id);
-
-                // Page title
-                const title = document.createElement('span');
-                title.className = 'text-sm font-medium select-none';
-                title.textContent = page.title || 'Sans titre';
-                tab.appendChild(title);
-
-                // Close button
-                if (currentProject.pages.length > 1) {
-                    const closeBtn = document.createElement('button');
-                    closeBtn.className = `
-                        text-xs opacity-0 group-hover:opacity-100 transition-opacity
-                        ${isActive ? 'text-white hover:text-red-200' : 'text-slate-400 hover:text-red-400'}
-                    `;
-                    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    closeBtn.onclick = (e) => closePage(page.id, e);
-                    tab.appendChild(closeBtn);
-                }
-
-                tabsContainer.appendChild(tab);
+            console.log('CMS initialized:', {
+                templates: templateManager.list().length,
+                contents: contentManager.list().length
             });
         }
 
-        // Update page metadata (title, slug)
-        function updatePageMetadata() {
-            if (!currentProject.activePageId) return;
-
-            const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
-            if (!activePage) return;
-
-            const titleInput = document.getElementById('page-title');
-            const slugInput = document.getElementById('page-slug');
-
-            if (titleInput) activePage.title = titleInput.value || 'Sans titre';
-            if (slugInput) activePage.slug = slugInput.value || 'page';
-
-            renderTabs();
-            saveProject();
-        }
-
         // ====================================================================
-        // PAGE MODE MANAGEMENT (SPA vs Multi-page)
+        // VIEW MANAGEMENT (Templates / Contents)
         // ====================================================================
 
-        let pageMode = 'spa'; // Default mode
+        let currentView = 'templates';
 
-        // Load page mode preference
-        function loadPageMode() {
-            const stored = localStorage.getItem('pageMode');
-            if (stored) {
-                pageMode = stored;
-                // Update radio buttons
-                const radios = document.querySelectorAll('input[name="page-mode"]');
-                radios.forEach(radio => {
-                    radio.checked = radio.value === pageMode;
-                });
+        function switchView(viewName) {
+            currentView = viewName;
+
+            // Hide all views
+            document.getElementById('view-templates').style.display = 'none';
+            document.getElementById('view-contents').style.display = 'none';
+
+            // Show selected view
+            document.getElementById(`view-${viewName}`).style.display = 'flex';
+
+            // Update tab styles
+            document.getElementById('tab-templates').className = 'px-4 py-2 rounded-md font-medium transition flex items-center gap-2 ' +
+                (viewName === 'templates' ? 'bg-slate-700 text-white' : 'bg-transparent hover:bg-slate-700 text-slate-400');
+            document.getElementById('tab-contents').className = 'px-4 py-2 rounded-md font-medium transition flex items-center gap-2 ' +
+                (viewName === 'contents' ? 'bg-slate-700 text-white' : 'bg-transparent hover:bg-slate-700 text-slate-400');
+
+            // Toggle action buttons
+            document.getElementById('btn-new-template').style.display = viewName === 'templates' ? 'flex' : 'none';
+            document.getElementById('btn-new-content').style.display = viewName === 'contents' ? 'flex' : 'none';
+
+            // Render appropriate content
+            if (viewName === 'templates') {
+                renderTemplates();
+            } else if (viewName === 'contents') {
+                renderContents();
             }
         }
 
-        // Update page mode
-        function updatePageMode() {
-            const selected = document.querySelector('input[name="page-mode"]:checked');
-            if (selected) {
-                pageMode = selected.value;
-                localStorage.setItem('pageMode', pageMode);
-                console.log('Page mode changed to:', pageMode);
+        // Render templates list
+        function renderTemplates() {
+            const container = document.getElementById('templates-list');
+            const templates = templateManager.list();
 
-                // Show notification
-                const notification = document.createElement('div');
-                notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                notification.textContent = pageMode === 'spa' ? 'Mode SPA activé ✨' : 'Mode Multi-pages activé 📄';
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 2000);
+            if (templates.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-500">
+                        <i class="fas fa-layer-group text-6xl mb-4 opacity-20"></i>
+                        <p class="text-lg">Aucun template pour le moment</p>
+                        <p class="text-sm mt-2">Cliquez sur "Générer Template avec IA" pour commencer</p>
+                    </div>
+                `;
+                return;
             }
+
+            container.innerHTML = templates.map(template => {
+                const contentCount = contentManager.listByTemplate(template.id).length;
+                return `
+                    <div class="bg-[#252526] rounded-lg border border-slate-700 hover:border-slate-600 transition p-4">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-white font-semibold text-lg">${template.name}</h3>
+                                <p class="text-slate-400 text-sm mt-1">${template.description || 'Aucune description'}</p>
+                            </div>
+                            <span class="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded">${template.fields.length} champs</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
+                            <span><i class="fas fa-file-alt mr-1"></i>${contentCount} contenu(s)</span>
+                            <span>${new Date(template.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick= "editTemplate('${template.id}')" class="flex-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
+                                <i class="fas fa-edit"></i> Éditer
+                            </button>
+                            <button onclick="duplicateTemplate('${template.id}')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button onclick="deleteTemplate('${template.id}')" class="px-3 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-sm rounded transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render contents list
+        function renderContents() {
+            const container = document.getElementById('contents-list');
+            const filterSelect = document.getElementById('filter-template');
+            const selectedTemplate = filterSelect.value;
+
+            let contents = contentManager.list();
+            if (selectedTemplate) {
+                contents = contentManager.listByTemplate(selectedTemplate);
+            }
+
+            // Update filter dropdown
+            const templates = templateManager.list();
+            filterSelect.innerHTML = '<option value="">Tous les templates</option>' +
+                templates.map(t => `<option value="${t.id}" ${selectedTemplate === t.id ? 'selected' : ''}>${t.name}</option>`).join('');
+
+            if (contents.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-500">
+                        <i class="fas fa-file-alt text-6xl mb-4 opacity-20"></i>
+                        <p class="text-lg">Aucun contenu pour le moment</p>
+                        <p class="text-sm mt-2">${templates.length === 0 ? 'Créez d\'abord un template, puis ajoutez des contenus' : 'Cliquez sur "Nouveau Contenu" pour ajouter du contenu'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = contents.map(content => {
+                const template = templateManager.get(content.templateId);
+                const statusColor = content.status === 'published' ? 'text-green-300 bg-green-900/30' : 'text-orange-300 bg-orange-900/30';
+
+                return `
+                    <div class="bg-[#252526] rounded-lg border border-slate-700 hover:border-slate-600 transition p-4">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold">${content.data.title || 'Sans titre'}</h3>
+                                <p class="text-slate-500 text-xs mt-1">${template?.name || 'Template inconnu'}</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs rounded ${statusColor}">${content.status === 'published' ? 'Publié' : 'Brouillon'}</span>
+                        </div>
+                        
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">${content.data.description || content.data.content?.substring(0, 100) || 'Pas de description'}</p>
+                        
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
+                            <span>${new Date(content.updatedAt).toLocaleDateString()}</span>
+                            <span class="text-blue-400">/${content.slug}</span>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="editContent('${content.id}')" class="flex-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded transition">
+                                <i class="fas fa-edit"></i> Éditer
+                            </button>
+                            <button onclick="previewContent('${content.id}')" class="px-3 py-1.5 bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 text-sm rounded transition">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="deleteContent('${content.id}')" class="px-3 py-1.5 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-sm rounded transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ====================================================================
+        // TEMPLATE ACTIONS
+        // ====================================================================
+
+        function createNewTemplate() {
+            // Open Gemini prompt modal
+            openPromptModal();
+        }
+
+        function editTemplate(id) {
+            const template = templateManager.get(id);
+            if (!template) return;
+
+            // For now, just show an alert - to be implemented later
+            alert('Édition de template à implémenter dans la prochaine phase');
+        }
+
+        function duplicateTemplate(id) {
+            const template = templateManager.get(id);
+            if (!template) return;
+
+            const newTemplate = templateManager.create({
+                ...template,
+                name: template.name + ' (Copie)'
+            });
+
+            renderTemplates();
+        }
+
+        function deleteTemplate(id) {
+            const template = templateManager.get(id);
+            if (!template) return;
+
+            if (!confirm(`Supprimer le template "${template.name}" ?\nTous les contenus associés seront également supprimés.`)) return;
+
+            // Delete all contents using this template
+            const contents = contentManager.listByTemplate(id);
+            contents.forEach(c => contentManager.delete(c.id));
+
+            templateManager.delete(id);
+            renderTemplates();
+        }
+
+        // ====================================================================
+        // CONTENT ACTIONS
+        // ==================================================================== 
+
+        let editingContentId = null; // Track if we're editing or creating
+
+        function createNewContent() {
+            const templates = templateManager.list();
+            if (templates.length === 0) {
+                alert('Veuillez d\'abord créer un template');
+                return;
+            }
+
+            editingContentId = null;
+            document.getElementById('content-modal-title').innerHTML = '<i class="fas fa-file-alt text-blue-400"></i> Nouveau Contenu';
+
+            // Populate template dropdown
+            const select = document.getElementById('content-template-select');
+            select.innerHTML = '<option value="">Sélectionnez un template...</option>' +
+                templates.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+
+            // Show template selection
+            document.getElementById('template-selection-div').style.display = 'block';
+
+            // Clear fields
+            document.getElementById('content-slug').value = '';
+            document.getElementById('content-fields-container').innerHTML = `
+                <div class="text-center py-8 text-slate-500">
+                    <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
+                    <p>Sélectionnez un template pour voir les champs</p>
+                </div>
+            `;
+
+            // Show modal
+            document.getElementById('content-modal').classList.remove('hidden');
+        }
+
+        function editContent(id) {
+            const content = contentManager.get(id);
+            if (!content) return;
+
+            editingContentId = id;
+            document.getElementById('content-modal-title').innerHTML = '<i class="fas fa-edit text-blue-400"></i> Éditer Contenu';
+
+            // Populate template dropdown (disabled since template can't change)
+            const templates = templateManager.list();
+            const select = document.getElementById('content-template-select');
+            select.innerHTML = templates.map(t =>
+                `<option value="${t.id}" ${t.id === content.templateId ? 'selected' : ''}>${t.name}</option>`
+            ).join('');
+            select.disabled = true;
+
+            // Hide template selection label (editing, template is locked)
+            document.getElementById('template-selection-div').style.display = 'none';
+
+            // Load slug
+            document.getElementById('content-slug').value = content.slug;
+
+            // Generate fields for this template and populate with content data
+            loadTemplateFields(content.data);
+
+            // Show modal
+            document.getElementById('content-modal').classList.remove('hidden');
+        }
+
+        function closeContentModal() {
+            document.getElementById('content-modal').classList.add('hidden');
+            document.getElementById('content-template-select').disabled = false;
+            editingContentId = null;
+        }
+
+        function loadTemplateFields(existingData = {}) {
+            const templateId = document.getElementById('content-template-select').value;
+            if (!templateId) {
+                document.getElementById('content-fields-container').innerHTML = `
+                    <div class="text-center py-8 text-slate-500">
+                        <i class="fas fa-info-circle text-3xl mb-2 opacity-20"></i>
+                        <p>Sélectionnez un template pour voir les champs</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const template = templateManager.get(templateId);
+            if (!template || !template.fields) return;
+
+            const container = document.getElementById('content-fields-container');
+            container.innerHTML = '';
+
+            template.fields.forEach(field => {
+                const fieldDiv = document.createElement('div');
+                const value = existingData[field.name] || '';
+
+                const label = `
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        ${field.name} ${field.required ? '<span class="text-red-400">*</span>' : ''}
+                        <span class="text-slate-500 text-xs ml-2">(${field.type})</span>
+                    </label>
+                `;
+
+                let input = '';
+                switch (field.type) {
+                    case 'text':
+                        input = `<input type="text" id="field-${field.name}" value="${value}" 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
+                            ${field.required ? 'required' : ''}>`;
+                        break;
+                    case 'richtext':
+                        input = `<textarea id="field-${field.name}" rows="8" 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 font-mono text-sm" 
+                            ${field.required ? 'required' : ''}>${value}</textarea>
+                            <p class="text-xs text-slate-500 mt-1">HTML autorisé</p>`;
+                        break;
+                    case 'date':
+                        input = `<input type="date" id="field-${field.name}" value="${value}" 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
+                            ${field.required ? 'required' : ''}>`;
+                        break;
+                    case 'image':
+                        input = `<input type="url" id="field-${field.name}" value="${value}" placeholder="https://..." 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500" 
+                            ${field.required ? 'required' : ''}>
+                            <p class="text-xs text-slate-500 mt-1">URL de l'image</p>`;
+                        break;
+                    case 'array':
+                        const arrayValues = Array.isArray(value) ? value.join(', ') : value;
+                        input = `<input type="text" id="field-${field.name}" value="${arrayValues}" placeholder="tag1, tag2, tag3" 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-slate-500 mt-1">Séparez par des virgules</p>`;
+                        break;
+                    default:
+                        input = `<input type="text" id="field-${field.name}" value="${value}" 
+                            class="w-full px-4 py-2.5 bg-[#252526] border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500">`;
+                }
+
+                fieldDiv.innerHTML = label + input;
+                container.appendChild(fieldDiv);
+            });
+        }
+
+        function saveContent(status) {
+            const templateId = document.getElementById('content-template-select').value;
+            if (!templateId) {
+                alert('Veuillez sélectionner un template');
+                return;
+            }
+
+            const template = templateManager.get(templateId);
+            if (!template) return;
+
+            // Collect data from all fields
+            const data = {};
+            template.fields.forEach(field => {
+                const input = document.getElementById(`field-${field.name}`);
+                if (!input) return;
+
+                let value = input.value;
+
+                // Handle array type
+                if (field.type === 'array' && value) {
+                    value = value.split(',').map(v => v.trim()).filter(v => v);
+                }
+
+                // Validation
+                if (field.required && (!value || value.length === 0)) {
+                    alert(`Le champ "${field.name}" est requis`);
+                    input.focus();
+                    throw new Error('Validation failed');
+                }
+
+                data[field.name] = value;
+            });
+
+            const slug = document.getElementById('content-slug').value;
+
+            if (editingContentId) {
+                // Update existing content
+                contentManager.update(editingContentId, { data, slug, status });
+            } else {
+                // Create new content
+                contentManager.create(templateId, data, slug || null);
+            }
+
+            closeContentModal();
+            renderContents();
+
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = editingContentId ? 'Contenu mis à jour !' : 'Contenu créé !';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+
+        function previewContent(id) {
+            const content = contentManager.get(id);
+            const template = templateManager.get(content.templateId);
+
+            if (!content || !template) return;
+
+            // Render content with template
+            const rendered = templateRenderer.render(template.htmlTemplate, content.data);
+
+            // Open in modal or new window
+            const w = window.open('', '_blank');
+            w.document.write(rendered);
+            w.document.close();
+        }
+
+        function deleteContent(id) {
+            const content = contentManager.get(id);
+            if (!content) return;
+
+            if (!confirm(`Supprimer ce contenu ?`)) return;
+
+            contentManager.delete(id);
+            renderContents();
         }
 
         // Listen to title changes
@@ -1079,11 +1539,11 @@ ${htmlContent}
                 domainEl.textContent = window.location.hostname || 'localhost';
             }
 
-            // Initialize multi-page project
-            initProject();
+            // Initialize CMS system
+            initCMS();
 
-            // Load page mode preference
-            loadPageMode();
+            // Render initial Templates view
+            renderTemplates();
 
             // Initialize Monaco Editor
             initMonacoEditor('');
