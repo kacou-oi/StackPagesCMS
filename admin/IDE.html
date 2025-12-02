@@ -900,11 +900,34 @@ ${htmlContent}
                     const activePage = currentProject.pages.find(p => p.id === currentProject.activePageId);
                     const otherPages = currentProject.pages.filter(p => p.id !== currentProject.activePageId);
 
-                    multiPageContext = "\n\nMULTI-PAGE PROJECT:\n" +
-                        "- Total pages: " + currentProject.pages.length + "\n" +
-                        "- Current page: " + (activePage?.title || 'Untitled') + "\n" +
-                        "- Other pages: " + otherPages.map(p => p.title).join(', ') + "\n" +
-                        "- MAINTAIN same visual style (colors, fonts, spacing) across all pages\n";
+                    multiPageContext = "\n\n=== MULTI-PAGE WEBSITE PROJECT ===\n" +
+                        "CRITICAL INSTRUCTIONS:\n" +
+                        "- This is a TRADITIONAL multi-page website, NOT a Single Page Application (SPA)\n" +
+                        "- Each page you create is a SEPARATE HTML file that will be saved independently\n" +
+                        "- DO NOT create JavaScript routing or page switching logic\n" +
+                        "- DO NOT put all content in one page with display:none toggles\n" +
+                        "- Each page should be a COMPLETE, STANDALONE HTML document\n\n" +
+
+                        "CURRENT PAGE INFO:\n" +
+                        "- Page you are editing: " + (activePage?.title || 'Untitled') + "\n" +
+                        "- Total pages in project: " + currentProject.pages.length + "\n" +
+                        "- Other existing pages: " + otherPages.map(p => p.title).join(', ') + "\n\n" +
+
+                        "NAVIGATION BETWEEN PAGES:\n" +
+                        "- Use simple <a href='/page-slug.html'> links to navigate between pages\n" +
+                        "- Example: <a href='/index.html'>Home</a> | <a href='/about.html'>About</a>\n" +
+                        "- The user will manage URL routing separately\n\n" +
+
+                        "DESIGN CONSISTENCY:\n" +
+                        "- MAINTAIN the same visual identity (colors, fonts, spacing) across all pages\n" +
+                        "- Use the SAME header/navigation bar structure on every page\n" +
+                        "- Keep the same footer design\n" +
+                        "- Match the overall aesthetic of the first page\n\n" +
+
+                        "WHAT TO GENERATE:\n" +
+                        "- Generate ONLY the content for: " + (activePage?.title || 'this page') + "\n" +
+                        "- Focus on making THIS PAGE unique while maintaining the overall design\n" +
+                        "- Do NOT try to include content from other pages\n";
                 }
 
                 const fullPrompt = systemInstruction + multiPageContext + "\n\nUser Request: " + prompt;
