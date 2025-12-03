@@ -356,12 +356,7 @@
             }, 300); // Duration of modal-fade-leave-active transition
 
             if (videoPlayer) videoPlayer.src = '';
-            document.body.classList.remove('overflow-hidden');
-            const podcastAudioPlayer = document.getElementById('podcast-audio-player');
-            if (podcastAudioPlayer && !podcastAudioPlayer.paused) {
-                podcastAudioPlayer.pause();
-                updatePlayPauseButton(true);
-            }
+            // Removed podcast player pause from here to allow it to continue playing when modals are closed or tabs are changed.
         }
 
         // Modified modal open to handle transitions
@@ -550,6 +545,11 @@
             const podcastPlayerContainer = document.getElementById('header-podcast-player-container');
             if (!podcastPlayerContainer || allPodcasts.length === 0) return;
 
+            // Preserve current audio state if player already exists
+            const existingAudioPlayer = document.getElementById('podcast-audio-player');
+            const currentTime = existingAudioPlayer ? existingAudioPlayer.currentTime : 0;
+            const isPaused = existingAudioPlayer ? existingAudioPlayer.paused : true;
+
             podcastPlayerContainer.innerHTML = `
                 <audio id="podcast-audio-player" class="hidden"></audio>
                 <div class="tooltip">
@@ -597,6 +597,10 @@
                 if (allPodcasts.length > 0) {
                     const currentPodcast = allPodcasts[currentPodcastIndex];
                     podcastAudioPlayer.src = currentPodcast.audioUrl;
+                    if (!isPaused) { // Only attempt to play if it was playing
+                        podcastAudioPlayer.currentTime = currentTime; // Restore time
+                        podcastAudioPlayer.play().catch(e => console.log("Autoplay prevented for podcast:", e));
+                    }
 
                     podcastPrevButton.disabled = currentPodcastIndex === 0;
                     podcastNextButton.disabled = currentPodcastIndex === allPodcasts.length - 1;
@@ -622,7 +626,7 @@
 
             function playPausePodcast() {
                 if (podcastAudioPlayer.paused) {
-                    podcastAudioPlayer.play();
+                    podcastAudioPlayer.play().catch(e => console.log("Autoplay prevented:", e));
                 } else {
                     podcastAudioPlayer.pause();
                 }
@@ -632,7 +636,7 @@
                 if (currentPodcastIndex < allPodcasts.length - 1) {
                     currentPodcastIndex++;
                     updatePodcastPlayerDisplay();
-                    podcastAudioPlayer.play();
+                    podcastAudioPlayer.play().catch(e => console.log("Autoplay prevented:", e));
                 } else {
                     podcastAudioPlayer.pause();
                     updatePlayPauseButton(true);
@@ -643,7 +647,7 @@
                 if (currentPodcastIndex > 0) {
                     currentPodcastIndex--;
                     updatePodcastPlayerDisplay();
-                    podcastAudioPlayer.play();
+                    podcastAudioPlayer.play().catch(e => console.log("Autoplay prevented:", e));
                 }
             }
 
@@ -656,7 +660,7 @@
             podcastAudioPlayer.addEventListener('ended', nextPodcast);
 
             updatePodcastPlayerDisplay();
-            updatePlayPauseButton(true);
+            updatePlayPauseButton(isPaused); // Restore play/pause state
         }
 
 
@@ -1078,7 +1082,7 @@
         }
 
         async function handleRouting() {
-            closeAllModals();
+            closeAllModals(); // Close modals but not the podcast player
             closeMobileMenu.click();
             const hash = window.location.hash || '#home';
             updateActiveNavLink(hash);
