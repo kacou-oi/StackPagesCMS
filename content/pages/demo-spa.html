@@ -850,15 +850,19 @@
                 videosToDisplay.forEach(video => {
                     const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
                     const card = document.createElement('div');
-                    card.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group relative aspect-video';
+                    card.className = 'bg-transparent rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group relative aspect-video';
                     card.innerHTML = `
-                        <img src="${video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o'}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <img src="${video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o'}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out absolute inset-0">
+                        <!-- Play overlay -->
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                            <div class="p-4 bg-blue-600 rounded-full shadow-xl transform group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
                         </div>
-                        <div class="p-4 bg-white absolute bottom-0 left-0 right-0">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-1 leading-tight group-hover:text-blue-600 transition-colors">${video.title}</h3>
-                            <p class="text-gray-500 text-xs">${videoDate}</p>
+                        <!-- Title and Date overlay -->
+                        <div class="p-4 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent z-10">
+                            <h3 class="text-lg font-semibold text-white mb-1 leading-tight group-hover:text-blue-400 transition-colors">${video.title}</h3>
+                            <p class="text-gray-200 text-xs">${videoDate}</p>
                         </div>
                     `;
                     card.addEventListener('click', () => openVideoModal(video.link));
@@ -916,7 +920,7 @@
                         dots.className = 'px-4 py-2 text-gray-500';
                         videosPagination.appendChild(dots);
                     }
-                    videosPagination.appendChild(createButton(totalPages.toString(), totalPages));
+                    publicationsPagination.appendChild(createButton(totalPages.toString(), totalPages));
                 }
 
                 videosPagination.appendChild(createButton('Suivant', currentVideosPage + 1, false, currentVideosPage === totalPages));
