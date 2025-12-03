@@ -598,10 +598,20 @@ ${htmlContent}
         });
 
         // --- History Panel Logic ---
+
+        // Define state variables globally within the script scope
+        let promptHistory = [];
+        let isPanelCollapsed = false;
+
         // Toggle Panel
-        function toggleHistoryPanel() {
+        window.toggleHistoryPanel = function () {
             const panel = document.getElementById('history-panel');
             const chevron = document.getElementById('history-chevron');
+
+            if (!panel || !chevron) {
+                console.error("History panel elements not found");
+                return;
+            }
 
             if (isPanelCollapsed) {
                 // Expand
@@ -614,7 +624,7 @@ ${htmlContent}
                 chevron.style.transform = 'rotate(180deg)';
                 isPanelCollapsed = true;
             }
-        }
+        };
 
         // Initialize History
         function initChat() {
@@ -697,7 +707,7 @@ ${htmlContent}
         }
 
         // Send Prompt
-        async function sendPrompt() {
+        window.sendPrompt = async function () {
             const input = document.getElementById('ai-prompt-input');
             const prompt = input.value.trim();
             if (!prompt) return;
@@ -709,8 +719,10 @@ ${htmlContent}
             input.value = '';
             input.disabled = true;
             const btn = document.getElementById('btn-send-prompt');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            }
 
             // Create History Item
             const historyItem = {
@@ -730,7 +742,7 @@ ${htmlContent}
                 // Call Gemini
                 await generateCodeFromHistory(prompt, historyItem.id);
             } catch (error) {
-                console.error(error);
+                console.error("Generation Error:", error);
                 // Update item status
                 const item = promptHistory.find(i => i.id === historyItem.id);
                 if (item) item.status = 'error';
@@ -740,10 +752,12 @@ ${htmlContent}
             } finally {
                 input.disabled = false;
                 input.focus();
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                }
             }
-        }
+        };
 
         // Generate Code
         async function generateCodeFromHistory(prompt, itemId) {
