@@ -1,7 +1,7 @@
 <html lang="fr"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title">Mon Site Web</title>
+    <title id="site-title">M. Kacou Oi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body::-webkit-scrollbar {
@@ -164,7 +164,9 @@
                             
                         
                             
-                        </head>
+                        
+                    
+                </head>
 <body class="font-sans antialiased text-gray-800 bg-gray-50 flex flex-col min-h-screen">
 
     <!-- Header -->
@@ -414,7 +416,7 @@
                 <a href="#videos" class="footer-nav-link text-gray-300 hover:text-white transition-colors">Vidéos</a>
                 <a href="#contact" class="footer-nav-link text-gray-300 hover:text-white transition-colors">Contact</a>
             </div>
-            <p class="text-gray-400">© 2025 <span id="footer-site-name-copyright">Mon Site Web</span>. Tous droits réservés.</p>
+            <p class="text-gray-400">© 2025 <span id="footer-site-name-copyright">M. Kacou Oi</span>. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -450,9 +452,9 @@
                 const response = await fetch(window.location.origin + '/api/metadata');
                 if (!response.ok) throw new Error('Failed to fetch metadata');
                 const metadata = await response.json();
-                siteTitleElem.textContent = metadata.title || 'Mon Site Web';
-                headerSiteName.textContent = metadata.title || 'Mon Site Web';
-                footerSiteNameCopyright.textContent = metadata.title || 'Mon Site Web';
+                siteTitleElem.textContent = metadata.title || 'M. Kacou Oi';
+                headerSiteName.textContent = metadata.title || 'M. kacou Oi';
+                footerSiteNameCopyright.textContent = metadata.title || 'M. Kacou Oi';
                 if (metadata.logo) {
                     headerLogo.src = metadata.logo;
                     headerLogo.style.display = 'block';
@@ -462,8 +464,8 @@
             } catch (error) {
                 console.error('Error fetching metadata:', error);
                 siteTitleElem.textContent = 'Erreur de chargement';
-                headerSiteName.textContent = 'Mon Site Web';
-                footerSiteNameCopyright.textContent = 'Mon Site Web';
+                headerSiteName.textContent = 'M. Kacou Oi';
+                footerSiteNameCopyright.textContent = 'M. Kacou oi';
                 headerLogo.style.display = 'none';
             }
         }
