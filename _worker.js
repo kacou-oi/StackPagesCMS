@@ -535,6 +535,20 @@ export default {
             headers: { 'Content-Type': 'text/html; charset=utf-8' }
         });
 
+        // Helper for HTMX Out-Of-Band Swaps (SEO Updates)
+        const generateOOB = (metadata) => {
+            if (!isHtmx) return "";
+            const title = metadata.title || config.siteName;
+            const desc = metadata.description || "";
+            const keywords = metadata.keywords || "";
+
+            return `
+            <title id="site-title" hx-swap-oob="true">${title}</title>
+            <meta id="meta-desc" name="description" content="${desc}" hx-swap-oob="true">
+            <meta id="meta-keywords" name="keywords" content="${keywords}" hx-swap-oob="true">
+            `;
+        };
+
         // Load Site Config and Super Template
         const siteConfig = await fetchSiteConfig(config);
         const template = await getTemplate(config, siteConfig);
@@ -543,6 +557,7 @@ export default {
         // Use siteConfig for site name, fallback to RSS metadata or default
         const siteName = siteConfig?.site?.name || config.siteName;
         const siteDescription = siteConfig?.seo?.metaDescription || "";
+        const siteKeywords = siteConfig?.seo?.keywords || "";
 
         // Use feeds from config.json if environment variables are not set
         const substackUrl = config.substackRssUrl || siteConfig?.feeds?.substack || "";
@@ -550,33 +565,37 @@ export default {
 
         if (path === "/" || path === "/index.html") {
             const data = await getCachedRSSData(substackUrl);
-            const content = generateHomeContent(template, { ...data.metadata, title: siteName });
-            if (isHtmx) return htmlResponse(content);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName, description: siteDescription }));
+            const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
+            const content = generateHomeContent(template, metadata);
+
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/publications") {
             const data = await getCachedRSSData(substackUrl);
+            const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
             const content = generatePublicationsContent(template, data.posts);
-            if (isHtmx) return htmlResponse(content);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
+
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/videos") {
             const videos = await getCachedYoutubeData(youtubeUrl);
             const content = generateVideosContent(template, videos);
-            if (isHtmx) return htmlResponse(content);
+            const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
 
-            const data = await getCachedRSSData(substackUrl);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/contact") {
             const content = generateContactContent(template);
-            if (isHtmx) return htmlResponse(content);
+            const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
 
-            const data = await getCachedRSSData(substackUrl);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path.startsWith("/post/")) {
@@ -586,8 +605,14 @@ export default {
 
             if (post) {
                 const content = generatePostContent(template, post);
-                if (isHtmx) return htmlResponse(content);
-                return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
+                const metadata = {
+                    title: `${post.title} - ${siteName}`,
+                    description: post.description || siteDescription,
+                    keywords: siteKeywords
+                };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
             } else {
                 return new Response("Article non trouvé", { status: 404 });
             }

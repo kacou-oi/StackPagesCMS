@@ -259,6 +259,7 @@ async function loadConfig() {
 
 // Load Site Config from GitHub config.json
 async function loadSiteConfig() {
+    console.log("loadSiteConfig called");
     const statusEl = document.getElementById('config-status');
     const loadingEl = document.getElementById('config-loading');
     const formEl = document.getElementById('config-form');
@@ -267,11 +268,13 @@ async function loadSiteConfig() {
     let ghConfig = {};
     try {
         ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+        console.log("GitHub Config loaded:", ghConfig);
     } catch (e) {
         console.error("Error parsing GitHub config:", e);
     }
 
     if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        console.warn("GitHub config missing");
         if (statusEl) {
             statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub (cliquez sur votre nom en bas à gauche)";
             statusEl.className = "text-sm text-center text-amber-600";
@@ -285,6 +288,7 @@ async function loadSiteConfig() {
 
     const branch = ghConfig.branch || 'portal';
     const rawUrl = `https://raw.githubusercontent.com/${ghConfig.owner}/${ghConfig.repo}/${branch}/config.json`;
+    console.log("Fetching config from:", rawUrl);
 
     try {
         const res = await fetch(rawUrl);
@@ -292,27 +296,28 @@ async function loadSiteConfig() {
             throw new Error("config.json not found");
         }
         const config = await res.json();
+        console.log("Config fetched:", config);
 
         // Populate form fields
-        document.getElementById('conf-siteName').value = config.site?.name || '';
-        document.getElementById('conf-domain').value = config.site?.domain || '';
-        document.getElementById('conf-description').value = config.site?.description || '';
-        document.getElementById('conf-author').value = config.site?.author || '';
+        if (document.getElementById('conf-siteName')) document.getElementById('conf-siteName').value = config.site?.name || '';
+        if (document.getElementById('conf-domain')) document.getElementById('conf-domain').value = config.site?.domain || '';
+        if (document.getElementById('conf-description')) document.getElementById('conf-description').value = config.site?.description || '';
+        if (document.getElementById('conf-author')) document.getElementById('conf-author').value = config.site?.author || '';
 
-        document.getElementById('conf-metaTitle').value = config.seo?.title || '';
-        document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
-        document.getElementById('conf-metaKeywords').value = config.seo?.keywords || '';
+        if (document.getElementById('conf-metaTitle')) document.getElementById('conf-metaTitle').value = config.seo?.title || '';
+        if (document.getElementById('conf-metaDesc')) document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
+        if (document.getElementById('conf-metaKeywords')) document.getElementById('conf-metaKeywords').value = config.seo?.keywords || '';
 
-        document.getElementById('conf-activeTemplate').value = config.theme?.activeTemplate || 'default';
-        document.getElementById('conf-primaryColor').value = config.theme?.primaryColor || '#3B82F6';
+        if (document.getElementById('conf-activeTemplate')) document.getElementById('conf-activeTemplate').value = config.theme?.activeTemplate || 'default';
+        if (document.getElementById('conf-primaryColor')) document.getElementById('conf-primaryColor').value = config.theme?.primaryColor || '#3B82F6';
 
-        document.getElementById('conf-substack').value = config.feeds?.substack || '';
-        document.getElementById('conf-youtube').value = config.feeds?.youtube || '';
-        document.getElementById('conf-podcast').value = config.feeds?.podcast || '';
+        if (document.getElementById('conf-substack')) document.getElementById('conf-substack').value = config.feeds?.substack || '';
+        if (document.getElementById('conf-youtube')) document.getElementById('conf-youtube').value = config.feeds?.youtube || '';
+        if (document.getElementById('conf-podcast')) document.getElementById('conf-podcast').value = config.feeds?.podcast || '';
 
-        document.getElementById('conf-twitter').value = config.social?.twitter || '';
-        document.getElementById('conf-linkedin').value = config.social?.linkedin || '';
-        document.getElementById('conf-github').value = config.social?.github || '';
+        if (document.getElementById('conf-twitter')) document.getElementById('conf-twitter').value = config.social?.twitter || '';
+        if (document.getElementById('conf-linkedin')) document.getElementById('conf-linkedin').value = config.social?.linkedin || '';
+        if (document.getElementById('conf-github')) document.getElementById('conf-github').value = config.social?.github || '';
 
         if (statusEl) {
             statusEl.textContent = "✓ Configuration chargée";
@@ -333,6 +338,7 @@ async function loadSiteConfig() {
 
 // Save Site Config to GitHub config.json
 async function saveSiteConfig() {
+    console.log("saveSiteConfig called");
     const statusEl = document.getElementById('config-status');
 
     // Get GitHub config from localStorage
@@ -344,6 +350,7 @@ async function saveSiteConfig() {
     }
 
     if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        console.warn("GitHub config missing during save");
         if (statusEl) {
             statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub";
             statusEl.className = "text-sm text-center text-red-600";
@@ -382,6 +389,8 @@ async function saveSiteConfig() {
             podcast: document.getElementById('conf-podcast').value
         }
     };
+
+    console.log("Saving config:", newConfig);
 
     const branch = ghConfig.branch || 'portal';
     const filePath = 'config.json';
@@ -430,12 +439,14 @@ async function saveSiteConfig() {
         });
 
         if (res.ok) {
+            console.log("Config saved successfully");
             if (statusEl) {
                 statusEl.textContent = "✓ Configuration sauvegardée sur GitHub !";
                 statusEl.className = "text-sm text-center text-green-600";
             }
         } else {
             const err = await res.json();
+            console.error("GitHub API Error:", err);
             throw new Error(err.message || 'GitHub API error');
         }
     } catch (e) {
@@ -446,6 +457,11 @@ async function saveSiteConfig() {
         }
     }
 }
+
+// Expose functions to window
+window.loadSiteConfig = loadSiteConfig;
+window.saveSiteConfig = saveSiteConfig;
+
 
 // Auto-load config when showing config view
 document.addEventListener('DOMContentLoaded', () => {
@@ -460,11 +476,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
-
-// Expose functions globally for onclick handlers
-window.loadSiteConfig = loadSiteConfig;
-window.saveSiteConfig = saveSiteConfig;
-
 
 
 // Renderers
