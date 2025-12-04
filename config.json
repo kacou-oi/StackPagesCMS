@@ -19,8 +19,8 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "guru",
-    "primaryColor": "#3B82F6"
+    "activeTemplate": "podcaster",
+    "primaryColor": "#000000"
   },
   "feeds": {
     "substack": "",
