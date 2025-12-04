@@ -1,16 +1,16 @@
 {
   "site": {
-    "name": "StackPages Headless",
-    "domain": "https://stackpages.pages.dev",
-    "description": "Un CMS moderne propulsé par l'IA",
-    "author": "Ange Kacou Oi",
+    "name": "Money Radar",
+    "domain": "",
+    "description": "",
+    "author": "",
     "logo": "",
     "favicon": ""
   },
   "seo": {
-    "title": "StackPages Headless",
-    "metaDescription": "Découvrez mes publications, vidéos et projets.",
-    "keywords": "blog, tech, innovation, cms",
+    "title": "",
+    "metaDescription": "",
+    "keywords": "",
     "ogImage": ""
   },
   "social": {
@@ -19,11 +19,16 @@
     "github": ""
   },
   "theme": {
+<<<<<<< HEAD
     "activeTemplate": "moneyradar",
     "primaryColor": "#00D9FF"
+=======
+    "activeTemplate": "default",
+    "primaryColor": "#3B82F6"
+>>>>>>> edd358b7e53acc6cdfd4156d5b4da43bcaf1c046
   },
   "feeds": {
-    "substack": "",
+    "substack": "https://moneyradar.substack.com/feed",
     "youtube": "",
     "podcast": ""
   }
