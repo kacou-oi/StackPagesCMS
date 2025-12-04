@@ -303,21 +303,6 @@ async function getTemplate(githubConfig, siteConfig) {
     }
 }
 
-function extractTemplate(html, id) {
-    if (!html) return "";
-    // Regex to find <template id="id">content</template>
-    // Note: This is a simple regex parser, assumes valid HTML structure.
-    const regex = new RegExp(`<template[^>]*id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/template>`, 'i');
-    const match = html.match(regex);
-    return match ? match[1].trim() : null;
-}
-
-function replacePlaceholders(template, data) {
-    if (!template) return "";
-    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return data[key] !== undefined ? data[key] : "";
-    });
-}
 
 function injectContent(template, content, metadata) {
     if (!template) return content;
@@ -326,149 +311,202 @@ function injectContent(template, content, metadata) {
 
     // 1. Inject Title
     if (metadata && metadata.title) {
-        html = html.replace(/<title[^>]*>(.*?)<\/title>/i, `<title id="site-title">${metadata.title}</title>`);
+        html = html.replace(/\<title[^\>]*\>(.*?)\<\/title\>/i, `<title id="site-title">${metadata.title}</title>`);
     }
 
     // 2. Inject Meta Description
     if (metadata && metadata.description) {
         // Try to replace existing meta tag
-        if (html.match(/<meta[^>]*name=["']description["'][^>]*>/i)) {
-            html = html.replace(/(<meta[^>]*name=["']description["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.description}$3`);
+        if (html.match(/\<meta[^\>]*name=["']description["'][^\>]*\>/i)) {
+            html = html.replace(/(\<meta[^\>]*name=["']description["'][^\>]*content=["'])(.*?)(["'][^\>]*\>)/i, `$1${metadata.description}$3`);
         } else {
             // Inject if missing (in head)
-            html = html.replace(/<\/head>/i, `<meta name="description" id="meta-desc" content="${metadata.description}">\n</head>`);
+            html = html.replace(/\<\/head\>/i, `<meta name="description" id="meta-desc" content="${metadata.description}">\n</head>`);
         }
     }
 
     // 3. Inject Meta Keywords
     if (metadata && metadata.keywords) {
-        if (html.match(/<meta[^>]*name=["']keywords["'][^>]*>/i)) {
-            html = html.replace(/(<meta[^>]*name=["']keywords["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.keywords}$3`);
+        if (html.match(/\<meta[^\>]*name=["']keywords["'][^\>]*\>/i)) {
+            html = html.replace(/(\<meta[^\>]*name=["']keywords["'][^\>]*content=["'])(.*?)(["'][^\>]*\>)/i, `$1${metadata.keywords}$3`);
         } else {
-            html = html.replace(/<\/head>/i, `<meta name="keywords" id="meta-keywords" content="${metadata.keywords}">\n</head>`);
+            html = html.replace(/\<\/head\>/i, `<meta name="keywords" id="meta-keywords" content="${metadata.keywords}">\n</head>`);
         }
     }
 
     // 4. Inject Site Name (Header & Footer)
-    // We use a regex to be safe, but simple string replacement might work if IDs are unique
     if (metadata && metadata.siteName) {
-        html = html.replace(/(<span[^>]*id=["']header-site-name["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
-        html = html.replace(/(<span[^>]*id=["']footer-site-name-copyright["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
+        html = html.replace(/(\<span[^\>]*id=["']header-site-name["'][^\>]*\>)(.*?)(\<\/span\>)/i, `$1${metadata.siteName}$3`);
+        html = html.replace(/(\<span[^\>]*id=["']footer-site-name-copyright["'][^\>]*\>)(.*?)(\<\/span\>)/i, `$1${metadata.siteName}$3`);
     }
 
     // 5. Inject Main Content
-    const mainRegex = /(<main[^>]*id=["']main-content["'][^>]*>)([\s\S]*?)(<\/main>)/i;
+    const mainRegex = /(\<main[^\>]*id=["']main-content["'][^\>]*\>)([\s\S]*?)(\<\/main\>)/i;
     html = html.replace(mainRegex, `$1${content}$3`);
 
     return html;
 }
 
-// --- CONTENT GENERATORS (USING TEMPLATES) ---
+// --- CONTENT GENERATORS (DIRECT HTML GENERATION) ---
 
-function generateHomeContent(fullTemplate, metadata) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-home');
-    if (!tpl) return "<p>Template 'tpl-home' not found.</p>";
-    return tpl; // Static home content for now, or replace placeholders if needed
+function generateHomeContent(metadata) {
+    // Simple home page - templates will provide their own home content
+    // This is a fallback if the template doesn't have home content
+    return `
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-5xl font-bold mb-8">${metadata.title || 'Bienvenue'}</h1>
+                <p class="text-xl text-gray-600 mb-10">${metadata.description || ''}</p>
+            </div>
+        </section>
+    `;
 }
 
-function generatePublicationsContent(fullTemplate, posts) {
-    const listTpl = extractTemplate(fullTemplate, 'tpl-blog-list');
-    const cardTpl = extractTemplate(fullTemplate, 'tpl-blog-card');
-
-    if (!listTpl || !cardTpl) return "<p>Templates 'tpl-blog-list' or 'tpl-blog-card' not found.</p>";
-
+function generatePublicationsContent(posts) {
     let itemsHtml = '';
+
     if (posts.length === 0) {
         itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune publication trouvée.</p>`;
     } else {
         posts.forEach(post => {
             const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-<<<<<<< HEAD
-            itemsHtml += replacePlaceholders(cardTpl, {
-                title: post.title,
-                description: post.description ? post.description.substring(0, 120) + '...' : '',
-                author: post.author || 'Inconnu',
-                date: postDate,
-                image: post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article',
-                slug: post.slug
-            });
-=======
-            // Escape JSON for the onclick handler
-            const postJson = JSON.stringify(post).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            const description = post.description ? post.description.substring(0, 120) + '...' : '';
+            const image = post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article';
 
-            postsHtml += `
-            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group"
-                 onclick="openArticleModal(${postJson.replace(/"/g, "'")})"> <!-- Note: Simple inline JSON passing, careful with quotes -->
-                <img src="${post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article'}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${post.title}</h3>
-                    <p class="text-gray-600 text-sm mb-4">${post.description ? post.description.substring(0, 120) + '...' : ''}</p>
-                    <div class="flex justify-between items-center text-gray-500 text-xs">
-                        <span>Par ${post.author || 'Inconnu'}</span>
-                        <span>${postDate}</span>
+            itemsHtml += `
+                <a href="/post/${post.slug}" hx-get="/post/${post.slug}" hx-target="#main-content" hx-push-url="true" class="group block">
+                    <div class="overflow-hidden rounded-lg mb-6 shadow-lg">
+                        <img src="${image}" alt="${post.title}" class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
                     </div>
-                </div>
-            </div>`;
->>>>>>> parent of e8543c5 (Update _worker.js)
+                    <span class="text-blue-600 text-xs font-bold uppercase tracking-widest">${postDate}</span>
+                    <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3 group-hover:text-blue-600 transition-colors">${post.title}</h3>
+                    <p class="text-gray-500 line-clamp-3">${description}</p>
+                </a>
+            `;
         });
     }
 
-    return replacePlaceholders(listTpl, { items: itemsHtml });
+    return `
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Publications</h2>
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    ${itemsHtml}
+                </div>
+            </div>
+        </section>
+    `;
 }
 
-<<<<<<< HEAD
-function generateVideosContent(fullTemplate, videos) {
-    const listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
-    const cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
-
-    if (!listTpl || !cardTpl) return "<p>Templates 'tpl-video-list' or 'tpl-video-card' not found.</p>";
-
+function generateVideosContent(videos) {
     let itemsHtml = '';
-=======
-function renderVideos(videos) {
-    let videosHtml = '';
->>>>>>> parent of e8543c5 (Update _worker.js)
+
     if (videos.length === 0) {
         itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
     } else {
         videos.forEach(video => {
             const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-            itemsHtml += replacePlaceholders(cardTpl, {
-                title: video.title,
-                date: videoDate,
-                thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o',
-                link: video.link,
-                slug: video.slug
-            });
+            const thumbnail = video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vidéo';
+
+            itemsHtml += `
+                <div class="cursor-pointer group" onclick="openVideoModal('${video.link}')">
+                    <div class="relative rounded-lg overflow-hidden mb-4 shadow-lg">
+                        <img src="${thumbnail}" alt="${video.title}" class="w-full aspect-video object-cover">
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                            <div class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center text-gray-900 shadow-xl transform group-hover:scale-110 transition-transform">
+                                <i class="fas fa-play ml-1 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">${video.title}</h3>
+                    <span class="text-gray-500 text-sm">${videoDate}</span>
+                </div>
+            `;
         });
     }
 
-    return replacePlaceholders(listTpl, { items: itemsHtml });
+    return `
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Vidéos</h2>
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    ${itemsHtml}
+                </div>
+            </div>
+        </section>
+    `;
 }
 
-function generateContactContent(fullTemplate) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-contact');
-    if (!tpl) return "<p>Template 'tpl-contact' not found.</p>";
-    return tpl;
+function generateContactContent() {
+    return `
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-xl">
+                    <h2 class="text-3xl font-bold text-center mb-8">Contactez-moi</h2>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Nom Complet</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-4 py-3 rounded border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-4 py-3 rounded border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5"
+                                class="w-full px-4 py-3 rounded border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition-colors shadow-lg">
+                            Envoyer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    `;
 }
 
-function generateCoachingContent(fullTemplate) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-coaching');
-    if (!tpl) return "<p>Template 'tpl-coaching' not found.</p>";
-    return tpl;
+function generateCoachingContent() {
+    return `
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <span class="text-blue-600 font-bold tracking-widest uppercase text-sm">Investissez en vous-même</span>
+                    <h1 class="text-5xl font-bold text-gray-900 mt-4 mb-6">Offres de Coaching</h1>
+                    <p class="text-gray-500 max-w-2xl mx-auto text-lg">Choisissez le programme qui correspond à vos ambitions.</p>
+                </div>
+            </div>
+        </section>
+    `;
 }
 
-function generateBioContent(fullTemplate) {
-    const bioTpl = extractTemplate(fullTemplate, 'tpl-bio');
-    if (!bioTpl) return "<p>Template 'tpl-bio' not found.</p>";
-    return bioTpl;
+function generateBioContent() {
+    return `
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-8 text-center">Mon Histoire</h1>
+                    <div class="w-24 h-1 bg-blue-500 mx-auto mb-16"></div>
+                    
+                    <div class="prose prose-lg prose-slate mx-auto leading-relaxed">
+                        <p class="text-xl text-gray-600 font-medium mb-8 text-center italic">
+                            Biographie à venir...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `;
 }
 
-function generateVideoDetailContent(fullTemplate, video) {
-    const detailTpl = extractTemplate(fullTemplate, 'tpl-video-detail');
-
-    if (!detailTpl) return "<p>Template 'tpl-video-detail' not found.</p>";
-
+function generateVideoDetailContent(video) {
     const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
 
     // Convert YouTube link to embed URL
@@ -481,28 +519,60 @@ function generateVideoDetailContent(fullTemplate, video) {
         embedUrl = `https://www.youtube.com/embed/${videoId}`;
     }
 
-    return replacePlaceholders(detailTpl, {
-        title: video.title,
-        date: videoDate,
-        description: video.description || 'Aucune description disponible.',
-        embedUrl: embedUrl
-    });
+    return `
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Vidéos
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">${video.title}</h1>
+                <div class="flex items-center text-gray-500 mb-10 border-b border-gray-100 pb-10">
+                    <span>${videoDate}</span>
+                </div>
+
+                <div class="aspect-video mb-12">
+                    <iframe class="w-full h-full rounded-xl shadow-2xl" src="${embedUrl}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+                <div class="prose prose-lg prose-slate max-w-none leading-relaxed">
+                    <p>${video.description || 'Aucune description disponible.'}</p>
+                </div>
+            </div>
+        </article>
+    `;
 }
 
-
-function generatePostContent(fullTemplate, post) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
-    if (!tpl) return "<p>Template 'tpl-post-detail' not found.</p>";
-
+function generatePostContent(post) {
     const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+    const image = post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture';
 
-    return replacePlaceholders(tpl, {
-        title: post.title,
-        author: post.author || 'Inconnu',
-        date: postDate,
-        image: post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture',
-        content: post.content
-    });
+    return `
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Publications
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">${post.title}</h1>
+                <div class="flex items-center text-gray-500 mb-10 border-b border-gray-100 pb-10">
+                    <span class="font-bold text-gray-900 mr-2">${post.author || 'Inconnu'}</span>
+                    <span class="mx-2">•</span>
+                    <span>${postDate}</span>
+                </div>
+
+                <img src="${image}" alt="${post.title}" class="w-full rounded-xl shadow-2xl mb-12">
+
+                <div class="prose prose-lg prose-slate max-w-none leading-relaxed article-content">
+                    ${post.content}
+                </div>
+            </div>
+        </article>
+    `;
 }
 
 // ====================================================================
@@ -666,8 +736,8 @@ export default {
 
         if (path === "/" || path === "/index.html") {
             const data = await getCachedRSSData(substackUrl);
-            const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
-            const content = generateHomeContent(template, metadata);
+            const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords, siteName };
+            const content = generateHomeContent(metadata);
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
@@ -675,8 +745,8 @@ export default {
 
         if (path === "/publications") {
             const data = await getCachedRSSData(substackUrl);
-            const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
-            const content = generatePublicationsContent(template, data.posts);
+            const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords, siteName };
+            const content = generatePublicationsContent(data.posts);
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
@@ -684,49 +754,49 @@ export default {
 
         if (path === "/videos") {
             const videos = await getCachedYoutubeData(youtubeUrl);
-            const content = generateVideosContent(template, videos);
-            const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
+            const content = generateVideosContent(videos);
+            const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords, siteName };
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/coaching") {
-            const content = generateCoachingContent(template);
-            const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
+            const content = generateCoachingContent();
+            const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords, siteName };
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/bio") {
-            const content = generateBioContent(template);
-            const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
+            const content = generateBioContent();
+            const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords, siteName };
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path === "/contact") {
-            const content = generateContactContent(template);
-            const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
+            const content = generateContactContent();
+            const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords, siteName };
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
-<<<<<<< HEAD
         if (path.startsWith("/post/")) {
             const slug = path.split("/").pop();
             const data = await getCachedRSSData(substackUrl);
             const post = data.posts.find(p => p.slug === slug);
 
             if (post) {
-                const content = generatePostContent(template, post);
+                const content = generatePostContent(post);
                 const metadata = {
                     title: `${post.title} - ${siteName}`,
                     description: post.description || siteDescription,
-                    keywords: siteKeywords
+                    keywords: siteKeywords,
+                    siteName
                 };
 
                 if (isHtmx) return htmlResponse(content + generateOOB(metadata));
@@ -739,14 +809,15 @@ export default {
         if (path.startsWith("/video/")) {
             const slug = path.split("/").pop();
             const videos = await getCachedYoutubeData(youtubeUrl);
-            const video = videos.find(v => v.slug === slug);
+            const video = videos.find(v => v.id === slug);
 
             if (video) {
-                const content = generateVideoDetailContent(template, video);
+                const content = generateVideoDetailContent(video);
                 const metadata = {
                     title: `${video.title} - ${siteName}`,
                     description: video.description || siteDescription,
-                    keywords: siteKeywords
+                    keywords: siteKeywords,
+                    siteName
                 };
 
                 if (isHtmx) return htmlResponse(content + generateOOB(metadata));
@@ -765,14 +836,11 @@ export default {
             if (githubContent) {
                 if (isHtmx) return htmlResponse(githubContent);
                 const data = await getCachedRSSData(substackUrl);
-                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName }));
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName, siteName }));
             }
         }
 
-        // Fallback to ASSETS
-=======
         // Fallback to ASSETS for everything else (images, etc.)
->>>>>>> parent of e8543c5 (Update _worker.js)
         return await env.ASSETS.fetch(req);
     }
 };
