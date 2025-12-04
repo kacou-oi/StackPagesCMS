@@ -434,10 +434,36 @@ function generateCoachingContent(fullTemplate) {
 }
 
 function generateBioContent(fullTemplate) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-bio');
-    if (!tpl) return "<p>Template 'tpl-bio' not found.</p>";
-    return tpl;
+    const bioTpl = extractTemplate(fullTemplate, 'tpl-bio');
+    if (!bioTpl) return "<p>Template 'tpl-bio' not found.</p>";
+    return bioTpl;
 }
+
+function generateVideoDetailContent(fullTemplate, video) {
+    const detailTpl = extractTemplate(fullTemplate, 'tpl-video-detail');
+
+    if (!detailTpl) return "<p>Template 'tpl-video-detail' not found.</p>";
+
+    const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Convert YouTube link to embed URL
+    let embedUrl = video.link;
+    if (video.link && video.link.includes('youtube.com/watch?v=')) {
+        const videoId = video.link.split('v=')[1]?.split('&')[0];
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    } else if (video.link && video.link.includes('youtu.be/')) {
+        const videoId = video.link.split('youtu.be/')[1]?.split('?')[0];
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    return replacePlaceholders(detailTpl, {
+        title: video.title,
+        date: videoDate,
+        description: video.description || 'Aucune description disponible.',
+        embedUrl: embedUrl
+    });
+}
+
 
 function generatePostContent(fullTemplate, post) {
     const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
@@ -683,6 +709,27 @@ export default {
                 return new Response("Article non trouvé", { status: 404 });
             }
         }
+
+        if (path.startsWith("/video/")) {
+            const slug = path.split("/").pop();
+            const videos = await getCachedYoutubeData(youtubeUrl);
+            const video = videos.find(v => v.slug === slug);
+
+            if (video) {
+                const content = generateVideoDetailContent(template, video);
+                const metadata = {
+                    title: `${video.title} - ${siteName}`,
+                    description: video.description || siteDescription,
+                    keywords: siteKeywords
+                };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            } else {
+                return new Response("Vidéo non trouvée", { status: 404 });
+            }
+        }
+
 
         // --- GITHUB FALLBACK (CATCH-ALL FOR CUSTOM PAGES) ---
         if (path !== "/" && !path.startsWith("/api") && !path.startsWith("/core") && !path.startsWith("/admin")) {
