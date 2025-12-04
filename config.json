@@ -1,14 +1,14 @@
 {
   "site": {
-    "name": "StackPages CMS",
+    "name": "StackPages System",
     "domain": "https://stackpages.pages.dev",
     "description": "Un CMS moderne propulsé par l'IA",
-    "author": "M. Kacou Oi",
+    "author": "Ange Kacou Oi",
     "logo": "",
     "favicon": ""
   },
   "seo": {
-    "title": "StackPages CMS",
+    "title": "StackPages Headless",
     "metaDescription": "Découvrez mes publications, vidéos et projets.",
     "keywords": "blog, tech, innovation, cms",
     "ogImage": ""

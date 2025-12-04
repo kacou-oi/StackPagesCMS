@@ -329,7 +329,34 @@ function injectContent(template, content, metadata) {
         html = html.replace(/<title[^>]*>(.*?)<\/title>/i, `<title id="site-title">${metadata.title}</title>`);
     }
 
-    // 2. Inject Main Content
+    // 2. Inject Meta Description
+    if (metadata && metadata.description) {
+        // Try to replace existing meta tag
+        if (html.match(/<meta[^>]*name=["']description["'][^>]*>/i)) {
+            html = html.replace(/(<meta[^>]*name=["']description["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.description}$3`);
+        } else {
+            // Inject if missing (in head)
+            html = html.replace(/<\/head>/i, `<meta name="description" id="meta-desc" content="${metadata.description}">\n</head>`);
+        }
+    }
+
+    // 3. Inject Meta Keywords
+    if (metadata && metadata.keywords) {
+        if (html.match(/<meta[^>]*name=["']keywords["'][^>]*>/i)) {
+            html = html.replace(/(<meta[^>]*name=["']keywords["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.keywords}$3`);
+        } else {
+            html = html.replace(/<\/head>/i, `<meta name="keywords" id="meta-keywords" content="${metadata.keywords}">\n</head>`);
+        }
+    }
+
+    // 4. Inject Site Name (Header & Footer)
+    // We use a regex to be safe, but simple string replacement might work if IDs are unique
+    if (metadata && metadata.siteName) {
+        html = html.replace(/(<span[^>]*id=["']header-site-name["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
+        html = html.replace(/(<span[^>]*id=["']footer-site-name-copyright["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
+    }
+
+    // 5. Inject Main Content
     const mainRegex = /(<main[^>]*id=["']main-content["'][^>]*>)([\s\S]*?)(<\/main>)/i;
     html = html.replace(mainRegex, `$1${content}$3`);
 
