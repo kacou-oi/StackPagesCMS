@@ -370,6 +370,49 @@ async function loadSiteConfig() {
         if (loadingEl) loadingEl.classList.add('hidden');
         if (formEl) formEl.classList.remove('opacity-50');
     }
+
+    // Load available templates after config is loaded
+    await loadAvailableTemplates();
+}
+
+// Load available templates from API
+async function loadAvailableTemplates() {
+    try {
+        const res = await fetch('/api/templates');
+        if (!res.ok) {
+            console.warn('Could not load templates');
+            return;
+        }
+
+        const templates = await res.json();
+        const selectEl = document.getElementById('conf-activeTemplate');
+
+        if (!selectEl) return;
+
+        // Get current value before updating
+        const currentValue = selectEl.value;
+
+        // Clear existing options
+        selectEl.innerHTML = '';
+
+        // Add templates from API
+        templates.forEach(template => {
+            const option = document.createElement('option');
+            option.value = template.name;
+            // Capitalize first letter for display
+            option.textContent = template.name.charAt(0).toUpperCase() + template.name.slice(1);
+            selectEl.appendChild(option);
+        });
+
+        // Restore selected value if it exists
+        if (currentValue && templates.find(t => t.name === currentValue)) {
+            selectEl.value = currentValue;
+        }
+
+        console.log(`Loaded ${templates.length} templates from API`);
+    } catch (e) {
+        console.error('Error loading templates:', e);
+    }
 }
 
 // Save Site Config to GitHub config.json
