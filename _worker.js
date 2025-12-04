@@ -383,7 +383,6 @@ function generatePublicationsContent(fullTemplate, posts) {
     } else {
         posts.forEach(post => {
             const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-<<<<<<< HEAD
             itemsHtml += replacePlaceholders(cardTpl, {
                 title: post.title,
                 description: post.description ? post.description.substring(0, 120) + '...' : '',
@@ -392,31 +391,12 @@ function generatePublicationsContent(fullTemplate, posts) {
                 image: post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article',
                 slug: post.slug
             });
-=======
-            // Escape JSON for the onclick handler
-            const postJson = JSON.stringify(post).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-
-            postsHtml += `
-            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group"
-                 onclick="openArticleModal(${postJson.replace(/"/g, "'")})"> <!-- Note: Simple inline JSON passing, careful with quotes -->
-                <img src="${post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article'}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${post.title}</h3>
-                    <p class="text-gray-600 text-sm mb-4">${post.description ? post.description.substring(0, 120) + '...' : ''}</p>
-                    <div class="flex justify-between items-center text-gray-500 text-xs">
-                        <span>Par ${post.author || 'Inconnu'}</span>
-                        <span>${postDate}</span>
-                    </div>
-                </div>
-            </div>`;
->>>>>>> parent of e8543c5 (Update _worker.js)
         });
     }
 
     return replacePlaceholders(listTpl, { items: itemsHtml });
 }
 
-<<<<<<< HEAD
 function generateVideosContent(fullTemplate, videos) {
     const listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
     const cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
@@ -424,376 +404,374 @@ function generateVideosContent(fullTemplate, videos) {
     if (!listTpl || !cardTpl) return "<p>Templates 'tpl-video-list' or 'tpl-video-card' not found.</p>";
 
     let itemsHtml = '';
-=======
-function renderVideos(videos) {
-    let videosHtml = '';
->>>>>>> parent of e8543c5 (Update _worker.js)
-    if (videos.length === 0) {
-        itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
-    } else {
-        videos.forEach(video => {
-            const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-            itemsHtml += replacePlaceholders(cardTpl, {
-                title: video.title,
-                date: videoDate,
-                thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o',
-                link: video.link,
-                slug: video.slug
-            });
-        });
-    }
 
-    return replacePlaceholders(listTpl, { items: itemsHtml });
-}
-
-function generateContactContent(fullTemplate) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-contact');
-    if (!tpl) return "<p>Template 'tpl-contact' not found.</p>";
-    return tpl;
-}
-
-function generateCoachingContent(fullTemplate) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-coaching');
-    if (!tpl) return "<p>Template 'tpl-coaching' not found.</p>";
-    return tpl;
-}
-
-function generateBioContent(fullTemplate) {
-    const bioTpl = extractTemplate(fullTemplate, 'tpl-bio');
-    if (!bioTpl) return "<p>Template 'tpl-bio' not found.</p>";
-    return bioTpl;
-}
-
-function generateVideoDetailContent(fullTemplate, video) {
-    const detailTpl = extractTemplate(fullTemplate, 'tpl-video-detail');
-
-    if (!detailTpl) return "<p>Template 'tpl-video-detail' not found.</p>";
-
-    const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    // Convert YouTube link to embed URL
-    let embedUrl = video.link;
-    if (video.link && video.link.includes('youtube.com/watch?v=')) {
-        const videoId = video.link.split('v=')[1]?.split('&')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-    } else if (video.link && video.link.includes('youtu.be/')) {
-        const videoId = video.link.split('youtu.be/')[1]?.split('?')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-    }
-
-    return replacePlaceholders(detailTpl, {
-        title: video.title,
-        date: videoDate,
-        description: video.description || 'Aucune description disponible.',
-        embedUrl: embedUrl
-    });
-}
-
-
-function generatePostContent(fullTemplate, post) {
-    const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
-    if (!tpl) return "<p>Template 'tpl-post-detail' not found.</p>";
-
-    const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    return replacePlaceholders(tpl, {
-        title: post.title,
-        author: post.author || 'Inconnu',
-        date: postDate,
-        image: post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture',
-        content: post.content
-    });
-}
-
-// ====================================================================
-// 5. GESTIONNAIRE PRINCIPAL DU WORKER
-// ====================================================================
-
-export default {
-    async fetch(req, env) {
-        const url = new URL(req.url);
-        let path = url.pathname;
-        if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
-
-        const config = {
-            substackRssUrl: env.SUBSTACK_FEED_URL || "",
-            youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
-            podcastFeedUrl: env.PODCAST_FEED_URL || "",
-            siteName: "StackPages CMS",
-            author: "Admin",
-            // GitHub Config
-            githubUser: env.GITHUB_USERNAME,
-            githubRepo: env.GITHUB_REPO,
-            githubBranch: env.GITHUB_BRANCH
-        };
-
-        const corsHeaders = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Content-Type': 'application/json'
-        };
-
-        if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
-
-        // --- STATIC ASSETS (CORE) ---
-        if (path.startsWith("/core/")) {
-            return await env.ASSETS.fetch(req);
-        }
-
-        // --- API ROUTES ---
-
-        // Admin Login
-        if (path === "/api/login" && req.method === "POST") {
-            try {
-                const body = await req.json();
-                const adminEmail = env.ADMIN_EMAIL || "";
-                const adminPassword = env.ADMIN_PASSWORD || "";
-
-                if (body.email === adminEmail && body.password === adminPassword) {
-                    return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
-                } else {
-                    return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401, headers: corsHeaders });
-                }
-            } catch (e) {
-                return new Response(JSON.stringify({ error: "Bad request" }), { status: 400, headers: corsHeaders });
-            }
-        }
-
-        // Admin Config (returns environment variables)
-        if (path === "/api/config") {
-            return new Response(JSON.stringify({
-                siteName: config.siteName,
-                substackRssUrl: config.substackRssUrl,
-                youtubeRssUrl: config.youtubeRssUrl,
-                podcastFeedUrl: config.podcastFeedUrl
-            }), { status: 200, headers: corsHeaders });
-        }
-
-        if (path === "/api/github-config") {
-            // Return GitHub configuration from environment variables
-            return new Response(JSON.stringify({
-                owner: config.githubUser || "",
-                repo: config.githubRepo || "",
-                branch: config.githubBranch || "main"
-            }), {
-                headers: corsHeaders
+    function renderVideos(videos) {
+        let videosHtml = '';
+parent of e8543c5(Update _worker.js)
+        if (videos.length === 0) {
+            itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
+        } else {
+            videos.forEach(video => {
+                const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                itemsHtml += replacePlaceholders(cardTpl, {
+                    title: video.title,
+                    date: videoDate,
+                    thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o',
+                    link: video.link,
+                    slug: video.slug
+                });
             });
         }
 
-        // Clear Cache
-        if (path === "/api/clear-cache" && req.method === "POST") {
-            // In Cloudflare Workers, caches.default doesn't support programmatic clearing easily.
-            // This is a placeholder that returns success.
-            return new Response(JSON.stringify({ success: true, message: "Cache cleared" }), { status: 200, headers: corsHeaders });
+        return replacePlaceholders(listTpl, { items: itemsHtml });
+    }
+
+    function generateContactContent(fullTemplate) {
+        const tpl = extractTemplate(fullTemplate, 'tpl-contact');
+        if (!tpl) return "<p>Template 'tpl-contact' not found.</p>";
+        return tpl;
+    }
+
+    function generateCoachingContent(fullTemplate) {
+        const tpl = extractTemplate(fullTemplate, 'tpl-coaching');
+        if (!tpl) return "<p>Template 'tpl-coaching' not found.</p>";
+        return tpl;
+    }
+
+    function generateBioContent(fullTemplate) {
+        const bioTpl = extractTemplate(fullTemplate, 'tpl-bio');
+        if (!bioTpl) return "<p>Template 'tpl-bio' not found.</p>";
+        return bioTpl;
+    }
+
+    function generateVideoDetailContent(fullTemplate, video) {
+        const detailTpl = extractTemplate(fullTemplate, 'tpl-video-detail');
+
+        if (!detailTpl) return "<p>Template 'tpl-video-detail' not found.</p>";
+
+        const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Convert YouTube link to embed URL
+        let embedUrl = video.link;
+        if (video.link && video.link.includes('youtube.com/watch?v=')) {
+            const videoId = video.link.split('v=')[1]?.split('&')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (video.link && video.link.includes('youtu.be/')) {
+            const videoId = video.link.split('youtu.be/')[1]?.split('?')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
         }
 
-        if (path === "/api/metadata") {
-            const data = await getCachedRSSData(config.substackRssUrl);
-            return new Response(JSON.stringify({ ...data.metadata, title: config.siteName }), { status: 200, headers: corsHeaders });
-        }
-        if (path === "/api/posts") {
-            const data = await getCachedRSSData(config.substackRssUrl);
-            return new Response(JSON.stringify(data.posts), { status: 200, headers: corsHeaders });
-        }
-        if (path === "/api/videos") {
-            const videos = await getCachedYoutubeData(config.youtubeRssUrl);
-            return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
-        }
-        if (path === "/api/podcasts") {
-            if (!config.podcastFeedUrl) return new Response(JSON.stringify([]), { headers: corsHeaders });
-            try {
-                const res = await fetch(config.podcastFeedUrl);
-                if (!res.ok) throw new Error("Fetch failed");
-                const xml = await res.text();
-                const items = [];
-                const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
-                let m;
-                while ((m = itemRe.exec(xml)) !== null) {
-                    const block = m[1];
-                    const getTag = (t) => { const r = new RegExp(`<${t}[^>]*>((.|[\\r\\n])*?)<\/${t}>`, 'i'); const f = block.match(r); return f ? decodeHTMLEntities(f[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim()) : ""; };
-                    const encMatch = block.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/);
-                    items.push({
-                        title: getTag('title'),
-                        pubDate: getTag('pubDate'),
-                        audioUrl: encMatch ? encMatch[1] : null
-                    });
-                }
-                return new Response(JSON.stringify(items), { headers: corsHeaders });
-            } catch (e) {
-                return new Response(JSON.stringify([]), { headers: corsHeaders });
-            }
-        }
-
-        // --- ADMIN ROUTES ---
-        if (path.startsWith("/admin") || path.startsWith("/dashboard")) {
-            return await env.ASSETS.fetch(req);
-        }
-
-        // --- SSR ROUTES (SUPER TEMPLATE) ---
-        const isHtmx = req.headers.get("HX-Request") === "true";
-        const htmlResponse = (html) => new Response(html, {
-            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+        return replacePlaceholders(detailTpl, {
+            title: video.title,
+            date: videoDate,
+            description: video.description || 'Aucune description disponible.',
+            embedUrl: embedUrl
         });
+    }
 
-        // Helper for HTMX Out-Of-Band Swaps (SEO Updates)
-        const generateOOB = (metadata) => {
-            if (!isHtmx) return "";
-            const title = metadata.title || config.siteName;
-            const desc = metadata.description || "";
-            const keywords = metadata.keywords || "";
 
-            return `
+    function generatePostContent(fullTemplate, post) {
+        const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
+        if (!tpl) return "<p>Template 'tpl-post-detail' not found.</p>";
+
+        const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        return replacePlaceholders(tpl, {
+            title: post.title,
+            author: post.author || 'Inconnu',
+            date: postDate,
+            image: post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture',
+            content: post.content
+        });
+    }
+
+    // ====================================================================
+    // 5. GESTIONNAIRE PRINCIPAL DU WORKER
+    // ====================================================================
+
+    export default {
+        async fetch(req, env) {
+            const url = new URL(req.url);
+            let path = url.pathname;
+            if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+
+            const config = {
+                substackRssUrl: env.SUBSTACK_FEED_URL || "",
+                youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
+                podcastFeedUrl: env.PODCAST_FEED_URL || "",
+                siteName: "StackPages CMS",
+                author: "Admin",
+                // GitHub Config
+                githubUser: env.GITHUB_USERNAME,
+                githubRepo: env.GITHUB_REPO,
+                githubBranch: env.GITHUB_BRANCH
+            };
+
+            const corsHeaders = {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Content-Type': 'application/json'
+            };
+
+            if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
+
+            // --- STATIC ASSETS (CORE) ---
+            if (path.startsWith("/core/")) {
+                return await env.ASSETS.fetch(req);
+            }
+
+            // --- API ROUTES ---
+
+            // Admin Login
+            if (path === "/api/login" && req.method === "POST") {
+                try {
+                    const body = await req.json();
+                    const adminEmail = env.ADMIN_EMAIL || "";
+                    const adminPassword = env.ADMIN_PASSWORD || "";
+
+                    if (body.email === adminEmail && body.password === adminPassword) {
+                        return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
+                    } else {
+                        return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401, headers: corsHeaders });
+                    }
+                } catch (e) {
+                    return new Response(JSON.stringify({ error: "Bad request" }), { status: 400, headers: corsHeaders });
+                }
+            }
+
+            // Admin Config (returns environment variables)
+            if (path === "/api/config") {
+                return new Response(JSON.stringify({
+                    siteName: config.siteName,
+                    substackRssUrl: config.substackRssUrl,
+                    youtubeRssUrl: config.youtubeRssUrl,
+                    podcastFeedUrl: config.podcastFeedUrl
+                }), { status: 200, headers: corsHeaders });
+            }
+
+            if (path === "/api/github-config") {
+                // Return GitHub configuration from environment variables
+                return new Response(JSON.stringify({
+                    owner: config.githubUser || "",
+                    repo: config.githubRepo || "",
+                    branch: config.githubBranch || "main"
+                }), {
+                    headers: corsHeaders
+                });
+            }
+
+            // Clear Cache
+            if (path === "/api/clear-cache" && req.method === "POST") {
+                // In Cloudflare Workers, caches.default doesn't support programmatic clearing easily.
+                // This is a placeholder that returns success.
+                return new Response(JSON.stringify({ success: true, message: "Cache cleared" }), { status: 200, headers: corsHeaders });
+            }
+
+            if (path === "/api/metadata") {
+                const data = await getCachedRSSData(config.substackRssUrl);
+                return new Response(JSON.stringify({ ...data.metadata, title: config.siteName }), { status: 200, headers: corsHeaders });
+            }
+            if (path === "/api/posts") {
+                const data = await getCachedRSSData(config.substackRssUrl);
+                return new Response(JSON.stringify(data.posts), { status: 200, headers: corsHeaders });
+            }
+            if (path === "/api/videos") {
+                const videos = await getCachedYoutubeData(config.youtubeRssUrl);
+                return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
+            }
+            if (path === "/api/podcasts") {
+                if (!config.podcastFeedUrl) return new Response(JSON.stringify([]), { headers: corsHeaders });
+                try {
+                    const res = await fetch(config.podcastFeedUrl);
+                    if (!res.ok) throw new Error("Fetch failed");
+                    const xml = await res.text();
+                    const items = [];
+                    const itemRe = /<item[^>]*>((.|[\r\n])*?)<\/item>/gi;
+                    let m;
+                    while ((m = itemRe.exec(xml)) !== null) {
+                        const block = m[1];
+                        const getTag = (t) => { const r = new RegExp(`<${t}[^>]*>((.|[\\r\\n])*?)<\/${t}>`, 'i'); const f = block.match(r); return f ? decodeHTMLEntities(f[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim()) : ""; };
+                        const encMatch = block.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/);
+                        items.push({
+                            title: getTag('title'),
+                            pubDate: getTag('pubDate'),
+                            audioUrl: encMatch ? encMatch[1] : null
+                        });
+                    }
+                    return new Response(JSON.stringify(items), { headers: corsHeaders });
+                } catch (e) {
+                    return new Response(JSON.stringify([]), { headers: corsHeaders });
+                }
+            }
+
+            // --- ADMIN ROUTES ---
+            if (path.startsWith("/admin") || path.startsWith("/dashboard")) {
+                return await env.ASSETS.fetch(req);
+            }
+
+            // --- SSR ROUTES (SUPER TEMPLATE) ---
+            const isHtmx = req.headers.get("HX-Request") === "true";
+            const htmlResponse = (html) => new Response(html, {
+                headers: { 'Content-Type': 'text/html; charset=utf-8' }
+            });
+
+            // Helper for HTMX Out-Of-Band Swaps (SEO Updates)
+            const generateOOB = (metadata) => {
+                if (!isHtmx) return "";
+                const title = metadata.title || config.siteName;
+                const desc = metadata.description || "";
+                const keywords = metadata.keywords || "";
+
+                return `
             <title id="site-title" hx-swap-oob="true">${title}</title>
             <meta id="meta-desc" name="description" content="${desc}" hx-swap-oob="true">
             <meta id="meta-keywords" name="keywords" content="${keywords}" hx-swap-oob="true">
             `;
-        };
+            };
 
-        // Load Site Config and Super Template
-        const siteConfig = await fetchSiteConfig(config);
-        const template = await getTemplate(config, siteConfig);
-        if (!template) return new Response("Error: Template not found. Check config.json and templates/ folder.", { status: 500 });
+            // Load Site Config and Super Template
+            const siteConfig = await fetchSiteConfig(config);
+            const template = await getTemplate(config, siteConfig);
+            if (!template) return new Response("Error: Template not found. Check config.json and templates/ folder.", { status: 500 });
 
-        // Use siteConfig for site name, fallback to RSS metadata or default
-        const siteName = siteConfig?.site?.name || config.siteName;
-        const siteDescription = siteConfig?.seo?.metaDescription || "";
-        const siteKeywords = siteConfig?.seo?.keywords || "";
+            // Use siteConfig for site name, fallback to RSS metadata or default
+            const siteName = siteConfig?.site?.name || config.siteName;
+            const siteDescription = siteConfig?.seo?.metaDescription || "";
+            const siteKeywords = siteConfig?.seo?.keywords || "";
 
-        // Use feeds from config.json if environment variables are not set
-        const substackUrl = config.substackRssUrl || siteConfig?.feeds?.substack || "";
-        const youtubeUrl = config.youtubeRssUrl || siteConfig?.feeds?.youtube || "";
+            // Use feeds from config.json if environment variables are not set
+            const substackUrl = config.substackRssUrl || siteConfig?.feeds?.substack || "";
+            const youtubeUrl = config.youtubeRssUrl || siteConfig?.feeds?.youtube || "";
 
-        if (path === "/" || path === "/index.html") {
-            const data = await getCachedRSSData(substackUrl);
-            const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
-            const content = generateHomeContent(template, metadata);
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/publications") {
-            const data = await getCachedRSSData(substackUrl);
-            const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
-            const content = generatePublicationsContent(template, data.posts);
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/videos") {
-            const videos = await getCachedYoutubeData(youtubeUrl);
-            const content = generateVideosContent(template, videos);
-            const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/coaching") {
-            const content = generateCoachingContent(template);
-            const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
-        // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
-        if (path.length > 1) {
-            const slug = path.substring(1); // Remove leading slash
-            const tplId = `tpl-${slug}`;
-            const dynamicContent = extractTemplate(template, tplId);
-
-            if (dynamicContent) {
-                // Basic title formatting: "reservation" -> "Reservation"
-                const title = slug.charAt(0).toUpperCase() + slug.slice(1);
-                const metadata = {
-                    title: `${title} - ${siteName}`,
-                    description: siteDescription,
-                    keywords: siteKeywords
-                };
-
-                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata));
-                return htmlResponse(injectContent(template, dynamicContent, metadata));
-            }
-        }
-
-        if (path === "/bio") {
-            const content = generateBioContent(template);
-            const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/contact") {
-            const content = generateContactContent(template);
-            const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-<<<<<<< HEAD
-        if (path.startsWith("/post/")) {
-            const slug = path.split("/").pop();
-            const data = await getCachedRSSData(substackUrl);
-            const post = data.posts.find(p => p.slug === slug);
-
-            if (post) {
-                const content = generatePostContent(template, post);
-                const metadata = {
-                    title: `${post.title} - ${siteName}`,
-                    description: post.description || siteDescription,
-                    keywords: siteKeywords
-                };
-
-                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-                return htmlResponse(injectContent(template, content, metadata));
-            } else {
-                return new Response("Article non trouvé", { status: 404 });
-            }
-        }
-
-        if (path.startsWith("/video/")) {
-            const slug = path.split("/").pop();
-            const videos = await getCachedYoutubeData(youtubeUrl);
-            const video = videos.find(v => v.slug === slug);
-
-            if (video) {
-                const content = generateVideoDetailContent(template, video);
-                const metadata = {
-                    title: `${video.title} - ${siteName}`,
-                    description: video.description || siteDescription,
-                    keywords: siteKeywords
-                };
-
-                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
-                return htmlResponse(injectContent(template, content, metadata));
-            } else {
-                return new Response("Vidéo non trouvée", { status: 404 });
-            }
-        }
-
-
-        // --- GITHUB FALLBACK (CATCH-ALL FOR CUSTOM PAGES) ---
-        if (path !== "/" && !path.startsWith("/api") && !path.startsWith("/core") && !path.startsWith("/admin")) {
-            const slug = path.substring(1);
-            const githubContent = await fetchGithubContent(config, slug);
-
-            if (githubContent) {
-                if (isHtmx) return htmlResponse(githubContent);
+            if (path === "/" || path === "/index.html") {
                 const data = await getCachedRSSData(substackUrl);
-                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName }));
-            }
-        }
+                const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
+                const content = generateHomeContent(template, metadata);
 
-        // Fallback to ASSETS
-=======
-        // Fallback to ASSETS for everything else (images, etc.)
->>>>>>> parent of e8543c5 (Update _worker.js)
-        return await env.ASSETS.fetch(req);
-    }
-};
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (path === "/publications") {
+                const data = await getCachedRSSData(substackUrl);
+                const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
+                const content = generatePublicationsContent(template, data.posts);
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (path === "/videos") {
+                const videos = await getCachedYoutubeData(youtubeUrl);
+                const content = generateVideosContent(template, videos);
+                const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (path === "/coaching") {
+                const content = generateCoachingContent(template);
+                const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
+            // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
+            if (path.length > 1) {
+                const slug = path.substring(1); // Remove leading slash
+                const tplId = `tpl-${slug}`;
+                const dynamicContent = extractTemplate(template, tplId);
+
+                if (dynamicContent) {
+                    // Basic title formatting: "reservation" -> "Reservation"
+                    const title = slug.charAt(0).toUpperCase() + slug.slice(1);
+                    const metadata = {
+                        title: `${title} - ${siteName}`,
+                        description: siteDescription,
+                        keywords: siteKeywords
+                    };
+
+                    if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata));
+                    return htmlResponse(injectContent(template, dynamicContent, metadata));
+                }
+            }
+
+            if (path === "/bio") {
+                const content = generateBioContent(template);
+                const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (path === "/contact") {
+                const content = generateContactContent(template);
+                const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
+
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (path.startsWith("/post/")) {
+                const slug = path.split("/").pop();
+                const data = await getCachedRSSData(substackUrl);
+                const post = data.posts.find(p => p.slug === slug);
+
+                if (post) {
+                    const content = generatePostContent(template, post);
+                    const metadata = {
+                        title: `${post.title} - ${siteName}`,
+                        description: post.description || siteDescription,
+                        keywords: siteKeywords
+                    };
+
+                    if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                    return htmlResponse(injectContent(template, content, metadata));
+                } else {
+                    return new Response("Article non trouvé", { status: 404 });
+                }
+            }
+
+            if (path.startsWith("/video/")) {
+                const slug = path.split("/").pop();
+                const videos = await getCachedYoutubeData(youtubeUrl);
+                const video = videos.find(v => v.slug === slug);
+
+                if (video) {
+                    const content = generateVideoDetailContent(template, video);
+                    const metadata = {
+                        title: `${video.title} - ${siteName}`,
+                        description: video.description || siteDescription,
+                        keywords: siteKeywords
+                    };
+
+                    if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                    return htmlResponse(injectContent(template, content, metadata));
+                } else {
+                    return new Response("Vidéo non trouvée", { status: 404 });
+                }
+            }
+
+
+            // --- GITHUB FALLBACK (CATCH-ALL FOR CUSTOM PAGES) ---
+            if (path !== "/" && !path.startsWith("/api") && !path.startsWith("/core") && !path.startsWith("/admin")) {
+                const slug = path.substring(1);
+                const githubContent = await fetchGithubContent(config, slug);
+
+                if (githubContent) {
+                    if (isHtmx) return htmlResponse(githubContent);
+                    const data = await getCachedRSSData(substackUrl);
+                    return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName }));
+                }
+            }
+
+            // Fallback to ASSETS
+
+            // Fallback to ASSETS for everything else (images, etc.)
+            return await env.ASSETS.fetch(req);
+        }
+    };
