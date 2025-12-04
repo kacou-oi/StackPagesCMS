@@ -4,6 +4,46 @@
 
 const CACHE_TTL = 180;
 
+// GitHub OAuth Configuration
+const GITHUB_OAUTH_AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
+const GITHUB_OAUTH_TOKEN_URL = "https://github.com/login/oauth/access_token";
+const GITHUB_API_USER_URL = "https://api.github.com/user";
+
+// Cookie helper functions
+function parseCookies(cookieHeader) {
+    const cookies = {};
+    if (!cookieHeader) return cookies;
+    cookieHeader.split(';').forEach(cookie => {
+        const [name, value] = cookie.trim().split('=');
+        if (name && value) cookies[name] = value;
+    });
+    return cookies;
+}
+
+function createAuthCookie(token, maxAge = 86400 * 7) {
+    return `github_token=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
+}
+
+function clearAuthCookie() {
+    return `github_token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+}
+
+async function getGitHubUser(token) {
+    try {
+        const res = await fetch(GITHUB_API_USER_URL, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': 'StackPages-CMS',
+                'Accept': 'application/json'
+            }
+        });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (e) {
+        return null;
+    }
+}
+
 function slugify(text) {
     return text.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -445,6 +485,102 @@ export default {
         };
 
         if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
+
+        // ====================================================================
+        // GITHUB OAUTH ROUTES
+        // ====================================================================
+
+        // Start OAuth flow - redirect to GitHub
+        if (path === "/auth/github") {
+            const clientId = env.GITHUB_CLIENT_ID;
+            if (!clientId) {
+                return new Response("GitHub OAuth not configured (missing GITHUB_CLIENT_ID)", { status: 500 });
+            }
+            const redirectUri = `${url.origin}/auth/github/callback`;
+            const scope = "read:user";
+            const authUrl = `${GITHUB_OAUTH_AUTHORIZE_URL}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
+            return Response.redirect(authUrl, 302);
+        }
+
+        // OAuth callback - exchange code for token
+        if (path === "/auth/github/callback") {
+            const code = url.searchParams.get("code");
+            if (!code) {
+                return new Response("Missing authorization code", { status: 400 });
+            }
+
+            const clientId = env.GITHUB_CLIENT_ID;
+            const clientSecret = env.GITHUB_CLIENT_SECRET;
+            if (!clientId || !clientSecret) {
+                return new Response("GitHub OAuth not configured", { status: 500 });
+            }
+
+            try {
+                // Exchange code for access token
+                const tokenRes = await fetch(GITHUB_OAUTH_TOKEN_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        client_id: clientId,
+                        client_secret: clientSecret,
+                        code: code
+                    })
+                });
+
+                const tokenData = await tokenRes.json();
+                if (tokenData.error || !tokenData.access_token) {
+                    return new Response(`OAuth Error: ${tokenData.error_description || tokenData.error}`, { status: 400 });
+                }
+
+                // Set cookie and redirect to dashboard
+                return new Response(null, {
+                    status: 302,
+                    headers: {
+                        "Location": "/admin/dashboard.html",
+                        "Set-Cookie": createAuthCookie(tokenData.access_token)
+                    }
+                });
+            } catch (e) {
+                return new Response(`OAuth Error: ${e.message}`, { status: 500 });
+            }
+        }
+
+        // Get current authenticated user
+        if (path === "/api/auth/user") {
+            const cookies = parseCookies(req.headers.get("Cookie"));
+            const token = cookies.github_token;
+
+            if (!token) {
+                return new Response(JSON.stringify({ authenticated: false }), { headers: corsHeaders });
+            }
+
+            const user = await getGitHubUser(token);
+            if (!user) {
+                return new Response(JSON.stringify({ authenticated: false }), {
+                    headers: { ...corsHeaders, "Set-Cookie": clearAuthCookie() }
+                });
+            }
+
+            return new Response(JSON.stringify({
+                authenticated: true,
+                user: {
+                    login: user.login,
+                    name: user.name,
+                    avatar_url: user.avatar_url,
+                    html_url: user.html_url
+                }
+            }), { headers: corsHeaders });
+        }
+
+        // Logout
+        if (path === "/api/auth/logout") {
+            return new Response(JSON.stringify({ success: true }), {
+                headers: { ...corsHeaders, "Set-Cookie": clearAuthCookie() }
+            });
+        }
 
         // --- STATIC ASSETS (CORE) ---
         if (path.startsWith("/core/")) {
