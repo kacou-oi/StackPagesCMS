@@ -4,42 +4,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StackPages Portal</title>
-    <link rel="icon" type="image/x-icon" href="https://stackpages.net/img/logo.png">
+    <title id="site-title">StackPages CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
 </head>
 
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="text-center space-y-6 max-w-lg">
-        <div
-            class="w-20 h-20 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-orange-200">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                </path>
-            </svg>
+<body class="font-sans antialiased text-gray-800 bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-4 py-3 flex items-center justify-between relative">
+            <!-- Left Group: Logo and Podcast Player -->
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="flex items-center text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
+                    id="header-logo-link">
+                    <img id="header-logo" src="" alt="Logo" class="h-8 mr-2 transition-transform hover:scale-105"
+                        onerror="this.style.display='none';" style="display: none;">
+                    <span id="header-site-name" class="">StackPages</span>
+                </a>
+                <!-- Podcast Player in Header -->
+                <div id="header-podcast-player-container"
+                    class="hidden md:flex items-center space-x-2 rounded-full shadow-sm px-2 py-1">
+                    <!-- Player rendered by client.js -->
+                </div>
+            </div>
+
+            <!-- Main Navigation (Desktop) -->
+            <div class="hidden md:flex space-x-8 absolute left-1/2 -translate-x-1/2 z-20">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="header-nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Accueil
+                    <span
+                        class="absolute bottom-0 left-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"
+                        style="width: 0px;"></span>
+                </a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="header-nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Publications
+                    <span
+                        class="absolute bottom-0 left-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"
+                        style="width: 0px;"></span>
+                </a>
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="header-nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Vidéos
+                    <span
+                        class="absolute bottom-0 left-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"
+                        style="width: 0px;"></span>
+                </a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="header-nav-link hover:text-blue-600 transition-colors relative group py-2 text-gray-600">
+                    Contact
+                    <span
+                        class="absolute bottom-0 left-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"
+                        style="width: 0px;"></span>
+                </a>
+            </div>
+
+            <!-- Right Group -->
+            <div class="flex items-center space-x-4">
+                <button
+                    class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+                    id="mobile-menu-button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="hidden md:block bg-blue-600 text-white px-5 py-2 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    Me Contacter
+                </a>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="close-mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+                <div class="mt-8 flex flex-col space-y-4">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100">Accueil</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100">Publications</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100">Vidéos</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg hover:text-blue-600 transition-colors block py-2 px-3 rounded-md hover:bg-gray-100">Contact</a>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <h1 class="text-4xl font-bold text-slate-900">StackPages Portal</h1>
-        <p class="text-lg text-slate-600">Bienvenue sur votre portail de gestion de contenu.</p>
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow pt-20">
+        <!-- Content will be injected here by the Worker -->
+    </main>
 
-        <div class="pt-4">
-            <a href="/admin"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                <span>Accéder à l'administration</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+    <!-- Modals (Hidden by default) -->
+    <div id="article-modal"
+        class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 overflow-y-auto hidden">
+        <div
+            class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative transform transition-all duration-300">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
+                id="close-article-modal">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
-            </a>
+            </button>
+            <div id="article-modal-content" class="relative">
+                <img id="modal-article-image" src="" alt="Image de Couverture"
+                    class="w-full h-64 object-cover rounded-t-lg mb-6">
+                <div class="p-6 md:p-8 lg:p-10">
+                    <h2 id="modal-article-title"
+                        class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight"></h2>
+                    <p class="text-gray-500 text-sm mb-6">Par <span id="modal-article-author"
+                            class="font-medium"></span> le <span id="modal-article-pubdate"></span></p>
+                    <div id="modal-article-body" class="max-w-none text-gray-700 leading-relaxed article-content"></div>
+                    <div class="mt-8 pt-6 border-t border-gray-200 flex flex-wrap gap-4 items-center justify-center">
+                        <span class="text-gray-600 text-lg font-semibold mr-2">Partager:</span>
+                        <a id="share-facebook" href="#" target="_blank"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"><svg
+                                fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path
+                                    d="M14 13.5h2.001l.4-2.001H14v-1.144c0-.573.284-.856.856-.856h1.145V8.001h-2.001c-2.4 0-3.145 1.745-3.145 3.145V13.5H9.5V15.5h2.501V22h3.999V15.5H18L17 13.5h-3z">
+                                </path>
+                            </svg></a>
+                        <a id="share-twitter" href="#" target="_blank"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors"><svg
+                                fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26L21.602 22H15.6L10.957 13.992L4.397 22H0L7.735 13.143L0.99 2.25h7.227L12.987 9.847L18.244 2.25Zm-2.349 1.4L7.404 21.006h2.842L17.595 3.65H15.895Z">
+                                </path>
+                            </svg></a>
+                        <a id="share-linkedin" href="#" target="_blank"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors"><svg
+                                fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path
+                                    d="M20.447 20.452h-3.518v-5.595c0-1.332-.51-2.247-1.684-2.247-1.282 0-2.007.868-2.333 1.708-.12.302-.15.725-.15 1.157v4.977h-3.519s.047-9.664 0-10.648h3.519v1.503c-.027.051-.054.09-.08.13-.393-.683-.872-1.397-2.185-1.397-2.668 0-4.665 1.789-4.665 5.595v5.807H3.882V9.804h3.519v1.503a3.52 3.52 0 0 0 .15-.13c.42-.69.878-1.397 2.277-1.397 2.916 0 5.105 2.156 5.105 6.777v5.807h3.518V14.15c0-2.31-.01-3.6-0.01-3.6zM6.92 5.275a2.27 2.27 0 1 1-4.54 0 2.27 2.27 0 0 1 4.54 0z">
+                                </path>
+                            </svg></a>
+                        <a id="share-mail" href="#" target="_blank"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors"><svg
+                                fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path
+                                    d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z">
+                                </path>
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div id="video-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
+        <div
+            class="relative w-full max-w-4xl aspect-video bg-gray-900 rounded-lg shadow-xl transform transition-all duration-300">
+            <button class="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
+                id="close-video-modal">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-lg" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="footer-nav-link hover:text-white transition-colors text-white">Accueil</a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="footer-nav-link text-gray-300 hover:text-white transition-colors">Publications</a>
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="footer-nav-link text-gray-300 hover:text-white transition-colors">Vidéos</a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="footer-nav-link text-gray-300 hover:text-white transition-colors">Contact</a>
+            </div>
+            <p class="text-gray-400">© 2025 <span id="footer-site-name-copyright">M. Kacou Oi</span>. Tous droits
+                réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
 </body>
 
 </html>
