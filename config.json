@@ -1,0 +1,30 @@
+{
+  "site": {
+    "name": "StackPages CMS",
+    "domain": "https://stackpages.pages.dev",
+    "description": "Un CMS moderne propulsé par l'IA",
+    "author": "M. Kacou Oi",
+    "logo": "",
+    "favicon": ""
+  },
+  "seo": {
+    "title": "StackPages CMS",
+    "metaDescription": "Découvrez mes publications, vidéos et projets.",
+    "keywords": "blog, tech, innovation, cms",
+    "ogImage": ""
+  },
+  "social": {
+    "twitter": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "theme": {
+    "activeTemplate": "default",
+    "primaryColor": "#3B82F6"
+  },
+  "feeds": {
+    "substack": "",
+    "youtube": "",
+    "podcast": ""
+  }
+}

@@ -262,16 +262,40 @@ async function getCachedYoutubeData(feedUrl, forceRefresh = false) {
 // 4. TEMPLATE ENGINE (SUPER TEMPLATE)
 // ====================================================================
 
-async function getTemplate(config) {
-    // Fetch index.html from GitHub Raw
-    if (!config.githubUser || !config.githubRepo) return null;
+async function fetchSiteConfig(githubConfig) {
+    // Fetch config.json from GitHub Raw
+    if (!githubConfig.githubUser || !githubConfig.githubRepo) return null;
 
-    const branch = config.githubBranch || 'main';
-    const url = `https://raw.githubusercontent.com/${config.githubUser}/${config.githubRepo}/${branch}/index.html`;
+    const branch = githubConfig.githubBranch || 'main';
+    const url = `https://raw.githubusercontent.com/${githubConfig.githubUser}/${githubConfig.githubRepo}/${branch}/config.json`;
 
     try {
         const res = await fetch(url);
         if (!res.ok) return null;
+        return await res.json();
+    } catch (e) {
+        console.error("Config Fetch Error:", e);
+        return null;
+    }
+}
+
+async function getTemplate(githubConfig, siteConfig) {
+    // Fetch template from GitHub Raw based on activeTemplate in config
+    if (!githubConfig.githubUser || !githubConfig.githubRepo) return null;
+
+    const branch = githubConfig.githubBranch || 'main';
+    const activeTemplate = siteConfig?.theme?.activeTemplate || 'default';
+    const url = `https://raw.githubusercontent.com/${githubConfig.githubUser}/${githubConfig.githubRepo}/${branch}/frontend/${activeTemplate}.html`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) {
+            // Fallback to index.html if template not found
+            const fallbackUrl = `https://raw.githubusercontent.com/${githubConfig.githubUser}/${githubConfig.githubRepo}/${branch}/index.html`;
+            const fallbackRes = await fetch(fallbackUrl);
+            if (!fallbackRes.ok) return null;
+            return await fallbackRes.text();
+        }
         return await res.text();
     } catch (e) {
         console.error("Template Fetch Error:", e);
@@ -476,50 +500,59 @@ export default {
             headers: { 'Content-Type': 'text/html; charset=utf-8' }
         });
 
-        // Load the Super Template (index.html)
-        const template = await getTemplate(config);
-        if (!template) return new Response("Error: index.html template not found.", { status: 500 });
+        // Load Site Config and Super Template
+        const siteConfig = await fetchSiteConfig(config);
+        const template = await getTemplate(config, siteConfig);
+        if (!template) return new Response("Error: Template not found. Check config.json and templates/ folder.", { status: 500 });
+
+        // Use siteConfig for site name, fallback to RSS metadata or default
+        const siteName = siteConfig?.site?.name || config.siteName;
+        const siteDescription = siteConfig?.seo?.metaDescription || "";
+
+        // Use feeds from config.json if environment variables are not set
+        const substackUrl = config.substackRssUrl || siteConfig?.feeds?.substack || "";
+        const youtubeUrl = config.youtubeRssUrl || siteConfig?.feeds?.youtube || "";
 
         if (path === "/" || path === "/index.html") {
-            const data = await getCachedRSSData(config.substackRssUrl);
-            const content = generateHomeContent(template, { ...data.metadata, title: config.siteName });
+            const data = await getCachedRSSData(substackUrl);
+            const content = generateHomeContent(template, { ...data.metadata, title: siteName });
             if (isHtmx) return htmlResponse(content);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }));
+            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName, description: siteDescription }));
         }
 
         if (path === "/publications") {
-            const data = await getCachedRSSData(config.substackRssUrl);
+            const data = await getCachedRSSData(substackUrl);
             const content = generatePublicationsContent(template, data.posts);
             if (isHtmx) return htmlResponse(content);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }));
+            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
         }
 
         if (path === "/videos") {
-            const videos = await getCachedYoutubeData(config.youtubeRssUrl);
+            const videos = await getCachedYoutubeData(youtubeUrl);
             const content = generateVideosContent(template, videos);
             if (isHtmx) return htmlResponse(content);
 
-            const data = await getCachedRSSData(config.substackRssUrl);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }));
+            const data = await getCachedRSSData(substackUrl);
+            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
         }
 
         if (path === "/contact") {
             const content = generateContactContent(template);
             if (isHtmx) return htmlResponse(content);
 
-            const data = await getCachedRSSData(config.substackRssUrl);
-            return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }));
+            const data = await getCachedRSSData(substackUrl);
+            return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
         }
 
         if (path.startsWith("/post/")) {
             const slug = path.split("/").pop();
-            const data = await getCachedRSSData(config.substackRssUrl);
+            const data = await getCachedRSSData(substackUrl);
             const post = data.posts.find(p => p.slug === slug);
 
             if (post) {
                 const content = generatePostContent(template, post);
                 if (isHtmx) return htmlResponse(content);
-                return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }));
+                return htmlResponse(injectContent(template, content, { ...data.metadata, title: siteName }));
             } else {
                 return new Response("Article non trouvé", { status: 404 });
             }
@@ -532,8 +565,8 @@ export default {
 
             if (githubContent) {
                 if (isHtmx) return htmlResponse(githubContent);
-                const data = await getCachedRSSData(config.substackRssUrl);
-                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: config.siteName }));
+                const data = await getCachedRSSData(substackUrl);
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName }));
             }
         }
 
