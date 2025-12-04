@@ -178,6 +178,28 @@ function fetchAndParseYoutubeRSS(xml) {
 }
 
 // ====================================================================
+// 2b. LOGIQUE GITHUB (GIT-BACKED CMS)
+// ====================================================================
+
+async function fetchGithubContent(config, slug) {
+    if (!config.githubUser || !config.githubRepo) return null;
+
+    // Construct Raw GitHub URL
+    // Format: https://raw.githubusercontent.com/{user}/{repo}/{branch}/content/pages/{slug}.html
+    const branch = config.githubBranch || 'main';
+    const url = `https://raw.githubusercontent.com/${config.githubUser}/${config.githubRepo}/${branch}/content/pages/${slug}.html`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        return await res.text();
+    } catch (e) {
+        console.error(`GitHub Fetch Error for ${slug}:`, e);
+        return null;
+    }
+}
+
+// ====================================================================
 // 3. LOGIQUE DE CACHE
 // ====================================================================
 
@@ -487,7 +509,11 @@ export default {
             youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
             podcastFeedUrl: env.PODCAST_FEED_URL || "",
             siteName: "StackPages CMS",
-            author: "Admin"
+            author: "Admin",
+            // GitHub Config
+            githubUser: env.GITHUB_USERNAME,
+            githubRepo: env.GITHUB_REPO,
+            githubBranch: env.GITHUB_BRANCH
         };
 
         const corsHeaders = {
@@ -604,6 +630,23 @@ export default {
                 return htmlResponse(injectContent(template, content, { ...data.metadata, title: config.siteName }, '/publications'));
             } else {
                 return new Response("Article non trouvé", { status: 404 });
+            }
+        }
+
+        // --- GITHUB FALLBACK (CATCH-ALL FOR CUSTOM PAGES) ---
+        // If path is not reserved, try to fetch it from GitHub content/pages/
+        if (path !== "/" && !path.startsWith("/api") && !path.startsWith("/core") && !path.startsWith("/admin")) {
+            const slug = path.substring(1); // Remove leading slash
+            const githubContent = await fetchGithubContent(config, slug);
+
+            if (githubContent) {
+                if (isHtmx) return htmlResponse(githubContent);
+
+                const data = await getCachedRSSData(config.substackRssUrl);
+                const template = await getTemplate(env, req);
+                // We assume the GitHub content is just the inner HTML. 
+                // If it's a full page, we might need to strip <html>/<body>, but for now we assume fragments.
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: config.siteName }, path));
             }
         }
 
