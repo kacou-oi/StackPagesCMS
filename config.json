@@ -19,7 +19,7 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "default",
+    "activeTemplate": "podcaster",
     "primaryColor": "#3B82F6"
   },
   "feeds": {
