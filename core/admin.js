@@ -461,6 +461,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Expose functions globally for onclick handlers
+window.loadSiteConfig = loadSiteConfig;
+window.saveSiteConfig = saveSiteConfig;
+
+
 
 // Renderers
 function renderDashboard() {
