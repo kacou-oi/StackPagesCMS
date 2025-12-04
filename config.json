@@ -19,8 +19,8 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "podcaster",
-    "primaryColor": "#000000"
+    "activeTemplate": "moneyradar",
+    "primaryColor": "#00D9FF"
   },
   "feeds": {
     "substack": "",

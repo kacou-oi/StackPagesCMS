@@ -491,11 +491,6 @@ export default {
         if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
 
         const config = {
-            substackRssUrl: env.SUBSTACK_FEED_URL || "",
-            youtubeRssUrl: env.YOUTUBE_FEED_URL || "",
-            podcastFeedUrl: env.PODCAST_FEED_URL || "",
-            siteName: "StackPages CMS",
-            author: "Admin",
             // GitHub Config
             githubUser: env.GITHUB_USERNAME,
             githubRepo: env.GITHUB_REPO,
@@ -535,13 +530,14 @@ export default {
             }
         }
 
-        // Admin Config (returns environment variables)
+        // Admin Config (returns config.json values)
         if (path === "/api/config") {
+            const siteConfig = await fetchSiteConfig(config);
             return new Response(JSON.stringify({
-                siteName: config.siteName,
-                substackRssUrl: config.substackRssUrl,
-                youtubeRssUrl: config.youtubeRssUrl,
-                podcastFeedUrl: config.podcastFeedUrl
+                siteName: siteConfig?.site?.name || "StackPages CMS",
+                substackRssUrl: siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "",
+                youtubeRssUrl: siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL || "",
+                podcastFeedUrl: siteConfig?.feeds?.podcast || env.PODCAST_FEED_URL || ""
             }), { status: 200, headers: corsHeaders });
         }
 
@@ -564,21 +560,29 @@ export default {
         }
 
         if (path === "/api/metadata") {
-            const data = await getCachedRSSData(config.substackRssUrl);
-            return new Response(JSON.stringify({ ...data.metadata, title: config.siteName }), { status: 200, headers: corsHeaders });
+            const siteConfig = await fetchSiteConfig(config);
+            const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "";
+            const data = await getCachedRSSData(substackUrl);
+            return new Response(JSON.stringify({ ...data.metadata, title: siteConfig?.site?.name || "StackPages CMS" }), { status: 200, headers: corsHeaders });
         }
         if (path === "/api/posts") {
-            const data = await getCachedRSSData(config.substackRssUrl);
+            const siteConfig = await fetchSiteConfig(config);
+            const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "";
+            const data = await getCachedRSSData(substackUrl);
             return new Response(JSON.stringify(data.posts), { status: 200, headers: corsHeaders });
         }
         if (path === "/api/videos") {
-            const videos = await getCachedYoutubeData(config.youtubeRssUrl);
+            const siteConfig = await fetchSiteConfig(config);
+            const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL || "";
+            const videos = await getCachedYoutubeData(youtubeUrl);
             return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
         }
         if (path === "/api/podcasts") {
-            if (!config.podcastFeedUrl) return new Response(JSON.stringify([]), { headers: corsHeaders });
+            const siteConfig = await fetchSiteConfig(config);
+            const podcastUrl = siteConfig?.feeds?.podcast || env.PODCAST_FEED_URL || "";
+            if (!podcastUrl) return new Response(JSON.stringify([]), { headers: corsHeaders });
             try {
-                const res = await fetch(config.podcastFeedUrl);
+                const res = await fetch(podcastUrl);
                 if (!res.ok) throw new Error("Fetch failed");
                 const xml = await res.text();
                 const items = [];
@@ -614,7 +618,7 @@ export default {
         // Helper for HTMX Out-Of-Band Swaps (SEO Updates)
         const generateOOB = (metadata) => {
             if (!isHtmx) return "";
-            const title = metadata.title || config.siteName;
+            const title = metadata.title || "StackPages CMS";
             const desc = metadata.description || "";
             const keywords = metadata.keywords || "";
 
@@ -630,14 +634,15 @@ export default {
         const template = await getTemplate(config, siteConfig);
         if (!template) return new Response("Error: Template not found. Check config.json and templates/ folder.", { status: 500 });
 
-        // Use siteConfig for site name, fallback to RSS metadata or default
-        const siteName = siteConfig?.site?.name || config.siteName;
+        // Use siteConfig for site name, fallback to default
+        const siteName = siteConfig?.site?.name || "StackPages CMS";
         const siteDescription = siteConfig?.seo?.metaDescription || "";
         const siteKeywords = siteConfig?.seo?.keywords || "";
 
-        // Use feeds from config.json if environment variables are not set
-        const substackUrl = config.substackRssUrl || siteConfig?.feeds?.substack || "";
-        const youtubeUrl = config.youtubeRssUrl || siteConfig?.feeds?.youtube || "";
+        // Use feeds from config.json, fallback to environment variables
+        const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "";
+        const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL || "";
+        const podcastUrl = siteConfig?.feeds?.podcast || env.PODCAST_FEED_URL || "";
 
         if (path === "/" || path === "/index.html") {
             const data = await getCachedRSSData(substackUrl);
