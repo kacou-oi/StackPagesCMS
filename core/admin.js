@@ -35,82 +35,70 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Auth Check
-// Auth Check
+// Auth Check - Uses GitHub OAuth cookie
 async function checkAuth() {
-    // Only check auth on dashboard page
-    const currentPath = window.location.pathname;
+    try {
+        // Check if authenticated via GitHub OAuth (cookie-based)
+        const res = await fetch('/api/auth/user');
+        const data = await res.json();
 
-    // If we are on the dashboard and NOT authenticated
-    const authKey = localStorage.getItem('stackpages_auth');
+        if (data.authenticated) {
+            // User is authenticated via OAuth
+            // Optionally display user info
+            const display = document.getElementById('gh-username-display');
+            const subtext = document.getElementById('dashboard-author');
+            if (display) display.textContent = data.user.login;
+            if (subtext) subtext.textContent = 'Connecté via GitHub';
 
-    if (!authKey) {
-        // Show login overlay if it exists
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) {
-            overlay.classList.remove('hidden');
-            // Prevent scrolling on body
-            document.body.style.overflow = 'hidden';
-
-            // Bind login form if not already bound (simple check)
-            const form = document.getElementById('dashboard-login-form');
-            if (form && !form.dataset.bound) {
-                form.dataset.bound = "true";
-                form.addEventListener('submit', handleDashboardLogin);
+            // Update avatar if element exists
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl && data.user.avatar_url) {
+                avatarEl.src = data.user.avatar_url;
             }
-        } else {
-            // Fallback if overlay is missing (should not happen on dashboard)
-            console.warn("Login overlay missing on dashboard");
-        }
-        return false; // Not authenticated
-    }
 
-    return true; // Authenticated
+            return true;
+        }
+
+        // Fallback: Check for PAT in localStorage
+        const pat = localStorage.getItem('github_pat');
+        if (pat) {
+            // Validate PAT
+            const patRes = await fetch('https://api.github.com/user', {
+                headers: { 'Authorization': `Bearer ${pat}` }
+            });
+            if (patRes.ok) {
+                const user = await patRes.json();
+                const display = document.getElementById('gh-username-display');
+                const subtext = document.getElementById('dashboard-author');
+                if (display) display.textContent = user.login;
+                if (subtext) subtext.textContent = 'Connecté via PAT';
+                return true;
+            } else {
+                // Invalid PAT, remove it
+                localStorage.removeItem('github_pat');
+            }
+        }
+
+        // Not authenticated - redirect to login
+        window.location.href = '/admin/index.html';
+        return false;
+
+    } catch (e) {
+        console.error('Auth check failed:', e);
+        window.location.href = '/admin/index.html';
+        return false;
+    }
 }
 
-async function handleDashboardLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('dash-email').value;
-    const password = document.getElementById('dash-password').value;
-    const errorDiv = document.getElementById('dash-login-error');
-    const btn = e.target.querySelector('button');
-    const originalBtnContent = btn.innerHTML;
-
-    // Reset UI
-    errorDiv.classList.add('hidden');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-
+// Logout function
+async function logout() {
     try {
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
-        if (res.ok) {
-            localStorage.setItem('stackpages_auth', password);
-            // Hide overlay and reload data
-            document.getElementById('login-overlay').classList.add('hidden');
-            document.body.style.overflow = '';
-            btn.disabled = false;
-            btn.innerHTML = originalBtnContent;
-
-            // Trigger data load
-            await loadConfig();
-            await loadData();
-        } else {
-            errorDiv.textContent = "Identifiants incorrects.";
-            errorDiv.classList.remove('hidden');
-            btn.disabled = false;
-            btn.innerHTML = originalBtnContent;
-        }
-    } catch (err) {
-        errorDiv.textContent = "Erreur de connexion.";
-        errorDiv.classList.remove('hidden');
-        btn.disabled = false;
-        btn.innerHTML = originalBtnContent;
+        await fetch('/api/auth/logout');
+    } catch (e) {
+        console.log('Logout error:', e);
     }
+    localStorage.removeItem('github_pat');
+    window.location.href = '/admin/index.html';
 }
 
 // Navigation
