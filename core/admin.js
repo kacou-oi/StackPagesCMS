@@ -392,7 +392,7 @@ async function saveSiteConfig() {
 
     console.log("Saving config:", newConfig);
 
-    const branch = ghConfig.branch || 'portal';
+    const branch = ghConfig.branch || 'Portal';
     const filePath = 'config.json';
     const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${filePath}`;
 
