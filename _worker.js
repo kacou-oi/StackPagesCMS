@@ -427,6 +427,18 @@ function generateContactContent(fullTemplate) {
     return tpl;
 }
 
+function generateCoachingContent(fullTemplate) {
+    const tpl = extractTemplate(fullTemplate, 'tpl-coaching');
+    if (!tpl) return "<p>Template 'tpl-coaching' not found.</p>";
+    return tpl;
+}
+
+function generateBioContent(fullTemplate) {
+    const tpl = extractTemplate(fullTemplate, 'tpl-bio');
+    if (!tpl) return "<p>Template 'tpl-bio' not found.</p>";
+    return tpl;
+}
+
 function generatePostContent(fullTemplate, post) {
     const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
     if (!tpl) return "<p>Template 'tpl-post-detail' not found.</p>";
@@ -612,6 +624,22 @@ export default {
             const videos = await getCachedYoutubeData(youtubeUrl);
             const content = generateVideosContent(template, videos);
             const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
+
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
+        }
+
+        if (path === "/coaching") {
+            const content = generateCoachingContent(template);
+            const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
+
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
+        }
+
+        if (path === "/bio") {
+            const content = generateBioContent(template);
+            const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
 
             if (isHtmx) return htmlResponse(content + generateOOB(metadata));
             return htmlResponse(injectContent(template, content, metadata));
