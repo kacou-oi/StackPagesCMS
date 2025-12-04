@@ -370,9 +370,6 @@ async function loadSiteConfig() {
         if (loadingEl) loadingEl.classList.add('hidden');
         if (formEl) formEl.classList.remove('opacity-50');
     }
-
-    // Load available templates after config is loaded
-    await loadAvailableTemplates();
 }
 
 // Load available templates from API
@@ -543,6 +540,7 @@ async function saveSiteConfig() {
 // Expose functions to window
 window.loadSiteConfig = loadSiteConfig;
 window.saveSiteConfig = saveSiteConfig;
+window.loadAvailableTemplates = loadAvailableTemplates;
 
 
 // Auto-load config when showing config view
