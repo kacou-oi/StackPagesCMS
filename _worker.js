@@ -699,6 +699,27 @@ export default {
             return htmlResponse(injectContent(template, content, metadata));
         }
 
+        // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
+        // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
+        if (path.length > 1) {
+            const slug = path.substring(1); // Remove leading slash
+            const tplId = `tpl-${slug}`;
+            const dynamicContent = extractTemplate(template, tplId);
+
+            if (dynamicContent) {
+                // Basic title formatting: "reservation" -> "Reservation"
+                const title = slug.charAt(0).toUpperCase() + slug.slice(1);
+                const metadata = {
+                    title: `${title} - ${siteName}`,
+                    description: siteDescription,
+                    keywords: siteKeywords
+                };
+
+                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata));
+                return htmlResponse(injectContent(template, dynamicContent, metadata));
+            }
+        }
+
         if (path === "/bio") {
             const content = generateBioContent(template);
             const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
