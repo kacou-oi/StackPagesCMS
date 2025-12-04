@@ -555,8 +555,18 @@ export default {
         // List available templates
         if (path === "/api/templates") {
             try {
+                // If GitHub is not configured, return default templates
                 if (!config.githubUser || !config.githubRepo) {
-                    return new Response(JSON.stringify({ error: "GitHub config not set" }), { status: 500, headers: corsHeaders });
+                    const defaultTemplates = [
+                        { name: "default", filename: "default.html" },
+                        { name: "guru", filename: "guru.html" },
+                        { name: "moneyradar", filename: "moneyradar.html" },
+                        { name: "petfamily", filename: "petfamily.html" },
+                        { name: "pinkoctober", filename: "pinkoctober.html" },
+                        { name: "podcaster", filename: "podcaster.html" },
+                        { name: "stackpages", filename: "stackpages.html" }
+                    ];
+                    return new Response(JSON.stringify(defaultTemplates), { headers: corsHeaders });
                 }
 
                 const branch = config.githubBranch || 'main';
@@ -570,7 +580,17 @@ export default {
                 });
 
                 if (!res.ok) {
-                    return new Response(JSON.stringify({ error: "Failed to fetch templates" }), { status: 500, headers: corsHeaders });
+                    // Fallback to default templates if GitHub API fails
+                    const defaultTemplates = [
+                        { name: "default", filename: "default.html" },
+                        { name: "guru", filename: "guru.html" },
+                        { name: "moneyradar", filename: "moneyradar.html" },
+                        { name: "petfamily", filename: "petfamily.html" },
+                        { name: "pinkoctober", filename: "pinkoctober.html" },
+                        { name: "podcaster", filename: "podcaster.html" },
+                        { name: "stackpages", filename: "stackpages.html" }
+                    ];
+                    return new Response(JSON.stringify(defaultTemplates), { headers: corsHeaders });
                 }
 
                 const files = await res.json();
@@ -584,7 +604,17 @@ export default {
                 return new Response(JSON.stringify(templates), { headers: corsHeaders });
             } catch (e) {
                 console.error("Templates API Error:", e);
-                return new Response(JSON.stringify({ error: "Failed to load templates" }), { status: 500, headers: corsHeaders });
+                // Return default templates on error
+                const defaultTemplates = [
+                    { name: "default", filename: "default.html" },
+                    { name: "guru", filename: "guru.html" },
+                    { name: "moneyradar", filename: "moneyradar.html" },
+                    { name: "petfamily", filename: "petfamily.html" },
+                    { name: "pinkoctober", filename: "pinkoctober.html" },
+                    { name: "podcaster", filename: "podcaster.html" },
+                    { name: "stackpages", filename: "stackpages.html" }
+                ];
+                return new Response(JSON.stringify(defaultTemplates), { headers: corsHeaders });
             }
         }
 

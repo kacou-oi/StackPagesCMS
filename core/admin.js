@@ -380,14 +380,17 @@ async function loadAvailableTemplates() {
     try {
         const res = await fetch('/api/templates');
         if (!res.ok) {
-            console.warn('Could not load templates');
+            console.warn('Could not load templates, status:', res.status);
             return;
         }
 
         const templates = await res.json();
         const selectEl = document.getElementById('conf-activeTemplate');
 
-        if (!selectEl) return;
+        if (!selectEl) {
+            console.warn('Template select element not found');
+            return;
+        }
 
         // Get current value before updating
         const currentValue = selectEl.value;
@@ -551,6 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
             originalShowView(viewName);
             if (viewName === 'config') {
                 loadSiteConfig();
+                // Also load templates independently
+                loadAvailableTemplates();
             }
         };
     }
