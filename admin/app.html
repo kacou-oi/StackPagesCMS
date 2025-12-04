@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackPages - Espace Utilisateur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-blue-500/30">
+                        <i class="fas fa-layer-group text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">StackPages <span
+                            class="text-blue-600 font-normal">App</span></span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
+                        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User"
+                            class="w-8 h-8 rounded-full border border-white shadow-sm" alt="Avatar">
+                        <span id="user-name" class="text-sm font-medium text-slate-700 pr-2">Utilisateur</span>
+                    </div>
+                    <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition p-2"
+                        title="Déconnexion">
+                        <i class="fas fa-sign-out-alt text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-900">Bonjour, <span id="welcome-name">...</span> 👋</h1>
+            <p class="text-slate-500 mt-1">Gérez vos pages et votre contenu.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
+                        <i class="fas fa-file-alt text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Vos Pages</span>
+                </div>
+                <div class="text-3xl font-bold text-slate-900" id="stats-pages">0</div>
+            </div>
+            <!-- Add more stats here -->
+        </div>
+
+        <!-- Pages List -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h2 class="font-semibold text-slate-800">Vos Pages</h2>
+                <a href="/visual-editor"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-md shadow-blue-500/20 flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Nouvelle Page
+                </a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr
+                            class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="px-6 py-3 font-medium">Titre</th>
+                            <th class="px-6 py-3 font-medium">Slug</th>
+                            <th class="px-6 py-3 font-medium">Statut</th>
+                            <th class="px-6 py-3 font-medium text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pages-table-body" class="text-sm text-slate-600 divide-y divide-slate-100">
+                        <tr>
+                            <td colspan="4" class="px-6 py-8 text-center text-slate-400">
+                                <i class="fas fa-spinner fa-spin mr-2"></i> Chargement...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/core/app.js"></script>
+</body>
+
+</html>

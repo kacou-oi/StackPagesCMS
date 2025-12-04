@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">PetFamily</title>
+    <meta name="description" id="meta-desc" content="">
+    <meta name="keywords" id="meta-keywords" content="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .paw-print {
+            position: absolute;
+            opacity: 0.08;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
+        }
+
+        .wave {
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(15deg);
+            }
+
+            75% {
+                transform: rotate(-15deg);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="font-sans antialiased text-gray-800 bg-orange-50 flex flex-col min-h-screen selection:bg-orange-300 selection:text-white">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md border-b-4 border-orange-400">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                class="flex items-center text-2xl font-bold text-orange-600 hover:text-orange-700 transition-colors group">
+                <i class="fas fa-paw text-3xl mr-3 wave"></i>
+                <span id="header-site-name">PetFamily</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-bold text-gray-700 hover:text-orange-500 transition-colors uppercase tracking-wide">Accueil</a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-bold text-gray-700 hover:text-orange-500 transition-colors uppercase tracking-wide">Blog</a>
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-bold text-gray-700 hover:text-orange-500 transition-colors uppercase tracking-wide">Vidéos</a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="px-6 py-2 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-orange-200 transform hover:scale-105">
+                    Contact
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2 text-orange-500 hover:text-orange-700" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/30 z-40 hidden md:hidden"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-900" id="close-mobile-menu">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div class="mt-16 flex flex-col space-y-6">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-2xl font-bold text-gray-900 hover:text-orange-500 transition-colors">Accueil</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-2xl font-bold text-gray-900 hover:text-orange-500 transition-colors">Blog</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-2xl font-bold text-gray-900 hover:text-orange-500 transition-colors">Vidéos</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="text-2xl font-bold text-gray-900 hover:text-orange-500 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow">
+        <!-- Content injected here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-orange-600 to-orange-500 text-white py-16 mt-auto relative overflow-hidden">
+        <i class="fas fa-paw paw-print text-9xl" style="top: 10%; left: 10%;"></i>
+        <i class="fas fa-paw paw-print text-9xl" style="bottom: 15%; right: 15%; animation-delay: 3s;"></i>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <h4 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-paw mr-3"></i> PetFamily
+                    </h4>
+                    <p class="text-orange-100 leading-relaxed">
+                        Votre source d'inspiration pour une vie heureuse avec vos compagnons à quatre pattes.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Navigation</h4>
+                    <ul class="space-y-3 text-orange-100">
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Accueil</a></li>
+                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Conseils</a></li>
+                        <li><a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Vidéos</a></li>
+                        <li><a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Suivez-nous</h4>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all transform hover:scale-110">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all transform hover:scale-110">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all transform hover:scale-110">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-orange-400 pt-8 text-center text-orange-100 text-sm">
+                <p>© 2025 <span id="footer-site-name-copyright">PetFamily</span>. Fait avec ❤️ pour nos amis à poils.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
+
+    <!-- TEMPLATES -->
+
+    <template id="tpl-home">
+        <!-- Hero Section -->
+        <section
+            class="relative min-h-screen flex items-center bg-gradient-to-br from-orange-100 via-yellow-50 to-orange-100 overflow-hidden">
+            <i class="fas fa-paw paw-print text-9xl text-orange-300" style="top: 5%; right: 10%;"></i>
+            <i class="fas fa-bone paw-print text-7xl text-yellow-300"
+                style="bottom: 10%; left: 5%; animation-delay: 2s;"></i>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <span
+                            class="inline-block py-2 px-4 bg-orange-200 text-orange-800 text-sm font-bold rounded-full mb-6">
+                            🐾 Bienvenue dans la famille
+                        </span>
+                        <h1 class="text-5xl md:text-7xl font-black text-gray-900 leading-tight mb-8">
+                            La vie est plus <span class="text-orange-500">belle</span> avec nos animaux
+                        </h1>
+                        <p class="text-xl text-gray-600 mb-10 leading-relaxed">
+                            Découvrez nos conseils, histoires et astuces pour offrir la meilleure vie à vos compagnons
+                            adorés.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="px-8 py-4 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-all shadow-xl shadow-orange-200 transform hover:scale-105 text-center">
+                                <i class="fas fa-book-open mr-2"></i> Lire nos Conseils
+                            </a>
+                            <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                                class="px-8 py-4 bg-white border-2 border-orange-500 text-orange-500 font-bold rounded-full hover:bg-orange-50 transition-all text-center">
+                                <i class="fas fa-play mr-2"></i> Voir les Vidéos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div
+                            class="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=2786&auto=format&fit=crop"
+                                alt="Chien heureux" class="w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-black text-gray-900 mb-4">Nos Amis à 4 Pattes</h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto">Chiens, chats, rongeurs... Tous les animaux méritent
+                        notre amour et notre attention.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div
+                        class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl p-8 hover:shadow-2xl transition-all group">
+                        <div
+                            class="w-20 h-20 bg-orange-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-dog text-4xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Chiens</h3>
+                        <p class="text-gray-600 leading-relaxed">Éducation, alimentation, santé... Tout pour le
+                            bien-être de votre fidèle compagnon.</p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl p-8 hover:shadow-2xl transition-all group">
+                        <div
+                            class="w-20 h-20 bg-yellow-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-cat text-4xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Chats</h3>
+                        <p class="text-gray-600 leading-relaxed">Comprendre votre félin indépendant et créer un lien
+                            unique avec lui.</p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl p-8 hover:shadow-2xl transition-all group">
+                        <div
+                            class="w-20 h-20 bg-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-heart text-4xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Autres Animaux</h3>
+                        <p class="text-gray-600 leading-relaxed">Rongeurs, oiseaux, reptiles... Chaque animal a des
+                            besoins spécifiques.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section
+            class="py-24 bg-gradient-to-br from-orange-500 to-yellow-500 text-white text-center relative overflow-hidden">
+            <i class="fas fa-paw paw-print text-9xl" style="top: -10%; right: 5%;"></i>
+            <i class="fas fa-bone paw-print text-7xl" style="bottom: -5%; left: 10%; animation-delay: 4s;"></i>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <i class="fas fa-heart text-6xl mb-8 opacity-90 wave"></i>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">Rejoignez Notre Communauté</h2>
+                <p class="text-xl text-orange-100 max-w-2xl mx-auto mb-10">
+                    Partagez vos histoires, posez vos questions et connectez-vous avec d'autres passionnés d'animaux.
+                </p>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="inline-block px-12 py-5 bg-white text-orange-500 font-bold rounded-full hover:bg-orange-50 transition-all shadow-2xl transform hover:scale-105">
+                    <i class="fas fa-paper-plane mr-2"></i> Nous Rejoindre
+                </a>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-list">
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-black text-center mb-4">Nos Derniers Conseils</h2>
+                <p class="text-gray-500 text-center mb-16 max-w-2xl mx-auto">Découvrez nos articles pour prendre soin de
+                    vos animaux au quotidien.</p>
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {{items}}
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-card">
+        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+            class="group block bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-orange-100 hover:border-orange-300">
+            <div class="overflow-hidden">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fas fa-paw text-orange-500"></i>
+                    <span class="text-orange-500 text-xs font-bold uppercase tracking-wider">{{date}}</span>
+                </div>
+                <h3
+                    class="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-500 transition-colors leading-tight">
+                    {{title}}</h3>
+                <p class="text-gray-600 text-sm line-clamp-3 mb-4">{{description}}</p>
+                <div class="flex items-center text-orange-500 font-bold text-sm">
+                    Lire la suite <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                </div>
+            </div>
+        </a>
+    </template>
+
+    <template id="tpl-video-list">
+        <section class="py-20 bg-orange-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-black text-center mb-16">Nos Vidéos</h2>
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {{items}}
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-video-card">
+        <div class="cursor-pointer group" onclick="openVideoModal('{{link}}')">
+            <div class="relative rounded-xl overflow-hidden mb-4 shadow-lg border-4 border-white">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full aspect-video object-cover">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6">
+                    <div class="w-full">
+                        <div class="flex items-center justify-center mb-4">
+                            <div
+                                class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
+                                <i class="fas fa-play text-white text-xl ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 group-hover:text-orange-500 transition-colors">{{title}}</h3>
+            <p class="text-gray-500 text-sm">{{date}}</p>
+        </div>
+    </template>
+
+    <template id="tpl-post-detail">
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-500 hover:text-orange-500 mb-10 transition-colors font-bold">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Articles
+                </a>
+
+                <div class="mb-12">
+                    <img src="{{image}}" alt="{{title}}"
+                        class="w-full h-96 object-cover rounded-2xl shadow-2xl mb-8 border-4 border-orange-100">
+                    <h1 class="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">{{title}}</h1>
+                    <div class="flex items-center text-gray-500 border-b-2 border-orange-100 pb-6">
+                        <i class="fas fa-user text-orange-500 mr-2"></i>
+                        <span class="font-bold text-gray-900 mr-3">{{author}}</span>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-calendar text-orange-500 mr-2"></i>
+                        <span>{{date}}</span>
+                    </div>
+                </div>
+
+                <div class="prose prose-lg max-w-none leading-relaxed article-content">
+                    {{content}}
+                </div>
+
+                <div class="mt-16 p-8 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl text-center">
+                    <i class="fas fa-paw text-5xl text-orange-500 mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Cet article vous a plu ?</h3>
+                    <p class="text-gray-700 mb-6">Partagez-le avec vos amis amoureux des animaux !</p>
+                    <div class="flex gap-4 justify-center flex-wrap">
+                        <a href="#"
+                            class="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-bold">
+                            <i class="fab fa-facebook-f mr-2"></i> Facebook
+                        </a>
+                        <a href="#"
+                            class="px-6 py-3 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition-colors font-bold">
+                            <i class="fab fa-instagram mr-2"></i> Instagram
+                        </a>
+                        <a href="#"
+                            class="px-6 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors font-bold">
+                            <i class="fas fa-share-alt mr-2"></i> Partager
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-contact">
+        <section class="py-20 bg-gradient-to-br from-orange-50 to-yellow-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-2xl border-4 border-orange-100">
+                    <div class="text-center mb-10">
+                        <i class="fas fa-envelope text-6xl text-orange-500 mb-6 wave"></i>
+                        <h2 class="text-3xl font-black mb-4">Contactez-nous</h2>
+                        <p class="text-gray-600">Une question sur votre animal ? Écrivez-nous !</p>
+                    </div>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-user text-orange-500 mr-2"></i> Nom Complet
+                            </label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-envelope text-orange-500 mr-2"></i> Email
+                            </label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-comment text-orange-500 mr-2"></i> Message
+                            </label>
+                            <textarea id="message" name="message" rows="5"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-xl hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg shadow-orange-200 transform hover:scale-105">
+                            <i class="fas fa-paper-plane mr-2"></i> Envoyer le Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Modals -->
+    <div id="video-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-2xl shadow-2xl border-4 border-orange-500">
+            <button class="absolute -top-12 right-0 text-white hover:text-orange-400 transition-colors"
+                id="close-video-modal">
+                <i class="fas fa-times text-3xl"></i>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-2xl" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+</body>
+
+</html>

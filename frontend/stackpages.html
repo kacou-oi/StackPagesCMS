@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">StackPages - Modern CMS Platform</title>
+    <meta name="description" id="meta-desc" content="">
+    <meta name="keywords" id="meta-keywords" content="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-orange {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-900">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-star text-white"></i>
+                </div>
+                <span id="header-site-name" class="text-xl font-bold text-gray-900">StackPages</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Home</a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Announcement</a>
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Videos
+                    Tutorial</a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">Get
+                    Started</a>
+            </div>
+
+            <button class="md:hidden" id="mobile-menu-button"><i class="fas fa-bars text-2xl"></i></button>
+        </nav>
+
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4" id="close-mobile-menu"><i
+                        class="fas fa-times text-2xl"></i></button>
+                <div class="mt-16 space-y-6">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="block text-xl font-bold hover:text-orange-500">Home</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="block text-xl font-bold hover:text-orange-500">Announcement</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="block text-xl font-bold hover:text-orange-500">Videos Tutorial</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="block text-xl font-bold hover:text-orange-500">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="pt-16"></main>
+
+    <footer class="bg-gray-50 border-t border-gray-200 py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-star text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">StackPages</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">Modern CMS platform powered by Cloudflare Workers. Build faster, ship
+                        smarter.</p>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
+                                class="fab fa-github"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
+                                class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-3 text-gray-600">
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Templates</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Documentation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-3 text-gray-600">
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 pt-8 text-center text-gray-500 text-sm">
+                <p>© 2025 <span id="footer-site-name-copyright">StackPages</span>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
+
+    <template id="tpl-home">
+        <!-- Hero -->
+        <section class="pt-20 pb-32 bg-gradient-to-b from-white to-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-8">
+                        The <span class="text-gradient">fastest</span> way to build your website
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+                        StackPages is a modern CMS powered by Cloudflare Workers. Deploy globally in seconds, scale
+                        infinitely, and deliver content at the edge.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
+                            Start Building
+                        </a>
+                        <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-white border-2 border-gray-300 text-gray-900 font-semibold rounded-md hover:border-orange-500 transition-colors">
+                            Learn More
+                        </a>
+                    </div>
+                    <div class="mt-16 flex items-center justify-center gap-12 text-sm text-gray-500">
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Free & Open
+                            Source</div>
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Deploy in 60
+                            seconds</div>
+                        <div class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> No credit card
+                            required</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="py-20 bg-white border-y border-gray-200">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    <div>
+                        <div class="text-5xl font-black text-orange-500 mb-2">300+</div>
+                        <div class="text-gray-600">Edge Locations</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-black text-orange-500 mb-2">&lt;100ms</div>
+                        <div class="text-gray-600">Response Time</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-black text-orange-500 mb-2">99.99%</div>
+                        <div class="text-gray-600">Uptime SLA</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Built for modern developers</h2>
+                    <p class="text-xl text-gray-600">Everything you need to build and deploy fast</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-bolt text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Lightning Fast</h3>
+                        <p class="text-gray-600">Powered by Cloudflare's global network. Your site loads in
+                            milliseconds, anywhere.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-shield-alt text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Secure by Default</h3>
+                        <p class="text-gray-600">No databases to hack. Content stored on GitHub, encrypted and version
+                            controlled.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Easy to Deploy</h3>
+                        <p class="text-gray-600">One-click deployment to Cloudflare Workers. No DevOps required.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-palette text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Beautiful Templates</h3>
+                        <p class="text-gray-600">5+ professional templates included. Switch themes without losing
+                            content.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-code text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Open Source</h3>
+                        <p class="text-gray-600">100% open source. Customize everything. Deploy your own instance.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-dollar-sign text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Cost Effective</h3>
+                        <p class="text-gray-600">Free tier includes 100k requests/day. Perfect for most projects.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Get started in 3 steps</h2>
+                    <p class="text-xl text-gray-600">From zero to production in minutes</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
+                            1</div>
+                        <h3 class="text-xl font-bold mb-3">Fork the Repository</h3>
+                        <p class="text-gray-600">Clone StackPages to your GitHub account</p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
+                            2</div>
+                        <h3 class="text-xl font-bold mb-3">Deploy to Workers</h3>
+                        <p class="text-gray-600">One-click deploy to Cloudflare's edge network</p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
+                            3</div>
+                        <h3 class="text-xl font-bold mb-3">Start Publishing</h3>
+                        <p class="text-gray-600">Create content and go live instantly</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-24 gradient-orange">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold text-white mb-6">Ready to get started?</h2>
+                <p class="text-xl text-orange-100 mb-10 max-w-2xl mx-auto">Join thousands of developers building with
+                    StackPages</p>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="inline-block px-12 py-5 bg-white text-orange-500 font-bold rounded-md hover:bg-gray-50 transition-all shadow-2xl">
+                    Start Building Now
+                </a>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-list">
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Announcement</h2>
+                <div id="publications-container" class="space-y-6 max-w-5xl mx-auto">{{items}}</div>
+                <div id="blog-load-more" class="text-center mt-12">
+                    <button onclick="loadMoreBlogs()"
+                        class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
+                        Load More Articles
+                    </button>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-card">
+        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+            class="group flex flex-col md:flex-row bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all">
+            <div class="md:w-80 flex-shrink-0 overflow-hidden">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-56 md:h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-6 flex-1">
+                <span class="text-orange-500 text-sm font-semibold">{{date}}</span>
+                <h3 class="text-2xl font-bold text-gray-900 mt-2 mb-3 group-hover:text-orange-500 transition-colors">
+                    {{title}}</h3>
+                <p class="text-gray-600 line-clamp-2">{{description}}</p>
+            </div>
+        </a>
+    </template>
+
+    <template id="tpl-video-list">
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Video tutorials</h2>
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">{{items}}</div>
+                <div id="video-load-more" class="text-center mt-12">
+                    <button onclick="loadMoreVideos()"
+                        class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
+                        Load More Videos
+                    </button>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-video-card">
+        <a href="/video/{{slug}}" hx-get="/video/{{slug}}" hx-target="#main-content" hx-push-url="true"
+            class="group block">
+            <div class="relative rounded-xl overflow-hidden border border-gray-200">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full aspect-video object-cover">
+                <div
+                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center shadow-2xl">
+                        <i class="fas fa-play text-white text-xl ml-1"></i>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mt-4 group-hover:text-orange-500 transition-colors">{{title}}
+            </h3>
+            <p class="text-gray-600 text-sm">{{date}}</p>
+        </a>
+    </template>
+
+    <template id="tpl-video-detail">
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-600 hover:text-orange-500 mb-10 transition-colors font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Videos
+                </a>
+
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-gray-600 mb-8">
+                    <i class="fas fa-calendar mr-2"></i>
+                    <span>{{date}}</span>
+                </div>
+
+                <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl mb-8">
+                    <iframe src="{{embedUrl}}" class="w-full h-full" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+                <div class="prose prose-lg max-w-none">
+                    <p class="text-gray-700 leading-relaxed">{{description}}</p>
+                </div>
+            </div>
+        </article>
+    </template>
+
+
+    <template id="tpl-post-detail">
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-600 hover:text-orange-500 mb-10 transition-colors font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Blog
+                </a>
+                <img src="{{image}}" alt="{{title}}" class="w-full h-96 object-cover rounded-xl mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-gray-600 border-b border-gray-200 pb-6 mb-10">
+                    <span class="font-bold text-gray-900 mr-2">{{author}}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{date}}</span>
+                </div>
+                <div class="prose prose-lg max-w-none article-content">{{content}}</div>
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-contact">
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-2xl mx-auto bg-white p-10 rounded-xl border border-gray-200 shadow-xl">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4">Get in touch</h2>
+                        <p class="text-gray-600">Have a question? We'd love to hear from you.</p>
+                    </div>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-4 py-3 rounded-md border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-4 py-3 rounded-md border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5"
+                                class="w-full px-4 py-3 rounded-md border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/30">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <div id="video-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-xl shadow-2xl">
+            <button class="absolute -top-12 right-0 text-white hover:text-orange-500 transition-colors"
+                id="close-video-modal">
+                <i class="fas fa-times text-3xl"></i>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-xl" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+</body>
+
+</html>

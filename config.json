@@ -1,11 +1,30 @@
 {
-  "siteName": "StackPages CMS",
-  "author": "Kacou Oi",
-  "substackRssUrl": "https://medium.com/feed/@cloudflare",
-  "youtubeRssUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC3QIolTSR29ba4_u15vtEUQ",
+  "site": {
+    "name": "StackPages Headless",
+    "domain": "https://stackpages.pages.dev",
+    "description": "Un CMS moderne propulsé par l'IA",
+    "author": "Ange Kacou Oi",
+    "logo": "",
+    "favicon": ""
+  },
   "seo": {
-    "metaTitle": "StackPages - Accueil",
-    "metaDescription": "Un site personnel et un blog propulsé par Substack.",
-    "metaKeywords": "blog, substack, portfolio, tech"
+    "title": "StackPages Headless",
+    "metaDescription": "Découvrez mes publications, vidéos et projets.",
+    "keywords": "blog, tech, innovation, cms",
+    "ogImage": ""
+  },
+  "social": {
+    "twitter": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "theme": {
+    "activeTemplate": "stackpages",
+    "primaryColor": "#3B82F6"
+  },
+  "feeds": {
+    "substack": "",
+    "youtube": "",
+    "podcast": ""
   }
 }

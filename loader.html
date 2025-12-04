@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargement...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Minimal loader styles */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get slug from URL
+            // Format: /p/slug or just /slug if handled by 404
+            const path = window.location.pathname;
+            const slug = path.split('/').pop(); // Simple extraction
+
+            if (!slug) {
+                document.body.innerHTML = '<div class="p-8 text-center">Page non trouvée (Slug manquant)</div>';
+                return;
+            }
+
+            // Try to find page in localStorage
+            try {
+                const stored = localStorage.getItem('stackpages_custom_pages');
+                const pages = stored ? JSON.parse(stored) : [];
+                const page = pages.find(p => p.slug === slug);
+
+                if (page) {
+                    // Replace document content
+                    document.open();
+                    document.write(page.htmlContent);
+                    document.close();
+
+                    // Update title if needed (though document.write usually handles it if full HTML)
+                    if (!page.htmlContent.includes('<title>')) {
+                        document.title = page.title;
+                    }
+                } else {
+                    document.getElementById('loader').innerHTML = `
+                        <div class="text-center">
+                            <h1 class="text-2xl font-bold text-slate-800 mb-2">Page non trouvée</h1>
+                            <p class="text-slate-500">La page "${slug}" n'existe pas ou n'a pas été publiée localement.</p>
+                            <a href="/" class="text-orange-500 hover:underline mt-4 block">Retour à l'accueil</a>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error(e);
+                document.body.innerHTML = '<div class="p-8 text-center">Erreur de chargement</div>';
+            }
+        });
+    </script>
+</body>
+
+</html>
