@@ -262,13 +262,21 @@ async function getCachedYoutubeData(feedUrl, forceRefresh = false) {
 // 4. TEMPLATE ENGINE (SUPER TEMPLATE)
 // ====================================================================
 
-async function getTemplate(env, request) {
-    // Fetch index.html from ASSETS
-    const url = new URL(request.url);
-    const templateReq = new Request(new URL("/index.html", url), request);
-    const res = await env.ASSETS.fetch(templateReq);
-    if (!res.ok) return null;
-    return await res.text();
+async function getTemplate(config) {
+    // Fetch index.html from GitHub Raw
+    if (!config.githubUser || !config.githubRepo) return null;
+
+    const branch = config.githubBranch || 'main';
+    const url = `https://raw.githubusercontent.com/${config.githubUser}/${config.githubRepo}/${branch}/index.html`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        return await res.text();
+    } catch (e) {
+        console.error("Template Fetch Error:", e);
+        return null;
+    }
 }
 
 function extractTemplate(html, id) {
@@ -469,7 +477,7 @@ export default {
         });
 
         // Load the Super Template (index.html)
-        const template = await getTemplate(env, req);
+        const template = await getTemplate(config);
         if (!template) return new Response("Error: index.html template not found.", { status: 500 });
 
         if (path === "/" || path === "/index.html") {
