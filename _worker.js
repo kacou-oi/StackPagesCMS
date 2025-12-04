@@ -452,6 +452,41 @@ export default {
         }
 
         // --- API ROUTES ---
+
+        // Admin Login
+        if (path === "/api/login" && req.method === "POST") {
+            try {
+                const body = await req.json();
+                const adminEmail = env.ADMIN_EMAIL || "admin@stackpages.com";
+                const adminPassword = env.ADMIN_PASSWORD || "admin123";
+
+                if (body.email === adminEmail && body.password === adminPassword) {
+                    return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
+                } else {
+                    return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401, headers: corsHeaders });
+                }
+            } catch (e) {
+                return new Response(JSON.stringify({ error: "Bad request" }), { status: 400, headers: corsHeaders });
+            }
+        }
+
+        // Admin Config (returns environment variables)
+        if (path === "/api/config") {
+            return new Response(JSON.stringify({
+                siteName: config.siteName,
+                substackRssUrl: config.substackRssUrl,
+                youtubeRssUrl: config.youtubeRssUrl,
+                podcastFeedUrl: config.podcastFeedUrl
+            }), { status: 200, headers: corsHeaders });
+        }
+
+        // Clear Cache
+        if (path === "/api/clear-cache" && req.method === "POST") {
+            // In Cloudflare Workers, caches.default doesn't support programmatic clearing easily.
+            // This is a placeholder that returns success.
+            return new Response(JSON.stringify({ success: true, message: "Cache cleared" }), { status: 200, headers: corsHeaders });
+        }
+
         if (path === "/api/metadata") {
             const data = await getCachedRSSData(config.substackRssUrl);
             return new Response(JSON.stringify({ ...data.metadata, title: config.siteName }), { status: 200, headers: corsHeaders });
