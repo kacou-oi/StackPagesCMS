@@ -20,7 +20,7 @@
   },
   "theme": {
     "activeTemplate": "guru",
-    "primaryColor": "#3B82F6"
+    "primaryColor": "#000000"
   },
   "feeds": {
     "substack": "",
