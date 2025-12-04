@@ -345,3 +345,80 @@ document.body.addEventListener('htmx:afterOnLoad', () => {
     // Re-initialize any other dynamic content if needed (e.g. syntax highlighting, etc.)
     window.scrollTo(0, 0);
 });
+
+// Infinite Scroll Functions
+let hiddenBlogs = [];
+let hiddenVideos = [];
+
+window.loadMoreBlogs = function () {
+    const container = document.getElementById('publications-container');
+    const button = document.getElementById('blog-load-more');
+
+    if (!container || hiddenBlogs.length === 0) {
+        if (button) button.style.display = 'none';
+        return;
+    }
+
+    // Load next 6 items
+    const nextBatch = hiddenBlogs.splice(0, 6);
+    nextBatch.forEach(html => {
+        container.insertAdjacentHTML('beforeend', html);
+    });
+
+    // Hide button if no more items
+    if (hiddenBlogs.length === 0 && button) {
+        button.style.display = 'none';
+    }
+};
+
+window.loadMoreVideos = function () {
+    const container = document.getElementById('videos-container');
+    const button = document.getElementById('video-load-more');
+
+    if (!container || hiddenVideos.length === 0) {
+        if (button) button.style.display = 'none';
+        return;
+    }
+
+    // Load next 6 items
+    const nextBatch = hiddenVideos.splice(0, 6);
+    nextBatch.forEach(html => {
+        container.insertAdjacentHTML('beforeend', html);
+    });
+
+    // Hide button if no more items
+    if (hiddenVideos.length === 0 && button) {
+        button.style.display = 'none';
+    }
+};
+
+// Hide items beyond initial load
+document.body.addEventListener('htmx:afterSwap', (event) => {
+    // Handle blog posts
+    const blogContainer = document.getElementById('publications-container');
+    if (blogContainer) {
+        const allBlogs = Array.from(blogContainer.children);
+        if (allBlogs.length > 6) {
+            hiddenBlogs = allBlogs.slice(6).map(el => el.outerHTML);
+            allBlogs.slice(6).forEach(el => el.remove());
+        } else {
+            hiddenBlogs = [];
+            const loadMoreBtn = document.getElementById('blog-load-more');
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+        }
+    }
+
+    // Handle videos
+    const videoContainer = document.getElementById('videos-container');
+    if (videoContainer) {
+        const allVideos = Array.from(videoContainer.children);
+        if (allVideos.length > 6) {
+            hiddenVideos = allVideos.slice(6).map(el => el.outerHTML);
+            allVideos.slice(6).forEach(el => el.remove());
+        } else {
+            hiddenVideos = [];
+            const loadMoreBtn = document.getElementById('video-load-more');
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+        }
+    }
+});
