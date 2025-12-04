@@ -496,8 +496,8 @@ export default {
         if (path === "/api/login" && req.method === "POST") {
             try {
                 const body = await req.json();
-                const adminEmail = env.ADMIN_EMAIL || "admin@stackpages.com";
-                const adminPassword = env.ADMIN_PASSWORD || "admin123";
+                const adminEmail = env.ADMIN_EMAIL || "";
+                const adminPassword = env.ADMIN_PASSWORD || "";
 
                 if (body.email === adminEmail && body.password === adminPassword) {
                     return new Response(JSON.stringify({ success: true }), { status: 200, headers: corsHeaders });
@@ -524,7 +524,7 @@ export default {
             return new Response(JSON.stringify({
                 owner: config.githubUser || "",
                 repo: config.githubRepo || "",
-                branch: config.githubBranch || "Portal"
+                branch: config.githubBranch || "main"
             }), {
                 headers: corsHeaders
             });
