@@ -383,6 +383,7 @@ function generatePublicationsContent(fullTemplate, posts) {
     } else {
         posts.forEach(post => {
             const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+<<<<<<< HEAD
             itemsHtml += replacePlaceholders(cardTpl, {
                 title: post.title,
                 description: post.description ? post.description.substring(0, 120) + '...' : '',
@@ -391,12 +392,31 @@ function generatePublicationsContent(fullTemplate, posts) {
                 image: post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article',
                 slug: post.slug
             });
+=======
+            // Escape JSON for the onclick handler
+            const postJson = JSON.stringify(post).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+
+            postsHtml += `
+            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group"
+                 onclick="openArticleModal(${postJson.replace(/"/g, "'")})"> <!-- Note: Simple inline JSON passing, careful with quotes -->
+                <img src="${post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article'}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${post.title}</h3>
+                    <p class="text-gray-600 text-sm mb-4">${post.description ? post.description.substring(0, 120) + '...' : ''}</p>
+                    <div class="flex justify-between items-center text-gray-500 text-xs">
+                        <span>Par ${post.author || 'Inconnu'}</span>
+                        <span>${postDate}</span>
+                    </div>
+                </div>
+            </div>`;
+>>>>>>> parent of e8543c5 (Update _worker.js)
         });
     }
 
     return replacePlaceholders(listTpl, { items: itemsHtml });
 }
 
+<<<<<<< HEAD
 function generateVideosContent(fullTemplate, videos) {
     const listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
     const cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
@@ -404,6 +424,10 @@ function generateVideosContent(fullTemplate, videos) {
     if (!listTpl || !cardTpl) return "<p>Templates 'tpl-video-list' or 'tpl-video-card' not found.</p>";
 
     let itemsHtml = '';
+=======
+function renderVideos(videos) {
+    let videosHtml = '';
+>>>>>>> parent of e8543c5 (Update _worker.js)
     if (videos.length === 0) {
         itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
     } else {
@@ -691,6 +715,7 @@ export default {
             return htmlResponse(injectContent(template, content, metadata));
         }
 
+<<<<<<< HEAD
         if (path.startsWith("/post/")) {
             const slug = path.split("/").pop();
             const data = await getCachedRSSData(substackUrl);
@@ -745,6 +770,9 @@ export default {
         }
 
         // Fallback to ASSETS
+=======
+        // Fallback to ASSETS for everything else (images, etc.)
+>>>>>>> parent of e8543c5 (Update _worker.js)
         return await env.ASSETS.fetch(req);
     }
 };
