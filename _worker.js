@@ -552,6 +552,42 @@ export default {
             });
         }
 
+        // List available templates
+        if (path === "/api/templates") {
+            try {
+                if (!config.githubUser || !config.githubRepo) {
+                    return new Response(JSON.stringify({ error: "GitHub config not set" }), { status: 500, headers: corsHeaders });
+                }
+
+                const branch = config.githubBranch || 'main';
+                const url = `https://api.github.com/repos/${config.githubUser}/${config.githubRepo}/contents/frontend?ref=${branch}`;
+
+                const res = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'StackPages-CMS',
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!res.ok) {
+                    return new Response(JSON.stringify({ error: "Failed to fetch templates" }), { status: 500, headers: corsHeaders });
+                }
+
+                const files = await res.json();
+                const templates = files
+                    .filter(file => file.type === 'file' && file.name.endsWith('.html'))
+                    .map(file => ({
+                        name: file.name.replace('.html', ''),
+                        filename: file.name
+                    }));
+
+                return new Response(JSON.stringify(templates), { headers: corsHeaders });
+            } catch (e) {
+                console.error("Templates API Error:", e);
+                return new Response(JSON.stringify({ error: "Failed to load templates" }), { status: 500, headers: corsHeaders });
+            }
+        }
+
         // Clear Cache
         if (path === "/api/clear-cache" && req.method === "POST") {
             // In Cloudflare Workers, caches.default doesn't support programmatic clearing easily.
