@@ -519,6 +519,17 @@ export default {
             }), { status: 200, headers: corsHeaders });
         }
 
+        if (path === "/api/github-config") {
+            // Return GitHub configuration from environment variables
+            return new Response(JSON.stringify({
+                owner: config.githubUser || "",
+                repo: config.githubRepo || "",
+                branch: config.githubBranch || "Portal"
+            }), {
+                headers: corsHeaders
+            });
+        }
+
         // Clear Cache
         if (path === "/api/clear-cache" && req.method === "POST") {
             // In Cloudflare Workers, caches.default doesn't support programmatic clearing easily.

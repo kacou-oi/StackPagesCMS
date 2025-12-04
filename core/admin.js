@@ -7,13 +7,49 @@ const appState = {
     config: {}
 };
 
-// Init
-// Init
+// Auto-load GitHub config from Worker environment variables
+async function autoLoadGithubConfig() {
+    try {
+        const res = await fetch('/api/github-config');
+        if (res.ok) {
+            const config = await res.json();
+
+            // Only auto-fill if not already configured
+            const existingConfig = localStorage.getItem('stackpages_github_config');
+            if (!existingConfig && config.owner && config.repo) {
+                console.log('Auto-loading GitHub config from environment variables');
+
+                // Pre-fill owner, repo, and branch (token must be manually added)
+                const partialConfig = {
+                    owner: config.owner,
+                    repo: config.repo,
+                    branch: config.branch,
+                    token: '' // User will need to provide this
+                };
+
+                // Save to localStorage so it's available for other functions
+                localStorage.setItem('stackpages_github_config', JSON.stringify(partialConfig));
+
+                // Update the display
+                updateGitHubDisplay();
+
+                console.log('GitHub owner, repo, and branch loaded from server.');
+                console.log('⚠️ Please configure your GitHub Personal Access Token in the GitHub settings.');
+            }
+        }
+    } catch (e) {
+        console.log('Could not auto-load GitHub config:', e);
+    }
+}
+
+// --- MAIN INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', async () => {
-    const isAuth = await checkAuth();
-    if (isAuth) {
-        await loadConfig(); // load config first
-        await loadData();
+    const isAuthenticated = await checkAuth();
+
+    if (isAuthenticated) {
+        await autoLoadGithubConfig(); // Auto-load GitHub config first
+        await loadConfig(); // Legacy config
+        await loadData(); // Load dashboard data
     }
 });
 
@@ -286,7 +322,7 @@ async function loadSiteConfig() {
     if (loadingEl) loadingEl.classList.remove('hidden');
     if (formEl) formEl.classList.add('opacity-50');
 
-    const branch = ghConfig.branch || 'portal';
+    const branch = ghConfig.branch || 'Portal';
     const rawUrl = `https://raw.githubusercontent.com/${ghConfig.owner}/${ghConfig.repo}/${branch}/config.json`;
     console.log("Fetching config from:", rawUrl);
 
