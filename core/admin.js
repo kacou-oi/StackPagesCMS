@@ -235,65 +235,232 @@ async function loadData() {
 }
 
 
-// Config Loading
+// Config Loading from GitHub config.json
 async function loadConfig() {
+    // Legacy function - just loads from API for backwards compatibility
     try {
         const authKey = localStorage.getItem('stackpages_auth');
-        // Fetch config (environment variables)
         const configRes = await fetch('/api/config', {
             headers: { 'X-Auth-Key': authKey }
         });
         const config = await configRes.json();
-        // Fetch metadata from Substack RSS (site name, author, SEO if any)
-        const metaRes = await fetch('/api/metadata');
-        const metadata = await metaRes.json();
-
-        // Save to State
         appState.config = config;
-        appState.metadata = metadata;
 
-        // Populate Config Form (Read-Only) with combined data
-        document.getElementById('conf-siteName').value = config.siteName || metadata.siteName || '';
-        document.getElementById('conf-author').value = config.author || metadata.author || '';
-        document.getElementById('conf-substack').value = config.substackRssUrl || '';
-        if (document.getElementById('conf-youtube')) {
-            document.getElementById('conf-youtube').value = config.youtubeRssUrl || 'Non configuré';
-        }
-        if (document.getElementById('conf-podcast')) {
-            document.getElementById('conf-podcast').value = config.podcastFeedUrl || 'Non configuré';
-        }
-        if (config.seo) {
-            document.getElementById('conf-metaTitle').value = config.seo.metaTitle || '';
-            document.getElementById('conf-metaDesc').value = config.seo.metaDescription || '';
-            document.getElementById('conf-metaKeywords').value = config.seo.metaKeywords || '';
-        }
-        // If metadata provides SEO overrides, use them when config lacks values
-        if (metadata.seo) {
-            if (!config.seo?.metaTitle) document.getElementById('conf-metaTitle').value = metadata.seo.metaTitle || '';
-            if (!config.seo?.metaDescription) document.getElementById('conf-metaDesc').value = metadata.seo.metaDescription || '';
-            if (!config.seo?.metaKeywords) document.getElementById('conf-metaKeywords').value = metadata.seo.metaKeywords || '';
-        }
         // Show warning if Substack URL missing
         if (!config.substackRssUrl) {
             document.getElementById('config-warning')?.classList.remove('hidden');
         } else {
             document.getElementById('config-warning')?.classList.add('hidden');
         }
-
-        // Update Frontend Builder Button URL
-        if (config.frontendBuilderUrl) {
-            const builderBtn = document.getElementById('builder-tab-btn');
-            if (builderBtn) {
-                builderBtn.href = config.frontendBuilderUrl;
-            }
-        }
     } catch (e) {
         console.error("Erreur chargement config:", e);
     }
 }
 
-// Config Saving (Disabled)
-// La configuration est gérée par les variables d'environnement.
+// Load Site Config from GitHub config.json
+async function loadSiteConfig() {
+    const statusEl = document.getElementById('config-status');
+    const loadingEl = document.getElementById('config-loading');
+    const formEl = document.getElementById('config-form');
+
+    // Get GitHub config from localStorage
+    let ghConfig = {};
+    try {
+        ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+    } catch (e) {
+        console.error("Error parsing GitHub config:", e);
+    }
+
+    if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        if (statusEl) {
+            statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub (cliquez sur votre nom en bas à gauche)";
+            statusEl.className = "text-sm text-center text-amber-600";
+        }
+        return;
+    }
+
+    // Show loading
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (formEl) formEl.classList.add('opacity-50');
+
+    const branch = ghConfig.branch || 'portal';
+    const rawUrl = `https://raw.githubusercontent.com/${ghConfig.owner}/${ghConfig.repo}/${branch}/config.json`;
+
+    try {
+        const res = await fetch(rawUrl);
+        if (!res.ok) {
+            throw new Error("config.json not found");
+        }
+        const config = await res.json();
+
+        // Populate form fields
+        document.getElementById('conf-siteName').value = config.site?.name || '';
+        document.getElementById('conf-domain').value = config.site?.domain || '';
+        document.getElementById('conf-description').value = config.site?.description || '';
+        document.getElementById('conf-author').value = config.site?.author || '';
+
+        document.getElementById('conf-metaTitle').value = config.seo?.title || '';
+        document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
+        document.getElementById('conf-metaKeywords').value = config.seo?.keywords || '';
+
+        document.getElementById('conf-activeTemplate').value = config.theme?.activeTemplate || 'default';
+        document.getElementById('conf-primaryColor').value = config.theme?.primaryColor || '#3B82F6';
+
+        document.getElementById('conf-substack').value = config.feeds?.substack || '';
+        document.getElementById('conf-youtube').value = config.feeds?.youtube || '';
+        document.getElementById('conf-podcast').value = config.feeds?.podcast || '';
+
+        document.getElementById('conf-twitter').value = config.social?.twitter || '';
+        document.getElementById('conf-linkedin').value = config.social?.linkedin || '';
+        document.getElementById('conf-github').value = config.social?.github || '';
+
+        if (statusEl) {
+            statusEl.textContent = "✓ Configuration chargée";
+            statusEl.className = "text-sm text-center text-green-600";
+            setTimeout(() => statusEl.textContent = "", 3000);
+        }
+    } catch (e) {
+        console.error("Error loading site config:", e);
+        if (statusEl) {
+            statusEl.textContent = "⚠️ config.json non trouvé. Les champs sont vides.";
+            statusEl.className = "text-sm text-center text-amber-600";
+        }
+    } finally {
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (formEl) formEl.classList.remove('opacity-50');
+    }
+}
+
+// Save Site Config to GitHub config.json
+async function saveSiteConfig() {
+    const statusEl = document.getElementById('config-status');
+
+    // Get GitHub config from localStorage
+    let ghConfig = {};
+    try {
+        ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+    } catch (e) {
+        console.error("Error parsing GitHub config:", e);
+    }
+
+    if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        if (statusEl) {
+            statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub";
+            statusEl.className = "text-sm text-center text-red-600";
+        }
+        return;
+    }
+
+    // Build config object from form values
+    const newConfig = {
+        site: {
+            name: document.getElementById('conf-siteName').value,
+            domain: document.getElementById('conf-domain').value,
+            description: document.getElementById('conf-description').value,
+            author: document.getElementById('conf-author').value,
+            logo: "",
+            favicon: ""
+        },
+        seo: {
+            title: document.getElementById('conf-metaTitle').value,
+            metaDescription: document.getElementById('conf-metaDesc').value,
+            keywords: document.getElementById('conf-metaKeywords').value,
+            ogImage: ""
+        },
+        social: {
+            twitter: document.getElementById('conf-twitter').value,
+            linkedin: document.getElementById('conf-linkedin').value,
+            github: document.getElementById('conf-github').value
+        },
+        theme: {
+            activeTemplate: document.getElementById('conf-activeTemplate').value || 'default',
+            primaryColor: document.getElementById('conf-primaryColor').value || '#3B82F6'
+        },
+        feeds: {
+            substack: document.getElementById('conf-substack').value,
+            youtube: document.getElementById('conf-youtube').value,
+            podcast: document.getElementById('conf-podcast').value
+        }
+    };
+
+    const branch = ghConfig.branch || 'portal';
+    const filePath = 'config.json';
+    const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${filePath}`;
+
+    if (statusEl) {
+        statusEl.textContent = "⏳ Enregistrement en cours...";
+        statusEl.className = "text-sm text-center text-blue-600";
+    }
+
+    try {
+        // First, try to get existing file SHA (for update)
+        let sha = null;
+        try {
+            const getRes = await fetch(`${apiUrl}?ref=${branch}`, {
+                headers: {
+                    'Authorization': `Bearer ${ghConfig.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (getRes.ok) {
+                const data = await getRes.json();
+                sha = data.sha;
+            }
+        } catch (e) {
+            // File doesn't exist yet, that's OK
+        }
+
+        // Create or update the file
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2))));
+        const body = {
+            message: `Update config.json via Dashboard`,
+            content: content,
+            branch: branch
+        };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${ghConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            if (statusEl) {
+                statusEl.textContent = "✓ Configuration sauvegardée sur GitHub !";
+                statusEl.className = "text-sm text-center text-green-600";
+            }
+        } else {
+            const err = await res.json();
+            throw new Error(err.message || 'GitHub API error');
+        }
+    } catch (e) {
+        console.error("Error saving site config:", e);
+        if (statusEl) {
+            statusEl.textContent = "❌ Erreur : " + e.message;
+            statusEl.className = "text-sm text-center text-red-600";
+        }
+    }
+}
+
+// Auto-load config when showing config view
+document.addEventListener('DOMContentLoaded', () => {
+    // Override showView to load config when navigating to config tab
+    const originalShowView = window.showView;
+    if (originalShowView) {
+        window.showView = function (viewName) {
+            originalShowView(viewName);
+            if (viewName === 'config') {
+                loadSiteConfig();
+            }
+        };
+    }
+});
+
 
 // Renderers
 function renderDashboard() {
