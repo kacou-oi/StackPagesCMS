@@ -495,6 +495,30 @@
         </section>
     </template>
 
+    <template id="tpl-post-detail">
+        <article class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-400 hover:text-cyan-400 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Analyses
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-gray-400 mb-10 border-b border-gray-800 pb-10">
+                    <span class="font-bold text-cyan-400 mr-2">{{author}}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{date}}</span>
+                </div>
+
+                <img src="{{image}}" alt="{{title}}" class="w-full rounded-xl shadow-2xl mb-12">
+
+                <div class="prose prose-lg prose-invert max-w-none leading-relaxed article-content">
+                    {{content}}
+                </div>
+            </div>
+        </article>
+    </template>
+
 </body>
 
 </html>
