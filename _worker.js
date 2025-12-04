@@ -413,7 +413,8 @@ function generateVideosContent(fullTemplate, videos) {
                 title: video.title,
                 date: videoDate,
                 thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o',
-                link: video.link
+                link: video.link,
+                slug: video.slug
             });
         });
     }
