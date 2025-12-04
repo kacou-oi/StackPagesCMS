@@ -461,12 +461,10 @@ function renderPublications(posts) {
     } else {
         posts.forEach(post => {
             const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-            // Escape JSON for the onclick handler
-            const postJson = JSON.stringify(post).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
 
             postsHtml += `
-            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group"
-                 onclick="openArticleModal(${postJson.replace(/"/g, "'")})"> <!-- Note: Simple inline JSON passing, careful with quotes -->
+            <a href="/post/${post.slug}" hx-get="/post/${post.slug}" hx-target="#main-content" hx-push-url="true"
+               class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer group block">
                 <img src="${post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article'}" alt="${post.title}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
                 <div class="p-6">
                     <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${post.title}</h3>
@@ -476,7 +474,7 @@ function renderPublications(posts) {
                         <span>${postDate}</span>
                     </div>
                 </div>
-            </div>`;
+            </a>`;
         });
     }
 
@@ -488,6 +486,43 @@ function renderPublications(posts) {
         </div>
         <!-- Pagination is omitted for MVP SSR, can be added later -->
     </section>
+    `;
+}
+
+function renderPost(post) {
+    const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+    const shareUrl = `https://stackpages.net/post/${post.slug}`; // Idealement dynamique
+    const shareTitle = encodeURIComponent(post.title);
+
+    return `
+    <article class="container mx-auto px-4 py-10 md:py-16 max-w-4xl">
+        <div class="mb-8">
+            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors mb-6">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Retour aux publications
+            </a>
+            <img src="${post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture'}" alt="${post.title}" class="w-full h-64 md:h-96 object-cover rounded-xl shadow-lg mb-8">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">${post.title}</h1>
+            <div class="flex items-center text-gray-500 text-sm md:text-base mb-8 border-b border-gray-200 pb-8">
+                <span class="font-medium mr-4">Par ${post.author || 'Inconnu'}</span>
+                <span>${postDate}</span>
+            </div>
+        </div>
+        
+        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed article-content">
+            ${post.content}
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-gray-200">
+            <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">Partager cet article</h3>
+            <div class="flex flex-wrap gap-4 items-center justify-center">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md hover:scale-110 transform duration-200"><svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M14 13.5h2.001l.4-2.001H14v-1.144c0-.573.284-.856.856-.856h1.145V8.001h-2.001c-2.4 0-3.145 1.745-3.145 3.145V13.5H9.5V15.5h2.501V22h3.999V15.5H18L17 13.5h-3z"></path></svg></a>
+                <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${shareTitle}" target="_blank" class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors shadow-md hover:scale-110 transform duration-200"><svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M18.244 2.25h3.308l-7.227 8.26L21.602 22H15.6L10.957 13.992L4.397 22H0L7.735 13.143L0.99 2.25h7.227L12.987 9.847L18.244 2.25Zm-2.349 1.4L7.404 21.006h2.842L17.595 3.65H15.895Z"></path></svg></a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${shareTitle}" target="_blank" class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors shadow-md hover:scale-110 transform duration-200"><svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M20.447 20.452h-3.518v-5.595c0-1.332-.51-2.247-1.684-2.247-1.282 0-2.007.868-2.333 1.708-.12.302-.15.725-.15 1.157v4.977h-3.519s.047-9.664 0-10.648h3.519v1.503c-.027.051-.054.09-.08.13-.393-.683-.872-1.397-2.185-1.397-2.668 0-4.665 1.789-4.665 5.595v5.807H3.882V9.804h3.519v1.503a3.52 3.52 0 0 0 .15-.13c.42-.69.878-1.397 2.277-1.397 2.916 0 5.105 2.156 5.105 6.777v5.807h3.518V14.15c0-2.31-.01-3.6-0.01-3.6zM6.92 5.275a2.27 2.27 0 1 1-4.54 0 2.27 2.27 0 0 1 4.54 0z"></path></svg></a>
+                <a href="mailto:?subject=${shareTitle}&body=${encodeURIComponent(shareUrl)}" target="_blank" class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors shadow-md hover:scale-110 transform duration-200"><svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg></a>
+            </div>
+        </div>
+    </article>
     `;
 }
 
@@ -675,6 +710,20 @@ export default {
             if (isHtmx) return htmlResponse(content);
             const data = await getCachedRSSData(config.substackRssUrl);
             return htmlResponse(renderLayout(content, { ...data.metadata, title: config.siteName }, '/contact'));
+        }
+
+        if (path.startsWith("/post/")) {
+            const slug = path.split("/").pop();
+            const data = await getCachedRSSData(config.substackRssUrl);
+            const post = data.posts.find(p => p.slug === slug);
+
+            if (post) {
+                const content = renderPost(post);
+                if (isHtmx) return htmlResponse(content);
+                return htmlResponse(renderLayout(content, { ...data.metadata, title: config.siteName }, '/publications')); // Keep 'Publications' active
+            } else {
+                return new Response("Article non trouvé", { status: 404 });
+            }
         }
 
         // Fallback to ASSETS for everything else (images, etc.)
