@@ -49,7 +49,8 @@
                     class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Serverless
                     Functions</a>
                 <a href="/tutorials" hx-get="/tutorials" hx-target="#main-content" hx-push-url="true"
-                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Video Tutorial</a>
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Video
+                    Tutorials</a>
                 <a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
                     class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Annoucements</a>
                 <a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
@@ -245,71 +246,7 @@
             </div>
         </section>
 
-        <!-- Get Started Options -->
-        <section class="py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">Choose your deployment</h2>
-                    <p class="text-xl text-gray-600">Start building with StackPages today</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                    <!-- Self Git Hosted -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-orange-500 transition-all group relative overflow-hidden">
-                        <div
-                            class="absolute top-0 right-0 bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                            OPEN SOURCE</div>
-                        <div
-                            class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-700 text-3xl mb-6 group-hover:bg-orange-100 group-hover:text-orange-500 transition-colors">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2">Self Git Hosted</h3>
-                        <p class="text-orange-500 font-medium mb-6">With free developers API</p>
-                        <ul class="space-y-3 text-gray-600 mb-8">
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Full Source
-                                Code Access</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Host on your
-                                own Cloudflare</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Unlimited
-                                Customization</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Community
-                                Support</li>
-                        </ul>
-                        <a href="https://github.com/stackpages/stackpages" target="_blank"
-                            class="block w-full py-4 bg-gray-900 text-white text-center font-bold rounded-lg hover:bg-gray-800 transition-colors">
-                            Fork on GitHub
-                        </a>
-                    </div>
 
-                    <!-- Managed Deployment -->
-                    <div class="bg-white p-8 rounded-2xl border-2 border-orange-500 shadow-xl relative overflow-hidden">
-                        <div
-                            class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                            RECOMMENDED</div>
-                        <div
-                            class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500 text-3xl mb-6">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2">Managed Deployment</h3>
-                        <p class="text-orange-500 font-medium mb-6">With advanced options</p>
-                        <ul class="space-y-3 text-gray-600 mb-8">
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> One-Click
-                                Deployment</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Automatic
-                                Updates</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Premium
-                                Templates</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Priority
-                                Support</li>
-                        </ul>
-                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
-                            class="block w-full py-4 bg-orange-500 text-white text-center font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
-                            Start Free Trial
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- How it Works -->
         <section class="py-24 bg-white">
@@ -363,7 +300,7 @@
             <div class="container mx-auto px-6">
                 <h2 class="text-4xl font-bold text-center mb-16">Annoucements</h2>
                 <div id="publications-container" class="space-y-6 max-w-5xl mx-auto">{{items}}</div>
-                <div id="blog-load-more" class="text-center mt-12">
+                <div id="blog-load-more" class="text-center mt-12 mb-20">
                     <button onclick="loadMoreBlogs()"
                         class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
                         Load More Articles
@@ -394,7 +331,7 @@
             <div class="container mx-auto px-6">
                 <h2 class="text-4xl font-bold text-center mb-16">Video Tutorials</h2>
                 <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">{{items}}</div>
-                <div id="video-load-more" class="text-center mt-12">
+                <div id="video-load-more" class="text-center mt-12 mb-20">
                     <button onclick="loadMoreVideos()"
                         class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
                         Load More Videos
@@ -695,6 +632,90 @@ export default {
         </div>
     </div>
 
+    <script>
+        // Mobile Menu Logic
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        function toggleMenu() {
+            const isHidden = mobileMenu.classList.contains('translate-x-full');
+            if (isHidden) {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenuOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                mobileMenuOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (mobileMenuButton) mobileMenuButton.addEventListener('click', toggleMenu);
+        if (closeMobileMenu) closeMobileMenu.addEventListener('click', toggleMenu);
+        if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', toggleMenu);
+
+        // Load More Logic
+        let blogOffset = 6;
+        const blogLimit = 6;
+        let videoOffset = 6;
+        const videoLimit = 6;
+
+        async function loadMoreBlogs() {
+            const btn = document.querySelector('#blog-load-more button');
+            if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+            try {
+                const response = await fetch(`/api/posts?offset=${blogOffset}&limit=${blogLimit}`, {
+                    headers: { 'HX-Request': 'true' }
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    if (html.trim()) {
+                        document.getElementById('publications-container').insertAdjacentHTML('beforeend', html);
+                        blogOffset += blogLimit;
+                        if (btn) btn.innerHTML = 'Load More Articles';
+                    } else {
+                        if (btn) btn.style.display = 'none';
+                    }
+                } else {
+                    if (btn) btn.innerHTML = 'Error loading articles';
+                }
+            } catch (e) {
+                console.error(e);
+                if (btn) btn.innerHTML = 'Error loading articles';
+            }
+        }
+
+        async function loadMoreVideos() {
+            const btn = document.querySelector('#video-load-more button');
+            if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+            try {
+                const response = await fetch(`/api/videos?offset=${videoOffset}&limit=${videoLimit}`, {
+                    headers: { 'HX-Request': 'true' }
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    if (html.trim()) {
+                        document.getElementById('videos-container').insertAdjacentHTML('beforeend', html);
+                        videoOffset += videoLimit;
+                        if (btn) btn.innerHTML = 'Load More Videos';
+                    } else {
+                        if (btn) btn.style.display = 'none';
+                    }
+                } else {
+                    if (btn) btn.innerHTML = 'Error loading videos';
+                }
+            } catch (e) {
+                console.error(e);
+                if (btn) btn.innerHTML = 'Error loading videos';
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -421,16 +421,6 @@ function generatePublicationsContent(fullTemplate, posts) {
     }
 
     let content = listTpl.replace('{{items}}', itemsHtml);
-
-    // Pagination / Load More (Basic implementation)
-    if (hasMore) {
-        content += `<div class="text-center mt-8">
-            <a href="/publications/page/2" class="inline-block px-6 py-2 border border-slate-300 rounded-full text-sm font-medium hover:bg-slate-50 transition">
-                Voir plus d'articles
-            </a>
-        </div>`;
-    }
-
     return content;
 }
 
@@ -478,22 +468,13 @@ function generateVideosContent(fullTemplate, videos) {
                 title: video.title,
                 thumbnail: video.thumbnail,
                 published: pubDate,
-                link: `/video/${video.id || video.link.split('v=')[1] || ''}`
+                link: `/video/${video.id || video.link.split('v=')[1] || ''}`,
+                slug: video.id || video.link.split('v=')[1] || ''
             });
         });
     }
 
     let content = listTpl.replace('{{items}}', itemsHtml);
-
-    // Pagination / Load More (Basic implementation)
-    if (hasMore) {
-        content += `<div class="text-center mt-8">
-            <a href="/videos/page/2" class="inline-block px-6 py-2 border border-slate-300 rounded-full text-sm font-medium hover:bg-slate-50 transition">
-                Voir plus de vidéos
-            </a>
-        </div>`;
-    }
-
     return content;
 }
 
@@ -793,7 +774,8 @@ export default {
                                 thumbnail: video.thumbnail,
                                 published: pubDate,
                                 date: pubDate, // Alias for consistency
-                                link: `/video/${video.id || video.link.split('v=')[1] || ''}`
+                                link: `/video/${video.id || video.link.split('v=')[1] || ''}`,
+                                slug: video.id || video.link.split('v=')[1] || ''
                             });
                         });
                         return new Response(itemsHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
