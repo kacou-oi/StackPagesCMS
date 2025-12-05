@@ -977,8 +977,9 @@ export default {
             }
 
             const detailTemplate = extractTemplate(template, 'tpl-video-detail');
-            const videoId = video.link.split('v=')[1]?.split('&')[0];
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
+            // Use slug as videoId since we set it that way in the RSS parser
+            const videoId = video.slug;
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
 
             const content = replacePlaceholders(detailTemplate, {
                 title: video.title,

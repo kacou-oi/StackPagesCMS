@@ -137,13 +137,52 @@
 
                 <!-- Mobile menu button -->
                 <div class="lg:hidden">
-                    <button class="text-gray-700 hover:text-green-city focus:outline-none">
+                    <button class="text-gray-700 hover:text-green-city focus:outline-none" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu (Hidden by default) -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200 absolute w-full z-40 shadow-lg">
+        <div class="px-4 pt-2 pb-4 space-y-1">
+            <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true" onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Accueil</a>
+            <a href="/mairie" hx-get="/mairie" hx-target="#main-content" hx-push-url="true" onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Mairie
+                & Élus</a>
+            <a href="/vivre" hx-get="/vivre" hx-target="#main-content" hx-push-url="true" onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Vivre
+                à GreenCity</a>
+            <a href="/decouvrir" hx-get="/decouvrir" hx-target="#main-content" hx-push-url="true"
+                onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Découvrir
+                & Tourisme</a>
+            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Actualités</a>
+            <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true" onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Web
+                TV</a>
+            <a href="/podcasts" hx-get="/podcasts" hx-target="#main-content" hx-push-url="true"
+                onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-city hover:bg-green-50">Kiosque
+                Audio</a>
+            <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                onclick="toggleMobileMenu()"
+                class="block px-3 py-2 rounded-md text-base font-medium text-green-city bg-green-50 hover:bg-green-100 mt-4">Nous
+                contacter</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
 
     <!-- Main Content Area (HTMX Target) -->
     <main id="main-content" class="flex-grow">
@@ -576,8 +615,8 @@
         </template>
 
         <template id="tpl-video-card">
-            <div
-                class="bg-gray-800 rounded-xl overflow-hidden shadow-lg group hover:ring-2 hover:ring-red-500 transition">
+            <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true"
+                class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg group hover:ring-2 hover:ring-red-500 transition cursor-pointer">
                 <div class="relative">
                     <img src="{{thumbnail}}" alt="{{title}}"
                         class="w-full h-48 object-cover opacity-80 group-hover:opacity-100 transition">
@@ -592,11 +631,10 @@
                     <div class="text-xs text-gray-400 mb-1">{{date}}</div>
                     <h3 class="font-bold text-white line-clamp-2 mb-2 group-hover:text-red-400 transition">{{title}}
                     </h3>
-                    <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true"
-                        class="text-sm text-gray-400 hover:text-white">Regarder <i
-                            class="fas fa-play-circle ml-1"></i></a>
+                    <span class="text-sm text-gray-400 group-hover:text-white flex items-center">Regarder <i
+                            class="fas fa-play-circle ml-1"></i></span>
                 </div>
-            </div>
+            </a>
         </template>
 
         <template id="tpl-podcast-card">
