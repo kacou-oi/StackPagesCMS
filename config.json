@@ -23,7 +23,7 @@
     "primaryColor": "#04b3b0"
   },
   "feeds": {
-    "substack": "https://moneyradar.substack.com/feed",
+    "substack": "https://petstack.substack.com/feed",
     "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCXy8Z8pIqRRGD4ZUCzZPiug",
     "podcast": ""
   }
