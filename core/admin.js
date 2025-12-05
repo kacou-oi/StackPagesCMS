@@ -218,14 +218,15 @@ async function loadData() {
         }
 
         // 2. Load Content (Individually to prevent one failure from blocking others)
-        const loadPosts = fetch('/api/posts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Posts fetch error:", e); return []; });
-        const loadVideos = fetch('/api/videos').then(res => res.ok ? res.json() : []).catch(e => { console.error("Videos fetch error:", e); return []; });
+        const loadPosts = fetch('/api/posts?limit=100').then(res => res.ok ? res.json() : { posts: [] }).catch(e => { console.error("Posts fetch error:", e); return { posts: [] }; });
+        const loadVideos = fetch('/api/videos?limit=100').then(res => res.ok ? res.json() : { videos: [] }).catch(e => { console.error("Videos fetch error:", e); return { videos: [] }; });
         const loadPodcasts = fetch('/api/podcasts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Podcasts fetch error:", e); return []; });
 
-        const [posts, videos, podcasts] = await Promise.all([loadPosts, loadVideos, loadPodcasts]);
+        const [postsData, videosData, podcasts] = await Promise.all([loadPosts, loadVideos, loadPodcasts]);
 
-        appState.posts = posts;
-        appState.videos = videos;
+        // Handle paginated responses
+        appState.posts = Array.isArray(postsData) ? postsData : (postsData.posts || []);
+        appState.videos = Array.isArray(videosData) ? videosData : (videosData.videos || []);
         appState.podcasts = podcasts;
 
 
