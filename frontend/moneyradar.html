@@ -565,7 +565,7 @@
                             hx-get="/publications" hx-target="this"
                             hx-select="#publications-container > *:nth-child(-n+3)" hx-trigger="load"
                             hx-swap="innerHTML"
-                            hx-on::after-settle="htmx.process(document.getElementById('latest-articles-container'))">
+                            hx-on::after-swap="var container = event.target; setTimeout(function() { htmx.process(container); console.log('HTMX processed latest articles'); }, 100);">
                         </div>
                         <div class="text-center mt-8">
                             <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
@@ -615,7 +615,8 @@
     </template>
 
     <template id="tpl-blog-card">
-        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-select="article"
+            hx-swap="innerHTML show:window:top" hx-push-url="true"
             class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden border border-gray-700 block">
             <img src="{{image}}" alt="{{title}}" class="w-full h-56 object-cover">
             <div class="p-6">
@@ -853,7 +854,8 @@
     </template>
 
     <template id="tpl-video-card">
-        <a href="/video/{{slug}}" hx-get="/video/{{slug}}" hx-target="#main-content" hx-push-url="true"
+        <a href="/video/{{slug}}" hx-get="/video/{{slug}}" hx-target="#main-content" hx-select="article"
+            hx-swap="innerHTML show:window:top" hx-push-url="true"
             class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden border border-gray-700 cursor-pointer group block">
             <div class="relative">
                 <img src="{{thumbnail}}" alt="{{title}}" class="w-full h-56 object-cover">
