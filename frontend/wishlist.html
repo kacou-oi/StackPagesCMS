@@ -87,11 +87,13 @@
                         class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Vidéos</a>
                     <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
                         class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Contact</a>
+                    <a href="/create-wish" hx-get="/create-wish" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Créer un vœu</a>
                 </nav>
 
                 <!-- CTA Button -->
                 <div class="hidden md:flex">
-                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    <a href="/create-wish" hx-get="/create-wish" hx-target="#main-content" hx-push-url="true"
                         class="px-6 py-2 bg-bordeaux hover:bg-red-900 text-white font-medium rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                         Créer ma liste
                     </a>
@@ -350,23 +352,241 @@
             </section>
         </template>
 
+        <!-- TEMPLATE: CREATE WISH (tpl-create-wish) -->
+        <template id="tpl-create-wish">
+            <section class="py-24 bg-cream min-h-screen">
+                <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h1 class="font-serif text-4xl font-bold text-gray-900 mb-4">Créer votre Vœu</h1>
+                        <p class="text-gray-600">Décrivez l'objet de vos rêves, nous nous occupons du reste.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gold-100">
+                        <form class="space-y-8">
+                            <!-- Basic Info -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre du vœu</label>
+                                    <input type="text" placeholder="Ex: Montre Vintage Omega..."
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+                                        <select
+                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                            <option>Horlogerie</option>
+                                            <option>Maroquinerie</option>
+                                            <option>Joaillerie</option>
+                                            <option>Art de vivre</option>
+                                            <option>Expérience</option>
+                                            <option>Autre</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Budget
+                                            estimé</label>
+                                        <select
+                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                            <option>Moins de 500€</option>
+                                            <option>500€ - 1000€</option>
+                                            <option>1000€ - 5000€</option>
+                                            <option>5000€ - 10 000€</option>
+                                            <option>Plus de 10 000€</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description
+                                        détaillée</label>
+                                    <textarea rows="4"
+                                        placeholder="Détails spécifiques, couleurs, année, état souhaité..."
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50 resize-none"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Additional Details -->
+                            <div class="pt-8 border-t border-gray-100 space-y-6">
+                                <h3 class="font-serif text-lg font-bold text-gray-900">Détails supplémentaires</h3>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Lien de référence
+                                        (optionnel)</label>
+                                    <input type="url" placeholder="https://..."
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Urgence</label>
+                                    <div class="flex gap-4">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input type="radio" name="urgency"
+                                                class="text-gold-600 focus:ring-gold-500">
+                                            <span class="text-gray-600">Aucune</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input type="radio" name="urgency"
+                                                class="text-gold-600 focus:ring-gold-500">
+                                            <span class="text-gray-600">Pour une occasion (date)</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Image
+                                        d'inspiration</label>
+                                    <div
+                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-gold-400 transition cursor-pointer bg-gray-50">
+                                        <div class="space-y-1 text-center">
+                                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                            <div class="flex text-sm text-gray-600">
+                                                <span
+                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-gold-600 hover:text-gold-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-gold-500">
+                                                    <span>Télécharger un fichier</span>
+                                                </span>
+                                                <p class="pl-1">ou glisser-déposer</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500">PNG, JPG, GIF jusqu'à 10MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-6">
+                                <button type="button"
+                                    class="w-full flex justify-center py-4 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-all transform hover:-translate-y-1">
+                                    Soumettre mon vœu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </template>
+
         <!-- TEMPLATE: CONTACT (tpl-contact) -->
         <template id="tpl-contact">
-            <section class="py-20 bg-white border-t border-gray-100">
-                <div class="max-w-4xl mx-auto px-4 text-center">
-                    <i class="far fa-envelope text-4xl text-gold-500 mb-6"></i>
-                    <h2 class="font-serif text-3xl font-bold text-gray-900 mb-4">Rejoignez le Club Privé</h2>
-                    <p class="text-gray-600 mb-8">
-                        Recevez nos sélections exclusives et nos invitations aux ventes privées.
-                    </p>
-                    <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                        <input type="email" placeholder="Votre adresse email"
-                            class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
-                        <button type="button"
-                            class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-full transition shadow-lg">
-                            S'inscrire
-                        </button>
-                    </form>
+            <section class="py-24 bg-white min-h-screen">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">Contactez-nous</h1>
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Notre équipe de conciergerie est à votre disposition pour réaliser vos rêves les plus fous.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-24">
+                        <!-- Contact Info -->
+                        <div class="space-y-12">
+                            <div class="bg-cream p-8 rounded-2xl border border-gold-100">
+                                <h3 class="font-serif text-2xl font-bold text-gray-900 mb-6">Nos Coordonnées</h3>
+                                <div class="space-y-6">
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gold-600 shadow-sm shrink-0">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">Showroom Privé</p>
+                                            <p class="text-gray-600">12 Place Vendôme<br>75001 Paris, France</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gold-600 shadow-sm shrink-0">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">Téléphone</p>
+                                            <p class="text-gray-600">+33 (0)1 42 60 00 00</p>
+                                            <p class="text-xs text-gray-500 mt-1">Du Lundi au Samedi, 10h - 19h</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gold-600 shadow-sm shrink-0">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">Email</p>
+                                            <p class="text-gray-600">conciergerie@wishlist-agency.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Map -->
+                            <div
+                                class="h-[300px] rounded-2xl overflow-hidden shadow-lg border border-gray-200 relative bg-gray-100">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.234836254796!2d2.327376315674906!3d48.87275697928889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e3489123457%3A0x67890abcdef12345!2sPlace%20Vend%C3%B4me%2C%2075001%20Paris!5e0!3m2!1sfr!2sfr!4v1620000000000!5m2!1sfr!2sfr"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                            <h3 class="font-serif text-2xl font-bold text-gray-900 mb-6">Envoyez-nous un message</h3>
+                            <form class="space-y-6">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                                        <input type="text"
+                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                                        <input type="text"
+                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <input type="email"
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                    <select
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50">
+                                        <option>Renseignement général</option>
+                                        <option>Suivi de commande</option>
+                                        <option>Partenariat</option>
+                                        <option>Presse</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                    <textarea rows="4"
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition bg-gray-50 resize-none"></textarea>
+                                </div>
+                                <button type="button"
+                                    class="w-full py-4 bg-gold-600 hover:bg-gold-700 text-white font-bold rounded-lg transition shadow-md">
+                                    Envoyer le message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Section (Moved to Bottom) -->
+                    <div class="border-t border-gray-200 pt-16 text-center max-w-4xl mx-auto">
+                        <i class="far fa-envelope text-4xl text-gold-500 mb-6"></i>
+                        <h2 class="font-serif text-3xl font-bold text-gray-900 mb-4">Rejoignez le Club Privé</h2>
+                        <p class="text-gray-600 mb-8">
+                            Recevez nos sélections exclusives et nos invitations aux ventes privées.
+                        </p>
+                        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                            <input type="email" placeholder="Votre adresse email"
+                                class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
+                            <button type="button"
+                                class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-full transition shadow-lg">
+                                S'inscrire
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </section>
         </template>
