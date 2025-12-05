@@ -435,46 +435,64 @@
         </section>
     </template>
 
-    <template id="tpl-blog-list">
+    <template id="tpl-publications">
         <section class="py-20 bg-white">
             <div class="container mx-auto px-6">
                 <h2 class="text-4xl font-bold text-center mb-16">Journal de Bord</h2>
-                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    {{items}}
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-10" hx-trigger="load"
+                    hx-get="/api/posts" hx-swap="innerHTML">
+                    <!-- Loading State -->
+                    <div class="col-span-1 md:col-span-3 flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+                    </div>
                 </div>
             </div>
         </section>
     </template>
 
-    <template id="tpl-blog-card">
-        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
-            class="group block">
-            <div class="overflow-hidden rounded-lg mb-6 shadow-lg">
-                <img src="{{image}}" alt="{{title}}"
-                    class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
-            </div>
-            <span class="text-yellow-600 text-xs font-bold uppercase tracking-widest">{{date}}</span>
-            <h3 class="text-xl font-bold text-slate-900 mt-2 mb-3 group-hover:text-yellow-600 transition-colors">
-                {{title}}</h3>
-            <p class="text-slate-500 line-clamp-3">{{description}}</p>
-        </a>
-    </template>
-
-    <template id="tpl-video-list">
+    <template id="tpl-videos">
         <section class="py-20 bg-slate-50">
             <div class="container mx-auto px-6">
                 <h2 class="text-4xl font-bold text-center mb-16">Conférences & Vidéos</h2>
-                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    {{items}}
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-3 gap-10" hx-trigger="load"
+                    hx-get="/api/videos" hx-swap="innerHTML">
+                    <!-- Loading State -->
+                    <div class="col-span-full flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+                    </div>
                 </div>
             </div>
         </section>
     </template>
 
+    <!-- Legacy templates kept for reference or specific use if needed, but main routing uses above -->
+    <template id="tpl-blog-card">
+        <article class="group block h-full flex flex-col">
+            <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                class="block overflow-hidden rounded-lg mb-6 shadow-lg">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+            </a>
+            <div class="flex-1 flex flex-col">
+                <span class="text-yellow-600 text-xs font-bold uppercase tracking-widest mb-2">{{date}}</span>
+                <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition-colors">
+                    <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true">
+                        {{title}}
+                    </a>
+                </h3>
+                <p class="text-slate-500 line-clamp-3 mb-4 flex-1">{{description}}</p>
+                <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-yellow-600 transition-colors mt-auto">
+                    Lire l'article <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </article>
+    </template>
+
     <template id="tpl-video-card">
-        <div class="cursor-pointer group" onclick="openVideoModal('{{link}}')">
-            <div class="relative rounded-lg overflow-hidden mb-4 shadow-lg">
-                <img src="{{thumbnail}}" alt="{{title}}" class="w-full aspect-video object-cover">
+        <div class="cursor-pointer group h-full flex flex-col" onclick="openVideoModal('{{link}}')">
+            <div class="relative rounded-lg overflow-hidden mb-4 shadow-lg aspect-video">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full h-full object-cover">
                 <div
                     class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                     <div
@@ -483,7 +501,8 @@
                     </div>
                 </div>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 group-hover:text-yellow-600 transition-colors">{{title}}</h3>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-yellow-600 transition-colors mb-2">{{title}}
+            </h3>
             <span class="text-slate-500 text-sm">{{date}}</span>
         </div>
     </template>
