@@ -635,16 +635,62 @@ export default {
             return new Response(JSON.stringify({ ...data.metadata, title: siteConfig?.site?.name || "StackPages CMS" }), { status: 200, headers: corsHeaders });
         }
         if (path === "/api/posts") {
-            const siteConfig = await fetchSiteConfig(config);
-            const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "";
-            const data = await getCachedRSSData(substackUrl);
-            return new Response(JSON.stringify(data.posts), { status: 200, headers: corsHeaders });
+            try {
+                const url = new URL(req.url);
+                const offset = parseInt(url.searchParams.get('offset') || '0');
+                const limit = parseInt(url.searchParams.get('limit') || '6');
+
+                const siteConfig = await fetchSiteConfig(config);
+                const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL;
+
+                if (!substackUrl) {
+                    return new Response(JSON.stringify([]), { headers: corsHeaders });
+                }
+
+                const data = await getCachedRSSData(substackUrl);
+                const total = data.posts.length;
+                const paginatedPosts = data.posts.slice(offset, offset + limit);
+
+                return new Response(JSON.stringify({
+                    posts: paginatedPosts,
+                    total: total,
+                    offset: offset,
+                    limit: limit,
+                    hasMore: (offset + limit) < total
+                }), { headers: corsHeaders });
+            } catch (e) {
+                console.error("Posts API Error:", e);
+                return new Response(JSON.stringify({ posts: [], total: 0, hasMore: false }), { headers: corsHeaders });
+            }
         }
         if (path === "/api/videos") {
-            const siteConfig = await fetchSiteConfig(config);
-            const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL || "";
-            const videos = await getCachedYoutubeData(youtubeUrl);
-            return new Response(JSON.stringify(videos), { status: 200, headers: corsHeaders });
+            try {
+                const url = new URL(req.url);
+                const offset = parseInt(url.searchParams.get('offset') || '0');
+                const limit = parseInt(url.searchParams.get('limit') || '6');
+
+                const siteConfig = await fetchSiteConfig(config);
+                const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL;
+
+                if (!youtubeUrl) {
+                    return new Response(JSON.stringify({ videos: [], total: 0, hasMore: false }), { headers: corsHeaders });
+                }
+
+                const videos = await getCachedYoutubeData(youtubeUrl);
+                const total = videos.length;
+                const paginatedVideos = videos.slice(offset, offset + limit);
+
+                return new Response(JSON.stringify({
+                    videos: paginatedVideos,
+                    total: total,
+                    offset: offset,
+                    limit: limit,
+                    hasMore: (offset + limit) < total
+                }), { headers: corsHeaders });
+            } catch (e) {
+                console.error("Videos API Error:", e);
+                return new Response(JSON.stringify({ videos: [], total: 0, hasMore: false }), { headers: corsHeaders });
+            }
         }
         if (path === "/api/podcasts") {
             const siteConfig = await fetchSiteConfig(config);
