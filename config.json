@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "StackPages CMS",
+    "name": "StackPages Cloud",
     "domain": "https://app.stackpages.net/",
     "description": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
     "author": "Admin",
@@ -8,7 +8,7 @@
     "favicon": ""
   },
   "seo": {
-    "title": "StackPages CMS",
+    "title": "StackPages Cloud",
     "metaDescription": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
     "keywords": "CMS, Jamstack, Headless, Blog, Substack, JS, HTMX, WSR",
     "ogImage": ""
