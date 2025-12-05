@@ -19,7 +19,7 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "default",
+    "activeTemplate": "moneyradar",
     "primaryColor": "#04b3b0"
   },
   "feeds": {
