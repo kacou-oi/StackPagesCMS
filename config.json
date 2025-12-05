@@ -20,7 +20,7 @@
   },
   "theme": {
     "activeTemplate": "default",
-    "primaryColor": "#ff7c22"
+    "primaryColor": "#FF6B35"
   },
   "feeds": {
     "substack": "https://blog.cloudflare.com/rss",
