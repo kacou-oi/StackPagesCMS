@@ -44,28 +44,20 @@
 
             <div class="hidden md:flex items-center gap-8">
                 <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
-                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">{{i18n.nav.home}}</a>
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Home</a>
                 <a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
-                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">{{i18n.nav.serverless}}</a>
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Serverless
+                    Functions</a>
                 <a href="/tutorials" hx-get="/tutorials" hx-target="#main-content" hx-push-url="true"
-                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">{{i18n.nav.tutorials}}</a>
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Video
+                    Tutorials</a>
                 <a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
-                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">{{i18n.nav.announcements}}</a>
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Announcements</a>
                 <a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
-                    class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">{{i18n.nav.get_started}}</a>
+                    class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">Get
+                    Started</a>
 
-                <!-- Language Switcher -->
-                <div class="relative group">
-                    <button
-                        class="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">
-                        <i class="fas fa-globe"></i> <span class="uppercase">{{lang}}</span>
-                    </button>
-                    <div
-                        class="absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100">
-                        <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">English</a>
-                        <a href="/fr/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">Français</a>
-                    </div>
-                </div>
+
             </div>
 
             <button class="md:hidden" id="mobile-menu-button"><i class="fas fa-bars text-2xl"></i></button>
@@ -79,23 +71,17 @@
                         class="fas fa-times text-2xl"></i></button>
                 <div class="mt-16 space-y-6">
                     <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
-                        class="block text-xl font-bold hover:text-orange-500">{{i18n.nav.home}}</a>
+                        class="block text-xl font-bold hover:text-orange-500">Home</a>
                     <a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
-                        class="block text-xl font-bold hover:text-orange-500">{{i18n.nav.serverless}}</a>
+                        class="block text-xl font-bold hover:text-orange-500">Serverless Functions</a>
                     <a href="/tutorials" hx-get="/tutorials" hx-target="#main-content" hx-push-url="true"
-                        class="block text-xl font-bold hover:text-orange-500">{{i18n.nav.tutorials}}</a>
+                        class="block text-xl font-bold hover:text-orange-500">Video Tutorials</a>
                     <a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
-                        class="block text-xl font-bold hover:text-orange-500">{{i18n.nav.announcements}}</a>
+                        class="block text-xl font-bold hover:text-orange-500">Announcements</a>
                     <a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
-                        class="block text-xl font-bold hover:text-orange-500">{{i18n.nav.get_started}}</a>
+                        class="block text-xl font-bold hover:text-orange-500">Get Started</a>
 
-                    <div class="pt-6 border-t border-gray-100">
-                        <p class="text-sm text-gray-500 mb-4 uppercase font-bold">Language</p>
-                        <div class="flex gap-4">
-                            <a href="/" class="text-lg font-medium hover:text-orange-500">EN</a>
-                            <a href="/fr/" class="text-lg font-medium hover:text-orange-500">FR</a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -128,25 +114,25 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">{{i18n.footer.product}}</h4>
+                    <h4 class="font-bold mb-4">Product</h4>
                     <ul class="space-y-3 text-gray-600">
                         <li><a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.nav.serverless}}</a></li>
+                                class="hover:text-orange-500 transition-colors">Serverless Functions</a></li>
                         <li><a href="/tutorials" hx-get="/tutorials" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.nav.tutorials}}</a></li>
+                                class="hover:text-orange-500 transition-colors">Video Tutorials</a></li>
                         <li><a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.nav.announcements}}</a></li>
+                                class="hover:text-orange-500 transition-colors">Announcements</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">{{i18n.footer.company}}</h4>
+                    <h4 class="font-bold mb-4">Company</h4>
                     <ul class="space-y-3 text-gray-600">
                         <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.footer.about}}</a></li>
+                                class="hover:text-orange-500 transition-colors">About</a></li>
                         <li><a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.footer.blog}}</a></li>
+                                class="hover:text-orange-500 transition-colors">Blog</a></li>
                         <li><a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-orange-500 transition-colors">{{i18n.nav.get_started}}</a></li>
+                                class="hover:text-orange-500 transition-colors">Get Started</a></li>
                     </ul>
                 </div>
             </div>
@@ -164,19 +150,20 @@
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto text-center">
                     <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-8">
-                        {{i18n.hero.title}}
+                        The <span class="text-gradient">fastest</span> way to build your website
                     </h1>
                     <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-                        {{i18n.hero.subtitle}}
+                        StackPages is a modern CMS powered by Cloudflare Workers. Deploy globally in seconds, scale
+                        infinitely, and deliver content at the edge.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
                             class="px-8 py-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
-                            {{i18n.hero.cta_primary}}
+                            Start Building
                         </a>
                         <a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
                             class="px-8 py-4 bg-white border-2 border-gray-300 text-gray-900 font-semibold rounded-md hover:border-orange-500 transition-colors">
-                            {{i18n.hero.cta_secondary}}
+                            Learn More
                         </a>
                     </div>
                     <div class="mt-16 flex items-center justify-center gap-12 text-sm text-gray-500">
@@ -197,15 +184,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                     <div>
                         <div class="text-5xl font-black text-orange-500 mb-2">300+</div>
-                        <div class="text-gray-600">{{i18n.stats.locations}}</div>
+                        <div class="text-gray-600">Edge Locations</div>
                     </div>
                     <div>
                         <div class="text-5xl font-black text-orange-500 mb-2">&lt;100ms</div>
-                        <div class="text-gray-600">{{i18n.stats.latency}}</div>
+                        <div class="text-gray-600">Response Time</div>
                     </div>
                     <div>
                         <div class="text-5xl font-black text-orange-500 mb-2">99.99%</div>
-                        <div class="text-gray-600">{{i18n.stats.uptime}}</div>
+                        <div class="text-gray-600">Uptime SLA</div>
                     </div>
                 </div>
             </div>
@@ -215,51 +202,54 @@
         <section class="py-24 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">{{i18n.features.title}}</h2>
-                    <p class="text-xl text-gray-600">{{i18n.features.subtitle}}</p>
+                    <h2 class="text-4xl font-bold mb-4">Built for modern developers</h2>
+                    <p class="text-xl text-gray-600">Everything you need to build and deploy fast</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-bolt text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.fast.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.fast.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Lightning Fast</h3>
+                        <p class="text-gray-600">Powered by Cloudflare's global network. Your site loads in
+                            milliseconds, anywhere.</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-shield-alt text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.secure.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.secure.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Secure by Default</h3>
+                        <p class="text-gray-600">No databases to hack. Content stored on GitHub, encrypted and version
+                            controlled.</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-rocket text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.deploy.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.deploy.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Easy to Deploy</h3>
+                        <p class="text-gray-600">One-click deployment to Cloudflare Workers. No DevOps required.</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-palette text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.templates.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.templates.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Beautiful Templates</h3>
+                        <p class="text-gray-600">5+ professional templates included. Switch themes without losing
+                            content.</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-code text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.opensource.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.opensource.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Open Source</h3>
+                        <p class="text-gray-600">100% open source. Customize everything. Deploy your own instance.</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-xl transition-all">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-dollar-sign text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.features.cost.title}}</h3>
-                        <p class="text-gray-600">{{i18n.features.cost.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Cost Effective</h3>
+                        <p class="text-gray-600">Free tier includes 100k requests/day. Perfect for most projects.</p>
                     </div>
                 </div>
             </div>
@@ -271,30 +261,30 @@
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">{{i18n.steps.title}}</h2>
-                    <p class="text-xl text-gray-600">{{i18n.steps.subtitle}}</p>
+                    <h2 class="text-4xl font-bold mb-4">Get started in 3 steps</h2>
+                    <p class="text-xl text-gray-600">From zero to production in minutes</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
                     <div class="text-center">
                         <div
                             class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
                             1</div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.steps.step1.title}}</h3>
-                        <p class="text-gray-600">{{i18n.steps.step1.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Fork the Repository</h3>
+                        <p class="text-gray-600">Clone StackPages to your GitHub account</p>
                     </div>
                     <div class="text-center">
                         <div
                             class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
                             2</div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.steps.step2.title}}</h3>
-                        <p class="text-gray-600">{{i18n.steps.step2.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Deploy to Workers</h3>
+                        <p class="text-gray-600">One-click deploy to Cloudflare's edge network</p>
                     </div>
                     <div class="text-center">
                         <div
                             class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
                             3</div>
-                        <h3 class="text-xl font-bold mb-3">{{i18n.steps.step3.title}}</h3>
-                        <p class="text-gray-600">{{i18n.steps.step3.desc}}</p>
+                        <h3 class="text-xl font-bold mb-3">Start Publishing</h3>
+                        <p class="text-gray-600">Create content and go live instantly</p>
                     </div>
                 </div>
             </div>
@@ -303,13 +293,13 @@
         <!-- CTA -->
         <section class="py-24 gradient-orange">
             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-4xl font-bold text-white mb-8">{{i18n.cta.title}}</h2>
+                <h2 class="text-4xl font-bold text-white mb-8">Ready to launch?</h2>
                 <p class="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-                    {{i18n.cta.subtitle}}
+                    Join thousands of developers building fast, secure, and scalable websites with StackPages.
                 </p>
                 <a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
                     class="px-10 py-5 bg-white text-orange-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-xl">
-                    {{i18n.cta.button}}
+                    Get Started Now
                 </a>
             </div>
         </section>
@@ -318,12 +308,12 @@
     <template id="tpl-annoucements">
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold text-center mb-16">{{i18n.announcements.title}}</h2>
+                <h2 class="text-4xl font-bold text-center mb-16">Announcements</h2>
                 <div id="publications-container" class="space-y-6 max-w-5xl mx-auto">{{items}}</div>
                 <div id="blog-load-more" class="text-center mt-12 mb-20">
                     <button onclick="loadMoreBlogs()"
                         class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                        {{i18n.announcements.load_more}}
+                        Load More Articles
                     </button>
                 </div>
             </div>
@@ -349,12 +339,12 @@
     <template id="tpl-tutorials">
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold text-center mb-16">{{i18n.tutorials.title}}</h2>
+                <h2 class="text-4xl font-bold text-center mb-16">Video Tutorials</h2>
                 <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">{{items}}</div>
                 <div id="video-load-more" class="text-center mt-12 mb-20">
                     <button onclick="loadMoreVideos()"
                         class="px-8 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                        {{i18n.tutorials.load_more}}
+                        Load More Videos
                     </button>
                 </div>
             </div>
@@ -430,8 +420,8 @@
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">{{i18n.get_started.title}}</h2>
-                    <p class="text-xl text-gray-600">{{i18n.get_started.subtitle}}</p>
+                    <h2 class="text-4xl font-bold mb-4">Choose your deployment</h2>
+                    <p class="text-xl text-gray-600">Start building with StackPages today</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     <!-- Self Git Hosted -->
@@ -439,26 +429,26 @@
                         class="bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-orange-500 transition-all group relative overflow-hidden">
                         <div
                             class="absolute top-0 right-0 bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                            {{i18n.get_started.opensource}}</div>
+                            OPEN SOURCE</div>
                         <div
                             class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-700 text-3xl mb-6 group-hover:bg-orange-100 group-hover:text-orange-500 transition-colors">
                             <i class="fab fa-github"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">{{i18n.get_started.self_hosted.title}}</h3>
-                        <p class="text-orange-500 font-medium mb-6">{{i18n.get_started.self_hosted.subtitle}}</p>
+                        <h3 class="text-2xl font-bold mb-2">Self Git Hosted</h3>
+                        <p class="text-orange-500 font-medium mb-6">With free developers API</p>
                         <ul class="space-y-3 text-gray-600 mb-8">
                             <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i>
-                                {{i18n.get_started.self_hosted.feature1}}</li>
+                                Full Source Code Access</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i>
-                                {{i18n.get_started.self_hosted.feature2}}</li>
+                                Host on your own Cloudflare</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i>
-                                {{i18n.get_started.self_hosted.feature3}}</li>
+                                Unlimited Customization</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i>
-                                {{i18n.get_started.self_hosted.feature4}}</li>
+                                Community Support</li>
                         </ul>
                         <a href="https://github.com/stackpages/stackpages" target="_blank"
                             class="block w-full py-4 bg-gray-900 text-white text-center font-bold rounded-lg hover:bg-gray-800 transition-colors">
-                            {{i18n.get_started.self_hosted.cta}}
+                            Fork on GitHub
                         </a>
                     </div>
 
@@ -466,26 +456,26 @@
                     <div class="bg-white p-8 rounded-2xl border-2 border-orange-500 shadow-xl relative overflow-hidden">
                         <div
                             class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                            {{i18n.get_started.recommended}}</div>
+                            RECOMMENDED</div>
                         <div
                             class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500 text-3xl mb-6">
                             <i class="fas fa-rocket"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">{{i18n.get_started.managed.title}}</h3>
-                        <p class="text-orange-500 font-medium mb-6">{{i18n.get_started.managed.subtitle}}</p>
+                        <h3 class="text-2xl font-bold mb-2">Managed Deployment</h3>
+                        <p class="text-orange-500 font-medium mb-6">With advanced options</p>
                         <ul class="space-y-3 text-gray-600 mb-8">
                             <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i>
-                                {{i18n.get_started.managed.feature1}}</li>
+                                One-Click Deployment</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i>
-                                {{i18n.get_started.managed.feature2}}</li>
+                                Automatic Updates</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i>
-                                {{i18n.get_started.managed.feature3}}</li>
+                                Premium Templates</li>
                             <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i>
-                                {{i18n.get_started.managed.feature4}}</li>
+                                Priority Support</li>
                         </ul>
                         <button onclick="document.getElementById('contact-modal').classList.remove('hidden')"
                             class="block w-full py-4 bg-orange-500 text-white text-center font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
-                            {{i18n.get_started.managed.cta}}
+                            Start Free Trial
                         </button>
                     </div>
                 </div>
@@ -504,28 +494,28 @@
                         <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-envelope text-orange-500 text-xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">{{i18n.contact.title}}</h3>
-                        <p class="text-gray-600">{{i18n.contact.subtitle}}</p>
+                        <h3 class="text-2xl font-bold mb-2">Contact Sales</h3>
+                        <p class="text-gray-600">Get in touch with our team</p>
                     </div>
                     <form class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{i18n.contact.name}}</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                             <input type="text"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{i18n.contact.email}}</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                             <input type="email"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{i18n.contact.message}}</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
                             <textarea rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"></textarea>
                         </div>
                         <button type="submit"
                             class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
-                            {{i18n.contact.submit}}
+                            Send Message
                         </button>
                     </form>
                 </div>
@@ -536,8 +526,9 @@
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">{{i18n.serverless.title}}</h2>
-                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">{{i18n.serverless.subtitle}}</p>
+                    <h2 class="text-4xl font-bold mb-4">Serverless Architecture</h2>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">How StackPages leverages Cloudflare Workers to
+                        deliver content instantly.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -545,36 +536,45 @@
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-globe text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">{{i18n.serverless.edge.title}}</h3>
+                        <h3 class="text-2xl font-bold mb-4">Edge Rendering</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            {{i18n.serverless.edge.desc}}
+                            Unlike traditional servers, our Worker runs on Cloudflare's global network. Every request is
+                            handled by the data center closest to the user, ensuring near-zero latency. HTML is
+                            generated dynamically at the edge, combining static templates with dynamic content.
                         </p>
                     </div>
                     <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-rss text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">{{i18n.serverless.feed.title}}</h3>
+                        <h3 class="text-2xl font-bold mb-4">Universal Feed Parser</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            {{i18n.serverless.feed.desc}}
+                            The Worker acts as a universal adapter. It fetches RSS feeds from Substack, YouTube, and
+                            Podcast hosts, parses the XML, and transforms it into a unified JSON structure. This allows
+                            you to use any content source without changing your frontend code.
                         </p>
                     </div>
                     <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-bolt text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">{{i18n.serverless.htmx.title}}</h3>
+                        <h3 class="text-2xl font-bold mb-4">HTMX Native</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            {{i18n.serverless.htmx.desc}}
+                            The backend is aware of HTMX. When it detects an `HX-Request` header, it returns only the
+                            necessary HTML fragment (like a card or a list) instead of the full page. This creates a
+                            Single Page Application (SPA) feel without the complexity of client-side frameworks.
                         </p>
                     </div>
                     <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
                             <i class="fas fa-database text-2xl text-orange-500"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">{{i18n.serverless.cache.title}}</h3>
+                        <h3 class="text-2xl font-bold mb-4">Smart Caching</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            {{i18n.serverless.cache.desc}}
+                            To minimize latency and avoid hitting rate limits on external APIs, the Worker implements a
+                            smart caching strategy. Parsed feed data is cached using the Cache API and KV storage,
+                            ensuring that your site remains fast and available even if the source feeds are slow or
+                            down.
                         </p>
                     </div>
                 </div>
@@ -584,7 +584,7 @@
                         class="absolute top-0 right-0 w-64 h-64 bg-orange-500 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2">
                     </div>
                     <div class="relative z-10">
-                        <h2 class="text-3xl font-bold mb-8">{{i18n.serverless.code.title}}</h2>
+                        <h2 class="text-3xl font-bold mb-8">Worker Logic Snippet</h2>
                         <pre class="bg-gray-800 p-6 rounded-lg overflow-x-auto text-sm font-mono text-gray-300"><code>// Example of Edge Routing Logic
 export default {
   async fetch(req, env) {
