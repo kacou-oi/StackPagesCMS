@@ -165,6 +165,7 @@ function fetchAndParseYoutubeRSS(xml) {
         if (videoId) {
             items.push({
                 id: videoId,
+                slug: videoId, // Use videoId as slug for routing
                 title,
                 published,
                 thumbnail,
