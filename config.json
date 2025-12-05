@@ -14,9 +14,9 @@
     "ogImage": ""
   },
   "social": {
-    "twitter": "",
-    "linkedin": "",
-    "github": ""
+    "twitter": "#",
+    "linkedin": "#",
+    "github": "#"
   },
   "theme": {
     "activeTemplate": "default",
