@@ -464,7 +464,7 @@ function generateBioContent(fullTemplate) {
     return bioTpl;
 }
 
-function generateVideoDetailContent(fullTemplate, video) {
+function generateVideoDetailContent(fullTemplate, video, currentUrl = '') {
     const detailTpl = extractTemplate(fullTemplate, 'tpl-video-detail');
 
     if (!detailTpl) return "<p>Template 'tpl-video-detail' not found.</p>";
@@ -487,11 +487,12 @@ function generateVideoDetailContent(fullTemplate, video) {
         description: video.description || 'Aucune description disponible.',
         embedUrl: embedUrl,
         link: video.link,
-        slug: video.slug
+        slug: video.slug,
+        currentUrl: currentUrl
     });
 }
 
-function generatePostContent(fullTemplate, post) {
+function generatePostContent(fullTemplate, post, currentUrl = '') {
     const tpl = extractTemplate(fullTemplate, 'tpl-post-detail');
     if (!tpl) return "<p>Template 'tpl-post-detail' not found.</p>";
 
@@ -502,7 +503,8 @@ function generatePostContent(fullTemplate, post) {
         author: post.author || 'Inconnu',
         date: postDate,
         image: post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture',
-        content: post.content
+        content: post.content,
+        currentUrl: currentUrl
     });
 }
 
@@ -902,7 +904,7 @@ export default {
             const post = data.posts.find(p => p.slug === slug);
 
             if (post) {
-                const content = generatePostContent(template, post);
+                const content = generatePostContent(template, post, req.url);
                 const metadata = {
                     title: `${post.title} - ${siteName}`,
                     description: post.description || siteDescription,
@@ -922,7 +924,7 @@ export default {
             const video = videos.find(v => v.slug === slug);
 
             if (video) {
-                const content = generateVideoDetailContent(template, video);
+                const content = generateVideoDetailContent(template, video, req.url);
                 const metadata = {
                     title: `${video.title} - ${siteName}`,
                     description: video.description || siteDescription,
