@@ -441,7 +441,7 @@
                                 } else {
                                     const btn = event.target;
                                     const currentOffset = parseInt(new URL(btn.getAttribute('hx-get'), window.location.href).searchParams.get('offset'));
-                                    btn.setAttribute('hx-get', '/api/posts?offset=' + (currentOffset + 6) + '&limit=6');
+                                    btn.setAttribute('hx-get', '/api/posts?offset=' + (currentOffset + 6) + '&amp;limit=6');
                                 }
                                 
                                 // Render posts
@@ -674,7 +674,7 @@
                                 } else {
                                     const btn = event.target;
                                     const currentOffset = parseInt(new URL(btn.getAttribute('hx-get'), window.location.href).searchParams.get('offset'));
-                                    btn.setAttribute('hx-get', '/api/videos?offset=' + (currentOffset + 6) + '&limit=6');
+                                    btn.setAttribute('hx-get', '/api/videos?offset=' + (currentOffset + 6) + '&amp;limit=6');
                                 }
                                 
                                 // Render videos
