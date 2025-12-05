@@ -242,9 +242,10 @@
                             </div>
                             <script>
                                 // Load latest video and extract embed
-                                fetch('/api/videos')
+                                fetch('/api/videos?offset=0&limit=1')
                                     .then(r => r.json())
-                                    .then(videos => {
+                                    .then(data => {
+                                        const videos = data.videos || data; // Handle both old and new format
                                         if (videos && videos.length > 0) {
                                             const video = videos[0];
                                             const videoId = video.link.split('v=')[1]?.split('&')[0];
@@ -394,7 +395,7 @@
                     </p>
                 </div>
 
-                <div hx-get="/publications" hx-trigger="load" hx-select="#publications-container > a:nth-child(-n+3)"
+                <div hx-get="/publications" hx-trigger="load" hx-select="#publications-container > *:nth-child(-n+3)"
                     hx-swap="innerHTML" id="latest-articles-container"
                     class="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[300px]">
                     <div class="col-span-3 flex items-center justify-center text-gray-500">
@@ -454,7 +455,7 @@
                                 container.insertAdjacentHTML('beforeend', card);
                             });
                         "
-                        class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg">
+                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
                         <i class="fas fa-plus-circle mr-2"></i> Charger plus d'analyses
                     </button>
                 </div>
@@ -675,7 +676,7 @@
                                 container.insertAdjacentHTML('beforeend', card);
                             });
                         "
-                        class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg">
+                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
                         <i class="fas fa-plus-circle mr-2"></i> Charger plus de vidéos
                     </button>
                 </div>

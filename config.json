@@ -25,6 +25,6 @@
   "feeds": {
     "substack": "https://moneyradar.substack.com/feed",
     "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCXy8Z8pIqRRGD4ZUCzZPiug",
-    "podcast": ""
+    "podcast": "https://fetchrss.com/feed/1vRMBK0ix4l01vRMAUDEY9UA.rss"
   }
 }
