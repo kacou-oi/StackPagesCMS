@@ -1,14 +1,14 @@
 {
   "site": {
-    "name": "PetStack",
-    "domain": "PetStack.com",
+    "name": "https://moneyradar.substack.com/",
+    "domain": "",
     "description": "",
-    "author": "Tytty",
+    "author": "Radar",
     "logo": "",
     "favicon": ""
   },
   "seo": {
-    "title": "PetStack",
+    "title": "Money Radar",
     "metaDescription": "Blog by Titty",
     "keywords": "PetStack, Titty",
     "ogImage": ""
@@ -19,12 +19,12 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "pinkoctober",
-    "primaryColor": "#ff9500"
+    "activeTemplate": "moneyradar",
+    "primaryColor": "#04b3b0"
   },
   "feeds": {
     "substack": "https://petstack.substack.com/feed",
-    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCWaDY2wHQSNoXXTvCr-aqUg",
+    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCXy8Z8pIqRRGD4ZUCzZPiug",
     "podcast": ""
   }
 }
