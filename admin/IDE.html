@@ -359,7 +359,9 @@
                     formatOnType: true,
                     suggest: {
                         snippetsPreventQuickSuggestions: false
-                    }
+                    },
+                    // Increase limit for long lines (e.g. base64)
+                    maxTokenizationLineLength: 20000
                 });
 
                 // Make globally accessible
@@ -592,7 +594,8 @@ ${htmlContent}
                     "3. Do NOT include explanations or comments outside the code\n" +
                     "4. The code should be complete body content or a full HTML page if requested\n" +
                     "5. Use modern Tailwind CSS utility classes for styling\n" +
-                    "6. Always implement loading states and error handling for API calls\n\n" +
+                    "6. Always implement loading states and error handling for API calls\n" +
+                    "7. CRITICAL: NEVER generate base64 data URIs for images. ALWAYS use external URLs (e.g., https://placehold.co/600x400 or real URLs).\n\n" +
 
                     "THEME CREATION CONTEXT:\n" +
                     "If the user asks to create a THEME, you must generate a FULL HTML FILE (<!DOCTYPE html>...).\n" +
