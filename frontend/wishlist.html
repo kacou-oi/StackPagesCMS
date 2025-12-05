@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WishList - L'Art d'Offrir, Réinventé</title>
+    <meta name="description" content="Agence de cadeaux personnalisés et curation d'objets d'exception.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B08D1E',
+                        },
+                        bordeaux: '#58181F',
+                        sapin: '#0F3B2E',
+                        cream: '#F9F7F2',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F9F7F2;
+            color: #1a202c;
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(to right, #D4AF37, #F3E5AB, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased">
+
+    <!-- Header Fixe -->
+    <header
+        class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gold-400/20 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="flex items-center gap-2 group">
+                        <i
+                            class="fas fa-gift text-3xl text-gold-500 group-hover:rotate-12 transition-transform duration-500"></i>
+                        <span class="font-serif text-2xl font-bold text-gray-900 tracking-tight">Wish<span
+                                class="text-gold-500">List</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Accueil</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Nos Sélections</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Vidéos</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-600 hover:text-gold-600 font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden md:flex">
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="px-6 py-2 bg-bordeaux hover:bg-red-900 text-white font-medium rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        Créer ma liste
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-gold-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area (HTMX Target) -->
+    <main id="main-content" class="pt-20 min-h-screen">
+
+        <!-- Hero Section -->
+        <section class="relative h-[80vh] flex items-center justify-center overflow-hidden">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2874&auto=format&fit=crop"
+                    alt="Cadeaux élégants" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-cream"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center px-4 max-w-4xl mx-auto" data-aos="fade-up">
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur text-white text-sm font-medium tracking-wider mb-6 border border-white/30">
+                    AGENCE DE CURATION
+                </span>
+                <h1 class="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                    L'Art d'Offrir, <br /><span class="italic text-gold-400">Réinventé</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                    Nous dénichons pour vous des objets rares et des expériences inoubliables.
+                    Transformez chaque occasion en un souvenir éternel.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-full transition-all shadow-lg hover:shadow-gold-500/30 transform hover:-translate-y-1">
+                        Découvrir nos trouvailles
+                    </a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/50 text-white font-semibold rounded-full transition-all hover:shadow-lg">
+                        Prendre rendez-vous
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Expertise</h2>
+                    <div class="w-24 h-1 bg-gold-500 mx-auto rounded-full"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <!-- Feature 1 -->
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                            <i class="fas fa-gem text-3xl text-gold-500"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Curation Rare</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Accès exclusif à des artisans d'art et des marques confidentielles pour des cadeaux uniques.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                            <i class="fas fa-wand-magic-sparkles text-3xl text-gold-500"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Personnalisation</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Chaque objet est adapté à l'histoire que vous souhaitez raconter. Gravure, packaging,
+                            message.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                            <i class="fas fa-shipping-fast text-3xl text-gold-500"></i>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Service Conciergerie</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            De la sélection à la livraison en mains propres, nous gérons chaque détail avec soin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section (Dynamic) -->
+        <section class="py-24 bg-cream">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">Nos Dernières
+                            Trouvailles</h2>
+                        <p class="text-gray-600">Inspirations et tendances du moment</p>
+                    </div>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="hidden md:flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
+                        Voir tout <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Container for Dynamic Posts -->
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Loading State -->
+                    <div class="col-span-1 md:col-span-3 flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500"></div>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center md:hidden">
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="inline-flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
+                        Voir tout <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Section (Dynamic) -->
+        <section class="py-24 bg-sapin text-white overflow-hidden relative">
+            <!-- Decorative Pattern -->
+            <div class="absolute top-0 right-0 opacity-5 pointer-events-none">
+                <i class="fas fa-gift text-[400px]"></i>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-4">Tests & Démonstrations</h2>
+                    <p class="text-gray-300 max-w-2xl mx-auto">
+                        Découvrez nos objets en action. Nous testons chaque produit rigoureusement pour garantir l'effet
+                        "Wow".
+                    </p>
+                </div>
+
+                <!-- Container for Dynamic Videos -->
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Loading State -->
+                    <div class="col-span-full flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="py-20 bg-white border-t border-gray-100">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <i class="far fa-envelope text-4xl text-gold-500 mb-6"></i>
+                <h2 class="font-serif text-3xl font-bold text-gray-900 mb-4">Rejoignez le Club Privé</h2>
+                <p class="text-gray-600 mb-8">
+                    Recevez nos sélections exclusives et nos invitations aux ventes privées.
+                </p>
+                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input type="email" placeholder="Votre adresse email"
+                        class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
+                    <button type="button"
+                        class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-full transition shadow-lg">
+                        S'inscrire
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="fas fa-gift text-2xl text-gold-500"></i>
+                        <span class="font-serif text-xl font-bold">Wish<span class="text-gold-500">List</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        L'agence de curation qui transforme l'art d'offrir en une expérience inoubliable.
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-gold-500">Explorer</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition">Accueil</a></li>
+                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition">Nos Sélections</a></li>
+                        <li><a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition">Vidéos</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-gold-500">Légal</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Mentions Légales</a></li>
+                        <li><a href="#" class="hover:text-white transition">Politique de Confidentialité</a></li>
+                        <li><a href="#" class="hover:text-white transition">CGV</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-gold-500">Suivez-nous</h4>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
+                            <i class="fab fa-pinterest-p"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+                &copy; 2024 WishList Agency. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dynamic Content Loader Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            loadVideos();
+        });
+
+        async function loadPosts() {
+            const container = document.getElementById('publications-container');
+            if (!container) return;
+
+            try {
+                const response = await fetch(window.location.origin + '/api/posts');
+                if (!response.ok) throw new Error('Erreur chargement articles');
+
+                const data = await response.json();
+                const posts = Array.isArray(data) ? data : (data.posts || []);
+
+                if (posts.length === 0) {
+                    container.innerHTML = '<p class="col-span-full text-center text-gray-500">Aucune sélection pour le moment.</p>';
+                    return;
+                }
+
+                container.innerHTML = posts.slice(0, 3).map(post => `
+                    <article class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col h-full">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="${post.image || 'https://placehold.co/600x400/F9F7F2/D4AF37?text=WishList'}" 
+                                 alt="${post.title}" 
+                                 class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="text-xs font-bold text-gold-600 mb-2 uppercase tracking-wider">Sélection</div>
+                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gold-600 transition-colors">
+                                <a href="${post.link}" hx-get="${post.link}" hx-target="#main-content" hx-push-url="true">
+                                    ${post.title}
+                                </a>
+                            </h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+                                ${post.description || 'Découvrez notre dernière trouvaille...'}
+                            </p>
+                            <a href="${post.link}" hx-get="${post.link}" hx-target="#main-content" hx-push-url="true" 
+                               class="inline-flex items-center text-sm font-semibold text-gray-900 hover:text-gold-600 transition group/link">
+                                Lire l'article 
+                                <i class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                    </article>
+                `).join('');
+
+                // Re-process HTMX for new content
+                if (window.htmx) htmx.process(container);
+
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                container.innerHTML = '<p class="col-span-full text-center text-red-500">Impossible de charger les sélections.</p>';
+            }
+        }
+
+        async function loadVideos() {
+            const container = document.getElementById('videos-container');
+            if (!container) return;
+
+            try {
+                const response = await fetch(window.location.origin + '/api/videos');
+                if (!response.ok) throw new Error('Erreur chargement vidéos');
+
+                const data = await response.json();
+                const videos = Array.isArray(data) ? data : (data.videos || []);
+
+                if (videos.length === 0) {
+                    container.innerHTML = '<p class="col-span-full text-center text-white/50">Aucune vidéo disponible.</p>';
+                    return;
+                }
+
+                container.innerHTML = videos.slice(0, 3).map(video => `
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors group">
+                        <div class="relative aspect-video">
+                            <img src="${video.thumbnail || 'https://placehold.co/600x400/0F3B2E/FFFFFF?text=Video'}" 
+                                 alt="${video.title}" 
+                                 class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                            <a href="${video.link}" target="_blank" class="absolute inset-0 flex items-center justify-center group/play">
+                                <div class="w-14 h-14 bg-gold-500/90 rounded-full flex items-center justify-center shadow-lg transform group-hover/play:scale-110 transition-transform">
+                                    <i class="fas fa-play text-white ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-serif text-lg font-bold text-white mb-2 line-clamp-2">
+                                ${video.title}
+                            </h3>
+                            <p class="text-gray-300 text-xs">
+                                <i class="far fa-calendar-alt mr-1"></i> ${new Date(video.published || Date.now()).toLocaleDateString('fr-FR')}
+                            </p>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                container.innerHTML = '<p class="col-span-full text-center text-red-300">Impossible de charger les vidéos.</p>';
+            }
+        }
+    </script>
+</body>
+
+</html>
