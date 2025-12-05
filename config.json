@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "Money Radar",
+    "name": "PetStack",
     "domain": "",
     "description": "",
     "author": "",
@@ -20,11 +20,11 @@
   },
   "theme": {
     "activeTemplate": "petfamily",
-    "primaryColor": "#00D9FF"
+    "primaryColor": "#ff9500"
   },
   "feeds": {
-    "substack": "https://moneyradar.substack.com/feed",
-    "youtube": "",
+    "substack": "https://petstack.substack.com/feed",
+    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCWaDY2wHQSNoXXTvCr-aqUg",
     "podcast": ""
   }
 }
