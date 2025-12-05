@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WishList - L'Art d'Offrir, Réinventé</title>
+    <meta name="description" content="WishList, votre agence de curation de cadeaux personnalisés pour toutes les occasions. Découvrez l'art d'offrir avec élégance et distinction.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQGfggCffhKFHDRQSYtKwHXngM2ArMpzCoMZTQwRQo6YikAeUYgANkFaDY" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfaf8; /* Off-white */
+            color: #333;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+        <div class="flex items-center">
+            <h1 class="text-3xl font-bold text-red-800 tracking-tight">
+                Wish<span class="text-[#D4AF37]">List</span>
+            </h1>
+        </div>
+        <nav>
+            <ul class="flex space-x-8">
+                <li><a href="/" class="text-lg text-gray-700 hover:text-[#D4AF37] transition-colors font-medium" hx-get="/" hx-target="#main-content" hx-push-url="true">Accueil</a></li>
+                <li><a href="/publications" class="text-lg text-gray-700 hover:text-[#D4AF37] transition-colors font-medium" hx-get="/publications" hx-target="#main-content" hx-push-url="true">Nos Sélections</a></li>
+                <li><a href="/videos" class="text-lg text-gray-700 hover:text-[#D4AF37] transition-colors font-medium" hx-get="/videos" hx-target="#main-content" hx-push-url="true">Vidéos</a></li>
+                <li><a href="/contact" class="text-lg text-gray-700 hover:text-[#D4AF37] transition-colors font-medium" hx-get="/contact" hx-target="#main-content" hx-push-url="true">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow">
+        <!-- Hero Section (Initial Home Page Content) -->
+        <section class="relative h-[60vh] bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x800/2f2f2f/fcfaf8?text=WishList+Homepage');">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <div class="relative text-center p-8 max-w-3xl">
+                <h2 class="text-6xl font-extrabold mb-4 leading-tight">L'Art d'Offrir, Réinventé</h2>
+                <p class="text-xl mb-8 font-light italic">Découvrez des cadeaux uniques, sélectionnés avec passion et élégance.</p>
+                <a href="/contact" class="inline-block bg-[#D4AF37] text-white py-4 px-10 rounded-full text-lg font-semibold hover:bg-opacity-90 transition-transform duration-300 transform hover:scale-105 shadow-lg" hx-get="/contact" hx-target="#main-content" hx-push-url="true">Créer ma liste</a>
+            </div>
+        </section>
+
+        <!-- Section: Nos Dernières Trouvailles (Blog) -->
+        <section class="py-16 bg-gradient-to-br from-stone-50 to-stone-100">
+            <div class="container mx-auto px-6 max-w-6xl">
+                <h2 class="text-5xl font-bold text-center mb-12 text-gray-800">Nos Dernières Trouvailles</h2>
+                <div id="publications-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="col-span-full text-center text-gray-600 animate-pulse">Chargement de nos sélections...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Tests & Démonstrations (Videos) -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6 max-w-6xl">
+                <h2 class="text-5xl font-bold text-center mb-12 text-gray-800">Tests & Démonstrations</h2>
+                <div id="videos-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="col-span-full text-center text-gray-600 animate-pulse">Chargement des vidéos...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12 px-8">
+        <div class="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-2xl font-bold mb-4 text-[#D4AF37]">WishList</h3>
+                <p class="text-gray-400">L'art de dénicher le cadeau parfait, sublimé par une curation experte.</p>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-white">Liens Rapides</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-[#D4AF37] transition-colors" hx-get="/" hx-target="#main-content" hx-push-url="true">Accueil</a></li>
+                    <li><a href="/publications" class="hover:text-[#D4AF37] transition-colors" hx-get="/publications" hx-target="#main-content" hx-push-url="true">Nos Sélections</a></li>
+                    <li><a href="/videos" class="hover:text-[#D4AF37] transition-colors" hx-get="/videos" hx-target="#main-content" hx-push-url="true">Vidéos</a></li>
+                    <li><a href="/contact" class="hover:text-[#D4AF37] transition-colors" hx-get="/contact" hx-target="#main-content" hx-push-url="true">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-white">Newsletter</h4>
+                <p class="text-gray-400 mb-4">Recevez nos dernières trouvailles directement dans votre boîte mail.</p>
+                <form class="flex">
+                    <input type="email" placeholder="Votre email" class="p-3 rounded-l-md border-none focus:outline-none focus:ring-2 focus:ring-[#D4AF37] text-gray-800 flex-grow">
+                    <button type="submit" class="bg-[#D4AF37] text-white p-3 rounded-r-md hover:bg-opacity-90 transition-colors">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-12 text-gray-500 border-t border-gray-700 pt-8">
+            <p>&copy; 2023 WishList. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Function to load publications
+        async function loadPublications() {
+            const container = document.getElementById('publications-container');
+            if (!container) return; // Ensure container exists
+
+            container.innerHTML = `<p class="col-span-full text-center text-gray-600 animate-pulse flex items-center justify-center space-x-2">
+                                    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Chargement de nos sélections...</span>
+                                </p>`;
+            try {
+                const response = await fetch(window.location.origin + '/api/posts');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    container.innerHTML = data.map(post => `
+                        <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
+                            <img src="${post.image || 'https://placehold.co/600x400/f0f0f0/888888?text=Image+Manquante'}" alt="${post.title}" class="w-full h-48 object-cover">
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-2xl font-semibold mb-3 text-gray-800 leading-tight">${post.title}</h3>
+                                <p class="text-gray-600 mb-4 flex-grow">${post.description ? post.description.substring(0, 120) + '...' : 'Pas de description.'}</p>
+                                <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="inline-block text-[#D4AF37] hover:underline font-medium text-lg self-start mt-auto">Lire la suite &rarr;</a>
+                            </div>
+                        </article>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="col-span-full text-center text-gray-600">Aucune sélection trouvée pour le moment.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching publications:', error);
+                container.innerHTML = `<p class="col-span-full text-center text-red-600">Erreur lors du chargement des sélections: ${error.message}. Veuillez réessayer plus tard.</p>`;
+            }
+        }
+
+        // Function to load videos
+        async function loadVideos() {
+            const container = document.getElementById('videos-container');
+            if (!container) return; // Ensure container exists
+
+            container.innerHTML = `<p class="col-span-full text-center text-gray-600 animate-pulse flex items-center justify-center space-x-2">
+                                    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Chargement des vidéos...</span>
+                                </p>`;
+            try {
+                const response = await fetch(window.location.origin + '/api/videos');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    container.innerHTML = data.map(video => {
+                        let embedLink = video.link;
+                        if (video.link && video.link.includes('youtube.com/watch?v=')) {
+                            const videoId = video.link.split('v=')[1].split('&')[0];
+                            embedLink = `https://www.youtube.com/embed/${videoId}`;
+                        } else if (video.link && video.link.includes('youtu.be/')) {
+                            const videoId = video.link.split('youtu.be/')[1].split('?')[0];
+                            embedLink = `https://www.youtube.com/embed/${videoId}`;
+                        }
+                        return `
+                            <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
+                                <div class="relative w-full h-48 bg-gray-200">
+                                    ${embedLink ? `<iframe class="w-full h-full" src="${embedLink}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : `<img src="${video.thumbnail || 'https://placehold.co/600x400/f0f0f0/888888?text=Video+Manquante'}" alt="${video.title}" class="w-full h-full object-cover">`}
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow">
+                                    <h3 class="text-2xl font-semibold mb-3 text-gray-800 leading-tight">${video.title}</h3>
+                                    <p class="text-gray-600 mb-4 flex-grow">${video.description ? video.description.substring(0, 120) + '...' : 'Pas de description.'}</p>
+                                    ${video.link ? `<a href="${video.link}" target="_blank" rel="noopener noreferrer" class="inline-block text-[#D4AF37] hover:underline font-medium text-lg self-start mt-auto">Voir la vidéo &rarr;</a>` : ''}
+                                </div>
+                            </article>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<p class="col-span-full text-center text-gray-600">Aucune vidéo trouvée pour le moment.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+                container.innerHTML = `<p class="col-span-full text-center text-red-600">Erreur lors du chargement des vidéos: ${error.message}. Veuillez réessayer plus tard.</p>`;
+            }
+        }
+
+        // Initial load for dynamic content when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPublications();
+            loadVideos();
+        });
+
+        // Re-run scripts if HTMX swaps content in #main-content
+        document.body.addEventListener('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'main-content') {
+                const mainContent = document.getElementById('main-content');
+                if (mainContent.querySelector('#publications-container')) {
+                    loadPublications();
+                }
+                if (mainContent.querySelector('#videos-container')) {
+                    loadVideos();
+                }
+                // Here you would add logic for other sections if they become part of main-content swaps
+                // For example, if a /contact route also needs JS for a dynamic form, it would be handled here.
+            }
+        });
+    </script>
+</body>
+</html>
