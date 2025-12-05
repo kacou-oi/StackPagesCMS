@@ -238,9 +238,9 @@
                                 <h3 class="text-xl font-bold text-white mb-2">📹 Dernière Analyse Vidéo</h3>
                                 <p class="text-gray-400 text-sm">Restez informé avec nos analyses de marché</p>
                             </div>
-                            <div hx-get="/api/latest-video" hx-trigger="load" hx-swap="innerHTML"
-                                class="min-h-[200px] flex items-center justify-center">
-                                <div class="text-gray-500">
+                            <div hx-get="/videos" hx-trigger="load" hx-select="#videos-container > a:first-child"
+                                hx-swap="innerHTML" class="min-h-[200px] flex items-center justify-center">
+                                <div class="text-center text-gray-500">
                                     <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                                     <p class="text-sm">Chargement...</p>
                                 </div>
@@ -371,8 +371,9 @@
                     </p>
                 </div>
 
-                <div hx-get="/api/latest-articles?limit=3" hx-trigger="load" hx-swap="innerHTML"
-                    id="latest-articles-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[300px]">
+                <div hx-get="/publications" hx-trigger="load" hx-select="#publications-container > a:nth-child(-n+3)"
+                    hx-swap="innerHTML" id="latest-articles-container"
+                    class="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[300px]">
                     <div class="col-span-3 flex items-center justify-center text-gray-500">
                         <i class="fas fa-spinner fa-spin text-2xl mr-3"></i>
                         <p>Chargement des dernières analyses...</p>

@@ -782,6 +782,51 @@ export default {
             return htmlResponse(injectContent(template, content, metadata));
         }
 
+        // Single Video Detail Page
+        if (path.startsWith("/video/")) {
+            const videoId = path.split("/video/")[1];
+            // Use the existing siteConfig and template variables
+            // const siteConfig = await getSiteConfig(env); // Already fetched as 'siteConfig'
+            // const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL; // Already available as 'youtubeUrl'
+
+            if (!youtubeUrl) {
+                return new Response("YouTube feed not configured", { status: 404 });
+            }
+
+            const videos = await getCachedYoutubeData(youtubeUrl); // Use existing cached function
+            const video = videos.find(v => v.id === videoId); // Assuming 'id' is the correct property for videoId
+
+            if (!video) {
+                return new Response("Video not found", { status: 404 });
+            }
+
+            // const template = await getTemplate(env); // Already fetched as 'template'
+            const detailTemplate = extractTemplate(template, 'tpl-video-detail');
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+            const content = replacePlaceholders(detailTemplate, {
+                title: video.title,
+                description: video.description || 'Aucune description disponible',
+                published: new Date(video.publishedAt).toLocaleDateString('fr-FR', { // Assuming 'publishedAt' from getCachedYoutubeData
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }),
+                embedUrl: embedUrl,
+                link: video.link,
+                slug: videoId
+            });
+
+            const metadata = {
+                title: `${video.title} - ${siteName}`,
+                description: video.description || siteDescription,
+                keywords: siteKeywords
+            };
+
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            return htmlResponse(injectContent(template, content, metadata));
+        }
+
         if (path.startsWith("/post/")) {
             const slug = path.split("/").pop();
             const data = await getCachedRSSData(substackUrl);
