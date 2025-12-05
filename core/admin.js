@@ -282,6 +282,21 @@ async function loadConfig() {
         const config = await configRes.json();
         appState.config = config;
 
+        // Update UI Elements
+        // 1. Sidebar Site Name
+        const sidebarTitle = document.querySelector('aside h1 span');
+        if (sidebarTitle) sidebarTitle.textContent = config.siteName || 'StackPages';
+
+        // 2. Header Site Link
+        const domainLink = document.getElementById('site-domain-link');
+        const headerBtn = document.getElementById('header-site-btn');
+
+        if (domainLink) domainLink.textContent = config.domain ? new URL(config.domain).hostname : 'Voir le site';
+        if (headerBtn) headerBtn.href = config.domain || '/';
+
+        // 3. Browser Title
+        document.title = `Dashboard - ${config.siteName || 'StackPages CMS'}`;
+
         // Show warning if Substack URL missing
         if (!config.substackRssUrl) {
             document.getElementById('config-warning')?.classList.remove('hidden');

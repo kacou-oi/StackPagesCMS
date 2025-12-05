@@ -563,6 +563,7 @@ export default {
             const siteConfig = await fetchSiteConfig(config);
             return new Response(JSON.stringify({
                 siteName: siteConfig?.site?.name || "StackPages CMS",
+                domain: siteConfig?.site?.domain || "",
                 substackRssUrl: siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "",
                 youtubeRssUrl: siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL || "",
                 podcastFeedUrl: siteConfig?.feeds?.podcast || env.PODCAST_FEED_URL || ""
