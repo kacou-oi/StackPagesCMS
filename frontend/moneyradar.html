@@ -431,45 +431,70 @@
                 <!-- Load More Button -->
                 <div id="load-more-posts" class="text-center mt-12">
                     <button hx-get="/api/posts?offset=6&limit=6" hx-target="#publications-container" hx-swap="none"
+                        hx-indicator="#posts-loading" hx-on::before-request="event.target.disabled = true;"
                         hx-on::after-request="
+                            event.target.disabled = false;
                             try {
                                 const response = JSON.parse(event.detail.xhr.response);
                                 console.log('Posts response:', response);
+                                console.log('Total posts:', response.total, 'Offset:', response.offset, 'Limit:', response.limit, 'Has more:', response.hasMore);
                                 
                                 if (!response.hasMore) {
-                                    document.getElementById('load-more-posts').style.display = 'none';
-                                } else {
-                                    const btn = event.target;
-                                    const currentOffset = parseInt(new URL(btn.getAttribute('hx-get'), window.location.href).searchParams.get('offset'));
-                                    btn.setAttribute('hx-get', '/api/posts?offset=' + (currentOffset + 6) + '&amp;limit=6');
-                                }
-                                
-                                // Render posts
-                                if (response.posts && response.posts.length > 0) {
-                                    const container = document.getElementById('publications-container');
-                                    response.posts.forEach(function(post) {
-                                        const cardTemplate = document.getElementById('tpl-blog-card').innerHTML;
-                                        const date = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-                                        let card = cardTemplate;
-                                        card = card.replace(/\{\{slug\}\}/g, post.slug);
-                                        card = card.replace(/\{\{image\}\}/g, post.image || 'https://via.placeholder.com/800x400?text=Article');
-                                        card = card.replace(/\{\{title\}\}/g, post.title);
-                                        card = card.replace(/\{\{description\}\}/g, post.description);
-                                        card = card.replace(/\{\{date\}\}/g, date);
-                                        container.insertAdjacentHTML('beforeend', card);
-                                    });
-                                    console.log('Added ' + response.posts.length + ' posts');
-                                } else {
-                                    console.warn('No posts in response');
-                                }
-                            } catch (e) {
-                                console.error('Error loading posts:', e);
-                            }
-                        "
-                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
-                        <i class="fas fa-plus-circle mr-2"></i> Charger plus d'analyses
-                    </button>
+                                    console.log('No more posts, showing end message');
+                                    document.getElementById('load-more-posts').innerHTML = `
+                                        <div class=\" text-center py-8\">
+                        <i class=\"fas fa-check-circle text-cyan-400 text-3xl mb-3\"></i>
+                        <p class=\"text-gray-400 text-lg font-semibold\">Vous avez tout vu !</p>
+                        <p class=\"text-gray-500 text-sm mt-2\">Toutes les analyses ont été chargées</p>
                 </div>
+                `;
+                } else {
+                const btn = event.target;
+                const currentUrl = btn.getAttribute('hx-get');
+                console.log('Current URL:', currentUrl);
+                const currentOffset = parseInt(new URL(currentUrl, window.location.href).searchParams.get('offset'));
+                const newOffset = currentOffset + 6;
+                console.log('Current offset:', currentOffset, 'New offset:', newOffset);
+                btn.setAttribute('hx-get', '/api/posts?offset=' + newOffset + '&amp;limit=6');
+                console.log('Updated URL:', btn.getAttribute('hx-get'));
+                }
+
+                // Render posts
+                if (response.posts && response.posts.length > 0) {
+                const container = document.getElementById('publications-container');
+                response.posts.forEach(function(post) {
+                const cardTemplate = document.getElementById('tpl-blog-card').innerHTML;
+                const date = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day:
+                'numeric' });
+                let card = cardTemplate;
+                card = card.replace(/\{\{slug\}\}/g, post.slug);
+                card = card.replace(/\{\{image\}\}/g, post.image || 'https://via.placeholder.com/800x400?text=Article');
+                card = card.replace(/\{\{title\}\}/g, post.title);
+                card = card.replace(/\{\{description\}\}/g, post.description);
+                card = card.replace(/\{\{date\}\}/g, date);
+                container.insertAdjacentHTML('beforeend', card);
+                });
+                console.log('Added ' + response.posts.length + ' posts');
+                } else {
+                console.warn('No posts in response');
+                }
+                } catch (e) {
+                console.error('Error loading posts:', e);
+                }
+                "
+                class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border
+                border-gray-700">
+                <i class="fas fa-plus-circle mr-2"></i> Charger plus d'analyses
+                </button>
+
+                <!-- Loading Spinner -->
+                <div id="posts-loading" class="htmx-indicator mt-4">
+                    <div class="flex items-center justify-center gap-3 text-cyan-400">
+                        <i class="fas fa-spinner fa-spin text-2xl"></i>
+                        <span class="font-semibold">Chargement en cours...</span>
+                    </div>
+                </div>
+            </div>
             </div>
         </section>
     </template>
@@ -664,45 +689,66 @@
                 <!-- Load More Button -->
                 <div id="load-more-videos" class="text-center mt-12">
                     <button hx-get="/api/videos?offset=6&limit=6" hx-target="#videos-container" hx-swap="none"
+                        hx-indicator="#videos-loading" hx-on::before-request="event.target.disabled = true;"
                         hx-on::after-request="
+                            event.target.disabled = false;
                             try {
                                 const response = JSON.parse(event.detail.xhr.response);
                                 console.log('Videos response:', response);
                                 
                                 if (!response.hasMore) {
-                                    document.getElementById('load-more-videos').style.display = 'none';
-                                } else {
-                                    const btn = event.target;
-                                    const currentOffset = parseInt(new URL(btn.getAttribute('hx-get'), window.location.href).searchParams.get('offset'));
-                                    btn.setAttribute('hx-get', '/api/videos?offset=' + (currentOffset + 6) + '&amp;limit=6');
-                                }
-                                
-                                // Render videos
-                                if (response.videos && response.videos.length > 0) {
-                                    const container = document.getElementById('videos-container');
-                                    response.videos.forEach(function(video) {
-                                        const cardTemplate = document.getElementById('tpl-video-card').innerHTML;
-                                        const date = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
-                                        let card = cardTemplate;
-                                        card = card.replace(/\{\{slug\}\}/g, video.slug);
-                                        card = card.replace(/\{\{thumbnail\}\}/g, video.thumbnail || 'https://via.placeholder.com/600x338?text=Vidéo');
-                                        card = card.replace(/\{\{title\}\}/g, video.title);
-                                        card = card.replace(/\{\{description\}\}/g, video.description || '');
-                                        card = card.replace(/\{\{published\}\}/g, date);
-                                        container.insertAdjacentHTML('beforeend', card);
-                                    });
-                                    console.log('Added ' + response.videos.length + ' videos');
-                                } else {
-                                    console.warn('No videos in response');
-                                }
-                            } catch (e) {
-                                console.error('Error loading videos:', e);
-                            }
-                        "
-                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
-                        <i class="fas fa-plus-circle mr-2"></i> Charger plus de vidéos
-                    </button>
+                                    console.log('No more videos, showing end message');
+                                    document.getElementById('load-more-videos').innerHTML = `
+                                        <div class=\" text-center py-8\">
+                        <i class=\"fas fa-check-circle text-cyan-400 text-3xl mb-3\"></i>
+                        <p class=\"text-gray-400 text-lg font-semibold\">Vous avez tout vu !</p>
+                        <p class=\"text-gray-500 text-sm mt-2\">Toutes les vidéos ont été chargées</p>
                 </div>
+                `;
+                } else {
+                const btn = event.target;
+                const currentOffset = parseInt(new URL(btn.getAttribute('hx-get'),
+                window.location.href).searchParams.get('offset'));
+                btn.setAttribute('hx-get', '/api/videos?offset=' + (currentOffset + 6) + '&amp;limit=6');
+                }
+
+                // Render videos
+                if (response.videos && response.videos.length > 0) {
+                const container = document.getElementById('videos-container');
+                response.videos.forEach(function(video) {
+                const cardTemplate = document.getElementById('tpl-video-card').innerHTML;
+                const date = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long',
+                day: 'numeric' });
+                let card = cardTemplate;
+                card = card.replace(/\{\{slug\}\}/g, video.slug);
+                card = card.replace(/\{\{thumbnail\}\}/g, video.thumbnail ||
+                'https://via.placeholder.com/600x338?text=Vidéo');
+                card = card.replace(/\{\{title\}\}/g, video.title);
+                card = card.replace(/\{\{description\}\}/g, video.description || '');
+                card = card.replace(/\{\{published\}\}/g, date);
+                container.insertAdjacentHTML('beforeend', card);
+                });
+                console.log('Added ' + response.videos.length + ' videos');
+                } else {
+                console.warn('No videos in response');
+                }
+                } catch (e) {
+                console.error('Error loading videos:', e);
+                }
+                "
+                class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border
+                border-gray-700">
+                <i class="fas fa-plus-circle mr-2"></i> Charger plus de vidéos
+                </button>
+
+                <!-- Loading Spinner -->
+                <div id="videos-loading" class="htmx-indicator mt-4">
+                    <div class="flex items-center justify-center gap-3 text-cyan-400">
+                        <i class="fas fa-spinner fa-spin text-2xl"></i>
+                        <span class="font-semibold">Chargement en cours...</span>
+                    </div>
+                </div>
+            </div>
             </div>
         </section>
     </template>
