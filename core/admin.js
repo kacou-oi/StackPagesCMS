@@ -807,7 +807,9 @@ function renderPodcasts() {
     const start = (currentPodcastPage - 1) * PODCASTS_PER_PAGE;
     const pagePodcasts = filtered.slice(start, start + PODCASTS_PER_PAGE);
 
-    tbody.innerHTML = pagePodcasts.map(podcast => `
+    tbody.innerHTML = pagePodcasts.map(podcast => {
+        const globalIndex = appState.podcasts.findIndex(p => p.link === podcast.link);
+        return `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4 font-medium text-slate-800">
                 ${podcast.title}
@@ -815,12 +817,13 @@ function renderPodcasts() {
             </td>
             <td class="px-6 py-4 text-slate-500 text-xs">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
             <td class="px-6 py-4 text-right">
-                <button onclick="openPodcastPreview('${podcast.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                <button onclick="openPodcastPreview(${globalIndex})" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
                     <i class="fas fa-play mr-1"></i> Ouvrir
                 </button>
             </td>
         </tr>
-            `).join('');
+            `;
+    }).join('');
 
     document.getElementById('podcast-pagination-info').textContent = `Page ${currentPodcastPage} sur ${totalPages} `;
     document.getElementById('prev-podcast-page-btn').disabled = currentPodcastPage === 1;
@@ -933,9 +936,13 @@ function openVideoPreview(link) {
     modal.classList.remove('hidden');
 }
 
-function openPodcastPreview(link) {
-    const podcast = appState.podcasts.find(p => p.link === link);
-    if (!podcast) return;
+function openPodcastPreview(index) {
+    const podcast = appState.podcasts[index];
+
+    if (!podcast) {
+        console.error("Podcast not found for index:", index);
+        return;
+    }
 
     document.getElementById('modal-title').textContent = podcast.title;
 
