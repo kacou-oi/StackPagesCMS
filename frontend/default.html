@@ -661,6 +661,16 @@ export default {
         if (closeMobileMenu) closeMobileMenu.addEventListener('click', toggleMenu);
         if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', toggleMenu);
 
+        // Close menu on link click
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+                mobileMenuOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+        });
+
         // Load More Logic
         let blogOffset = 6;
         const blogLimit = 6;
