@@ -378,11 +378,15 @@ function generatePublicationsContent(fullTemplate, posts) {
 
     if (!listTpl || !cardTpl) return "<p>Templates 'tpl-blog-list' or 'tpl-blog-card' not found.</p>";
 
+    // Show only first 6 posts initially
+    const initialPosts = posts.slice(0, 6);
+    const hasMore = posts.length > 6;
+
     let itemsHtml = '';
-    if (posts.length === 0) {
+    if (initialPosts.length === 0) {
         itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune publication trouvée.</p>`;
     } else {
-        posts.forEach(post => {
+        initialPosts.forEach(post => {
             const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
             itemsHtml += replacePlaceholders(cardTpl, {
                 title: post.title,
@@ -395,7 +399,14 @@ function generatePublicationsContent(fullTemplate, posts) {
         });
     }
 
-    return replacePlaceholders(listTpl, { items: itemsHtml });
+    let content = replacePlaceholders(listTpl, { items: itemsHtml });
+
+    // Hide load more button if no more items
+    if (!hasMore) {
+        content = content.replace('id="load-more-posts"', 'id="load-more-posts" style="display:none"');
+    }
+
+    return content;
 }
 
 function generateVideosContent(fullTemplate, videos) {
@@ -404,23 +415,35 @@ function generateVideosContent(fullTemplate, videos) {
 
     if (!listTpl || !cardTpl) return "<p>Templates 'tpl-video-list' or 'tpl-video-card' not found.</p>";
 
+    // Show only first 6 videos initially
+    const initialVideos = videos.slice(0, 6);
+    const hasMore = videos.length > 6;
+
     let itemsHtml = '';
-    if (videos.length === 0) {
+    if (initialVideos.length === 0) {
         itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
     } else {
-        videos.forEach(video => {
+        initialVideos.forEach(video => {
             const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
             itemsHtml += replacePlaceholders(cardTpl, {
                 title: video.title,
-                date: videoDate,
-                thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vid%C3%A9o',
+                published: videoDate,
+                description: video.description || '',
+                thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vidéo',
                 link: video.link,
                 slug: video.slug
             });
         });
     }
 
-    return replacePlaceholders(listTpl, { items: itemsHtml });
+    let content = replacePlaceholders(listTpl, { items: itemsHtml });
+
+    // Hide load more button if no more items
+    if (!hasMore) {
+        content = content.replace('id="load-more-videos"', 'id="load-more-videos" style="display:none"');
+    }
+
+    return content;
 }
 
 function generateContactContent(fullTemplate) {
