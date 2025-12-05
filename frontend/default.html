@@ -98,30 +98,35 @@
                     <p class="text-gray-600 mb-6">Modern CMS platform powered by Cloudflare Workers. Build faster, ship
                         smarter.</p>
                     <div class="flex gap-4">
-                        <a href="#"
+                        <a href="https://github.com/stackpages/stackpages" target="_blank"
                             class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
                                 class="fab fa-github"></i></a>
-                        <a href="#"
+                        <a href="https://twitter.com/stackpages" target="_blank"
                             class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
                                 class="fab fa-twitter"></i></a>
-                        <a href="#"
+                        <a href="https://youtube.com/@stackpages" target="_blank"
                             class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i
-                                class="fab fa-discord"></i></a>
+                                class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4">Product</h4>
                     <ul class="space-y-3 text-gray-600">
-                        <li><a href="#" class="hover:text-orange-500 transition-colors">Features</a></li>
-                        <li><a href="#" class="hover:text-orange-500 transition-colors">Templates</a></li>
-                        <li><a href="#" class="hover:text-orange-500 transition-colors">Documentation</a></li>
+                        <li><a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-orange-500 transition-colors">Serverless Functions</a></li>
+                        <li><a href="/tutorials" hx-get="/tutorials" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-orange-500 transition-colors">Video Tutorials</a></li>
+                        <li><a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-orange-500 transition-colors">Annoucements</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4">Company</h4>
                     <ul class="space-y-3 text-gray-600">
-                        <li><a href="#" class="hover:text-orange-500 transition-colors">About</a></li>
-                        <li><a href="#" class="hover:text-orange-500 transition-colors">Blog</a></li>
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-orange-500 transition-colors">About</a></li>
+                        <li><a href="/annoucements" hx-get="/annoucements" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-orange-500 transition-colors">Blog</a></li>
                         <li><a href="/get-started" hx-get="/get-started" hx-target="#main-content" hx-push-url="true"
                                 class="hover:text-orange-500 transition-colors">Get Started</a></li>
                     </ul>
@@ -715,6 +720,30 @@ export default {
                 if (btn) btn.innerHTML = 'Error loading videos';
             }
         }
+
+        // Active Navigation State
+        function updateActiveNav() {
+            const path = window.location.pathname;
+            const links = document.querySelectorAll('nav a');
+
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === path || (path === '/' && href === '/')) {
+                    link.classList.add('text-orange-500');
+                    link.classList.remove('text-gray-700');
+                } else {
+                    link.classList.remove('text-orange-500');
+                    link.classList.add('text-gray-700');
+                }
+            });
+        }
+
+        // Run on load
+        updateActiveNav();
+
+        // Run on HTMX navigation
+        document.body.addEventListener('htmx:afterOnLoad', updateActiveNav);
+        document.body.addEventListener('htmx:historyRestore', updateActiveNav);
     </script>
 </body>
 
