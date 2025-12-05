@@ -2,15 +2,15 @@
   "site": {
     "name": "https://moneyradar.substack.com/",
     "domain": "",
-    "description": "",
+    "description": "Des stratégies d'investissement personnalisées pour maximiser vos rendements et sécuriser votre patrimoine.",
     "author": "Radar",
     "logo": "",
     "favicon": ""
   },
   "seo": {
     "title": "Money Radar",
-    "metaDescription": "Blog by Titty",
-    "keywords": "PetStack, Titty",
+    "metaDescription": "Des stratégies d'investissement personnalisées pour maximiser vos rendements et sécuriser votre patrimoine.",
+    "keywords": "MoneyRadar, Crypto, Bourse, investissement, Finance",
     "ogImage": ""
   },
   "social": {
