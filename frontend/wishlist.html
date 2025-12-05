@@ -373,173 +373,125 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
-                <!-- Brand -->
-                <div class="col-span-1 md:col-span-1">
-                    <div class="flex items-center gap-2 mb-6">
-                        <i class="fas fa-gift text-2xl text-gold-500"></i>
-                        <span class="font-serif text-xl font-bold">Wish<span class="text-gold-500">List</span></span>
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        L'agence de curation qui transforme l'art d'offrir en une expérience inoubliable.
-                    </p>
-                </div>
-
-                <!-- Links -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6 text-gold-500">Explorer</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-white transition">Accueil</a></li>
-                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-white transition">Nos Sélections</a></li>
-                        <li><a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
-                                class="hover:text-white transition">Vidéos</a></li>
-                    </ul>
-                </div>
-
-                <!-- Legal -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6 text-gold-500">Légal</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Mentions Légales</a></li>
-                        <li><a href="#" class="hover:text-white transition">Politique de Confidentialité</a></li>
-                        <li><a href="#" class="hover:text-white transition">CGV</a></li>
-                    </ul>
-                </div>
-
-                <!-- Social -->
-                <div>
-                    <h4 class="font-bold text-lg mb-6 text-gold-500">Suivez-nous</h4>
-                    <div class="flex gap-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
-                            <i class="fab fa-pinterest-p"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gold-500 hover:text-white transition duration-300">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
+    <!-- TEMPLATE: BLOG CARD (tpl-blog-card) -->
+    <template id="tpl-blog-card">
+        <article
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col h-full">
+            <div class="relative h-56 overflow-hidden">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
             </div>
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
-                &copy; 2024 WishList Agency. Tous droits réservés.
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="text-xs font-bold text-gold-600 mb-2 uppercase tracking-wider">{{date}}</div>
+                <h3
+                    class="font-serif text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gold-600 transition-colors">
+                    <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true">
+                        {{title}}
+                    </a>
+                </h3>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+                    {{description}}
+                </p>
+                <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-sm font-semibold text-gray-900 hover:text-gold-600 transition group/link">
+                    Lire l'article
+                    <i
+                        class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </article>
+    </template>
+
+    <!-- TEMPLATE: VIDEO CARD (tpl-video-card) -->
+    <template id="tpl-video-card">
+        <div
+            class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors group">
+            <div class="relative aspect-video">
+                <img src="{{thumbnail}}" alt="{{title}}"
+                    class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <a href="{{link}}" target="_blank" class="absolute inset-0 flex items-center justify-center group/play">
+                    <div
+                        class="w-14 h-14 bg-gold-500/90 rounded-full flex items-center justify-center shadow-lg transform group-hover/play:scale-110 transition-transform">
+                        <i class="fas fa-play text-white ml-1"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="p-5">
+                <h3 class="font-serif text-lg font-bold text-white mb-2 line-clamp-2">
+                    {{title}}
+                </h3>
+                <p class="text-gray-300 text-xs">
+                    <i class="far fa-calendar-alt mr-1"></i> {{date}}
+                </p>
             </div>
         </div>
-    </footer>
+    </template>
 
-    <!-- Dynamic Content Loader Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPosts();
-            loadVideos();
-        });
-
-        async function loadPosts() {
-            const container = document.getElementById('publications-container');
-            if (!container) return;
-
-            try {
-                const response = await fetch(window.location.origin + '/api/posts');
-                if (!response.ok) throw new Error('Erreur chargement articles');
-
-                const data = await response.json();
-                const posts = Array.isArray(data) ? data : (data.posts || []);
-
-                if (posts.length === 0) {
-                    container.innerHTML = '<p class="col-span-full text-center text-gray-500">Aucune sélection pour le moment.</p>';
-                    return;
-                }
-
-                container.innerHTML = posts.slice(0, 3).map(post => `
-                    <article class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col h-full">
-                        <div class="relative h-56 overflow-hidden">
-                            <img src="${post.image || 'https://placehold.co/600x400/F9F7F2/D4AF37?text=WishList'}" 
-                                 alt="${post.title}" 
-                                 class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
-                            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
-                        </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <div class="text-xs font-bold text-gold-600 mb-2 uppercase tracking-wider">Sélection</div>
-                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gold-600 transition-colors">
-                                <a href="${post.link}" hx-get="${post.link}" hx-target="#main-content" hx-push-url="true">
-                                    ${post.title}
-                                </a>
-                            </h3>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
-                                ${post.description || 'Découvrez notre dernière trouvaille...'}
-                            </p>
-                            <a href="${post.link}" hx-get="${post.link}" hx-target="#main-content" hx-push-url="true" 
-                               class="inline-flex items-center text-sm font-semibold text-gray-900 hover:text-gold-600 transition group/link">
-                                Lire l'article 
-                                <i class="fas fa-arrow-right ml-2 transform group-hover/link:translate-x-1 transition-transform"></i>
-                            </a>
-                        </div>
-                    </article>
-                `).join('');
-
-                // Re-process HTMX for new content
-                if (window.htmx) htmx.process(container);
-
-            } catch (error) {
-                console.error('Error loading posts:', error);
-                container.innerHTML = '<p class="col-span-full text-center text-red-500">Impossible de charger les sélections.</p>';
-            }
-        }
-
-        async function loadVideos() {
-            const container = document.getElementById('videos-container');
-            if (!container) return;
-
-            try {
-                const response = await fetch(window.location.origin + '/api/videos');
-                if (!response.ok) throw new Error('Erreur chargement vidéos');
-
-                const data = await response.json();
-                const videos = Array.isArray(data) ? data : (data.videos || []);
-
-                if (videos.length === 0) {
-                    container.innerHTML = '<p class="col-span-full text-center text-white/50">Aucune vidéo disponible.</p>';
-                    return;
-                }
-
-                container.innerHTML = videos.slice(0, 3).map(video => `
-                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors group">
-                        <div class="relative aspect-video">
-                            <img src="${video.thumbnail || 'https://placehold.co/600x400/0F3B2E/FFFFFF?text=Video'}" 
-                                 alt="${video.title}" 
-                                 class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-                            <a href="${video.link}" target="_blank" class="absolute inset-0 flex items-center justify-center group/play">
-                                <div class="w-14 h-14 bg-gold-500/90 rounded-full flex items-center justify-center shadow-lg transform group-hover/play:scale-110 transition-transform">
-                                    <i class="fas fa-play text-white ml-1"></i>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-serif text-lg font-bold text-white mb-2 line-clamp-2">
-                                ${video.title}
-                            </h3>
-                            <p class="text-gray-300 text-xs">
-                                <i class="far fa-calendar-alt mr-1"></i> ${new Date(video.published || Date.now()).toLocaleDateString('fr-FR')}
-                            </p>
-                        </div>
+    <!-- TEMPLATE: POST DETAIL (tpl-post-detail) -->
+    <template id="tpl-post-detail">
+        <article class="py-24 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 text-center">
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="inline-flex items-center text-gold-600 hover:text-gold-700 font-medium mb-8 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour aux sélections
+                    </a>
+                    <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">{{title}}
+                    </h1>
+                    <div class="flex items-center justify-center gap-4 text-gray-500 text-sm">
+                        <span>{{date}}</span>
+                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                        <span>{{author}}</span>
                     </div>
-                `).join('');
+                </div>
 
-            } catch (error) {
-                console.error('Error loading videos:', error);
-                container.innerHTML = '<p class="col-span-full text-center text-red-300">Impossible de charger les vidéos.</p>';
-            }
-        }
-    </script>
+                <div class="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl mb-12">
+                    <img src="{{image}}" alt="{{title}}" class="w-full h-full object-cover">
+                </div>
+
+                <div
+                    class="prose prose-lg prose-slate mx-auto prose-headings:font-serif prose-a:text-gold-600 hover:prose-a:text-gold-700">
+                    {{content}}
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <!-- TEMPLATE: VIDEO DETAIL (tpl-video-detail) -->
+    <template id="tpl-video-detail">
+        <article class="py-24 bg-sapin min-h-screen text-white">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-white/70 hover:text-white font-medium mb-8 transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux vidéos
+                </a>
+
+                <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl mb-12 border border-white/10">
+                    <iframe src="{{embedUrl}}" title="{{title}}" class="w-full h-full" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+                <div class="max-w-3xl mx-auto">
+                    <h1 class="font-serif text-3xl md:text-4xl font-bold mb-6">{{title}}</h1>
+                    <div class="flex items-center gap-4 text-white/60 text-sm mb-8">
+                        <i class="far fa-calendar-alt"></i> {{published}}
+                    </div>
+                    <div class="prose prose-invert prose-lg max-w-none">
+                        <p>{{description}}</p>
+                    </div>
+                    <div class="mt-12 text-center">
+                        <a href="{{link}}" target="_blank"
+                            class="inline-block px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-full transition shadow-lg">
+                            Voir sur YouTube <i class="fab fa-youtube ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </template>
+
 </body>
 
 </html>
