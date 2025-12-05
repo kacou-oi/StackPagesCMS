@@ -232,8 +232,7 @@
 
                     <!-- Right Column: Latest Video -->
                     <div class="hidden lg:block">
-                        <div
-                            class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-2xl border border-gray-700 shadow-2xl">
+                        <div class="card-hover rounded-2xl overflow-hidden shadow-2xl group cursor-pointer">
                             <div id="hero-video-container" class="min-h-[200px] flex items-center justify-center">
                                 <div class="text-center text-gray-500">
                                     <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
@@ -250,7 +249,7 @@
                                             const video = videos[0];
                                             const videoId = video.link.split('v=')[1]?.split('&')[0];
                                             document.getElementById('hero-video-container').innerHTML = `
-                                                <div class="relative w-full rounded-lg overflow-hidden" style="padding-bottom: 56.25%;">
+                                                <div class="relative w-full" style="padding-bottom: 56.25%;">
                                                     <iframe 
                                                         src="https://www.youtube-nocookie.com/embed/${videoId}" 
                                                         class="absolute top-0 left-0 w-full h-full"
@@ -431,7 +430,7 @@
 
                 <!-- Load More Button -->
                 <div id="load-more-posts" class="text-center mt-12">
-                    <button hx-get="/api/posts?offset=6&limit=6" hx-target="#publications-container" hx-swap="beforeend"
+                    <button hx-get="/api/posts?offset=6&limit=6" hx-target="#publications-container" hx-swap="none"
                         hx-on::after-request="
                             const response = JSON.parse(event.detail.xhr.response);
                             if (!response.hasMore) {
@@ -652,7 +651,7 @@
 
                 <!-- Load More Button -->
                 <div id="load-more-videos" class="text-center mt-12">
-                    <button hx-get="/api/videos?offset=6&limit=6" hx-target="#videos-container" hx-swap="beforeend"
+                    <button hx-get="/api/videos?offset=6&limit=6" hx-target="#videos-container" hx-swap="none"
                         hx-on::after-request="
                             const response = JSON.parse(event.detail.xhr.response);
                             if (!response.hasMore) {
