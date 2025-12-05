@@ -19,7 +19,7 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "default",
+    "activeTemplate": "petfamily",
     "primaryColor": "#ff9500"
   },
   "feeds": {
