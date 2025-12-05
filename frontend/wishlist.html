@@ -110,166 +110,179 @@
     <!-- Main Content Area (HTMX Target) -->
     <main id="main-content" class="pt-20 min-h-screen">
 
-        <!-- Hero Section -->
-        <section class="relative h-[80vh] flex items-center justify-center overflow-hidden">
-            <!-- Background Image with Overlay -->
-            <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2874&auto=format&fit=crop"
-                    alt="Cadeaux élégants" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-cream"></div>
-            </div>
-
-            <!-- Content -->
-            <div class="relative z-10 text-center px-4 max-w-4xl mx-auto" data-aos="fade-up">
-                <span
-                    class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur text-white text-sm font-medium tracking-wider mb-6 border border-white/30">
-                    AGENCE DE CURATION
-                </span>
-                <h1 class="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-                    L'Art d'Offrir, <br /><span class="italic text-gold-400">Réinventé</span>
-                </h1>
-                <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-                    Nous dénichons pour vous des objets rares et des expériences inoubliables.
-                    Transformez chaque occasion en un souvenir éternel.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
-                        class="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-full transition-all shadow-lg hover:shadow-gold-500/30 transform hover:-translate-y-1">
-                        Découvrir nos trouvailles
-                    </a>
-                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
-                        class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/50 text-white font-semibold rounded-full transition-all hover:shadow-lg">
-                        Prendre rendez-vous
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Expertise</h2>
-                    <div class="w-24 h-1 bg-gold-500 mx-auto rounded-full"></div>
+        <!-- TEMPLATE: HOME (tpl-home) -->
+        <template id="tpl-home">
+            <!-- Hero Section -->
+            <section class="relative h-[80vh] flex items-center justify-center overflow-hidden">
+                <!-- Background Image with Overlay -->
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2874&auto=format&fit=crop"
+                        alt="Cadeaux élégants" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-cream"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <!-- Feature 1 -->
-                    <div class="text-center group">
-                        <div
-                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
-                            <i class="fas fa-gem text-3xl text-gold-500"></i>
-                        </div>
-                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Curation Rare</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Accès exclusif à des artisans d'art et des marques confidentielles pour des cadeaux uniques.
-                        </p>
-                    </div>
-
-                    <!-- Feature 2 -->
-                    <div class="text-center group">
-                        <div
-                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
-                            <i class="fas fa-wand-magic-sparkles text-3xl text-gold-500"></i>
-                        </div>
-                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Personnalisation</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Chaque objet est adapté à l'histoire que vous souhaitez raconter. Gravure, packaging,
-                            message.
-                        </p>
-                    </div>
-
-                    <!-- Feature 3 -->
-                    <div class="text-center group">
-                        <div
-                            class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
-                            <i class="fas fa-shipping-fast text-3xl text-gold-500"></i>
-                        </div>
-                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Service Conciergerie</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            De la sélection à la livraison en mains propres, nous gérons chaque détail avec soin.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Blog Section (Dynamic) -->
-        <section class="py-24 bg-cream">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">Nos Dernières
-                            Trouvailles</h2>
-                        <p class="text-gray-600">Inspirations et tendances du moment</p>
-                    </div>
-                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
-                        class="hidden md:flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
-                        Voir tout <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- Container for Dynamic Posts -->
-                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Loading State -->
-                    <div class="col-span-1 md:col-span-3 flex justify-center py-12">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500"></div>
-                    </div>
-                </div>
-
-                <div class="mt-12 text-center md:hidden">
-                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
-                        class="inline-flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
-                        Voir tout <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Video Section (Dynamic) -->
-        <section class="py-24 bg-sapin text-white overflow-hidden relative">
-            <!-- Decorative Pattern -->
-            <div class="absolute top-0 right-0 opacity-5 pointer-events-none">
-                <i class="fas fa-gift text-[400px]"></i>
-            </div>
-
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="text-center mb-16">
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-4">Tests & Démonstrations</h2>
-                    <p class="text-gray-300 max-w-2xl mx-auto">
-                        Découvrez nos objets en action. Nous testons chaque produit rigoureusement pour garantir l'effet
-                        "Wow".
+                <!-- Content -->
+                <div class="relative z-10 text-center px-4 max-w-4xl mx-auto" data-aos="fade-up">
+                    <span
+                        class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur text-white text-sm font-medium tracking-wider mb-6 border border-white/30">
+                        AGENCE DE CURATION
+                    </span>
+                    <h1 class="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                        L'Art d'Offrir, <br /><span class="italic text-gold-400">Réinventé</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                        Nous dénichons pour vous des objets rares et des expériences inoubliables.
+                        Transformez chaque occasion en un souvenir éternel.
                     </p>
-                </div>
-
-                <!-- Container for Dynamic Videos -->
-                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Loading State -->
-                    <div class="col-span-full flex justify-center py-12">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-full transition-all shadow-lg hover:shadow-gold-500/30 transform hover:-translate-y-1">
+                            Découvrir nos trouvailles
+                        </a>
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/50 text-white font-semibold rounded-full transition-all hover:shadow-lg">
+                            Prendre rendez-vous
+                        </a>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Newsletter Section -->
-        <section class="py-20 bg-white border-t border-gray-100">
-            <div class="max-w-4xl mx-auto px-4 text-center">
-                <i class="far fa-envelope text-4xl text-gold-500 mb-6"></i>
-                <h2 class="font-serif text-3xl font-bold text-gray-900 mb-4">Rejoignez le Club Privé</h2>
-                <p class="text-gray-600 mb-8">
-                    Recevez nos sélections exclusives et nos invitations aux ventes privées.
-                </p>
-                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" placeholder="Votre adresse email"
-                        class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
-                    <button type="button"
-                        class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-full transition shadow-lg">
-                        S'inscrire
-                    </button>
-                </form>
-            </div>
-        </section>
+            <!-- Features Section -->
+            <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre Expertise</h2>
+                        <div class="w-24 h-1 bg-gold-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                        <!-- Feature 1 -->
+                        <div class="text-center group">
+                            <div
+                                class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                                <i class="fas fa-gem text-3xl text-gold-500"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Curation Rare</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Accès exclusif à des artisans d'art et des marques confidentielles pour des cadeaux
+                                uniques.
+                            </p>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="text-center group">
+                            <div
+                                class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                                <i class="fas fa-wand-magic-sparkles text-3xl text-gold-500"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Personnalisation</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Chaque objet est adapté à l'histoire que vous souhaitez raconter. Gravure, packaging,
+                                message.
+                            </p>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="text-center group">
+                            <div
+                                class="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-gold-50 transition-colors duration-300">
+                                <i class="fas fa-shipping-fast text-3xl text-gold-500"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Service Conciergerie</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                De la sélection à la livraison en mains propres, nous gérons chaque détail avec soin.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: PUBLICATIONS (tpl-publications) -->
+        <template id="tpl-publications">
+            <section class="py-24 bg-cream">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">Nos Dernières
+                                Trouvailles</h2>
+                            <p class="text-gray-600">Inspirations et tendances du moment</p>
+                        </div>
+                        <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                            class="hidden md:flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
+                            Voir tout <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <!-- Container for Dynamic Posts -->
+                    <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-8" hx-trigger="load"
+                        hx-get="/api/posts" hx-swap="innerHTML">
+                        <!-- Loading State -->
+                        <div class="col-span-1 md:col-span-3 flex justify-center py-12">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 text-center md:hidden">
+                        <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                            class="inline-flex items-center gap-2 text-gold-600 font-medium hover:text-gold-700 transition">
+                            Voir tout <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: VIDEOS (tpl-videos) -->
+        <template id="tpl-videos">
+            <section class="py-24 bg-sapin text-white overflow-hidden relative">
+                <!-- Decorative Pattern -->
+                <div class="absolute top-0 right-0 opacity-5 pointer-events-none">
+                    <i class="fas fa-gift text-[400px]"></i>
+                </div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="text-center mb-16">
+                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-4">Tests & Démonstrations
+                        </h2>
+                        <p class="text-gray-300 max-w-2xl mx-auto">
+                            Découvrez nos objets en action. Nous testons chaque produit rigoureusement pour garantir
+                            l'effet "Wow".
+                        </p>
+                    </div>
+
+                    <!-- Container for Dynamic Videos -->
+                    <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                        hx-trigger="load" hx-get="/api/videos" hx-swap="innerHTML">
+                        <!-- Loading State -->
+                        <div class="col-span-full flex justify-center py-12">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: CONTACT (tpl-contact) -->
+        <template id="tpl-contact">
+            <section class="py-20 bg-white border-t border-gray-100">
+                <div class="max-w-4xl mx-auto px-4 text-center">
+                    <i class="far fa-envelope text-4xl text-gold-500 mb-6"></i>
+                    <h2 class="font-serif text-3xl font-bold text-gray-900 mb-4">Rejoignez le Club Privé</h2>
+                    <p class="text-gray-600 mb-8">
+                        Recevez nos sélections exclusives et nos invitations aux ventes privées.
+                    </p>
+                    <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                        <input type="email" placeholder="Votre adresse email"
+                            class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition">
+                        <button type="button"
+                            class="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-full transition shadow-lg">
+                            S'inscrire
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </template>
 
     </main>
 

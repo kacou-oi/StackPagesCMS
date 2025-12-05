@@ -373,10 +373,30 @@ function generateHomeContent(fullTemplate, metadata) {
 }
 
 function generatePublicationsContent(fullTemplate, posts) {
-    const listTpl = extractTemplate(fullTemplate, 'tpl-blog-list');
-    const cardTpl = extractTemplate(fullTemplate, 'tpl-blog-card');
+    let listTpl = extractTemplate(fullTemplate, 'tpl-blog-list');
+    let cardTpl = extractTemplate(fullTemplate, 'tpl-blog-card');
 
-    if (!listTpl || !cardTpl) return "<p>Templates 'tpl-blog-list' or 'tpl-blog-card' not found.</p>";
+    // FALLBACKS for Modern/AI Themes
+    if (!listTpl) {
+        listTpl = '<div class="grid grid-cols-1 md:grid-cols-3 gap-8">{{items}}</div>';
+    }
+    if (!cardTpl) {
+        cardTpl = `
+        <article class="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+            <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true" class="block h-48 overflow-hidden">
+                <img src="{{image}}" alt="{{title}}" class="w-full h-full object-cover transform hover:scale-105 transition duration-500">
+            </a>
+            <div class="p-5">
+                <div class="text-xs text-slate-500 mb-2">{{date}}</div>
+                <h3 class="font-bold text-lg mb-2 leading-tight">
+                    <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true" class="hover:text-blue-600 transition">
+                        {{title}}
+                    </a>
+                </h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">{{description}}</p>
+            </div>
+        </article>`;
+    }
 
     // Show only first 6 posts initially
     const initialPosts = posts.slice(0, 6);
@@ -394,26 +414,55 @@ function generatePublicationsContent(fullTemplate, posts) {
                 author: post.author || 'Inconnu',
                 date: postDate,
                 image: post.image || 'https://via.placeholder.com/600x400/edf2f7/4a5568?text=Image+Article',
-                slug: post.slug
+                slug: post.slug,
+                link: `/post/${post.slug}`
             });
         });
     }
 
-    let content = replacePlaceholders(listTpl, { items: itemsHtml });
+    let content = listTpl.replace('{{items}}', itemsHtml);
 
-    // Hide load more button if no more items
-    if (!hasMore) {
-        content = content.replace('id="load-more-posts"', 'id="load-more-posts" style="display:none"');
+    // Pagination / Load More (Basic implementation)
+    if (hasMore) {
+        content += `<div class="text-center mt-8">
+            <a href="/publications/page/2" class="inline-block px-6 py-2 border border-slate-300 rounded-full text-sm font-medium hover:bg-slate-50 transition">
+                Voir plus d'articles
+            </a>
+        </div>`;
     }
 
     return content;
 }
 
 function generateVideosContent(fullTemplate, videos) {
-    const listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
-    const cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
+    let listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
+    let cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
 
-    if (!listTpl || !cardTpl) return "<p>Templates 'tpl-video-list' or 'tpl-video-card' not found.</p>";
+    // FALLBACKS
+    if (!listTpl) {
+        listTpl = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{{items}}</div>';
+    }
+    if (!cardTpl) {
+        cardTpl = `
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden group">
+            <div class="relative aspect-video">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full h-full object-cover">
+                <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true" class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </a>
+            </div>
+            <div class="p-4">
+                <h3 class="font-bold text-sm mb-1 line-clamp-2">
+                    <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true" class="hover:text-red-600 transition">
+                        {{title}}
+                    </a>
+                </h3>
+                <div class="text-xs text-slate-500">{{published}}</div>
+            </div>
+        </div>`;
+    }
 
     // Show only first 6 videos initially
     const initialVideos = videos.slice(0, 6);
@@ -421,26 +470,28 @@ function generateVideosContent(fullTemplate, videos) {
 
     let itemsHtml = '';
     if (initialVideos.length === 0) {
-        itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo trouvée.</p>`;
+        itemsHtml = `<p class="col-span-full text-center text-gray-600 p-8">Aucune vidéo disponible.</p>`;
     } else {
         initialVideos.forEach(video => {
-            const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+            const pubDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
             itemsHtml += replacePlaceholders(cardTpl, {
                 title: video.title,
-                published: videoDate,
-                description: video.description || '',
-                thumbnail: video.thumbnail || 'https://via.placeholder.com/600x338/edf2f7/4a5568?text=Vidéo',
-                link: video.link,
-                slug: video.slug
+                thumbnail: video.thumbnail,
+                published: pubDate,
+                link: `/video/${video.id || video.link.split('v=')[1] || ''}`
             });
         });
     }
 
-    let content = replacePlaceholders(listTpl, { items: itemsHtml });
+    let content = listTpl.replace('{{items}}', itemsHtml);
 
-    // Hide load more button if no more items
-    if (!hasMore) {
-        content = content.replace('id="load-more-videos"', 'id="load-more-videos" style="display:none"');
+    // Pagination / Load More (Basic implementation)
+    if (hasMore) {
+        content += `<div class="text-center mt-8">
+            <a href="/videos/page/2" class="inline-block px-6 py-2 border border-slate-300 rounded-full text-sm font-medium hover:bg-slate-50 transition">
+                Voir plus de vidéos
+            </a>
+        </div>`;
     }
 
     return content;
@@ -800,32 +851,6 @@ export default {
             return htmlResponse(injectContent(template, content, metadata));
         }
 
-        if (path === "/publications") {
-            const data = await getCachedRSSData(substackUrl);
-            const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
-            const content = generatePublicationsContent(template, data.posts);
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/videos") {
-            const videos = await getCachedYoutubeData(youtubeUrl);
-            const content = generateVideosContent(template, videos);
-            const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/coaching") {
-            const content = generateCoachingContent(template);
-            const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
         // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
         // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
         if (path.length > 1) {
@@ -845,22 +870,6 @@ export default {
                 if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata, req));
                 return htmlResponse(injectContent(template, dynamicContent, metadata));
             }
-        }
-
-        if (path === "/bio") {
-            const content = generateBioContent(template);
-            const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-            return htmlResponse(injectContent(template, content, metadata));
-        }
-
-        if (path === "/contact") {
-            const content = generateContactContent(template);
-            const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
-
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-            return htmlResponse(injectContent(template, content, metadata));
         }
 
         // Single Video Detail Page
@@ -925,23 +934,24 @@ export default {
             }
         }
 
-        if (path.startsWith("/video/")) {
-            const slug = path.split("/").pop();
-            const videos = await getCachedYoutubeData(youtubeUrl);
-            const video = videos.find(v => v.slug === slug);
+        // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
+        // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
+        if (path.length > 1) {
+            const slug = path.substring(1); // Remove leading slash
+            const tplId = `tpl-${slug}`;
+            const dynamicContent = extractTemplate(template, tplId);
 
-            if (video) {
-                const content = generateVideoDetailContent(template, video, req.url);
+            if (dynamicContent) {
+                // Basic title formatting: "reservation" -> "Reservation"
+                const title = slug.charAt(0).toUpperCase() + slug.slice(1);
                 const metadata = {
-                    title: `${video.title} - ${siteName}`,
-                    description: video.description || siteDescription,
+                    title: `${title} - ${siteName}`,
+                    description: siteDescription,
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
-                return htmlResponse(injectContent(template, content, metadata));
-            } else {
-                return new Response("Vidéo non trouvée", { status: 404 });
+                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, dynamicContent, metadata));
             }
         }
 
