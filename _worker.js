@@ -373,7 +373,7 @@ function generateHomeContent(fullTemplate, metadata) {
 }
 
 function generatePublicationsContent(fullTemplate, posts) {
-    let listTpl = extractTemplate(fullTemplate, 'tpl-blog-list');
+    let listTpl = extractTemplate(fullTemplate, 'tpl-annoucements') || extractTemplate(fullTemplate, 'tpl-blog-list');
     let cardTpl = extractTemplate(fullTemplate, 'tpl-blog-card');
 
     // FALLBACKS for Modern/AI Themes
@@ -435,7 +435,7 @@ function generatePublicationsContent(fullTemplate, posts) {
 }
 
 function generateVideosContent(fullTemplate, videos) {
-    let listTpl = extractTemplate(fullTemplate, 'tpl-video-list');
+    let listTpl = extractTemplate(fullTemplate, 'tpl-tutorials') || extractTemplate(fullTemplate, 'tpl-video-list');
     let cardTpl = extractTemplate(fullTemplate, 'tpl-video-card');
 
     // FALLBACKS
@@ -945,6 +945,33 @@ export default {
         if (path.length > 1) {
             const slug = path.substring(1); // Remove leading slash
             const tplId = `tpl-${slug}`;
+
+            // Special handling for data-driven pages
+            if (slug === 'annoucements' || slug === 'publications') {
+                const data = await getCachedRSSData(substackUrl);
+                const content = generatePublicationsContent(template, data.posts);
+                const metadata = {
+                    title: `Announcements - ${siteName}`,
+                    description: siteDescription,
+                    keywords: siteKeywords
+                };
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            if (slug === 'tutorials' || slug === 'videos') {
+                const videos = await getCachedYoutubeData(youtubeUrl);
+                const content = generateVideosContent(template, videos);
+                const metadata = {
+                    title: `Video Tutorials - ${siteName}`,
+                    description: siteDescription,
+                    keywords: siteKeywords
+                };
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, content, metadata));
+            }
+
+            // Standard static template extraction
             const dynamicContent = extractTemplate(template, tplId);
 
             if (dynamicContent) {
@@ -1024,26 +1051,7 @@ export default {
             }
         }
 
-        // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
-        // Checks if a template exists for the current path (e.g. /reservation -> tpl-reservation)
-        if (path.length > 1) {
-            const slug = path.substring(1); // Remove leading slash
-            const tplId = `tpl-${slug}`;
-            const dynamicContent = extractTemplate(template, tplId);
 
-            if (dynamicContent) {
-                // Basic title formatting: "reservation" -> "Reservation"
-                const title = slug.charAt(0).toUpperCase() + slug.slice(1);
-                const metadata = {
-                    title: `${title} - ${siteName}`,
-                    description: siteDescription,
-                    keywords: siteKeywords
-                };
-
-                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata, req));
-                return htmlResponse(injectContent(template, dynamicContent, metadata));
-            }
-        }
 
         // --- CUSTOM PAGES (/p/ prefix) ---
         if (path.startsWith("/p/")) {
