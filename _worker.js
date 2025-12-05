@@ -998,6 +998,31 @@ export default {
             }
         }
 
+        // --- CUSTOM PAGES (/p/ prefix) ---
+        if (path.startsWith("/p/")) {
+            const slug = path.substring(3); // Remove /p/
+            const githubContent = await fetchGithubContent(config, slug);
+
+            if (githubContent) {
+                // Extract title from content if possible, or use slug
+                // Simple regex to find first h1
+                const titleMatch = githubContent.match(/<h1[^>]*>(.*?)<\/h1>/i);
+                const pageTitle = titleMatch ? titleMatch[1] : (slug.charAt(0).toUpperCase() + slug.slice(1));
+
+                const metadata = {
+                    title: `${pageTitle} - ${siteName}`,
+                    description: siteDescription,
+                    keywords: siteKeywords
+                };
+
+                if (isHtmx) return htmlResponse(githubContent + generateOOB(metadata, req));
+                const data = await getCachedRSSData(substackUrl);
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, ...metadata }));
+            } else {
+                return new Response("Page introuvable", { status: 404 });
+            }
+        }
+
 
         // --- GITHUB FALLBACK (CATCH-ALL FOR CUSTOM PAGES) ---
         if (path !== "/" && !path.startsWith("/api") && !path.startsWith("/core") && !path.startsWith("/admin")) {
