@@ -1,16 +1,16 @@
 {
   "site": {
-    "name": "Money Radar",
-    "domain": "",
-    "description": "Des stratégies d'investissement personnalisées pour maximiser vos rendements et sécuriser votre patrimoine.",
-    "author": "Radar",
+    "name": "StackPages CMS",
+    "domain": "https://app.stackpages.net/",
+    "description": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
+    "author": "Admin",
     "logo": "",
     "favicon": ""
   },
   "seo": {
-    "title": "Money Radar",
-    "metaDescription": "Des stratégies d'investissement personnalisées pour maximiser vos rendements et sécuriser votre patrimoine.",
-    "keywords": "MoneyRadar, Crypto, Bourse, investissement, Finance",
+    "title": "StackPages CMS",
+    "metaDescription": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
+    "keywords": "CMS, Jamstack, Headless, Blog, Substack, JS, HTMX, WSR",
     "ogImage": ""
   },
   "social": {
@@ -19,12 +19,12 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "moneyradar",
-    "primaryColor": "#04b3b0"
+    "activeTemplate": "default",
+    "primaryColor": "#ff7c22"
   },
   "feeds": {
-    "substack": "https://moneyradar.substack.com/feed",
-    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCXy8Z8pIqRRGD4ZUCzZPiug",
+    "substack": "https://on.substack.com/feed",
+    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCgv3xMy6kECn0boYP9d2o-g",
     "podcast": "https://fetchrss.com/feed/1vRMBK0ix4l01vRMAUDEY9UA.rss"
   }
 }
