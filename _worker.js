@@ -447,21 +447,23 @@ function generateVideoDetailContent(fullTemplate, video) {
 
     const videoDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Convert YouTube link to embed URL
+    // Convert YouTube link to embed URL (using youtube-nocookie for privacy)
     let embedUrl = video.link;
     if (video.link && video.link.includes('youtube.com/watch?v=')) {
         const videoId = video.link.split('v=')[1]?.split('&')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
     } else if (video.link && video.link.includes('youtu.be/')) {
         const videoId = video.link.split('youtu.be/')[1]?.split('?')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
     }
 
     return replacePlaceholders(detailTpl, {
         title: video.title,
-        date: videoDate,
+        published: videoDate,
         description: video.description || 'Aucune description disponible.',
-        embedUrl: embedUrl
+        embedUrl: embedUrl,
+        link: video.link,
+        slug: video.slug
     });
 }
 
@@ -784,37 +786,34 @@ export default {
 
         // Single Video Detail Page
         if (path.startsWith("/video/")) {
-            const videoId = path.split("/video/")[1];
-            // Use the existing siteConfig and template variables
-            // const siteConfig = await getSiteConfig(env); // Already fetched as 'siteConfig'
-            // const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL; // Already available as 'youtubeUrl'
+            const slug = path.split("/video/")[1];
 
             if (!youtubeUrl) {
                 return new Response("YouTube feed not configured", { status: 404 });
             }
 
-            const videos = await getCachedYoutubeData(youtubeUrl); // Use existing cached function
-            const video = videos.find(v => v.id === videoId); // Assuming 'id' is the correct property for videoId
+            const videos = await getCachedYoutubeData(youtubeUrl);
+            const video = videos.find(v => v.slug === slug);
 
             if (!video) {
                 return new Response("Video not found", { status: 404 });
             }
 
-            // const template = await getTemplate(env); // Already fetched as 'template'
             const detailTemplate = extractTemplate(template, 'tpl-video-detail');
-            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            const videoId = video.link.split('v=')[1]?.split('&')[0];
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
 
             const content = replacePlaceholders(detailTemplate, {
                 title: video.title,
                 description: video.description || 'Aucune description disponible',
-                published: new Date(video.publishedAt).toLocaleDateString('fr-FR', { // Assuming 'publishedAt' from getCachedYoutubeData
+                published: new Date(video.published).toLocaleDateString('fr-FR', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 }),
                 embedUrl: embedUrl,
                 link: video.link,
-                slug: videoId
+                slug: slug
             });
 
             const metadata = {
