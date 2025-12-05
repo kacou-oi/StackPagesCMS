@@ -245,34 +245,67 @@
             </div>
         </section>
 
-        <!-- How it Works -->
+        <!-- Get Started Options -->
         <section class="py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">Get started in 3 steps</h2>
-                    <p class="text-xl text-gray-600">From zero to production in minutes</p>
+                    <h2 class="text-4xl font-bold mb-4">Choose your deployment</h2>
+                    <p class="text-xl text-gray-600">Start building with StackPages today</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-                    <div class="text-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <!-- Self Git Hosted -->
+                    <div
+                        class="bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-orange-500 transition-all group relative overflow-hidden">
                         <div
-                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
-                            1</div>
-                        <h3 class="text-xl font-bold mb-3">Fork the Repository</h3>
-                        <p class="text-gray-600">Clone StackPages to your GitHub account</p>
+                            class="absolute top-0 right-0 bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                            OPEN SOURCE</div>
+                        <div
+                            class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-700 text-3xl mb-6 group-hover:bg-orange-100 group-hover:text-orange-500 transition-colors">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Self Git Hosted</h3>
+                        <p class="text-orange-500 font-medium mb-6">With free developers API</p>
+                        <ul class="space-y-3 text-gray-600 mb-8">
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Full Source
+                                Code Access</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Host on your
+                                own Cloudflare</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Unlimited
+                                Customization</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Community
+                                Support</li>
+                        </ul>
+                        <a href="https://github.com/stackpages/stackpages" target="_blank"
+                            class="block w-full py-4 bg-gray-900 text-white text-center font-bold rounded-lg hover:bg-gray-800 transition-colors">
+                            Fork on GitHub
+                        </a>
                     </div>
-                    <div class="text-center">
+
+                    <!-- Managed Deployment -->
+                    <div class="bg-white p-8 rounded-2xl border-2 border-orange-500 shadow-xl relative overflow-hidden">
                         <div
-                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
-                            2</div>
-                        <h3 class="text-xl font-bold mb-3">Deploy to Workers</h3>
-                        <p class="text-gray-600">One-click deploy to Cloudflare's edge network</p>
-                    </div>
-                    <div class="text-center">
+                            class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                            RECOMMENDED</div>
                         <div
-                            class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">
-                            3</div>
-                        <h3 class="text-xl font-bold mb-3">Start Publishing</h3>
-                        <p class="text-gray-600">Create content and go live instantly</p>
+                            class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500 text-3xl mb-6">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Managed Deployment</h3>
+                        <p class="text-orange-500 font-medium mb-6">With advanced options</p>
+                        <ul class="space-y-3 text-gray-600 mb-8">
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> One-Click
+                                Deployment</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Automatic
+                                Updates</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Premium
+                                Templates</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-orange-500"></i> Priority
+                                Support</li>
+                        </ul>
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="block w-full py-4 bg-orange-500 text-white text-center font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30">
+                            Start Free Trial
+                        </a>
                     </div>
                 </div>
             </div>
