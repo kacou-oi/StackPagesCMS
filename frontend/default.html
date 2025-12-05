@@ -50,6 +50,9 @@
                 <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
                     class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Videos
                     Tutorial</a>
+                <a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors">Serverless
+                    Functions</a>
                 <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
                     class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">Get
                     Started</a>
@@ -71,6 +74,8 @@
                         class="block text-xl font-bold hover:text-orange-500">Announcement</a>
                     <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
                         class="block text-xl font-bold hover:text-orange-500">Videos Tutorial</a>
+                    <a href="/serverless" hx-get="/serverless" hx-target="#main-content" hx-push-url="true"
+                        class="block text-xl font-bold hover:text-orange-500">Serverless Functions</a>
                     <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
                         class="block text-xl font-bold hover:text-orange-500">Contact</a>
                 </div>
@@ -430,6 +435,106 @@
                             Send Message
                         </button>
                     </form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-serverless">
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl font-bold mb-6">Serverless Architecture</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        StackPages is built entirely on Cloudflare Workers, providing a global, high-performance, and
+                        secure foundation for your content.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+                    <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-globe text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Edge Rendering</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Unlike traditional servers, our Worker runs on Cloudflare's global network.
+                            Every request is handled by the data center closest to the user, ensuring near-zero latency.
+                            HTML is generated dynamically at the edge, combining static templates with dynamic content.
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-rss text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Universal Feed Parser</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            The Worker acts as a universal adapter. It fetches RSS feeds from Substack, YouTube, and
+                            Podcast hosts,
+                            parses the XML, and transforms it into a unified JSON structure.
+                            This allows you to use any content source without changing your frontend code.
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-bolt text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">HTMX Native</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            The backend is aware of HTMX. When it detects an `HX-Request` header, it returns only the
+                            necessary HTML fragment
+                            (like a card or a list) instead of the full page. This creates a Single Page Application
+                            (SPA) feel
+                            without the complexity of client-side frameworks.
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                            <i class="fas fa-database text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Smart Caching</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            To minimize latency and avoid hitting rate limits on external APIs, the Worker implements a
+                            smart caching strategy.
+                            Parsed feed data is cached using the Cache API and KV storage, ensuring that your site
+                            remains fast and available
+                            even if the source feeds are slow or down.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 text-white rounded-2xl p-10 shadow-2xl overflow-hidden relative">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-orange-500 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2">
+                    </div>
+                    <div class="relative z-10">
+                        <h2 class="text-3xl font-bold mb-8">Worker Logic Snippet</h2>
+                        <pre class="bg-gray-800 p-6 rounded-lg overflow-x-auto text-sm font-mono text-gray-300"><code>// Example of Edge Routing Logic
+export default {
+  async fetch(req, env) {
+    const url = new URL(req.url);
+    
+    // 1. HTMX Detection
+    const isHtmx = req.headers.get("HX-Request") === "true";
+    
+    // 2. Route Handling
+    if (url.pathname === "/api/posts") {
+      const posts = await getCachedRSS(env.SUBSTACK_URL);
+      
+      if (isHtmx) {
+        // Return HTML fragment for HTMX
+        return generatePostCards(posts);
+      }
+      
+      // Return JSON for API
+      return Response.json(posts);
+    }
+    
+    // 3. Static Asset Fallback
+    return env.ASSETS.fetch(req);
+  }
+}</code></pre>
+                    </div>
                 </div>
             </div>
         </section>
