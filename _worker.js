@@ -98,39 +98,84 @@ function fetchAndParseRSS(xml) {
         let image = extractEnclosureImage(block);
         let contentFull = "";
         const contentEncodedRe = /<content:encoded[^>]*>((.|[\r\n])*?)<\/content:encoded>/i;
-        const contentMatch = block.match(contentEncodedRe);
-        if (contentMatch) {
-            contentFull = contentMatch[1];
-            if (contentFull.startsWith('<![CDATA[')) {
-                contentFull = contentFull.slice(9, -3);
+        const contentEncodedMatch = block.match(contentEncodedRe);
+
+        if (contentEncodedMatch) {
+            let content = contentEncodedMatch[1].trim();
+            if (content.startsWith('<![CDATA[')) {
+                content = content.slice(9, -3).trim();
             }
+            contentFull = decodeHTMLEntities(content);
             contentFull = cleanHtmlContent(contentFull);
+            if (!image) {
+                image = extractFirstImage(contentFull);
+            }
+        } else {
+            contentFull = description;
         }
-
-        if (!image) {
-            image = extractFirstImage(contentFull) || extractFirstImage(description);
-        }
-
-        const slug = slugify(title);
 
         items.push({
             title,
             link,
             pubDate,
-            description: description.replace(/<[^>]*>/g, '').substring(0, 160) + '...',
-            image,
+            description,
+            slug: slugify(title),
             content: contentFull,
-            slug
+            image
         });
     }
+    items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     return items;
 }
 
-// Helper function to extract YouTube video ID
-function getYoutubeVideoId(url) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+function fetchAndParseYoutubeRSS(xml) {
+    const items = [];
+    const entryRe = /<entry[^>]*>((.|[\r\n])*?)<\/entry>/gi;
+    let m;
+
+    while ((m = entryRe.exec(xml)) !== null) {
+        const block = m[1];
+        const getTag = (tag) => {
+            const re = new RegExp(`<${tag}[^>]*>((.|[\r\n])*?)<\/${tag}>`, 'i');
+            const found = block.match(re);
+            if (!found) return "";
+            return decodeHTMLEntities(found[1].trim());
+        };
+
+        const title = getTag('title');
+        const published = getTag('published');
+        const videoIdRe = /<yt:videoId>((.|[\r\n])*?)<\/yt:videoId>/i;
+        const videoIdMatch = block.match(videoIdRe);
+        const videoId = videoIdMatch ? videoIdMatch[1].trim() : "";
+        const mediaGroupRe = /<media:group>((.|[\r\n])*?)<\/media:group>/i;
+        const mediaGroupMatch = block.match(mediaGroupRe);
+        let thumbnail = "";
+        let description = "";
+
+        if (mediaGroupMatch) {
+            const groupContent = mediaGroupMatch[1];
+            const thumbRe = /<media:thumbnail\s+url=["']([^"']+)["']/i;
+            const thumbMatch = groupContent.match(thumbRe);
+            if (thumbMatch) thumbnail = thumbMatch[1];
+            const descRe = /<media:description[^>]*>((.|[\r\n])*?)<\/media:description>/i;
+            const descMatch = groupContent.match(descRe);
+            if (descMatch) description = decodeHTMLEntities(descMatch[1].trim());
+        }
+
+        if (videoId) {
+            items.push({
+                id: videoId,
+                slug: videoId, // Use videoId as slug for routing
+                title,
+                published,
+                thumbnail,
+                description,
+                link: `https://www.youtube.com/watch?v=${videoId}`
+            });
+        }
+    }
+    items.sort((a, b) => new Date(b.published) - new Date(a.published));
+    return items;
 }
 
 // ====================================================================
@@ -159,74 +204,59 @@ async function fetchGithubContent(config, slug) {
 // 3. LOGIQUE DE CACHE
 // ====================================================================
 
-async function getCachedRSS(url, key, env) {
-    if (!url) return { items: [], metadata: {} };
+async function getCachedRSSData(feedUrl, forceRefresh = false) {
+    if (!feedUrl) return { metadata: {}, posts: [] };
+    const cache = caches.default;
+    const cacheKey = new Request(feedUrl, { method: 'GET' });
 
-    // Try KV first
-    const cached = await env.STACKPAGES_KV.get(`rss_${key}`, { type: "json" });
-    if (cached) return cached;
+    if (!forceRefresh) {
+        let response = await cache.match(cacheKey);
+        if (response) return await response.json();
+    }
 
-    // Fetch and parse
     try {
-        const response = await fetch(url);
-        const xml = await response.text();
-        let items = [];
-        let metadata = {};
-
-        if (key === 'youtube') {
-            // Simple YouTube RSS parsing
-            const itemRe = /<entry>([\s\S]*?)<\/entry>/g;
-            let m;
-            while ((m = itemRe.exec(xml)) !== null) {
-                const block = m[1];
-                const getTag = (tag) => {
-                    const re = new RegExp(`<${tag}[^>]*>(.*?)<\/${tag}>`, 'i');
-                    const found = block.match(re);
-                    return found ? found[1] : "";
-                };
-                const title = getTag('title');
-                const linkMatch = block.match(/<link rel="alternate" href="(.*?)"\/>/);
-                const link = linkMatch ? linkMatch[1] : "";
-                const id = getTag('yt:videoId');
-                const published = getTag('published');
-                const mediaGroupMatch = block.match(/<media:group>([\s\S]*?)<\/media:group>/);
-                const description = mediaGroupMatch ? (mediaGroupMatch[1].match(/<media:description[^>]*>([\s\S]*?)<\/media:description>/)?.[1] || "") : "";
-
-                items.push({
-                    title,
-                    link,
-                    id,
-                    published,
-                    description,
-                    slug: id // Use ID as slug for videos
-                });
-            }
-        } else {
-            items = fetchAndParseRSS(xml);
-            metadata = extractChannelMetadata(xml);
-        }
-
-        const data = { items, metadata };
-        // Cache in KV
-        await env.STACKPAGES_KV.put(`rss_${key}`, JSON.stringify(data), { expirationTtl: CACHE_TTL });
+        const res = await fetch(feedUrl);
+        if (!res.ok) throw new Error(`RSS Fetch Failed: ${res.statusText}`);
+        const xml = await res.text();
+        const data = {
+            metadata: extractChannelMetadata(xml),
+            posts: fetchAndParseRSS(xml)
+        };
+        const cachedResponse = new Response(JSON.stringify(data), {
+            headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CACHE_TTL}` }
+        });
+        await cache.put(cacheKey, cachedResponse.clone());
         return data;
     } catch (e) {
-        console.error(`Error fetching ${key} RSS:`, e);
-        return { items: [], metadata: {} };
+        console.error("RSS Error:", e);
+        return { metadata: {}, posts: [] };
     }
 }
 
-async function getCachedRSSData(url, env) {
-    if (!url) return { posts: [], metadata: {} };
-    // Assume substack or generic
-    const data = await getCachedRSS(url, "substack", env);
-    return { posts: data.items, metadata: data.metadata };
-}
+async function getCachedYoutubeData(feedUrl, forceRefresh = false) {
+    if (!feedUrl) return [];
+    const cache = caches.default;
+    const cacheKey = new Request(feedUrl, { method: 'GET' });
 
-async function getCachedYoutubeData(url, env) {
-    if (!url) return [];
-    const data = await getCachedRSS(url, "youtube", env);
-    return data.items;
+    if (!forceRefresh) {
+        let response = await cache.match(cacheKey);
+        if (response) return await response.json();
+    }
+
+    try {
+        const res = await fetch(feedUrl);
+        if (!res.ok) throw new Error(`Youtube Fetch Failed`);
+        const xml = await res.text();
+        const videos = fetchAndParseYoutubeRSS(xml);
+        const cachedResponse = new Response(JSON.stringify(videos), {
+            headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CACHE_TTL}` }
+        });
+        await cache.put(cacheKey, cachedResponse.clone());
+        return videos;
+    } catch (e) {
+        console.error("Youtube Error:", e);
+        return [];
+    }
 }
 
 // ====================================================================
@@ -283,6 +313,13 @@ function extractTemplate(html, id) {
     return match ? match[1].trim() : null;
 }
 
+function replacePlaceholders(template, data) {
+    if (!template) return "";
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return data[key] !== undefined ? data[key] : "";
+    });
+}
+
 function injectContent(template, content, metadata) {
     if (!template) return content;
 
@@ -299,8 +336,8 @@ function injectContent(template, content, metadata) {
         if (html.match(/<meta[^>]*name=["']description["'][^>]*>/i)) {
             html = html.replace(/(<meta[^>]*name=["']description["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.description}$3`);
         } else {
-            // Insert after title
-            html = html.replace(/(<\/title>)/i, `$1\n    <meta name="description" content="${metadata.description}">`);
+            // Inject if missing (in head)
+            html = html.replace(/<\/head>/i, `<meta name="description" id="meta-desc" content="${metadata.description}">\n</head>`);
         }
     }
 
@@ -314,29 +351,17 @@ function injectContent(template, content, metadata) {
     }
 
     // 4. Inject Site Name (Header & Footer)
+    // We use a regex to be safe, but simple string replacement might work if IDs are unique
     if (metadata && metadata.siteName) {
         html = html.replace(/(<span[^>]*id=["']header-site-name["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
         html = html.replace(/(<span[^>]*id=["']footer-site-name-copyright["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
     }
 
     // 5. Inject Main Content
-    // Use regex to be robust against attributes
     const mainRegex = /(<main[^>]*id=["']main-content["'][^>]*>)([\s\S]*?)(<\/main>)/i;
-    if (html.match(mainRegex)) {
-        html = html.replace(mainRegex, `$1${content}$3`);
-    } else {
-        // Fallback if regex fails (e.g. simple string replace)
-        html = html.replace('<main id="main-content" class="pt-16"></main>', `<main id="main-content" class="pt-16">${content}</main>`);
-    }
+    html = html.replace(mainRegex, `$1${content}$3`);
 
     return html;
-}
-
-function replacePlaceholders(template, data) {
-    if (!template) return "";
-    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return data[key] !== undefined ? data[key] : "";
-    });
 }
 
 // --- CONTENT GENERATORS (USING TEMPLATES) ---
@@ -664,7 +689,7 @@ export default {
         if (path === "/api/metadata") {
             const siteConfig = await fetchSiteConfig(config);
             const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL || "";
-            const data = await getCachedRSSData(substackUrl, env);
+            const data = await getCachedRSSData(substackUrl);
             return new Response(JSON.stringify({ ...data.metadata, title: siteConfig?.site?.name || "StackPages CMS" }), { status: 200, headers: corsHeaders });
         }
         if (path === "/api/posts") {
@@ -681,7 +706,7 @@ export default {
                     return new Response(JSON.stringify([]), { headers: corsHeaders });
                 }
 
-                const data = await getCachedRSSData(substackUrl, env);
+                const data = await getCachedRSSData(substackUrl);
                 const total = data.posts.length;
                 const paginatedPosts = data.posts.slice(offset, offset + limit);
 
@@ -732,7 +757,7 @@ export default {
                     return new Response(JSON.stringify({ videos: [], total: 0, hasMore: false }), { headers: corsHeaders });
                 }
 
-                const videos = await getCachedYoutubeData(youtubeUrl, env);
+                const videos = await getCachedYoutubeData(youtubeUrl);
                 const total = videos.length;
                 const paginatedVideos = videos.slice(offset, offset + limit);
 
@@ -893,8 +918,8 @@ export default {
             const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
             const content = generateHomeContent(template, metadata);
 
-            if (isHtmx) return htmlResponse(localizeContent(content + generateOOB(metadata, req), lang));
-            return htmlResponse(localizeContent(injectContent(template, content, metadata), lang));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         // --- DYNAMIC STATIC PAGES (CATCH-ALL) ---
@@ -907,25 +932,25 @@ export default {
             if (slug === 'annoucements' || slug === 'publications') {
                 const data = await getCachedRSSData(substackUrl);
                 const content = generatePublicationsContent(template, data.posts);
-                const pageMetadata = {
+                const metadata = {
                     title: `Announcements - ${siteName}`,
                     description: siteDescription,
                     keywords: siteKeywords
                 };
-                if (isHtmx) return htmlResponse(localizeContent(content + generateOOB(pageMetadata, req), lang));
-                return htmlResponse(localizeContent(injectContent(template, content, pageMetadata), lang));
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, content, metadata));
             }
 
             if (slug === 'tutorials' || slug === 'videos') {
                 const videos = await getCachedYoutubeData(youtubeUrl);
                 const content = generateVideosContent(template, videos);
-                const pageMetadata = {
+                const metadata = {
                     title: `Video Tutorials - ${siteName}`,
                     description: siteDescription,
                     keywords: siteKeywords
                 };
-                if (isHtmx) return htmlResponse(localizeContent(content + generateOOB(pageMetadata, req), lang));
-                return htmlResponse(localizeContent(injectContent(template, content, pageMetadata), lang));
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, content, metadata));
             }
 
             // Standard static template extraction
@@ -934,33 +959,36 @@ export default {
             if (dynamicContent) {
                 // Basic title formatting: "reservation" -> "Reservation"
                 const title = slug.charAt(0).toUpperCase() + slug.slice(1);
-                const pageMetadata = {
+                const metadata = {
                     title: `${title} - ${siteName}`,
                     description: siteDescription,
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(localizeContent(dynamicContent + generateOOB(pageMetadata, req), lang));
-                return htmlResponse(localizeContent(injectContent(template, dynamicContent, pageMetadata), lang));
+                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, dynamicContent, metadata));
             }
         }
 
+        // Single Video Detail Page
         if (path.startsWith("/video/")) {
-            const videoId = path.split("/").pop();
+            const slug = path.split("/video/")[1];
+
+            if (!youtubeUrl) {
+                return new Response("YouTube feed not configured", { status: 404 });
+            }
+
             const videos = await getCachedYoutubeData(youtubeUrl);
-            const video = videos.find(v => v.id === videoId || v.link.includes(videoId));
+            const video = videos.find(v => v.slug === slug);
 
             if (!video) {
-                return new Response("Video non trouvée", { status: 404 });
+                return new Response("Video not found", { status: 404 });
             }
 
             const detailTemplate = extractTemplate(template, 'tpl-video-detail');
-            if (!detailTemplate) {
-                return new Response("Error: Video detail template not found.", { status: 500 });
-            }
-
-            const embedUrl = `https://www.youtube.com/embed/${video.id}`;
-            const slug = video.id || video.link.split('v=')[1] || '';
+            // Use slug as videoId since we set it that way in the RSS parser
+            const videoId = video.slug;
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
 
             const content = replacePlaceholders(detailTemplate, {
                 title: video.title,
@@ -975,19 +1003,19 @@ export default {
                 slug: slug
             });
 
-            const pageMetadata = {
+            const metadata = {
                 title: `${video.title} - ${siteName}`,
-                description: video.description ? video.description.substring(0, 160) : siteDescription,
+                description: video.description || siteDescription,
                 keywords: siteKeywords
             };
 
-            if (isHtmx) return htmlResponse(localizeContent(content + generateOOB(pageMetadata, req), lang));
-            return htmlResponse(localizeContent(injectContent(template, content, pageMetadata), lang));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+            return htmlResponse(injectContent(template, content, metadata));
         }
 
         if (path.startsWith("/post/")) {
             const slug = path.split("/").pop();
-            const data = await getCachedRSSData(substackUrl, env);
+            const data = await getCachedRSSData(substackUrl);
             const post = data.posts.find(p => p.slug === slug);
 
             if (post) {
@@ -998,8 +1026,8 @@ export default {
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(localizeContent(content + generateOOB(metadata, req), lang));
-                return htmlResponse(localizeContent(injectContent(template, content, metadata), lang));
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
+                return htmlResponse(injectContent(template, content, metadata));
             } else {
                 return new Response("Article non trouvé", { status: 404 });
             }
@@ -1024,9 +1052,9 @@ export default {
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(localizeContent(githubContent + generateOOB(metadata, req), lang));
-                const data = await getCachedRSSData(substackUrl, env);
-                return htmlResponse(localizeContent(injectContent(template, githubContent, { ...data.metadata, ...metadata }), lang));
+                if (isHtmx) return htmlResponse(githubContent + generateOOB(metadata, req));
+                const data = await getCachedRSSData(substackUrl);
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, ...metadata }));
             } else {
                 return new Response("Page introuvable", { status: 404 });
             }
@@ -1039,9 +1067,9 @@ export default {
             const githubContent = await fetchGithubContent(config, slug);
 
             if (githubContent) {
-                if (isHtmx) return htmlResponse(localizeContent(githubContent, lang));
-                const data = await getCachedRSSData(substackUrl, env);
-                return htmlResponse(localizeContent(injectContent(template, githubContent, { ...data.metadata, title: siteName }), lang));
+                if (isHtmx) return htmlResponse(githubContent);
+                const data = await getCachedRSSData(substackUrl);
+                return htmlResponse(injectContent(template, githubContent, { ...data.metadata, title: siteName }));
             }
         }
 
