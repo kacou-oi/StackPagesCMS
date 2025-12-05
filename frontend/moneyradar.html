@@ -616,8 +616,36 @@
 
                 <img src="{{image}}" alt="{{title}}" class="w-full rounded-xl shadow-2xl mb-12">
 
-                <div class="prose prose-lg prose-invert max-w-none leading-relaxed article-content">
-                    {{content}}
+                <!-- Share Buttons -->
+                <div class="flex flex-wrap items-center gap-4 mb-12 pb-8 border-b border-gray-800">
+                    <span class="text-gray-400 font-semibold">Partager :</span>
+                    <a href="https://twitter.com/intent/tweet?text={{title}}&url={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-500 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-500">
+                        <i class="fab fa-twitter mr-2"></i> Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-600 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-600">
+                        <i class="fab fa-facebook-f mr-2"></i> Facebook
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-700 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-700">
+                        <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
+                    </a>
+                    <button
+                        onclick="navigator.clipboard.writeText('{{currentUrl}}'); this.innerHTML='<i class=\'fas fa-check mr-2\'></i> Copié !'; setTimeout(() => this.innerHTML='<i class=\'fas fa-link mr-2\'></i> Copier le lien', 2000)"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-cyan-500 text-white rounded-lg transition-all border border-gray-700 hover:border-cyan-500">
+                        <i class="fas fa-link mr-2"></i> Copier le lien
+                    </button>
+                </div>
+
+                <!-- Article Content in Styled Box -->
+                <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-12 rounded-2xl border border-gray-700">
+                    <div class="prose prose-lg prose-invert max-w-none leading-relaxed article-content">
+                        {{content}}
+                    </div>
                 </div>
             </div>
         </article>
@@ -711,6 +739,31 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen>
                     </iframe>
+                </div>
+
+                <!-- Share Buttons -->
+                <div class="flex flex-wrap items-center gap-4 mb-12">
+                    <span class="text-gray-400 font-semibold">Partager :</span>
+                    <a href="https://twitter.com/intent/tweet?text={{title}}&url={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-500 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-500">
+                        <i class="fab fa-twitter mr-2"></i> Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-600 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-600">
+                        <i class="fab fa-facebook-f mr-2"></i> Facebook
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{currentUrl}}" target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-700 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-700">
+                        <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
+                    </a>
+                    <button
+                        onclick="navigator.clipboard.writeText('{{currentUrl}}'); this.innerHTML='<i class=\'fas fa-check mr-2\'></i> Copié !'; setTimeout(() => this.innerHTML='<i class=\'fas fa-link mr-2\'></i> Copier le lien', 2000)"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-cyan-500 text-white rounded-lg transition-all border border-gray-700 hover:border-cyan-500">
+                        <i class="fas fa-link mr-2"></i> Copier le lien
+                    </button>
                 </div>
 
                 <!-- Description -->
