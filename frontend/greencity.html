@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ville de GreenCity - Site Officiel</title>
+    <meta name="description"
+        content="Bienvenue sur le site officiel de la commune de GreenCity. Actualités, démarches, vie locale.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            city: '#2E8B57',
+                            dark: '#1E5E3A',
+                            light: '#E8F5E9',
+                        },
+                        blue: {
+                            city: '#4682B4',
+                            dark: '#2C5274',
+                        },
+                        gray: {
+                            light: '#F3F4F6',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Open Sans"', 'sans-serif'],
+                        display: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .hero-pattern {
+            background-color: #2E8B57;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233cb371' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Top Bar -->
+    <div class="bg-green-dark text-white text-sm py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span><i class="fas fa-phone-alt mr-2"></i> 01 23 45 67 89</span>
+                <span class="hidden sm:inline"><i class="fas fa-envelope mr-2"></i> contact@greencity.fr</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-green-200"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-green-200"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-green-200"><i class="fab fa-instagram"></i></a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="bg-white text-green-dark px-3 py-1 rounded-full font-semibold hover:bg-green-100 transition">Nous
+                    contacter</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true" class="flex items-center gap-3">
+                        <i class="fas fa-leaf text-4xl text-green-city"></i>
+                        <div class="flex flex-col">
+                            <span class="font-display text-2xl font-bold text-gray-900 leading-none">GreenCity</span>
+                            <span class="text-sm text-green-city font-medium tracking-wider">Ville Durable</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex space-x-8">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-700 hover:text-green-city font-semibold transition">Accueil</a>
+
+                    <div class="relative group">
+                        <button
+                            class="text-gray-700 hover:text-green-city font-semibold transition flex items-center gap-1">
+                            Ma Ville <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border-t-4 border-green-city">
+                            <a href="/mairie" hx-get="/mairie" hx-target="#main-content" hx-push-url="true"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Mairie & Élus</a>
+                            <a href="/vivre" hx-get="/vivre" hx-target="#main-content" hx-push-url="true"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Vivre à GreenCity</a>
+                            <a href="/decouvrir" hx-get="/decouvrir" hx-target="#main-content" hx-push-url="true"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Découvrir & Tourisme</a>
+                        </div>
+                    </div>
+
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-700 hover:text-green-city font-semibold transition">Actualités</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-700 hover:text-green-city font-semibold transition">Web TV</a>
+                    <a href="/podcasts" hx-get="/podcasts" hx-target="#main-content" hx-push-url="true"
+                        class="text-gray-700 hover:text-green-city font-semibold transition">Kiosque Audio</a>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="lg:hidden">
+                    <button class="text-gray-700 hover:text-green-city focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area (HTMX Target) -->
+    <main id="main-content" class="flex-grow">
+
+        <!-- TEMPLATE: HOME (tpl-home) -->
+        <template id="tpl-home">
+            <!-- Hero Section -->
+            <section class="relative bg-green-city text-white py-20 hero-pattern">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2 space-y-6">
+                        <span
+                            class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm">Bienvenue
+                            à GreenCity</span>
+                        <h1 class="text-4xl md:text-6xl font-bold leading-tight">Une ville où il fait bon vivre
+                            ensemble.</h1>
+                        <p class="text-lg text-green-100">Découvrez nos services, nos actualités et participez à la vie
+                            de votre commune.</p>
+                        <div class="flex gap-4 pt-4">
+                            <a href="/mairie" hx-get="/mairie" hx-target="#main-content" hx-push-url="true"
+                                class="bg-white text-green-city px-6 py-3 rounded-lg font-bold hover:bg-green-50 transition shadow-lg">Mes
+                                démarches</a>
+                            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="bg-green-dark text-white px-6 py-3 rounded-lg font-bold hover:bg-green-900 transition shadow-lg">L'agenda</a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=2940&auto=format&fit=crop"
+                            alt="GreenCity View" class="rounded-2xl shadow-2xl border-4 border-white/20">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Access -->
+            <section class="py-12 bg-white -mt-8 relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <a href="#"
+                        class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition text-center group border border-gray-100">
+                        <div
+                            class="w-12 h-12 bg-green-light text-green-city rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-city group-hover:text-white transition">
+                            <i class="fas fa-file-signature text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">État Civil</h3>
+                    </a>
+                    <a href="#"
+                        class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition text-center group border border-gray-100">
+                        <div
+                            class="w-12 h-12 bg-blue-100 text-blue-city rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-city group-hover:text-white transition">
+                            <i class="fas fa-child text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Famille</h3>
+                    </a>
+                    <a href="#"
+                        class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition text-center group border border-gray-100">
+                        <div
+                            class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-500 group-hover:text-white transition">
+                            <i class="fas fa-hard-hat text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Urbanisme</h3>
+                    </a>
+                    <a href="#"
+                        class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition text-center group border border-gray-100">
+                        <div
+                            class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-red-500 group-hover:text-white transition">
+                            <i class="fas fa-exclamation-triangle text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Signalement</h3>
+                    </a>
+                </div>
+            </section>
+
+            <!-- News Section -->
+            <section class="py-16 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-10">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900 border-l-4 border-green-city pl-4">À la une</h2>
+                            <p class="text-gray-600 mt-2 pl-5">Les dernières actualités de votre commune</p>
+                        </div>
+                        <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                            class="text-green-city font-semibold hover:text-green-dark">Toutes les actualités <i
+                                class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+
+                    <div id="home-news-container" class="grid grid-cols-1 md:grid-cols-3 gap-8" hx-trigger="load"
+                        hx-get="/api/posts?limit=3" hx-swap="innerHTML">
+                        <!-- Loading State -->
+                        <div class="col-span-3 flex justify-center py-12">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-city"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mayor's Word -->
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-green-light rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-12">
+                        <div class="md:w-1/3">
+                            <div class="relative">
+                                <div
+                                    class="absolute inset-0 bg-green-city rounded-full transform translate-x-2 translate-y-2">
+                                </div>
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"
+                                    alt="Maire de GreenCity"
+                                    class="relative rounded-full w-64 h-64 object-cover border-4 border-white shadow-lg mx-auto">
+                            </div>
+                        </div>
+                        <div class="md:w-2/3">
+                            <h2 class="text-3xl font-bold text-green-dark mb-6">Le mot du Maire</h2>
+                            <p class="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                                "Chères GreenCityennes, chers GreenCityens, notre ville s'engage chaque jour pour un
+                                avenir plus durable et solidaire. Ensemble, construisons le GreenCity de demain."
+                            </p>
+                            <div class="flex items-center gap-4">
+                                <div>
+                                    <p class="font-bold text-gray-900">Jean Dupont</p>
+                                    <p class="text-green-city">Maire de GreenCity</p>
+                                </div>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Signature_sample.svg/1200px-Signature_sample.svg.png"
+                                    alt="Signature" class="h-12 opacity-50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Web TV & Podcasts -->
+            <section class="py-16 bg-gray-900 text-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                        <!-- Web TV -->
+                        <div>
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-2xl font-bold border-l-4 border-red-500 pl-4">Web TV</h2>
+                                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                                    class="text-gray-400 hover:text-white text-sm">Voir tout</a>
+                            </div>
+                            <div id="home-videos-container" class="space-y-6" hx-trigger="load"
+                                hx-get="/api/videos?limit=2" hx-swap="innerHTML">
+                                <div class="animate-pulse bg-gray-800 h-48 rounded-lg"></div>
+                            </div>
+                        </div>
+
+                        <!-- Podcasts -->
+                        <div>
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-2xl font-bold border-l-4 border-blue-500 pl-4">Kiosque Audio</h2>
+                                <a href="/podcasts" hx-get="/podcasts" hx-target="#main-content" hx-push-url="true"
+                                    class="text-gray-400 hover:text-white text-sm">Voir tout</a>
+                            </div>
+                            <div id="home-podcasts-container" class="space-y-4" hx-trigger="load"
+                                hx-get="/api/podcasts?limit=3" hx-swap="innerHTML">
+                                <div class="animate-pulse bg-gray-800 h-24 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: PUBLICATIONS (tpl-publications) -->
+        <template id="tpl-publications">
+            <section class="bg-green-city text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Actualités</h1>
+                    <p class="text-green-100 mt-2">Toute l'information de votre ville en temps réel.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-gray-50 min-h-screen">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-8" hx-trigger="load"
+                        hx-get="/api/posts" hx-swap="innerHTML">
+                        <div class="col-span-3 flex justify-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-city"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: VIDEOS (tpl-videos) -->
+        <template id="tpl-videos">
+            <section class="bg-gray-900 text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold"><span class="text-red-500">Web</span> TV</h1>
+                    <p class="text-gray-400 mt-2">Reportages, conseils municipaux et événements en vidéo.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-gray-100 min-h-screen">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                        hx-trigger="load" hx-get="/api/videos" hx-swap="innerHTML">
+                        <div class="col-span-full flex justify-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: PODCASTS (tpl-podcasts) -->
+        <template id="tpl-podcasts">
+            <section class="bg-blue-dark text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Kiosque Audio</h1>
+                    <p class="text-blue-200 mt-2">Écoutez les podcasts de GreenCity : interviews, débats, culture.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-white min-h-screen">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div id="podcasts-container" class="space-y-6" hx-trigger="load" hx-get="/api/podcasts"
+                        hx-swap="innerHTML">
+                        <div class="flex justify-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-dark"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: CONTACT (tpl-contact) -->
+        <template id="tpl-contact">
+            <section class="bg-green-city text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Contactez-nous</h1>
+                    <p class="text-green-100 mt-2">Nous sommes à votre écoute pour toutes vos questions.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- Form -->
+                        <div class="bg-gray-50 p-8 rounded-xl border border-gray-200">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Formulaire de contact</h2>
+                            <form class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Nom"
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-city focus:border-transparent">
+                                    <input type="text" placeholder="Prénom"
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-city focus:border-transparent">
+                                </div>
+                                <input type="email" placeholder="Email"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-city focus:border-transparent">
+                                <select
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-city focus:border-transparent">
+                                    <option>Sujet de votre demande</option>
+                                    <option>État Civil</option>
+                                    <option>Urbanisme</option>
+                                    <option>Voirie</option>
+                                    <option>Autre</option>
+                                </select>
+                                <textarea rows="5" placeholder="Votre message"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-city focus:border-transparent"></textarea>
+                                <button type="button"
+                                    class="w-full bg-green-city hover:bg-green-dark text-white font-bold py-3 rounded-lg transition">Envoyer</button>
+                            </form>
+                        </div>
+                        <!-- Info -->
+                        <div class="space-y-8">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-4">Hôtel de Ville</h3>
+                                <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt w-6 text-green-city"></i>
+                                    1 Place de la République, 75000 GreenCity</p>
+                                <p class="text-gray-600 mb-2"><i class="fas fa-phone w-6 text-green-city"></i> 01 23 45
+                                    67 89</p>
+                                <p class="text-gray-600"><i class="fas fa-envelope w-6 text-green-city"></i>
+                                    contact@greencity.fr</p>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-4">Horaires d'ouverture</h3>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li class="flex justify-between border-b border-gray-100 pb-2"><span>Lundi -
+                                            Vendredi</span> <span>08h30 - 17h30</span></li>
+                                    <li class="flex justify-between border-b border-gray-100 pb-2"><span>Samedi</span>
+                                        <span>09h00 - 12h00</span></li>
+                                    <li class="flex justify-between text-red-500"><span>Dimanche</span>
+                                        <span>Fermé</span></li>
+                                </ul>
+                            </div>
+                            <div class="h-64 bg-gray-200 rounded-xl overflow-hidden">
+                                <!-- Map Placeholder -->
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.292292615509614!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1647531535804!5m2!1sfr!2sfr"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen=""
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: MAIRIE (tpl-mairie) -->
+        <template id="tpl-mairie">
+            <section class="bg-green-dark text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Mairie & Élus</h1>
+                    <p class="text-green-200 mt-2">Découvrez l'équipe municipale et les services administratifs.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-8 border-l-4 border-green-city pl-4">Le Conseil
+                        Municipal</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                        <!-- Mayor -->
+                        <div class="text-center">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop"
+                                class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-green-light shadow-md">
+                            <h3 class="font-bold text-lg">Jean Dupont</h3>
+                            <p class="text-green-city font-medium">Maire</p>
+                        </div>
+                        <!-- Deputy 1 -->
+                        <div class="text-center">
+                            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop"
+                                class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-gray-100 shadow-md">
+                            <h3 class="font-bold text-lg">Marie Martin</h3>
+                            <p class="text-gray-600">1ère Adjointe</p>
+                        </div>
+                        <!-- Deputy 2 -->
+                        <div class="text-center">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"
+                                class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-gray-100 shadow-md">
+                            <h3 class="font-bold text-lg">Pierre Durand</h3>
+                            <p class="text-gray-600">Adjoint Urbanisme</p>
+                        </div>
+                        <!-- Deputy 3 -->
+                        <div class="text-center">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop"
+                                class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-gray-100 shadow-md">
+                            <h3 class="font-bold text-lg">Sophie Bernard</h3>
+                            <p class="text-gray-600">Adjointe Culture</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: VIVRE (tpl-vivre) -->
+        <template id="tpl-vivre">
+            <section class="bg-blue-city text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Vivre à GreenCity</h1>
+                    <p class="text-blue-100 mt-2">Tout savoir sur la vie quotidienne, les écoles, et les associations.
+                    </p>
+                </div>
+            </section>
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                            <i class="fas fa-school text-4xl text-blue-city mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Éducation</h3>
+                            <p class="text-gray-600 mb-4">Inscriptions scolaires, cantine, périscolaire.</p>
+                            <a href="#" class="text-blue-city font-semibold hover:underline">En savoir plus</a>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                            <i class="fas fa-users text-4xl text-blue-city mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Associations</h3>
+                            <p class="text-gray-600 mb-4">Annuaire des associations sportives et culturelles.</p>
+                            <a href="#" class="text-blue-city font-semibold hover:underline">En savoir plus</a>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                            <i class="fas fa-trash-alt text-4xl text-blue-city mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Déchets</h3>
+                            <p class="text-gray-600 mb-4">Calendrier de collecte, déchetterie, tri sélectif.</p>
+                            <a href="#" class="text-blue-city font-semibold hover:underline">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- TEMPLATE: DECOUVRIR (tpl-decouvrir) -->
+        <template id="tpl-decouvrir">
+            <section class="bg-yellow-500 text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl font-bold">Découvrir & Tourisme</h1>
+                    <p class="text-yellow-100 mt-2">Patrimoine, parcs, et événements incontournables.</p>
+                </div>
+            </section>
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900 mb-6">Le Parc Central</h2>
+                            <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                                Véritable poumon vert de la ville, le Parc Central offre 50 hectares de nature
+                                préservée. Idéal pour les promenades en famille, le sport, ou simplement pour se
+                                détendre au bord du lac.
+                            </p>
+                            <a href="#"
+                                class="bg-yellow-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-yellow-600 transition">Voir
+                                le plan</a>
+                        </div>
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1496564203457-11bb12075d90?q=80&w=1000&auto=format&fit=crop"
+                                class="rounded-2xl shadow-xl">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- COMPONENTS: CARDS -->
+        <template id="tpl-blog-card">
+            <article
+                class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden border border-gray-100 flex flex-col h-full group">
+                <div class="relative overflow-hidden h-48">
+                    <img src="{{image}}" alt="{{title}}"
+                        class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                    <div
+                        class="absolute top-4 left-4 bg-green-city text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                        Actualité</div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="text-sm text-gray-500 mb-2"><i class="far fa-calendar-alt mr-1"></i> {{date}}</div>
+                    <h3
+                        class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-green-city transition">
+                        {{title}}</h3>
+                    <p class="text-gray-600 mb-4 line-clamp-3 text-sm flex-grow">{{description}}</p>
+                    <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                        class="inline-flex items-center text-green-city font-semibold hover:text-green-dark mt-auto">
+                        Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+            </article>
+        </template>
+
+        <template id="tpl-video-card">
+            <div
+                class="bg-gray-800 rounded-xl overflow-hidden shadow-lg group hover:ring-2 hover:ring-red-500 transition">
+                <div class="relative">
+                    <img src="{{thumbnail}}" alt="{{title}}"
+                        class="w-full h-48 object-cover opacity-80 group-hover:opacity-100 transition">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition">
+                            <i class="fas fa-play ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="text-xs text-gray-400 mb-1">{{date}}</div>
+                    <h3 class="font-bold text-white line-clamp-2 mb-2 group-hover:text-red-400 transition">{{title}}
+                    </h3>
+                    <a href="{{link}}" target="_blank" class="text-sm text-gray-400 hover:text-white">Regarder sur
+                        YouTube <i class="fas fa-external-link-alt ml-1"></i></a>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-podcast-card">
+            <div
+                class="bg-white rounded-xl p-6 shadow-md border-l-4 border-blue-city hover:shadow-lg transition flex items-start gap-4">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-city rounded-full flex items-center justify-center">
+                        <i class="fas fa-headphones-alt text-xl"></i>
+                    </div>
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-gray-900 mb-1">{{title}}</h3>
+                    <div class="text-sm text-gray-500 mb-3">{{date}}</div>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{description}}</p>
+                    <audio controls class="w-full h-8">
+                        <source src="{{audioUrl}}" type="audio/mpeg">
+                        Votre navigateur ne supporte pas l'élément audio.
+                    </audio>
+                </div>
+            </div>
+        </template>
+
+        <!-- DETAIL PAGES -->
+        <template id="tpl-post-detail">
+            <article class="bg-white min-h-screen pb-20">
+                <!-- Header Image -->
+                <div class="h-[40vh] relative">
+                    <img src="{{image}}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white">
+                        <div class="max-w-4xl mx-auto">
+                            <span
+                                class="bg-green-city px-3 py-1 rounded text-sm font-bold mb-4 inline-block">Actualité</span>
+                            <h1 class="text-3xl md:text-5xl font-bold mb-4">{{title}}</h1>
+                            <div class="flex items-center gap-4 text-sm opacity-90">
+                                <span><i class="far fa-calendar-alt mr-2"></i> {{date}}</span>
+                                <span><i class="far fa-user mr-2"></i> {{author}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="inline-flex items-center text-gray-500 hover:text-green-city mb-8 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour aux actualités
+                    </a>
+                    <div class="prose prose-lg prose-green max-w-none">
+                        {{content}}
+                    </div>
+                </div>
+            </article>
+        </template>
+
+        <template id="tpl-video-detail">
+            <!-- Not strictly used by worker yet, but good for future proofing or client side fallback -->
+            <div class="bg-black min-h-screen text-white p-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="aspect-w-16 aspect-h-9 mb-8">
+                        <iframe src="{{embedUrl}}" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen class="w-full h-[60vh]"></iframe>
+                    </div>
+                    <h1 class="text-3xl font-bold mb-4">{{title}}</h1>
+                    <p class="text-gray-400">{{description}}</p>
+                </div>
+            </div>
+        </template>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-leaf text-3xl text-green-city"></i>
+                        <span class="font-display text-xl font-bold">GreenCity</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Site officiel de la commune de GreenCity. Retrouvez toutes les informations pratiques et
+                        l'actualité de votre ville.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-6 border-b border-gray-700 pb-2">Accès Rapide</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-green-city transition">Accueil</a></li>
+                        <li><a href="/mairie" hx-get="/mairie" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-green-city transition">Mairie & Élus</a></li>
+                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-green-city transition">Actualités</a></li>
+                        <li><a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-green-city transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-6 border-b border-gray-700 pb-2">Horaires Mairie</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex justify-between"><span>Lundi - Vendredi</span> <span>08h30 - 17h30</span></li>
+                        <li class="flex justify-between"><span>Samedi</span> <span>09h00 - 12h00</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-6 border-b border-gray-700 pb-2">Newsletter</h3>
+                    <p class="text-gray-400 text-sm mb-4">Restez informé de l'actualité de votre commune.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Votre email"
+                            class="bg-gray-800 text-white px-4 py-2 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-green-city w-full text-sm">
+                        <button class="bg-green-city hover:bg-green-dark px-4 py-2 rounded-r-lg transition"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; 2024 Ville de GreenCity. Tous droits réservés.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Mentions Légales</a>
+                    <a href="#" class="hover:text-white">Confidentialité</a>
+                    <a href="#" class="hover:text-white">Plan du site</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

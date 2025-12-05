@@ -830,9 +830,33 @@ export default {
                     items.push({
                         title: getTag('title'),
                         pubDate: getTag('pubDate'),
-                        audioUrl: encMatch ? encMatch[1] : null
+                        audioUrl: encMatch ? encMatch[1] : null,
+                        link: getTag('link'),
+                        description: getTag('description')
                     });
                 }
+
+                if (isHtmx) {
+                    const template = await getTemplate(config, siteConfig);
+                    const cardTpl = extractTemplate(template, 'tpl-podcast-card');
+
+                    if (cardTpl) {
+                        let itemsHtml = '';
+                        items.forEach(item => {
+                            const pubDate = new Date(item.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                            itemsHtml += replacePlaceholders(cardTpl, {
+                                title: item.title,
+                                pubDate: pubDate,
+                                date: pubDate,
+                                audioUrl: item.audioUrl,
+                                link: item.link,
+                                description: item.description
+                            });
+                        });
+                        return new Response(itemsHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                    }
+                }
+
                 return new Response(JSON.stringify(items), { headers: corsHeaders });
             } catch (e) {
                 return new Response(JSON.stringify([]), { headers: corsHeaders });
