@@ -59,6 +59,10 @@
                     class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg border border-gray-700">
                     <i class="fab fa-github"></i> Publier sur GitHub
                 </button>
+                <button onclick="saveAsTheme()" id="btn-save-theme"
+                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg border border-purple-500">
+                    <i class="fas fa-palette"></i> Enregistrer Thème
+                </button>
                 <button onclick="savePage('draft')"
                     class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition flex items-center gap-2">
                     <i class="far fa-save"></i> Brouillon
@@ -581,7 +585,7 @@ ${htmlContent}
 
             try {
                 // Construct the API request with enriched system instruction
-                const systemInstruction = "You are an expert web developer specialized in creating dynamic web pages.\n\n" +
+                const systemInstruction = "You are an expert web developer specialized in creating dynamic web pages and themes for StackPages CMS.\n\n" +
                     "IMPORTANT RULES:\n" +
                     "1. Generate ONLY valid HTML code with Tailwind CSS classes\n" +
                     "2. Do NOT include markdown backticks\n" +
@@ -589,6 +593,17 @@ ${htmlContent}
                     "4. The code should be complete body content or a full HTML page if requested\n" +
                     "5. Use modern Tailwind CSS utility classes for styling\n" +
                     "6. Always implement loading states and error handling for API calls\n\n" +
+
+                    "THEME CREATION CONTEXT:\n" +
+                    "If the user asks to create a THEME, you must generate a FULL HTML FILE (<!DOCTYPE html>...).\n" +
+                    "A valid StackPages theme MUST have these specific IDs for HTMX targeting:\n" +
+                    "- id='main-content': The main container where page content is swapped.\n" +
+                    "- id='publications-container': Inside the blog section, where articles are appended.\n" +
+                    "- id='videos-container': Inside the video section, where videos are appended.\n\n" +
+
+                    "HTMX NAVIGATION REQUIREMENTS:\n" +
+                    "- All internal links (nav, articles) MUST use hx-get, hx-target='#main-content', hx-push-url='true'.\n" +
+                    "- Example: <a href='/publications' hx-get='/publications' hx-target='#main-content' hx-push-url='true'>Blog</a>\n\n" +
 
                     "STACKPAGES CMS INTERNAL API:\n" +
                     "This CMS has an internal API that provides dynamic content. When the user requests content like blog, videos, podcasts, you MUST use these endpoints:\n\n" +

@@ -1565,3 +1565,227 @@ function loadPublishedPages() {
         container.appendChild(card);
     });
 }
+
+// GitHub Integration
+function getGitHubConfig() {
+    const owner = localStorage.getItem('stackpages_gh_owner');
+    const repo = localStorage.getItem('stackpages_gh_repo');
+    const token = localStorage.getItem('stackpages_gh_token');
+    return { owner, repo, token };
+}
+
+async function publishToGitHub() {
+    const { owner, repo, token } = getGitHubConfig();
+
+    if (!owner || !repo || !token) {
+        alert("Configuration GitHub manquante. Veuillez configurer votre dépôt dans les paramètres.");
+        // Open GitHub config modal if possible
+        const modal = document.getElementById('github-modal');
+        if (modal) modal.classList.remove('hidden');
+        return;
+    }
+
+    const title = document.getElementById('page-title').value.trim();
+    const slug = document.getElementById('page-slug').value.trim();
+    const htmlContent = monacoEditor ? monacoEditor.getValue().trim() : '';
+
+    if (!title || !slug || !htmlContent) {
+        alert("Veuillez remplir le titre et le contenu de la page.");
+        return;
+    }
+
+    const btn = document.getElementById('btn-publish-github');
+    const originalBtnContent = btn.innerHTML;
+
+    // UI Loading
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Publication...';
+
+    try {
+        const path = `content/pages/${slug}.html`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        // 1. Check if file exists to get SHA (for update)
+        let sha = null;
+        const checkRes = await fetch(apiUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (checkRes.ok) {
+            const data = await checkRes.json();
+            sha = data.sha;
+        }
+
+        // 2. Prepare content (Base64 encode with UTF-8 support)
+        const contentEncoded = btoa(unescape(encodeURIComponent(htmlContent)));
+
+        // 3. Create/Update file
+        const body = {
+            message: `Update page: ${title} (${slug})`,
+            content: contentEncoded,
+            branch: localStorage.getItem('stackpages_gh_branch') || 'main'
+        };
+
+        if (sha) {
+            body.sha = sha;
+        }
+
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+            const errorData = await putRes.json();
+            throw new Error(errorData.message || "Erreur lors de la publication sur GitHub");
+        }
+
+        // Success
+        btn.innerHTML = '<i class="fas fa-check"></i> Publié !';
+        btn.classList.remove('bg-gray-800', 'hover:bg-gray-900');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+        // Also save locally as published
+        savePage('published');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.add('bg-gray-800', 'hover:bg-gray-900');
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        }, 3000);
+
+    } catch (error) {
+        console.error("GitHub Publish Error:", error);
+        alert(`Erreur: ${error.message}`);
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+        btn.classList.add('bg-red-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.remove('bg-red-600');
+        }, 3000);
+    }
+}
+
+async function saveAsTheme() {
+    const { owner, repo, token } = getGitHubConfig();
+
+    if (!owner || !repo || !token) {
+        alert("Configuration GitHub manquante. Veuillez configurer votre dépôt dans les paramètres.");
+        const modal = document.getElementById('github-modal');
+        if (modal) modal.classList.remove('hidden');
+        return;
+    }
+
+    const htmlContent = monacoEditor ? monacoEditor.getValue().trim() : '';
+
+    if (!htmlContent) {
+        alert("L'éditeur est vide. Veuillez générer ou écrire du code HTML.");
+        return;
+    }
+
+    // Prompt for filename
+    let filename = prompt("Nom du fichier de thème (ex: mon-theme.html) :", "nouveau-theme.html");
+    if (!filename) return; // User cancelled
+
+    filename = filename.trim();
+    if (!filename.endsWith('.html')) {
+        filename += '.html';
+    }
+
+    const btn = document.getElementById('btn-save-theme');
+    const originalBtnContent = btn.innerHTML;
+
+    // UI Loading
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sauvegarde...';
+
+    try {
+        const path = `frontend/${filename}`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        // 1. Check if file exists to get SHA (for update)
+        let sha = null;
+        const checkRes = await fetch(apiUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (checkRes.ok) {
+            const data = await checkRes.json();
+            sha = data.sha;
+            if (!confirm(`Le thème "${filename}" existe déjà. Voulez-vous l'écraser ?`)) {
+                throw new Error("Sauvegarde annulée par l'utilisateur.");
+            }
+        }
+
+        // 2. Prepare content (Base64 encode with UTF-8 support)
+        const contentEncoded = btoa(unescape(encodeURIComponent(htmlContent)));
+
+        // 3. Create/Update file
+        const body = {
+            message: `Add/Update theme: ${filename}`,
+            content: contentEncoded,
+            branch: localStorage.getItem('stackpages_gh_branch') || 'main'
+        };
+
+        if (sha) {
+            body.sha = sha;
+        }
+
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+            const errorData = await putRes.json();
+            throw new Error(errorData.message || "Erreur lors de la sauvegarde du thème sur GitHub");
+        }
+
+        // Success
+        btn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+        btn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+        alert(`Thème "${filename}" sauvegardé avec succès dans le dossier frontend/ !`);
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        }, 3000);
+
+    } catch (error) {
+        console.error("Theme Save Error:", error);
+        if (error.message !== "Sauvegarde annulée par l'utilisateur.") {
+            alert(`Erreur: ${error.message}`);
+        }
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+        btn.classList.add('bg-red-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.remove('bg-red-600');
+        }, 3000);
+    }
+}
