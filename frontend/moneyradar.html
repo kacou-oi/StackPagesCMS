@@ -307,6 +307,63 @@
     </footer>
 
     <script src="/core/client.js"></script>
+    <script>
+        // Handle active navigation link styling
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to update active nav link
+            function updateActiveNavLink() {
+                const currentPath = window.location.pathname;
+                const navLinks = document.querySelectorAll('.header-nav-link');
+
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPath || (currentPath === '/' && href === '/')) {
+                        // Active link - cyan
+                        link.classList.remove('text-gray-300');
+                        link.classList.add('text-cyan-400');
+                    } else {
+                        // Inactive link - gray
+                        link.classList.remove('text-cyan-400');
+                        link.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            // Update on page load
+            updateActiveNavLink();
+
+            // Update after HTMX navigation
+            document.body.addEventListener('htmx:afterSettle', updateActiveNavLink);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('translate-x-full');
+            mobileMenuOverlay.classList.remove('hidden');
+        }
+
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.add('translate-x-full');
+            mobileMenuOverlay.classList.add('hidden');
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', openMobileMenu);
+        }
+
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+    </script>
 
     <!-- TEMPLATES -->
 
