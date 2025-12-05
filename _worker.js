@@ -756,8 +756,14 @@ export default {
         });
 
         // Helper for HTMX Out-Of-Band Swaps (SEO Updates)
-        const generateOOB = (metadata) => {
+        const generateOOB = (metadata, req) => {
             if (!isHtmx) return "";
+
+            // Only update title/meta if we are targeting the main content
+            // This prevents widgets (like latest articles on homepage) from overwriting the page title
+            const hxTarget = req.headers.get("HX-Target");
+            if (hxTarget && hxTarget !== "main-content") return "";
+
             const title = metadata.title || "StackPages CMS";
             const desc = metadata.description || "";
             const keywords = metadata.keywords || "";
@@ -789,7 +795,7 @@ export default {
             const metadata = { ...data.metadata, title: siteName, description: siteDescription, keywords: siteKeywords };
             const content = generateHomeContent(template, metadata);
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -798,7 +804,7 @@ export default {
             const metadata = { ...data.metadata, title: `Publications - ${siteName}`, description: "Découvrez mes derniers articles.", keywords: siteKeywords };
             const content = generatePublicationsContent(template, data.posts);
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -807,7 +813,7 @@ export default {
             const content = generateVideosContent(template, videos);
             const metadata = { title: `Vidéos - ${siteName}`, description: "Mes dernières vidéos YouTube.", keywords: siteKeywords };
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -815,7 +821,7 @@ export default {
             const content = generateCoachingContent(template);
             const metadata = { title: `Coaching - ${siteName}`, description: "Réservez votre séance de coaching.", keywords: siteKeywords };
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -835,7 +841,7 @@ export default {
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata));
+                if (isHtmx) return htmlResponse(dynamicContent + generateOOB(metadata, req));
                 return htmlResponse(injectContent(template, dynamicContent, metadata));
             }
         }
@@ -844,7 +850,7 @@ export default {
             const content = generateBioContent(template);
             const metadata = { title: `Biographie - ${siteName}`, description: "À propos de moi.", keywords: siteKeywords };
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -852,7 +858,7 @@ export default {
             const content = generateContactContent(template);
             const metadata = { title: `Contact - ${siteName}`, description: "Contactez-moi pour toute question.", keywords: siteKeywords };
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -894,7 +900,7 @@ export default {
                 keywords: siteKeywords
             };
 
-            if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+            if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
             return htmlResponse(injectContent(template, content, metadata));
         }
 
@@ -911,7 +917,7 @@ export default {
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
                 return htmlResponse(injectContent(template, content, metadata));
             } else {
                 return new Response("Article non trouvé", { status: 404 });
@@ -931,7 +937,7 @@ export default {
                     keywords: siteKeywords
                 };
 
-                if (isHtmx) return htmlResponse(content + generateOOB(metadata));
+                if (isHtmx) return htmlResponse(content + generateOOB(metadata, req));
                 return htmlResponse(injectContent(template, content, metadata));
             } else {
                 return new Response("Vidéo non trouvée", { status: 404 });
