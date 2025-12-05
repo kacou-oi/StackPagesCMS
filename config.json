@@ -19,11 +19,11 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "wishlist",
+    "activeTemplate": "default",
     "primaryColor": "#ff7c22"
   },
   "feeds": {
-    "substack": "https://on.substack.com/feed",
+    "substack": "https://blog.cloudflare.com/rss",
     "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCgv3xMy6kECn0boYP9d2o-g",
     "podcast": "https://feeds.fame.so/the-connectivity-cloud-podcast"
   }
