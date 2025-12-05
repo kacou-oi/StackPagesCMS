@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">StackPages Podcaster</title>
+    <meta name="description" id="meta-desc" content="">
+    <meta name="keywords" id="meta-keywords" content="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d28d9;
+        }
+    </style>
+</head>
+
+<body
+    class="font-sans antialiased text-slate-200 bg-slate-950 flex flex-col min-h-screen selection:bg-purple-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between relative">
+            <!-- Left Group: Logo -->
+            <div class="flex items-center space-x-4">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="flex items-center text-xl font-bold text-white hover:text-purple-400 transition-colors"
+                    id="header-logo-link">
+                    <img id="header-logo" src="" alt="Logo" class="h-8 mr-3 rounded-full border border-slate-700"
+                        onerror="this.style.display='none';" style="display: none;">
+                    <span id="header-site-name" class="tracking-tight">StackPages</span>
+                </a>
+            </div>
+
+            <!-- Main Navigation (Desktop) -->
+            <div class="hidden md:flex space-x-8 absolute left-1/2 -translate-x-1/2 z-20">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-400 hover:text-purple-400 transition-colors uppercase tracking-wider">
+                    Accueil
+                </a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-400 hover:text-purple-400 transition-colors uppercase tracking-wider">
+                    Épisodes
+                </a>
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-400 hover:text-purple-400 transition-colors uppercase tracking-wider">
+                    Vidéos
+                </a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-400 hover:text-purple-400 transition-colors uppercase tracking-wider">
+                    Contact
+                </a>
+            </div>
+
+            <!-- Right Group -->
+            <div class="flex items-center space-x-4">
+                <div id="header-podcast-player-container" class="hidden md:flex items-center">
+                    <!-- Player injected by client.js -->
+                </div>
+
+                <button class="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none"
+                    id="mobile-menu-button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <a href="https://open.spotify.com" target="_blank"
+                    class="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-green-500 text-black hover:bg-green-400 transition-all transform hover:scale-110">
+                    <i class="fab fa-spotify text-xl"></i>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-72 bg-slate-900 border-l border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4 text-slate-500 hover:text-white" id="close-mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+                <div class="mt-12 flex flex-col space-y-6">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-xl font-bold text-slate-300 hover:text-purple-400 transition-colors">Accueil</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-xl font-bold text-slate-300 hover:text-purple-400 transition-colors">Épisodes</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-xl font-bold text-slate-300 hover:text-purple-400 transition-colors">Vidéos</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="text-xl font-bold text-slate-300 hover:text-purple-400 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow pt-20">
+        <!-- Content will be injected here by the Worker -->
+    </main>
+
+    <!-- Modals -->
+    <div id="article-modal"
+        class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 overflow-y-auto hidden backdrop-blur-md">
+        <div
+            class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button class="absolute top-4 right-4 text-slate-400 hover:text-white z-10 bg-slate-800/50 rounded-full p-2"
+                id="close-article-modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <div id="article-modal-content" class="relative">
+                <img id="modal-article-image" src="" alt="Cover" class="w-full h-72 object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                <div class="relative p-8 -mt-32">
+                    <span
+                        class="inline-block px-3 py-1 bg-purple-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4">Article</span>
+                    <h2 id="modal-article-title" class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                    </h2>
+                    <p class="text-slate-400 text-sm mb-8 flex items-center gap-2">
+                        <i class="far fa-user"></i> <span id="modal-article-author"></span>
+                        <span class="mx-2">•</span>
+                        <i class="far fa-calendar"></i> <span id="modal-article-pubdate"></span>
+                    </p>
+                    <div id="modal-article-body" class="prose prose-invert prose-lg max-w-none text-slate-300"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-modal"
+        class="fixed inset-0 bg-black/95 flex items-center justify-center p-4 z-50 hidden backdrop-blur-xl">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-xl shadow-2xl border border-slate-800">
+            <button class="absolute -top-12 right-0 text-white hover:text-purple-400 transition-colors"
+                id="close-video-modal">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-xl" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-12 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold text-white mb-6 tracking-tight">Restez à l'écoute</h2>
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="#"
+                    class="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-purple-600 hover:text-white transition-all"><i
+                        class="fab fa-twitter text-xl"></i></a>
+                <a href="#"
+                    class="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-purple-600 hover:text-white transition-all"><i
+                        class="fab fa-instagram text-xl"></i></a>
+                <a href="#"
+                    class="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-purple-600 hover:text-white transition-all"><i
+                        class="fab fa-linkedin-in text-xl"></i></a>
+            </div>
+            <p class="text-slate-600 text-sm">© 2025 <span id="footer-site-name-copyright">StackPages</span>. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- TEMPLATES -->
+
+    <template id="tpl-home">
+        <!-- Hero Section -->
+        <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1478737270239-2f02b77ac6d5?q=80&w=2666&auto=format&fit=crop"
+                    class="w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-slate-950"></div>
+            </div>
+
+            <div class="container mx-auto px-4 relative z-10 text-center">
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-purple-900/50 border border-purple-700 text-purple-300 text-sm font-medium mb-6 animate-fade-in">
+                    Nouvel Épisode Disponible
+                </span>
+                <h1
+                    class="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-tight animate-fade-in delay-100">
+                    LA VOIX DU <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">FUTUR</span>
+                </h1>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in delay-200">
+                    Plongez dans des conversations fascinantes sur la tech, l'innovation et le futur de notre société.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-300">
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-purple-900/20 flex items-center justify-center gap-2">
+                        <i class="fas fa-play"></i> Écouter Maintenant
+                    </a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-full font-bold text-lg transition-all border border-slate-700">
+                        S'abonner
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Episodes Preview -->
+        <section class="py-20 bg-slate-950">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white mb-2">Derniers Épisodes</h2>
+                        <div class="h-1 w-20 bg-purple-600 rounded-full"></div>
+                    </div>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-purple-400 hover:text-purple-300 font-medium">Voir tout -></a>
+                </div>
+
+                <!-- Placeholder for dynamic content injection if needed, or static showcase -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Static placeholders for design demo -->
+                    <div
+                        class="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-purple-500/50 transition-all group">
+                        <div
+                            class="w-12 h-12 bg-purple-900/50 rounded-xl flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-microphone-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">L'IA
+                            Générative</h3>
+                        <p class="text-slate-400 text-sm mb-4">Exploration des impacts de l'IA sur la création de
+                            contenu.</p>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Saison 1 • Épisode
+                            4</span>
+                    </div>
+                    <div
+                        class="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-purple-500/50 transition-all group">
+                        <div
+                            class="w-12 h-12 bg-blue-900/50 rounded-xl flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-code text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                            No-Code Revolution</h3>
+                        <p class="text-slate-400 text-sm mb-4">Comment construire des apps sans écrire une ligne de
+                            code.</p>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Saison 1 • Épisode
+                            3</span>
+                    </div>
+                    <div
+                        class="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-purple-500/50 transition-all group">
+                        <div
+                            class="w-12 h-12 bg-pink-900/50 rounded-xl flex items-center justify-center text-pink-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-rocket text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-pink-400 transition-colors">
+                            Startup Mindset</h3>
+                        <p class="text-slate-400 text-sm mb-4">Les clés pour lancer son projet en 2025.</p>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Saison 1 • Épisode
+                            2</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-list">
+        <section class="container mx-auto px-4 py-16">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Tous les Épisodes</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Retrouvez l'intégralité de nos discussions et articles.</p>
+            </div>
+            <div id="publications-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{items}}
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-card">
+        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+            class="flex flex-col md:flex-row bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-purple-500/50 transition-all group h-full">
+            <div class="md:w-1/3 relative overflow-hidden">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                <div class="absolute inset-0 bg-purple-900/20 group-hover:bg-transparent transition-colors"></div>
+            </div>
+            <div class="p-6 md:w-2/3 flex flex-col justify-center">
+                <div class="flex items-center gap-2 mb-3">
+                    <span
+                        class="px-2 py-1 bg-slate-800 text-purple-400 text-xs font-bold rounded uppercase">Podcast</span>
+                    <span class="text-slate-500 text-xs">{{date}}</span>
+                </div>
+                <h3
+                    class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors leading-tight">
+                    {{title}}</h3>
+                <p class="text-slate-400 text-sm line-clamp-2 mb-4">{{description}}</p>
+                <div class="flex items-center text-purple-400 text-sm font-bold mt-auto">
+                    <i class="fas fa-play-circle mr-2"></i> Écouter
+                </div>
+            </div>
+        </a>
+    </template>
+
+    <template id="tpl-video-list">
+        <section class="container mx-auto px-4 py-16">
+            <h2 class="text-4xl font-black text-white text-center mb-12">Vidéos Exclusives</h2>
+            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {{items}}
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-video-card">
+        <div class="group cursor-pointer" onclick="openVideoModal('{{link}}')">
+            <div
+                class="relative aspect-video rounded-xl overflow-hidden mb-4 border border-slate-800 group-hover:border-purple-500 transition-all">
+                <img src="{{thumbnail}}" alt="{{title}}"
+                    class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div
+                        class="w-14 h-14 bg-purple-600/90 rounded-full flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform">
+                        <i class="fas fa-play pl-1"></i>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors">
+                {{title}}</h3>
+            <p class="text-slate-500 text-xs mt-2">{{date}}</p>
+        </div>
+    </template>
+
+    <template id="tpl-post-detail">
+        <article class="container mx-auto px-4 py-16 max-w-3xl">
+            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                class="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Retour aux épisodes
+            </a>
+
+            <header class="mb-10 text-center">
+                <span
+                    class="inline-block px-3 py-1 bg-purple-900/30 text-purple-300 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Épisode</span>
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center justify-center gap-4 text-slate-400 text-sm">
+                    <span class="flex items-center gap-2"><img
+                            src="https://ui-avatars.com/api/?name={{author}}&background=random"
+                            class="w-6 h-6 rounded-full"> {{author}}</span>
+                    <span>•</span>
+                    <span>{{date}}</span>
+                </div>
+            </header>
+
+            <div class="relative rounded-2xl overflow-hidden mb-12 shadow-2xl border border-slate-800">
+                <img src="{{image}}" alt="{{title}}" class="w-full h-auto">
+                <div
+                    class="absolute bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur p-4 flex items-center justify-between border-t border-slate-800">
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white hover:bg-purple-500 transition-colors">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="h-1 bg-slate-700 w-32 md:w-64 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 w-1/3"></div>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">12:45 / 45:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prose prose-invert prose-lg max-w-none text-slate-300 leading-relaxed article-content">
+                {{content}}
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-contact">
+        <section class="container mx-auto px-4 py-20">
+            <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl">
+                <h2 class="text-3xl font-black text-white mb-2 text-center">Contactez-nous</h2>
+                <p class="text-slate-400 text-center mb-10">Une question ? Une proposition de partenariat ?</p>
+
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nom</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                                required>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                                required>
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Message</label>
+                        <textarea id="message" name="message" rows="5"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+                            required></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-purple-900/20">
+                        Envoyer le Message
+                    </button>
+                </form>
+            </div>
+        </section>
+    </template>
+
+</body>
+
+</html>

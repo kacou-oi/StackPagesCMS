@@ -1,0 +1,30 @@
+{
+  "site": {
+    "name": "StackPages",
+    "domain": "https://app.stackpages.net/",
+    "description": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
+    "author": "Admin",
+    "logo": "",
+    "favicon": ""
+  },
+  "seo": {
+    "title": "StackPages Cloud",
+    "metaDescription": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
+    "keywords": "CMS, Jamstack, Headless, Blog, Substack, JS, HTMX, WSR",
+    "ogImage": ""
+  },
+  "social": {
+    "twitter": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "theme": {
+    "activeTemplate": "guru",
+    "primaryColor": "#FF6B35"
+  },
+  "feeds": {
+    "substack": "https://blog.cloudflare.com/rss",
+    "youtube": "https://youtube.com/feeds/videos.xml?channel_id=UCgv3xMy6kECn0boYP9d2o-g",
+    "podcast": "https://feeds.fame.so/the-connectivity-cloud-podcast"
+  }
+}

@@ -52,8 +52,16 @@
 
             <div class="flex items-center gap-3">
                 <button onclick="previewPageNewTab()"
-                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition flex items-center gap-2">
-                    <i class="fas fa-external-link-alt"></i> Aperçu
+                    class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg font-medium transition flex items-center gap-2">
+                    <i class="fas fa-external-link-alt"></i> Prévisualiser
+                </button>
+                <button onclick="publishToGitHub()" id="btn-publish-github"
+                    class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg border border-gray-700">
+                    <i class="fab fa-github"></i> Publier sur GitHub
+                </button>
+                <button onclick="saveAsTheme()" id="btn-save-theme"
+                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition flex items-center gap-2 shadow-lg border border-purple-500">
+                    <i class="fas fa-palette"></i> Enregistrer Thème
                 </button>
                 <button onclick="savePage('draft')"
                     class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition flex items-center gap-2">
@@ -351,7 +359,9 @@
                     formatOnType: true,
                     suggest: {
                         snippetsPreventQuickSuggestions: false
-                    }
+                    },
+                    // Increase limit for long lines (e.g. base64)
+                    maxTokenizationLineLength: 20000
                 });
 
                 // Make globally accessible
@@ -576,10 +586,95 @@ ${htmlContent}
             if (errorDiv) errorDiv.classList.add('hidden');
 
             try {
-                // Construct the API request
-                const systemInstruction = "You are an expert web developer. Generate ONLY valid HTML code with Tailwind CSS classes based on the user's request. Do not include markdown backticks (```html), do not include explanations. The code should be a complete body content or a full HTML page if requested. Use modern Tailwind CSS utility classes. If images are needed, use placeholder URLs like 'https://placehold.co/600x400'.";
+                // Construct the API request with enriched system instruction
+                const systemInstruction = "You are an expert web developer specialized in creating dynamic web pages and themes for StackPages CMS.\n\n" +
+                    "IMPORTANT RULES:\n" +
+                    "1. Generate ONLY valid HTML code with Tailwind CSS classes\n" +
+                    "2. Do NOT include markdown backticks\n" +
+                    "3. Do NOT include explanations or comments outside the code\n" +
+                    "4. The code should be complete body content or a full HTML page if requested\n" +
+                    "5. Use modern Tailwind CSS utility classes for styling\n" +
+                    "6. Always implement loading states and error handling for API calls\n" +
+                    "7. CRITICAL: NEVER generate base64 data URIs for images. ALWAYS use external URLs (e.g., https://placehold.co/600x400 or real URLs).\n\n" +
 
-                const fullPrompt = `${systemInstruction}\n\nUser Request: ${prompt}`;
+                    "THEME CREATION CONTEXT:\n" +
+                    "If the user asks to create a THEME, you must generate a FULL HTML FILE (<!DOCTYPE html>...).\n" +
+                    "A valid StackPages theme MUST have these specific IDs for HTMX targeting:\n" +
+                    "- id='main-content': The main container where page content is swapped.\n" +
+                    "- id='publications-container': Inside the blog section, where articles are appended.\n" +
+                    "- id='videos-container': Inside the video section, where videos are appended.\n\n" +
+
+                    "HTMX NAVIGATION REQUIREMENTS:\n" +
+                    "- All internal links (nav, articles) MUST use hx-get, hx-target='#main-content', hx-push-url='true'.\n" +
+                    "- Example: <a href='/publications' hx-get='/publications' hx-target='#main-content' hx-push-url='true'>Blog</a>\n\n" +
+
+                    "STACKPAGES CMS INTERNAL API:\n" +
+                    "This CMS has an internal API that provides dynamic content. When the user requests content like blog, videos, podcasts, you MUST use these endpoints:\n\n" +
+
+                    "API ENDPOINTS:\n\n" +
+                    "1. /api/posts - Substack Articles\n" +
+                    "   Response: Array of objects [{ title, description, content, link, pubDate, author, image }]\n" +
+                    "   Note: Use 'content' for full HTML body, 'image' for cover image, 'link' for URL.\n\n" +
+
+                    "2. /api/videos - YouTube Videos\n" +
+                    "   Response: Array of objects [{ title, description, link, thumbnail, published }]\n" +
+                    "   Note: Use 'link' for URL (convert to embed if needed), 'published' for date.\n\n" +
+
+                    "3. /api/podcasts - Podcast Episodes\n" +
+                    "   Response: Array of objects [{ title, description, link, audioUrl, pubDate }]\n" +
+                    "   Note: Use 'link' for page URL, 'audioUrl' for mp3 source.\n\n" +
+
+                    "4. /api/metadata - Site Metadata\n" +
+                    "   Response: Object { title, description, author, logo, keywords[] }\n\n" +
+
+                    "CODE PATTERN:\n" +
+                    "When user requests dynamic content, use this pattern:\n" +
+                    "- Create a container div with an ID\n" +
+                    "- Add a loading message initially\n" +
+                    "- Use fetch() with ABSOLUTE URL: window.location.origin + '/api/endpoint'\n" +
+                    "- Check if data is array: if (Array.isArray(data) && data.length > 0)\n" +
+                    "- Map the data array to HTML\n" +
+                    "- Include error handling with catch()\n\n" +
+
+                    "CRITICAL - API CALLS:\n" +
+                    "ALWAYS use absolute URLs for API calls:\n" +
+                    "fetch(window.location.origin + '/api/posts')\n" +
+                    "NOT just fetch('/api/posts')\n\n" +
+
+                    "EXAMPLE:\n" +
+                    "User asks for 'blog' → Generate HTML with fetch(window.location.origin + '/api/posts')\n" +
+                    "User asks for 'videos' → Generate HTML with fetch(window.location.origin + '/api/videos')\n" +
+                    "User asks for 'podcasts' → Generate HTML with fetch(window.location.origin + '/api/podcasts')\n\n" +
+
+                    "STYLING:\n" +
+                    "- Use Tailwind CSS utility classes\n" +
+                    "- Make designs modern and responsive\n" +
+                    "- Include animations and hover effects\n" +
+                    "- Always add loading states and error handling\n\n" +
+
+                    "CRITICAL:\n" +
+                    "- JavaScript code MUST be inside script tags at the end\n" +
+                    "- Do NOT use external libraries except TailwindCSS\n" +
+                    "- Make sure all IDs match between HTML and JavaScript\n" +
+                    "- ALWAYS use window.location.origin + '/api/...' for API calls\n" +
+                    "- API returns ARRAYS (except metadata), so iterate directly on data, NOT data.posts\n" +
+                    "- Use correct field names: 'link' (not url), 'pubDate'/'published' (not date/publishedAt)";
+
+                // Get current editor content
+                const currentCode = monacoEditor ? monacoEditor.getValue().trim() : '';
+
+                let fullPrompt = "";
+
+                if (currentCode) {
+                    // Iterative Mode: Modify existing code
+                    fullPrompt = systemInstruction +
+                        "\n\nCURRENT CODE:\n```html\n" + currentCode + "\n```\n\n" +
+                        "USER REQUEST (Modify the code above):\n" + prompt +
+                        "\n\nINSTRUCTION: Return the FULLY UPDATED HTML code based on the user request. Do not omit any parts unless requested. Maintain the existing structure and logic where possible.";
+                } else {
+                    // Generation Mode: Create from scratch
+                    fullPrompt = systemInstruction + "\n\nUser Request: " + prompt;
+                }
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
@@ -762,6 +857,91 @@ ${htmlContent}
                 }
             } else {
                 window.location.href = '/admin/visual-editor.html';
+            }
+        }
+        // Publish to GitHub
+        async function publishToGitHub() {
+            if (!confirm("Voulez-vous publier cette page sur GitHub ?")) return;
+
+            // 1. Get GitHub Config
+            const ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+            if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+                alert("Configuration GitHub manquante. Veuillez la configurer dans le tableau de bord (cliquez sur l'icône GitHub en bas à gauche).");
+                return;
+            }
+
+            // 2. Get Content & Metadata
+            const slug = document.getElementById('page-slug')?.value.trim();
+            if (!slug) {
+                alert("Veuillez définir un slug pour la page (sauvegardez d'abord la page pour générer un slug si nécessaire).");
+                return;
+            }
+
+            const htmlContent = monacoEditor ? monacoEditor.getValue() : '';
+            if (!htmlContent) {
+                alert("Le contenu est vide.");
+                return;
+            }
+
+            // 3. Prepare API Call
+            const path = `content/pages/${slug}.html`;
+            const contentBase64 = btoa(unescape(encodeURIComponent(htmlContent))); // Handle UTF-8
+            const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+
+            // Feedback UI
+            const btn = document.getElementById('btn-publish-github');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication...';
+            btn.disabled = true;
+
+            try {
+                // Check if file exists to get SHA
+                let sha = null;
+                const checkRes = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${ghConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (checkRes.ok) {
+                    const data = await checkRes.json();
+                    sha = data.sha;
+                }
+
+                // Push to GitHub
+                const body = {
+                    message: `Update page: ${slug}`,
+                    content: contentBase64,
+                    branch: 'main' // Default branch
+                };
+                if (sha) body.sha = sha;
+
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${ghConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (res.ok) {
+                    alert("Page publiée avec succès sur GitHub !");
+                    // Also save locally to keep sync
+                    savePage();
+                } else {
+                    const error = await res.json();
+                    throw new Error(error.message);
+                }
+
+            } catch (e) {
+                console.error("GitHub Publish Error:", e);
+                alert(`Erreur lors de la publication : ${e.message}`);
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
             }
         }
     </script>

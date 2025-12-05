@@ -228,12 +228,12 @@
 
             <!-- History -->
             <div class="flex items-center gap-0.5">
-                <button onclick="execCmd('undo')"
-                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Annuler">
+                <button onclick="customUndo()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Annuler">
                     <i class="fas fa-undo text-sm"></i>
                 </button>
-                <button onclick="execCmd('redo')"
-                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Rétablir">
+                <button onclick="customRedo()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Rétablir">
                     <i class="fas fa-redo text-sm"></i>
                 </button>
             </div>
@@ -253,6 +253,10 @@
                 <button onclick="execCmd('underline')"
                     class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Souligné">
                     <i class="fas fa-underline text-sm"></i>
+                </button>
+                <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Lien">
+                    <i class="fas fa-link text-sm"></i>
                 </button>
             </div>
 
@@ -294,10 +298,15 @@
 
             <!-- Inserts -->
             <div class="flex items-center gap-0.5">
-                <button onclick="promptLink()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
-                    title="Lien">
-                    <i class="fas fa-link text-sm"></i>
-                </button>
+                <div class="relative group">
+                    <button onclick="document.getElementById('color-picker').click()"
+                        class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10 flex items-center gap-1"
+                        title="Couleur du texte">
+                        <i class="fas fa-palette text-sm"></i>
+                    </button>
+                    <input type="color" id="color-picker" class="absolute opacity-0 w-0 h-0"
+                        onchange="execCmd('foreColor', this.value)" value="#000000">
+                </div>
                 <button onclick="promptImage()" class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
                     title="Image">
                     <i class="fas fa-image text-sm"></i>
@@ -305,6 +314,11 @@
                 <button onclick="openImageBank()"
                     class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10" title="Banque d'images">
                     <i class="fas fa-cloud-download-alt text-sm"></i>
+                </button>
+                <button onclick="duplicateElement()"
+                    class="p-1.5 hover:text-orange-400 transition rounded hover:bg-white/10"
+                    title="Dupliquer l'élément">
+                    <i class="fas fa-copy text-sm"></i>
                 </button>
             </div>
         </div>
@@ -314,6 +328,12 @@
             let isEditMode = false; // Initialize isEditMode
             let pexelsApiKey = localStorage.getItem('stackpages_pexels_key') || '';
             let currentImageSelection = null; // To store the image element being edited
+
+            // History management for undo/redo
+            let historyStack = [];
+            let historyIndex = -1;
+            let isRestoringState = false; // Flag to prevent saving during restore
+            const MAX_HISTORY = 50; // Limit history to prevent memory issues
 
             // --- Initialization ---
             document.addEventListener('DOMContentLoaded', () => {
@@ -387,6 +407,21 @@
                     .editable-hover { outline: 2px dashed #f97316; cursor: text; }
                     .editable-active { outline: 2px solid #f97316; }
                     [contenteditable]:empty:before { content: 'Ecrivez ici...'; color: #94a3b8; }
+                    /* DRAG & DROP DISABLED
+                    .draggable-element { cursor: move; position: relative; }
+                    .draggable-element:hover::before { 
+                        content: '⋮⋮'; 
+                        position: absolute; 
+                        left: -20px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        color: #f97316; 
+                        font-size: 18px; 
+                        opacity: 0.5;
+                    }
+                    .drag-over { border-top: 3px solid #f97316 !important; }
+                    .dragging { opacity: 0.5; }
+                    */
                 </style>
             `;
 
@@ -397,6 +432,8 @@
                 // Enable editing by default
                 setTimeout(() => {
                     enableVisualEditing(true);
+                    // Initialize history after page load
+                    initializeHistory();
                 }, 500);
             }
 
@@ -432,6 +469,10 @@
                 const selector = 'h1, h2, h3, h4, h5, h6, p, span, div, li, a, blockquote';
                 const elements = doc.querySelectorAll(selector);
 
+                // DRAG & DROP DISABLED
+                // const draggableSelector = 'p, h1, h2, h3, h4, h5, h6, div, section, article, header, footer, aside, blockquote, ul, ol';
+                // const draggableElements = doc.querySelectorAll(draggableSelector);
+
                 if (enable) {
                     // Show toolbar
                     // toolbar.classList.remove('opacity-0', 'pointer-events-none'); // Always visible now
@@ -459,6 +500,87 @@
                         }
                     });
 
+                    // DRAG & DROP DISABLED
+                    /*
+                    // Enable drag & drop for block elements
+                    draggableElements.forEach(el => {
+                        // Skip if element is inside another draggable element (avoid nested drag)
+                        let parent = el.parentElement;
+                        let hasNestedDraggable = false;
+                        while (parent && parent.tagName !== 'BODY') {
+                            if (parent.matches(draggableSelector) && parent.draggable) {
+                                hasNestedDraggable = true;
+                                break;
+                            }
+                            parent = parent.parentElement;
+                        }
+
+                        if (!hasNestedDraggable && el.tagName !== 'BODY') {
+                            el.draggable = true;
+                            el.classList.add('draggable-element');
+
+                            // Drag start
+                            el.addEventListener('dragstart', function (e) {
+                                this.classList.add('dragging');
+                                e.dataTransfer.effectAllowed = 'move';
+                                e.dataTransfer.setData('text/html', this.innerHTML);
+                            });
+
+                            // Drag end
+                            el.addEventListener('dragend', function (e) {
+                                this.classList.remove('dragging');
+                                // Remove all drag-over classes
+                                doc.querySelectorAll('.drag-over').forEach(item => {
+                                    item.classList.remove('drag-over');
+                                });
+                            });
+
+                            // Drag over
+                            el.addEventListener('dragover', function (e) {
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+
+                                const draggingElement = doc.querySelector('.dragging');
+                                if (draggingElement && draggingElement !== this) {
+                                    this.classList.add('drag-over');
+                                }
+                            });
+
+                            // Drag leave
+                            el.addEventListener('dragleave', function (e) {
+                                this.classList.remove('drag-over');
+                            });
+
+                            // Drop
+                            el.addEventListener('drop', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                this.classList.remove('drag-over');
+                                const draggingElement = doc.querySelector('.dragging');
+
+                                if (draggingElement && draggingElement !== this) {
+                                    // Get the bounding rectangles
+                                    const rect = this.getBoundingClientRect();
+                                    const draggingRect = draggingElement.getBoundingClientRect();
+
+                                    // Determine if we should insert before or after based on mouse position
+                                    const mouseY = e.clientY;
+                                    const elementMiddle = rect.top + (rect.height / 2);
+
+                                    if (mouseY < elementMiddle) {
+                                        // Insert before
+                                        this.parentNode.insertBefore(draggingElement, this);
+                                    } else {
+                                        // Insert after
+                                        this.parentNode.insertBefore(draggingElement, this.nextSibling);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    */
+
                     // Image handling
                     const images = doc.querySelectorAll('img');
                     images.forEach(img => {
@@ -479,17 +601,20 @@
                     });
 
                 } else {
-                    // Hide toolbar
-                    // toolbar.classList.add('opacity-0', 'pointer-events-none'); // Always visible now
-
                     // Cleanup
                     elements.forEach(el => {
                         el.removeAttribute('contenteditable');
                         el.classList.remove('editable-active', 'editable-hover');
-                        // Remove listeners (cloning node is a cheap way to remove listeners)
-                        // But we want to keep the changes. 
-                        // Actually, removing contenteditable is enough to stop editing.
                     });
+
+                    // DRAG & DROP DISABLED
+                    /*
+                    // Remove drag & drop
+                    draggableElements.forEach(el => {
+                        el.draggable = false;
+                        el.classList.remove('draggable-element', 'dragging', 'drag-over');
+                    });
+                    */
                 }
             }
 
@@ -505,6 +630,94 @@
                 }
 
                 iframe.contentWindow.focus();
+
+                // Save state after command execution
+                setTimeout(() => saveState(), 100);
+            }
+
+            // --- History Management ---
+            function saveState() {
+                if (isRestoringState) return; // Don't save during restore
+
+                const iframe = document.getElementById('editor-frame');
+                if (!iframe || !iframe.contentWindow) return;
+
+                const doc = iframe.contentWindow.document;
+                if (!doc || !doc.body) return;
+
+                const currentState = doc.body.innerHTML;
+
+                // Don't save if state hasn't changed
+                if (historyIndex >= 0 && historyStack[historyIndex] === currentState) {
+                    return;
+                }
+
+                // Remove any redo history
+                historyStack = historyStack.slice(0, historyIndex + 1);
+
+                // Add new state
+                historyStack.push(currentState);
+                historyIndex++;
+
+                // Limit history size
+                if (historyStack.length > MAX_HISTORY) {
+                    historyStack.shift();
+                    historyIndex--;
+                }
+            }
+
+            function customUndo() {
+                if (historyIndex <= 0) return; // Nothing to undo
+
+                historyIndex--;
+                restoreState(historyStack[historyIndex]);
+            }
+
+            function customRedo() {
+                if (historyIndex >= historyStack.length - 1) return; // Nothing to redo
+
+                historyIndex++;
+                restoreState(historyStack[historyIndex]);
+            }
+
+            function restoreState(html) {
+                isRestoringState = true;
+
+                const iframe = document.getElementById('editor-frame');
+                const doc = iframe.contentWindow.document;
+
+                doc.body.innerHTML = html;
+
+                // Re-enable editing after restore
+                if (isEditMode) {
+                    setTimeout(() => {
+                        enableVisualEditing(true);
+                        isRestoringState = false;
+                    }, 50);
+                } else {
+                    isRestoringState = false;
+                }
+            }
+
+            function initializeHistory() {
+                const iframe = document.getElementById('editor-frame');
+                if (!iframe || !iframe.contentWindow) return;
+
+                const doc = iframe.contentWindow.document;
+                if (!doc || !doc.body) return;
+
+                // Save initial state
+                historyStack = [doc.body.innerHTML];
+                historyIndex = 0;
+
+                // Listen to input events for text editing
+                doc.addEventListener('input', () => {
+                    if (!isRestoringState) {
+                        // Debounce state saving
+                        clearTimeout(window.saveStateTimeout);
+                        window.saveStateTimeout = setTimeout(() => saveState(), 500);
+                    }
+                });
             }
 
             function promptLink() {
@@ -516,6 +729,135 @@
                 // Use Image Bank instead of prompt
                 currentImageSelection = null; // Ensure we are inserting new
                 openImageBank();
+            }
+
+            function duplicateElement() {
+                const iframe = document.getElementById('editor-frame');
+                const doc = iframe.contentWindow.document;
+                const selection = doc.getSelection();
+
+                if (!selection || !selection.anchorNode) {
+                    alert("Veuillez sélectionner un élément à dupliquer");
+                    return;
+                }
+
+                // Find the closest block-level element to duplicate
+                let elementToDuplicate = selection.anchorNode;
+
+                // If it's a text node, get its parent element
+                if (elementToDuplicate.nodeType === Node.TEXT_NODE) {
+                    elementToDuplicate = elementToDuplicate.parentElement;
+                }
+
+                // Try to find a meaningful block element (not body or html)
+                while (elementToDuplicate &&
+                    elementToDuplicate.tagName !== 'P' &&
+                    elementToDuplicate.tagName !== 'DIV' &&
+                    elementToDuplicate.tagName !== 'H1' &&
+                    elementToDuplicate.tagName !== 'H2' &&
+                    elementToDuplicate.tagName !== 'H3' &&
+                    elementToDuplicate.tagName !== 'H4' &&
+                    elementToDuplicate.tagName !== 'H5' &&
+                    elementToDuplicate.tagName !== 'H6' &&
+                    elementToDuplicate.tagName !== 'LI' &&
+                    elementToDuplicate.tagName !== 'BLOCKQUOTE' &&
+                    elementToDuplicate.tagName !== 'IMG' &&
+                    elementToDuplicate.tagName !== 'SECTION' &&
+                    elementToDuplicate.tagName !== 'ARTICLE' &&
+                    elementToDuplicate.tagName !== 'HEADER' &&
+                    elementToDuplicate.tagName !== 'FOOTER' &&
+                    elementToDuplicate.tagName !== 'ASIDE' &&
+                    elementToDuplicate.tagName !== 'UL' &&
+                    elementToDuplicate.tagName !== 'OL' &&
+                    elementToDuplicate.tagName !== 'BODY') {
+                    elementToDuplicate = elementToDuplicate.parentElement;
+                }
+
+                // Don't duplicate body or html
+                if (!elementToDuplicate || elementToDuplicate.tagName === 'BODY' || elementToDuplicate.tagName === 'HTML') {
+                    alert("Impossible de dupliquer cet élément");
+                    return;
+                }
+
+                // Clone the element
+                const clonedElement = elementToDuplicate.cloneNode(true);
+
+                // Insert the clone after the original
+                elementToDuplicate.parentNode.insertBefore(clonedElement, elementToDuplicate.nextSibling);
+
+                // Re-enable editing on the new element if in edit mode
+                if (isEditMode) {
+                    const selector = 'h1, h2, h3, h4, h5, h6, p, span, div, li, a, blockquote';
+                    const elements = clonedElement.querySelectorAll(selector);
+
+                    elements.forEach(el => {
+                        if (el.children.length === 0 || el.tagName === 'P' || el.tagName === 'DIV') {
+                            el.setAttribute('contenteditable', 'true');
+
+                            el.addEventListener('focus', () => {
+                                el.classList.add('editable-active');
+                            });
+                            el.addEventListener('blur', () => {
+                                el.classList.remove('editable-active');
+                            });
+                            el.addEventListener('mouseover', () => {
+                                if (doc.activeElement !== el) el.classList.add('editable-hover');
+                            });
+                            el.addEventListener('mouseout', () => {
+                                el.classList.remove('editable-hover');
+                            });
+                        }
+                    });
+
+                    // Handle images in the cloned element
+                    const images = clonedElement.querySelectorAll('img');
+                    images.forEach(img => {
+                        img.style.cursor = 'pointer';
+                        img.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentImageSelection = img;
+                            openImageBank();
+                        });
+                    });
+
+                    // Handle links in the cloned element
+                    const links = clonedElement.querySelectorAll('a');
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                        });
+                    });
+
+                    // If the cloned element itself is editable
+                    if (clonedElement.matches(selector)) {
+                        if (clonedElement.children.length === 0 || clonedElement.tagName === 'P' || clonedElement.tagName === 'DIV') {
+                            clonedElement.setAttribute('contenteditable', 'true');
+
+                            clonedElement.addEventListener('focus', () => {
+                                clonedElement.classList.add('editable-active');
+                            });
+                            clonedElement.addEventListener('blur', () => {
+                                clonedElement.classList.remove('editable-active');
+                            });
+                            clonedElement.addEventListener('mouseover', () => {
+                                if (doc.activeElement !== clonedElement) clonedElement.classList.add('editable-hover');
+                            });
+                            clonedElement.addEventListener('mouseout', () => {
+                                clonedElement.classList.remove('editable-hover');
+                            });
+                        }
+                    }
+                }
+
+                // Scroll to the duplicated element and highlight it briefly
+                clonedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                clonedElement.style.outline = '3px solid #f97316';
+                setTimeout(() => {
+                    clonedElement.style.outline = '';
+                }, 1500);
+
+                // Save state after duplication
+                saveState();
             }
 
             // --- Saving ---
@@ -822,6 +1164,9 @@
                     execCmd('insertImage', url);
                 }
                 closeImageBank();
+
+                // Save state after image insertion/replacement
+                setTimeout(() => saveState(), 100);
             }
 
             // --- Tab Switching ---

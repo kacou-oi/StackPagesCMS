@@ -1,0 +1,33 @@
+name = "stackpages-portal"
+main = "_worker.js"
+compatibility_date = "2023-10-25"
+
+# Configuration des Assets (Fichiers statiques)
+# Cela permet à env.ASSETS de servir les fichiers du répertoire courant (dont core/style.css)
+[assets]
+directory = "."
+binding = "ASSETS"
+
+# Configuration des variables d'environnement
+[vars]
+# URLs des flux RSS
+SUBSTACK_FEED_URL = "https://example.substack.com/feed"
+YOUTUBE_FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=VOTRE_CHANNEL_ID"
+PODCAST_FEED_URL = "https://anchor.fm/s/votre-podcast/podcast/rss"
+
+# URL du constructeur Frontend (Webstudio ou autre)
+FRONTEND_BUILDER_URL = "https://builder.wstd.io/votre-projet"
+
+# Configuration SEO par défaut
+META_TITLE = "StackPages Portal"
+META_DESCRIPTION = "Portail de contenus agrégés"
+META_KEYWORDS = "stackpages, portal, cms, rss"
+
+# Authentification Admin
+ADMIN_EMAIL = "admin@example.com"
+ADMIN_PASSWORD = "change_me_please"
+
+# Configuration GitHub (Git-backed CMS)
+GITHUB_USERNAME = "kacou-oi"
+GITHUB_REPO = "StackPagesCMS"
+GITHUB_BRANCH = "main"

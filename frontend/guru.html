@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">StackPages Guru</title>
+    <meta name="description" id="meta-desc" content="">
+    <meta name="keywords" id="meta-keywords" content="">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-bg {
+            background: linear-gradient(135deg, #d4af37 0%, #f2d06b 100%);
+        }
+    </style>
+</head>
+
+<body
+    class="font-sans antialiased text-slate-800 bg-white flex flex-col min-h-screen selection:bg-yellow-200 selection:text-slate-900">
+
+    <!-- Header -->
+    <header
+        class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300"
+        id="main-header">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between relative">
+            <!-- Logo -->
+            <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                class="flex items-center text-2xl font-bold text-slate-900 hover:text-yellow-600 transition-colors group">
+                <span
+                    class="w-10 h-10 bg-slate-900 text-white flex items-center justify-center rounded-full mr-3 group-hover:bg-yellow-600 transition-colors font-serif italic">S</span>
+                <span id="header-site-name">StackPages</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-600 hover:text-yellow-600 transition-colors uppercase tracking-wider">Accueil</a>
+                <a href="/bio" hx-get="/bio" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-600 hover:text-yellow-600 transition-colors uppercase tracking-wider">Biographie</a>
+                <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-600 hover:text-yellow-600 transition-colors uppercase tracking-wider">Coaching</a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="text-sm font-medium text-slate-600 hover:text-yellow-600 transition-colors uppercase tracking-wider">Blog</a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="px-6 py-2 bg-slate-900 text-white text-sm font-medium rounded-full hover:bg-yellow-600 transition-colors shadow-lg shadow-slate-900/20">
+                    Me Contacter
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none"
+                id="mobile-menu-button">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden backdrop-blur-sm"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden flex flex-col">
+            <div class="p-6 flex justify-end">
+                <button class="text-slate-400 hover:text-slate-900" id="close-mobile-menu">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex-grow flex flex-col justify-center px-8 space-y-6">
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="text-2xl font-serif font-bold text-slate-900 hover:text-yellow-600 transition-colors">Accueil</a>
+                <a href="/bio" hx-get="/bio" hx-target="#main-content" hx-push-url="true"
+                    class="text-2xl font-serif font-bold text-slate-900 hover:text-yellow-600 transition-colors">Biographie</a>
+                <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                    class="text-2xl font-serif font-bold text-slate-900 hover:text-yellow-600 transition-colors">Coaching</a>
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="text-2xl font-serif font-bold text-slate-900 hover:text-yellow-600 transition-colors">Blog</a>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="text-2xl font-serif font-bold text-slate-900 hover:text-yellow-600 transition-colors">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow pt-20">
+        <!-- Content injected here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="/" class="text-3xl font-serif font-bold text-white mb-6 block">StackPages</a>
+                    <p class="text-slate-400 max-w-md leading-relaxed">
+                        J'accompagne les leaders et les entrepreneurs visionnaires à atteindre leur plein potentiel
+                        grâce à des stratégies éprouvées et une approche personnalisée.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-yellow-500">Navigation</h4>
+                    <ul class="space-y-3 text-slate-400">
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Accueil</a></li>
+                        <li><a href="/bio" hx-get="/bio" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Biographie</a></li>
+                        <li><a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Offres de Coaching</a></li>
+                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-white transition-colors">Journal</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-yellow-500">Suivez-moi</h4>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-yellow-600 hover:text-white transition-all"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-yellow-600 hover:text-white transition-all"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-yellow-600 hover:text-white transition-all"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 text-center text-slate-500 text-sm">
+                <p>&copy; 2025 <span id="footer-site-name-copyright">StackPages</span>. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
+
+    <!-- TEMPLATES -->
+
+    <template id="tpl-home">
+        <!-- Hero Section -->
+        <section class="relative min-h-screen flex items-center bg-slate-50 overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <span
+                        class="inline-block py-1 px-3 bg-yellow-100 text-yellow-800 text-xs font-bold uppercase tracking-widest rounded-sm mb-6">Expertise
+                        & Leadership</span>
+                    <h1 class="text-5xl md:text-7xl font-bold text-slate-900 leading-tight mb-8">
+                        Révélez votre <br>
+                        <span class="gold-gradient">Potentiel Illimité</span>
+                    </h1>
+                    <p class="text-xl text-slate-600 mb-10 max-w-lg leading-relaxed">
+                        Transformez votre vision en réalité. Je vous guide à travers les défis complexes pour bâtir un
+                        avenir durable et prospère.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-slate-900 text-white font-bold rounded hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl text-center">
+                            Commencer le Coaching
+                        </a>
+                        <a href="/bio" hx-get="/bio" hx-target="#main-content" hx-push-url="true"
+                            class="px-8 py-4 bg-white text-slate-900 border border-slate-200 font-bold rounded hover:bg-slate-50 transition-all text-center">
+                            Découvrir mon Parcours
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <div
+                        class="absolute inset-0 bg-yellow-200 rounded-full filter blur-3xl opacity-30 transform translate-x-20 translate-y-20">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop"
+                        alt="Portrait Guru"
+                        class="relative rounded-2xl shadow-2xl w-full max-w-md mx-auto z-10 object-cover aspect-[3/4]">
+                </div>
+            </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="py-24 bg-slate-900 text-white text-center">
+            <div class="container mx-auto px-6">
+                <i class="fas fa-quote-left text-4xl text-yellow-600 mb-8 opacity-50"></i>
+                <blockquote class="text-3xl md:text-5xl font-serif leading-tight max-w-4xl mx-auto mb-8">
+                    "Le succès n'est pas une destination, c'est une méthode. Apprenez à maîtriser les outils de votre
+                    propre réussite."
+                </blockquote>
+                <cite class="text-yellow-500 font-bold tracking-widest uppercase not-italic">— M. Kacou Oi</cite>
+            </div>
+        </section>
+
+        <!-- Services Preview -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Comment je peux vous aider</h2>
+                    <div class="w-24 h-1 bg-yellow-500 mx-auto"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-yellow-500 transition-colors duration-500">
+                            <i
+                                class="fas fa-chart-line text-3xl text-slate-900 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Stratégie Business</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">Optimisez vos processus et débloquez de nouvelles
+                            opportunités de croissance exponentielle.</p>
+                        <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                            class="text-yellow-600 font-bold hover:text-slate-900 transition-colors">En savoir plus
+                            &rarr;</a>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-yellow-500 transition-colors duration-500">
+                            <i
+                                class="fas fa-brain text-3xl text-slate-900 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Leadership Mindset</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">Développez la résilience et la vision nécessaires
+                            pour diriger avec confiance et impact.</p>
+                        <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                            class="text-yellow-600 font-bold hover:text-slate-900 transition-colors">En savoir plus
+                            &rarr;</a>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-yellow-500 transition-colors duration-500">
+                            <i
+                                class="fas fa-users text-3xl text-slate-900 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Team Building</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">Créez une culture d'entreprise forte qui attire
+                            et retient les meilleurs talents.</p>
+                        <a href="/coaching" hx-get="/coaching" hx-target="#main-content" hx-push-url="true"
+                            class="text-yellow-600 font-bold hover:text-slate-900 transition-colors">En savoir plus
+                            &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-bio">
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-5xl md:text-6xl font-bold text-slate-900 mb-8 text-center">Mon Histoire</h1>
+                    <div class="w-24 h-1 bg-yellow-500 mx-auto mb-16"></div>
+
+                    <div class="prose prose-lg prose-slate mx-auto leading-relaxed">
+                        <p class="text-xl text-slate-600 font-medium mb-8 text-center italic">
+                            "De l'ingénierie logicielle au coaching de dirigeants, mon parcours est guidé par une seule
+                            obsession : l'optimisation du potentiel humain."
+                        </p>
+
+                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop"
+                            alt="Conférence" class="w-full rounded-xl shadow-2xl mb-12">
+
+                        <h3>Les Débuts</h3>
+                        <p>
+                            Tout a commencé il y a 10 ans. Passionné par la technologie, j'ai rapidement gravi les
+                            échelons dans la Silicon Valley. Mais j'ai réalisé que la technologie seule ne suffisait
+                            pas. Le véritable moteur du changement, c'est l'humain.
+                        </p>
+
+                        <h3>La Transition</h3>
+                        <p>
+                            J'ai décidé de pivoter. J'ai étudié la psychologie, le management et les neurosciences. J'ai
+                            combiné ma rigueur d'ingénieur avec une compréhension profonde de la psyché humaine pour
+                            créer une méthode de coaching unique.
+                        </p>
+
+                        <h3>Aujourd'hui</h3>
+                        <p>
+                            Aujourd'hui, j'accompagne les CEOs, les fondateurs et les artistes pour les aider à briser
+                            leurs plafonds de verre. Ma mission est simple : vous donner les clés pour débloquer votre
+                            prochain niveau de succès.
+                        </p>
+                    </div>
+
+                    <div class="mt-16 text-center">
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="inline-block px-10 py-5 bg-slate-900 text-white font-bold rounded hover:bg-yellow-600 transition-all shadow-xl">
+                            Travaillons Ensemble
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-coaching">
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <span class="text-yellow-600 font-bold tracking-widest uppercase text-sm">Investissez en
+                        vous-même</span>
+                    <h1 class="text-5xl font-bold text-slate-900 mt-4 mb-6">Offres de Coaching</h1>
+                    <p class="text-slate-500 max-w-2xl mx-auto text-lg">Choisissez le programme qui correspond à vos
+                        ambitions. Chaque accompagnement est conçu pour des résultats tangibles.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-24">
+                    <!-- Plan 1 -->
+                    <div
+                        class="border border-slate-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 relative group">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Discovery</h3>
+                        <div class="text-4xl font-bold text-slate-900 mb-6">150€ <span
+                                class="text-base font-normal text-slate-500">/ séance</span></div>
+                        <p class="text-slate-600 mb-8">Idéal pour débloquer une situation spécifique ou préparer une
+                            échéance importante.</p>
+                        <ul class="space-y-4 mb-8 text-slate-600">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> 1h de
+                                coaching intensif</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> Audit de
+                                situation</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> Plan d'action
+                                immédiat</li>
+                        </ul>
+                        <button
+                            onclick="document.getElementById('reservation-form').scrollIntoView({behavior: 'smooth'})"
+                            class="w-full py-3 border-2 border-slate-900 text-slate-900 font-bold rounded hover:bg-slate-900 hover:text-white transition-colors">
+                            Réserver
+                        </button>
+                    </div>
+
+                    <!-- Plan 2 (Featured) -->
+                    <div
+                        class="bg-slate-900 text-white rounded-2xl p-8 shadow-2xl transform md:-translate-y-4 relative overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 bg-yellow-500 text-slate-900 text-xs font-bold px-3 py-1 uppercase tracking-wider rounded-bl-lg">
+                            Populaire</div>
+                        <h3 class="text-2xl font-bold mb-4">Transformation</h3>
+                        <div class="text-4xl font-bold mb-6">1200€ <span class="text-base font-normal text-slate-400">/
+                                mois</span></div>
+                        <p class="text-slate-300 mb-8">Un accompagnement complet sur 3 mois pour opérer un changement
+                            profond.</p>
+                        <ul class="space-y-4 mb-8 text-slate-300">
+                            <li class="flex items-center"><i class="fas fa-check text-yellow-500 mr-3"></i> 4 séances
+                                par mois</li>
+                            <li class="flex items-center"><i class="fas fa-check text-yellow-500 mr-3"></i> Support
+                                WhatsApp 24/7</li>
+                            <li class="flex items-center"><i class="fas fa-check text-yellow-500 mr-3"></i> Accès aux
+                                ressources privées</li>
+                            <li class="flex items-center"><i class="fas fa-check text-yellow-500 mr-3"></i> Analyse de
+                                personnalité</li>
+                        </ul>
+                        <button
+                            onclick="document.getElementById('reservation-form').scrollIntoView({behavior: 'smooth'})"
+                            class="w-full py-3 bg-yellow-500 text-slate-900 font-bold rounded hover:bg-yellow-400 transition-colors">
+                            Candidater
+                        </button>
+                    </div>
+
+                    <!-- Plan 3 -->
+                    <div class="border border-slate-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Elite</h3>
+                        <div class="text-4xl font-bold text-slate-900 mb-6">Sur Mesure</div>
+                        <p class="text-slate-600 mb-8">Pour les organisations et les dirigeants qui visent l'excellence
+                            absolue.</p>
+                        <ul class="space-y-4 mb-8 text-slate-600">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> Coaching
+                                d'équipe</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> Séminaires
+                                stratégiques</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i> Immersion sur
+                                site</li>
+                        </ul>
+                        <button
+                            onclick="document.getElementById('reservation-form').scrollIntoView({behavior: 'smooth'})"
+                            class="w-full py-3 border-2 border-slate-900 text-slate-900 font-bold rounded hover:bg-slate-900 hover:text-white transition-colors">
+                            Me Contacter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reservation Form -->
+                <div id="reservation-form" class="max-w-2xl mx-auto bg-slate-50 p-10 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Réserver une Séance</h3>
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Nom</label>
+                                <input type="text"
+                                    class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                    placeholder="Votre nom">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Email</label>
+                                <input type="email"
+                                    class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                    placeholder="votre@email.com">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Type de séance</label>
+                            <select
+                                class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none">
+                                <option>Séance Découverte (150€)</option>
+                                <option>Candidature Programme Transformation</option>
+                                <option>Demande Elite / Entreprise</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Message (Optionnel)</label>
+                            <textarea rows="4"
+                                class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                placeholder="Décrivez brièvement vos attentes..."></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-slate-900 text-white font-bold rounded hover:bg-yellow-600 transition-colors shadow-lg">
+                            Confirmer la Demande
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-publications">
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Journal de Bord</h2>
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-10" hx-trigger="load"
+                    hx-get="/api/posts" hx-swap="innerHTML">
+                    <!-- Loading State -->
+                    <div class="col-span-1 md:col-span-3 flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-videos">
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">Conférences & Vidéos</h2>
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-3 gap-10" hx-trigger="load"
+                    hx-get="/api/videos" hx-swap="innerHTML">
+                    <!-- Loading State -->
+                    <div class="col-span-full flex justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Legacy templates kept for reference or specific use if needed, but main routing uses above -->
+    <template id="tpl-blog-card">
+        <article class="group block h-full flex flex-col">
+            <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                class="block overflow-hidden rounded-lg mb-6 shadow-lg">
+                <img src="{{image}}" alt="{{title}}"
+                    class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500">
+            </a>
+            <div class="flex-1 flex flex-col">
+                <span class="text-yellow-600 text-xs font-bold uppercase tracking-widest mb-2">{{date}}</span>
+                <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition-colors">
+                    <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true">
+                        {{title}}
+                    </a>
+                </h3>
+                <p class="text-slate-500 line-clamp-3 mb-4 flex-1">{{description}}</p>
+                <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-yellow-600 transition-colors mt-auto">
+                    Lire l'article <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-video-card">
+        <div class="cursor-pointer group h-full flex flex-col" onclick="openVideoModal('{{link}}')">
+            <div class="relative rounded-lg overflow-hidden mb-4 shadow-lg aspect-video">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full h-full object-cover">
+                <div
+                    class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                    <div
+                        class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center text-slate-900 shadow-xl transform group-hover:scale-110 transition-transform">
+                        <i class="fas fa-play ml-1 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-yellow-600 transition-colors mb-2">{{title}}
+            </h3>
+            <span class="text-slate-500 text-sm">{{date}}</span>
+        </div>
+    </template>
+
+    <template id="tpl-post-detail">
+        <article class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-slate-500 hover:text-slate-900 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour au Journal
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-slate-500 mb-10 border-b border-slate-100 pb-10">
+                    <span class="font-bold text-slate-900 mr-2">{{author}}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{date}}</span>
+                </div>
+
+                <img src="{{image}}" alt="{{title}}" class="w-full rounded-xl shadow-2xl mb-12">
+
+                <div class="prose prose-lg prose-slate max-w-none leading-relaxed article-content">
+                    {{content}}
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-contact">
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-xl">
+                    <h2 class="text-3xl font-bold text-center mb-8">Contactez-moi</h2>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Nom Complet</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5"
+                                class="w-full px-4 py-3 rounded border border-slate-300 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none"
+                                required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-slate-900 text-white font-bold rounded hover:bg-yellow-600 transition-colors shadow-lg">
+                            Envoyer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Modals -->
+    <div id="video-modal"
+        class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden backdrop-blur-sm">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-xl shadow-2xl">
+            <button class="absolute -top-12 right-0 text-white hover:text-yellow-500 transition-colors"
+                id="close-video-modal">
+                <i class="fas fa-times text-3xl"></i>
+            </button>
+            <iframe id="video-player" class="w-full h-full rounded-xl" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <template id="tpl-temoignage">
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="text-yellow-600 font-bold tracking-widest uppercase text-sm">Ils m'ont fait
+                        confiance</span>
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mt-4 mb-6">Témoignages Clients</h1>
+                    <div class="w-24 h-1 bg-yellow-500 mx-auto"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                        <div class="flex items-center mb-6">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Client"
+                                class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-yellow-500">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900">Sophie Martin</h3>
+                                <p class="text-slate-500 text-sm">CEO, TechStart</p>
+                            </div>
+                            <div class="ml-auto text-yellow-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 italic leading-relaxed">"L'accompagnement de M. Kacou a été
+                            transformateur pour notre entreprise. Sa vision stratégique nous a permis de doubler notre
+                            chiffre d'affaires en moins d'un an."</p>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                        <div class="flex items-center mb-6">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client"
+                                class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-yellow-500">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900">Thomas Dubois</h3>
+                                <p class="text-slate-500 text-sm">Directeur Marketing</p>
+                            </div>
+                            <div class="ml-auto text-yellow-500">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 italic leading-relaxed">"Un coaching d'une rare qualité. J'ai non
+                            seulement amélioré mes compétences en leadership, mais j'ai aussi retrouvé un équilibre vie
+                            pro/vie perso."</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-16">
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="inline-block px-8 py-4 bg-slate-900 text-white font-bold rounded hover:bg-slate-800 transition-all shadow-xl">
+                        Rejoignez-les
+                    </a>
+                </div>
+            </div>
+        </section>
+    </template>
+</body>
+
+</html>

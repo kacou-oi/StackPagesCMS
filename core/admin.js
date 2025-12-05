@@ -7,13 +7,49 @@ const appState = {
     config: {}
 };
 
-// Init
-// Init
+// Auto-load GitHub config from Worker environment variables
+async function autoLoadGithubConfig() {
+    try {
+        const res = await fetch('/api/github-config');
+        if (res.ok) {
+            const config = await res.json();
+
+            // Only auto-fill if not already configured
+            const existingConfig = localStorage.getItem('stackpages_github_config');
+            if (!existingConfig && config.owner && config.repo) {
+                console.log('Auto-loading GitHub config from environment variables');
+
+                // Pre-fill owner, repo, and branch (token must be manually added)
+                const partialConfig = {
+                    owner: config.owner,
+                    repo: config.repo,
+                    branch: config.branch,
+                    token: '' // User will need to provide this
+                };
+
+                // Save to localStorage so it's available for other functions
+                localStorage.setItem('stackpages_github_config', JSON.stringify(partialConfig));
+
+                // Update the display
+                updateGitHubDisplay();
+
+                console.log('GitHub owner, repo, and branch loaded from server.');
+                console.log('⚠️ Please configure your GitHub Personal Access Token in the GitHub settings.');
+            }
+        }
+    } catch (e) {
+        console.log('Could not auto-load GitHub config:', e);
+    }
+}
+
+// --- MAIN INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', async () => {
-    const isAuth = await checkAuth();
-    if (isAuth) {
-        await loadConfig(); // load config first
-        await loadData();
+    const isAuthenticated = await checkAuth();
+
+    if (isAuthenticated) {
+        await autoLoadGithubConfig(); // Auto-load GitHub config first
+        await loadConfig(); // Legacy config
+        await loadData(); // Load dashboard data
     }
 });
 
@@ -182,14 +218,15 @@ async function loadData() {
         }
 
         // 2. Load Content (Individually to prevent one failure from blocking others)
-        const loadPosts = fetch('/api/posts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Posts fetch error:", e); return []; });
-        const loadVideos = fetch('/api/videos').then(res => res.ok ? res.json() : []).catch(e => { console.error("Videos fetch error:", e); return []; });
+        const loadPosts = fetch('/api/posts?limit=100').then(res => res.ok ? res.json() : { posts: [] }).catch(e => { console.error("Posts fetch error:", e); return { posts: [] }; });
+        const loadVideos = fetch('/api/videos?limit=100').then(res => res.ok ? res.json() : { videos: [] }).catch(e => { console.error("Videos fetch error:", e); return { videos: [] }; });
         const loadPodcasts = fetch('/api/podcasts').then(res => res.ok ? res.json() : []).catch(e => { console.error("Podcasts fetch error:", e); return []; });
 
-        const [posts, videos, podcasts] = await Promise.all([loadPosts, loadVideos, loadPodcasts]);
+        const [postsData, videosData, podcasts] = await Promise.all([loadPosts, loadVideos, loadPodcasts]);
 
-        appState.posts = posts;
-        appState.videos = videos;
+        // Handle paginated responses
+        appState.posts = Array.isArray(postsData) ? postsData : (postsData.posts || []);
+        appState.videos = Array.isArray(videosData) ? videosData : (videosData.videos || []);
         appState.podcasts = podcasts;
 
 
@@ -235,65 +272,309 @@ async function loadData() {
 }
 
 
-// Config Loading
+// Config Loading from GitHub config.json
 async function loadConfig() {
+    // Legacy function - just loads from API for backwards compatibility
     try {
         const authKey = localStorage.getItem('stackpages_auth');
-        // Fetch config (environment variables)
         const configRes = await fetch('/api/config', {
             headers: { 'X-Auth-Key': authKey }
         });
         const config = await configRes.json();
-        // Fetch metadata from Substack RSS (site name, author, SEO if any)
-        const metaRes = await fetch('/api/metadata');
-        const metadata = await metaRes.json();
-
-        // Save to State
         appState.config = config;
-        appState.metadata = metadata;
 
-        // Populate Config Form (Read-Only) with combined data
-        document.getElementById('conf-siteName').value = config.siteName || metadata.siteName || '';
-        document.getElementById('conf-author').value = config.author || metadata.author || '';
-        document.getElementById('conf-substack').value = config.substackRssUrl || '';
-        if (document.getElementById('conf-youtube')) {
-            document.getElementById('conf-youtube').value = config.youtubeRssUrl || 'Non configuré';
-        }
-        if (document.getElementById('conf-podcast')) {
-            document.getElementById('conf-podcast').value = config.podcastFeedUrl || 'Non configuré';
-        }
-        if (config.seo) {
-            document.getElementById('conf-metaTitle').value = config.seo.metaTitle || '';
-            document.getElementById('conf-metaDesc').value = config.seo.metaDescription || '';
-            document.getElementById('conf-metaKeywords').value = config.seo.metaKeywords || '';
-        }
-        // If metadata provides SEO overrides, use them when config lacks values
-        if (metadata.seo) {
-            if (!config.seo?.metaTitle) document.getElementById('conf-metaTitle').value = metadata.seo.metaTitle || '';
-            if (!config.seo?.metaDescription) document.getElementById('conf-metaDesc').value = metadata.seo.metaDescription || '';
-            if (!config.seo?.metaKeywords) document.getElementById('conf-metaKeywords').value = metadata.seo.metaKeywords || '';
-        }
+        // Update UI Elements
+        // 1. Sidebar Site Name
+        const sidebarTitle = document.querySelector('aside h1 span');
+        if (sidebarTitle) sidebarTitle.textContent = config.siteName || 'StackPages';
+
+        // 2. Header Site Link
+        const domainLink = document.getElementById('site-domain-link');
+        const headerBtn = document.getElementById('header-site-btn');
+
+        if (domainLink) domainLink.textContent = config.domain ? new URL(config.domain).hostname : 'Voir le site';
+        if (headerBtn) headerBtn.href = config.domain || '/';
+
+        // 3. Browser Title
+        document.title = `Dashboard - ${config.siteName || 'StackPages CMS'}`;
+
         // Show warning if Substack URL missing
         if (!config.substackRssUrl) {
             document.getElementById('config-warning')?.classList.remove('hidden');
         } else {
             document.getElementById('config-warning')?.classList.add('hidden');
         }
-
-        // Update Frontend Builder Button URL
-        if (config.frontendBuilderUrl) {
-            const builderBtn = document.getElementById('builder-tab-btn');
-            if (builderBtn) {
-                builderBtn.href = config.frontendBuilderUrl;
-            }
-        }
     } catch (e) {
         console.error("Erreur chargement config:", e);
     }
 }
 
-// Config Saving (Disabled)
-// La configuration est gérée par les variables d'environnement.
+// Load Site Config from GitHub config.json
+async function loadSiteConfig() {
+    console.log("loadSiteConfig called");
+    const statusEl = document.getElementById('config-status');
+    const loadingEl = document.getElementById('config-loading');
+    const formEl = document.getElementById('config-form');
+
+    // Get GitHub config from localStorage
+    let ghConfig = {};
+    try {
+        ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+        console.log("GitHub Config loaded:", ghConfig);
+    } catch (e) {
+        console.error("Error parsing GitHub config:", e);
+    }
+
+    if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        console.warn("GitHub config missing");
+        if (statusEl) {
+            statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub (cliquez sur votre nom en bas à gauche)";
+            statusEl.className = "text-sm text-center text-amber-600";
+        }
+        return;
+    }
+
+    // Show loading
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (formEl) formEl.classList.add('opacity-50');
+
+    const branch = ghConfig.branch || 'Portal';
+    const rawUrl = `https://raw.githubusercontent.com/${ghConfig.owner}/${ghConfig.repo}/${branch}/config.json`;
+    console.log("Fetching config from:", rawUrl);
+
+    try {
+        const res = await fetch(rawUrl);
+        if (!res.ok) {
+            throw new Error("config.json not found");
+        }
+        const config = await res.json();
+        console.log("Config fetched:", config);
+
+        // Populate form fields
+        if (document.getElementById('conf-siteName')) document.getElementById('conf-siteName').value = config.site?.name || '';
+        if (document.getElementById('conf-domain')) document.getElementById('conf-domain').value = config.site?.domain || '';
+        if (document.getElementById('conf-description')) document.getElementById('conf-description').value = config.site?.description || '';
+        if (document.getElementById('conf-author')) document.getElementById('conf-author').value = config.site?.author || '';
+
+        if (document.getElementById('conf-metaTitle')) document.getElementById('conf-metaTitle').value = config.seo?.title || '';
+        if (document.getElementById('conf-metaDesc')) document.getElementById('conf-metaDesc').value = config.seo?.metaDescription || '';
+        if (document.getElementById('conf-metaKeywords')) document.getElementById('conf-metaKeywords').value = config.seo?.keywords || '';
+
+        if (document.getElementById('conf-activeTemplate')) document.getElementById('conf-activeTemplate').value = config.theme?.activeTemplate || 'default';
+        if (document.getElementById('conf-primaryColor')) document.getElementById('conf-primaryColor').value = config.theme?.primaryColor || '#3B82F6';
+
+        if (document.getElementById('conf-substack')) document.getElementById('conf-substack').value = config.feeds?.substack || '';
+        if (document.getElementById('conf-youtube')) document.getElementById('conf-youtube').value = config.feeds?.youtube || '';
+        if (document.getElementById('conf-podcast')) document.getElementById('conf-podcast').value = config.feeds?.podcast || '';
+
+        if (document.getElementById('conf-twitter')) document.getElementById('conf-twitter').value = config.social?.twitter || '';
+        if (document.getElementById('conf-linkedin')) document.getElementById('conf-linkedin').value = config.social?.linkedin || '';
+        if (document.getElementById('conf-github')) document.getElementById('conf-github').value = config.social?.github || '';
+
+        if (statusEl) {
+            statusEl.textContent = "✓ Configuration chargée";
+            statusEl.className = "text-sm text-center text-green-600";
+            setTimeout(() => statusEl.textContent = "", 3000);
+        }
+    } catch (e) {
+        console.error("Error loading site config:", e);
+        if (statusEl) {
+            statusEl.textContent = "⚠️ config.json non trouvé. Les champs sont vides.";
+            statusEl.className = "text-sm text-center text-amber-600";
+        }
+    } finally {
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (formEl) formEl.classList.remove('opacity-50');
+    }
+}
+
+// Load available templates from API
+async function loadAvailableTemplates() {
+    try {
+        const res = await fetch('/api/templates');
+        if (!res.ok) {
+            console.warn('Could not load templates, status:', res.status);
+            return;
+        }
+
+        const templates = await res.json();
+        const selectEl = document.getElementById('conf-activeTemplate');
+
+        if (!selectEl) {
+            console.warn('Template select element not found');
+            return;
+        }
+
+        // Get current value before updating
+        const currentValue = selectEl.value;
+
+        // Clear existing options
+        selectEl.innerHTML = '';
+
+        // Add templates from API
+        templates.forEach(template => {
+            const option = document.createElement('option');
+            option.value = template.name;
+            // Capitalize first letter for display
+            option.textContent = template.name.charAt(0).toUpperCase() + template.name.slice(1);
+            selectEl.appendChild(option);
+        });
+
+        // Restore selected value if it exists
+        if (currentValue && templates.find(t => t.name === currentValue)) {
+            selectEl.value = currentValue;
+        }
+
+        console.log(`Loaded ${templates.length} templates from API`);
+    } catch (e) {
+        console.error('Error loading templates:', e);
+    }
+}
+
+// Save Site Config to GitHub config.json
+async function saveSiteConfig() {
+    console.log("saveSiteConfig called");
+    const statusEl = document.getElementById('config-status');
+
+    // Get GitHub config from localStorage
+    let ghConfig = {};
+    try {
+        ghConfig = JSON.parse(localStorage.getItem('stackpages_github_config') || '{}');
+    } catch (e) {
+        console.error("Error parsing GitHub config:", e);
+    }
+
+    if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+        console.warn("GitHub config missing during save");
+        if (statusEl) {
+            statusEl.textContent = "⚠️ Veuillez d'abord configurer GitHub";
+            statusEl.className = "text-sm text-center text-red-600";
+        }
+        return;
+    }
+
+    // Build config object from form values
+    const newConfig = {
+        site: {
+            name: document.getElementById('conf-siteName').value,
+            domain: document.getElementById('conf-domain').value,
+            description: document.getElementById('conf-description').value,
+            author: document.getElementById('conf-author').value,
+            logo: "",
+            favicon: ""
+        },
+        seo: {
+            title: document.getElementById('conf-metaTitle').value,
+            metaDescription: document.getElementById('conf-metaDesc').value,
+            keywords: document.getElementById('conf-metaKeywords').value,
+            ogImage: ""
+        },
+        social: {
+            twitter: document.getElementById('conf-twitter').value,
+            linkedin: document.getElementById('conf-linkedin').value,
+            github: document.getElementById('conf-github').value
+        },
+        theme: {
+            activeTemplate: document.getElementById('conf-activeTemplate').value || 'default',
+            primaryColor: document.getElementById('conf-primaryColor').value || '#3B82F6'
+        },
+        feeds: {
+            substack: document.getElementById('conf-substack').value,
+            youtube: document.getElementById('conf-youtube').value,
+            podcast: document.getElementById('conf-podcast').value
+        }
+    };
+
+    console.log("Saving config:", newConfig);
+
+    const branch = ghConfig.branch || 'Portal';
+    const filePath = 'config.json';
+    const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${filePath}`;
+
+    if (statusEl) {
+        statusEl.textContent = "⏳ Enregistrement en cours...";
+        statusEl.className = "text-sm text-center text-blue-600";
+    }
+
+    try {
+        // First, try to get existing file SHA (for update)
+        let sha = null;
+        try {
+            const getRes = await fetch(`${apiUrl}?ref=${branch}`, {
+                headers: {
+                    'Authorization': `Bearer ${ghConfig.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (getRes.ok) {
+                const data = await getRes.json();
+                sha = data.sha;
+            }
+        } catch (e) {
+            // File doesn't exist yet, that's OK
+        }
+
+        // Create or update the file
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2))));
+        const body = {
+            message: `Update config.json via Dashboard`,
+            content: content,
+            branch: branch
+        };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${ghConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            console.log("Config saved successfully");
+            if (statusEl) {
+                statusEl.textContent = "✓ Configuration sauvegardée sur GitHub !";
+                statusEl.className = "text-sm text-center text-green-600";
+            }
+        } else {
+            const err = await res.json();
+            console.error("GitHub API Error:", err);
+            throw new Error(err.message || 'GitHub API error');
+        }
+    } catch (e) {
+        console.error("Error saving site config:", e);
+        if (statusEl) {
+            statusEl.textContent = "❌ Erreur : " + e.message;
+            statusEl.className = "text-sm text-center text-red-600";
+        }
+    }
+}
+
+// Expose functions to window
+window.loadSiteConfig = loadSiteConfig;
+window.saveSiteConfig = saveSiteConfig;
+window.loadAvailableTemplates = loadAvailableTemplates;
+
+
+// Auto-load config when showing config view
+document.addEventListener('DOMContentLoaded', () => {
+    // Override showView to load config when navigating to config tab
+    const originalShowView = window.showView;
+    if (originalShowView) {
+        window.showView = function (viewName) {
+            originalShowView(viewName);
+            if (viewName === 'config') {
+                loadSiteConfig();
+                // Also load templates independently
+                loadAvailableTemplates();
+            }
+        };
+    }
+});
+
 
 // Renderers
 function renderDashboard() {
@@ -526,7 +807,9 @@ function renderPodcasts() {
     const start = (currentPodcastPage - 1) * PODCASTS_PER_PAGE;
     const pagePodcasts = filtered.slice(start, start + PODCASTS_PER_PAGE);
 
-    tbody.innerHTML = pagePodcasts.map(podcast => `
+    tbody.innerHTML = pagePodcasts.map(podcast => {
+        const globalIndex = appState.podcasts.findIndex(p => p.link === podcast.link);
+        return `
         <tr class="hover:bg-slate-50 transition group">
             <td class="px-6 py-4 font-medium text-slate-800">
                 ${podcast.title}
@@ -534,12 +817,13 @@ function renderPodcasts() {
             </td>
             <td class="px-6 py-4 text-slate-500 text-xs">${new Date(podcast.pubDate).toLocaleDateString('fr-FR')}</td>
             <td class="px-6 py-4 text-right">
-                <button onclick="openPodcastPreview('${podcast.link}')" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
+                <button onclick="openPodcastPreview(${globalIndex})" class="bg-white border border-slate-200 hover:border-orange-500 text-slate-600 hover:text-orange-600 px-3 py-1.5 rounded-md text-sm transition shadow-sm">
                     <i class="fas fa-play mr-1"></i> Ouvrir
                 </button>
             </td>
         </tr>
-            `).join('');
+            `;
+    }).join('');
 
     document.getElementById('podcast-pagination-info').textContent = `Page ${currentPodcastPage} sur ${totalPages} `;
     document.getElementById('prev-podcast-page-btn').disabled = currentPodcastPage === 1;
@@ -652,9 +936,13 @@ function openVideoPreview(link) {
     modal.classList.remove('hidden');
 }
 
-function openPodcastPreview(link) {
-    const podcast = appState.podcasts.find(p => p.link === link);
-    if (!podcast) return;
+function openPodcastPreview(index) {
+    const podcast = appState.podcasts[index];
+
+    if (!podcast) {
+        console.error("Podcast not found for index:", index);
+        return;
+    }
 
     document.getElementById('modal-title').textContent = podcast.title;
 
@@ -1276,4 +1564,228 @@ function loadPublishedPages() {
         `;
         container.appendChild(card);
     });
+}
+
+// GitHub Integration
+function getGitHubConfig() {
+    const owner = localStorage.getItem('stackpages_gh_owner');
+    const repo = localStorage.getItem('stackpages_gh_repo');
+    const token = localStorage.getItem('stackpages_gh_token');
+    return { owner, repo, token };
+}
+
+async function publishToGitHub() {
+    const { owner, repo, token } = getGitHubConfig();
+
+    if (!owner || !repo || !token) {
+        alert("Configuration GitHub manquante. Veuillez configurer votre dépôt dans les paramètres.");
+        // Open GitHub config modal if possible
+        const modal = document.getElementById('github-modal');
+        if (modal) modal.classList.remove('hidden');
+        return;
+    }
+
+    const title = document.getElementById('page-title').value.trim();
+    const slug = document.getElementById('page-slug').value.trim();
+    const htmlContent = monacoEditor ? monacoEditor.getValue().trim() : '';
+
+    if (!title || !slug || !htmlContent) {
+        alert("Veuillez remplir le titre et le contenu de la page.");
+        return;
+    }
+
+    const btn = document.getElementById('btn-publish-github');
+    const originalBtnContent = btn.innerHTML;
+
+    // UI Loading
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Publication...';
+
+    try {
+        const path = `content/pages/${slug}.html`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        // 1. Check if file exists to get SHA (for update)
+        let sha = null;
+        const checkRes = await fetch(apiUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (checkRes.ok) {
+            const data = await checkRes.json();
+            sha = data.sha;
+        }
+
+        // 2. Prepare content (Base64 encode with UTF-8 support)
+        const contentEncoded = btoa(unescape(encodeURIComponent(htmlContent)));
+
+        // 3. Create/Update file
+        const body = {
+            message: `Update page: ${title} (${slug})`,
+            content: contentEncoded,
+            branch: localStorage.getItem('stackpages_gh_branch') || 'main'
+        };
+
+        if (sha) {
+            body.sha = sha;
+        }
+
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+            const errorData = await putRes.json();
+            throw new Error(errorData.message || "Erreur lors de la publication sur GitHub");
+        }
+
+        // Success
+        btn.innerHTML = '<i class="fas fa-check"></i> Publié !';
+        btn.classList.remove('bg-gray-800', 'hover:bg-gray-900');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+        // Also save locally as published
+        savePage('published');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.add('bg-gray-800', 'hover:bg-gray-900');
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        }, 3000);
+
+    } catch (error) {
+        console.error("GitHub Publish Error:", error);
+        alert(`Erreur: ${error.message}`);
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+        btn.classList.add('bg-red-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.remove('bg-red-600');
+        }, 3000);
+    }
+}
+
+async function saveAsTheme() {
+    const { owner, repo, token } = getGitHubConfig();
+
+    if (!owner || !repo || !token) {
+        alert("Configuration GitHub manquante. Veuillez configurer votre dépôt dans les paramètres.");
+        const modal = document.getElementById('github-modal');
+        if (modal) modal.classList.remove('hidden');
+        return;
+    }
+
+    const htmlContent = monacoEditor ? monacoEditor.getValue().trim() : '';
+
+    if (!htmlContent) {
+        alert("L'éditeur est vide. Veuillez générer ou écrire du code HTML.");
+        return;
+    }
+
+    // Prompt for filename
+    let filename = prompt("Nom du fichier de thème (ex: mon-theme.html) :", "nouveau-theme.html");
+    if (!filename) return; // User cancelled
+
+    filename = filename.trim();
+    if (!filename.endsWith('.html')) {
+        filename += '.html';
+    }
+
+    const btn = document.getElementById('btn-save-theme');
+    const originalBtnContent = btn.innerHTML;
+
+    // UI Loading
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sauvegarde...';
+
+    try {
+        const path = `frontend/${filename}`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        // 1. Check if file exists to get SHA (for update)
+        let sha = null;
+        const checkRes = await fetch(apiUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (checkRes.ok) {
+            const data = await checkRes.json();
+            sha = data.sha;
+            if (!confirm(`Le thème "${filename}" existe déjà. Voulez-vous l'écraser ?`)) {
+                throw new Error("Sauvegarde annulée par l'utilisateur.");
+            }
+        }
+
+        // 2. Prepare content (Base64 encode with UTF-8 support)
+        const contentEncoded = btoa(unescape(encodeURIComponent(htmlContent)));
+
+        // 3. Create/Update file
+        const body = {
+            message: `Add/Update theme: ${filename}`,
+            content: contentEncoded,
+            branch: localStorage.getItem('stackpages_gh_branch') || 'main'
+        };
+
+        if (sha) {
+            body.sha = sha;
+        }
+
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!putRes.ok) {
+            const errorData = await putRes.json();
+            throw new Error(errorData.message || "Erreur lors de la sauvegarde du thème sur GitHub");
+        }
+
+        // Success
+        btn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+        btn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+        btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+        alert(`Thème "${filename}" sauvegardé avec succès dans le dossier frontend/ !`);
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        }, 3000);
+
+    } catch (error) {
+        console.error("Theme Save Error:", error);
+        if (error.message !== "Sauvegarde annulée par l'utilisateur.") {
+            alert(`Erreur: ${error.message}`);
+        }
+        btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+        btn.classList.add('bg-red-600');
+
+        setTimeout(() => {
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            btn.classList.remove('bg-red-600');
+        }, 3000);
+    }
 }

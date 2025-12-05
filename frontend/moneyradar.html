@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">Money Radar - Conseil en Investissement</title>
+    <meta name="description" id="meta-desc" content="Expert en investissements et placements financiers">
+    <meta name="keywords" id="meta-keywords" content="investissement, finance, placement, conseil financier">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="/core/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Playfair+Display:wght@700;900&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gradient-gold {
+            background: linear-gradient(135deg, #00D9FF 0%, #00FFA3 50%, #00D9FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bg-dark-pattern {
+            background-color: #0a0a0a;
+            background-image:
+                linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
+                linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .htmx-indicator {
+            display: none;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: block;
+        }
+
+        /* Article Content Styling - matches video description */
+        .article-content p {
+            color: #d1d5db;
+            /* gray-300 */
+            line-height: 1.75;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content h1,
+        .article-content h2,
+        .article-content h3,
+        .article-content h4,
+        .article-content h5,
+        .article-content h6 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h1 {
+            font-size: 2rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.75rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.5rem;
+        }
+
+        .article-content a {
+            color: #22d3ee;
+            /* cyan-400 */
+            text-decoration: underline;
+        }
+
+        .article-content a:hover {
+            color: #06b6d4;
+            /* cyan-500 */
+        }
+
+        .article-content ul,
+        .article-content ol {
+            color: #d1d5db;
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-content strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid #22d3ee;
+            padding-left: 1rem;
+            color: #9ca3af;
+            font-style: italic;
+            margin: 1.5rem 0;
+        }
+
+        .article-content code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            color: #22d3ee;
+        }
+
+        .article-content pre {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        /* Active navigation link styling */
+        .header-nav-link.htmx-request,
+        .header-nav-link[aria-current="page"] {
+            color: #22d3ee !important;
+            /* cyan-400 */
+        }
+    </style>
+</head>
+
+<body class="bg-black text-gray-100 antialiased">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-md border-b border-gray-800">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                    class="flex items-center space-x-3 group" id="header-logo-link">
+                    <img src="https://substackcdn.com/image/fetch/w_80,h_80,c_fill,f_webp,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Fc200435f-4b9f-4e13-8e4a-f4cae8256341_900x900.png"
+                        alt="Money Radar Logo"
+                        class="w-10 h-10 rounded-lg transform group-hover:scale-110 transition-transform">
+                    <span id="header-site-name" class="text-2xl font-display font-bold gradient-gold">Money Radar</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="header-nav-link text-gray-300 hover:text-cyan-400 transition-colors font-medium">
+                        Accueil
+                    </a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="header-nav-link text-gray-300 hover:text-cyan-400 transition-colors font-medium">
+                        Analyses
+                    </a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="header-nav-link text-gray-300 hover:text-cyan-400 transition-colors font-medium">
+                        Vidéos
+                    </a>
+                    <a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                        class="header-nav-link text-gray-300 hover:text-cyan-400 transition-colors font-medium">
+                        Services
+                    </a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-cyan-400 text-black font-bold rounded-lg hover:from-cyan-400 hover:to-cyan-300 transition-all shadow-lg hover:shadow-cyan-500/50">
+                        Consultation Gratuite
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-cyan-400">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden"></div>
+        <div id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-gray-900 to-black shadow-2xl transform translate-x-full transition-transform duration-300 z-50 md:hidden">
+            <div class="p-6">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-white" id="close-mobile-menu">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div class="mt-12 flex flex-col space-y-6">
+                    <a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Accueil</a>
+                    <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Analyses</a>
+                    <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Vidéos</a>
+                    <a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                        class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Services</a>
+                    <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                        class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-400 text-black font-bold rounded-lg text-center">
+                        Consultation Gratuite
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="pt-20">
+        <!-- Content will be injected here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-pattern border-t border-gray-800 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="https://substackcdn.com/image/fetch/w_80,h_80,c_fill,f_webp,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Fc200435f-4b9f-4e13-8e4a-f4cae8256341_900x900.png"
+                            alt="Money Radar Logo" class="w-10 h-10 rounded-lg">
+                        <span class="text-2xl font-display font-bold gradient-gold">Money Radar</span>
+                    </div>
+                    <p class="text-gray-400 max-w-md leading-relaxed">
+                        Votre partenaire de confiance pour des investissements intelligents et une croissance financière
+                        durable.
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-cyan-400 font-bold mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/" hx-get="/" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-cyan-400 transition-colors">Accueil</a></li>
+                        <li><a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-cyan-400 transition-colors">Analyses</a></li>
+                        <li><a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-cyan-400 transition-colors">Vidéos</a></li>
+                        <li><a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                                class="hover:text-cyan-400 transition-colors">Services</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <h4 class="text-cyan-400 font-bold mb-4">Suivez-nous</h4>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-cyan-500 hover:text-black transition-all">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-cyan-500 hover:text-black transition-all">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-cyan-500 hover:text-black transition-all">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 <span id="footer-site-name-copyright">Money Radar</span>. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/core/client.js"></script>
+    <script>
+        // Handle active navigation link styling
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to update active nav link
+            function updateActiveNavLink() {
+                const currentPath = window.location.pathname;
+                const navLinks = document.querySelectorAll('.header-nav-link');
+
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPath || (currentPath === '/' && href === '/')) {
+                        // Active link - cyan
+                        link.classList.remove('text-gray-300');
+                        link.classList.add('text-cyan-400');
+                    } else {
+                        // Inactive link - gray
+                        link.classList.remove('text-cyan-400');
+                        link.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            // Update on page load
+            updateActiveNavLink();
+
+            // Update after HTMX navigation
+            document.body.addEventListener('htmx:afterSettle', updateActiveNavLink);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('translate-x-full');
+            mobileMenuOverlay.classList.remove('hidden');
+        }
+
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.add('translate-x-full');
+            mobileMenuOverlay.classList.add('hidden');
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', openMobileMenu);
+        }
+
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+    </script>
+
+    <!-- TEMPLATES -->
+
+    <template id="tpl-home">
+        <!-- Hero Section -->
+        <section class="relative min-h-screen flex items-center bg-dark-pattern overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left Column: Hero Content -->
+                    <div class="max-w-2xl">
+                        <div class="inline-block px-4 py-2 bg-cyan-500/20 border border-cyan-500/30 rounded-full mb-6">
+                            <span class="text-cyan-400 font-semibold text-sm">🎯 Expertise Financière depuis 2010</span>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-display font-black mb-6 leading-tight">
+                            Investissez dans<br>
+                            <span class="gradient-gold">Votre Avenir</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl leading-relaxed">
+                            Des stratégies d'investissement personnalisées pour maximiser vos rendements et sécuriser
+                            votre
+                            patrimoine.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                                class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-black font-bold rounded-lg hover:from-cyan-400 hover:to-cyan-300 transition-all shadow-lg hover:shadow-cyan-400/50 text-center">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                Consultation Gratuite
+                            </a>
+                            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="px-8 py-4 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700 text-center">
+                                <i class="fas fa-chart-bar mr-2"></i>
+                                Nos Analyses
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Latest Video -->
+                    <div class="hidden lg:block">
+                        <div class="card-hover rounded-2xl overflow-hidden shadow-2xl group cursor-pointer">
+                            <div id="hero-video-container" class="min-h-[200px] flex items-center justify-center">
+                                <div class="text-center text-gray-500">
+                                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                    <p class="text-sm">Chargement...</p>
+                                </div>
+                            </div>
+                            <script>
+                                // Load latest video and extract embed
+                                fetch('/api/videos?offset=0&limit=1')
+                                    .then(r => r.json())
+                                    .then(data => {
+                                        const videos = data.videos || data; // Handle both old and new format
+                                        if (videos && videos.length > 0) {
+                                            const video = videos[0];
+                                            const videoId = video.link.split('v=')[1]?.split('&')[0];
+                                            document.getElementById('hero-video-container').innerHTML = `
+                                                <div class="relative w-full" style="padding-bottom: 56.25%;">
+                                                    <iframe 
+                                                        src="https://www.youtube-nocookie.com/embed/${videoId}" 
+                                                        class="absolute top-0 left-0 w-full h-full"
+                                                        title="YouTube video player"
+                                                        frameborder="0" 
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                                        referrerpolicy="strict-origin-when-cross-origin"
+                                                        allowfullscreen>
+                                                    </iframe>
+                                                </div>
+                                            `;
+                                        }
+                                    })
+                                    .catch(e => {
+                                        document.getElementById('hero-video-container').innerHTML =
+                                            '<p class="text-gray-500 text-sm">Aucune vidéo disponible</p>';
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-20 bg-gradient-to-b from-black to-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="stat-number gradient-gold mb-2">15+</div>
+                        <p class="text-gray-400 font-medium">Années d'Expérience</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number gradient-gold mb-2">500+</div>
+                        <p class="text-gray-400 font-medium">Clients Satisfaits</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number gradient-gold mb-2">€2M+</div>
+                        <p class="text-gray-400 font-medium">Actifs Gérés</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number gradient-gold mb-2">18%</div>
+                        <p class="text-gray-400 font-medium">Rendement Moyen</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="py-24 bg-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">
+                        Nos <span class="gradient-gold">Services</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                        Des solutions sur mesure pour chaque profil d'investisseur
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div
+                        class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
+                        <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-chart-line text-cyan-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Gestion de Portefeuille</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            Optimisation et diversification de vos investissements pour un rendement maximal avec un
+                            risque maîtrisé.
+                        </p>
+                        <a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                            class="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+                            En savoir plus <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div
+                        class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
+                        <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-piggy-bank text-cyan-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Placements Sécurisés</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            Solutions d'épargne et de placement adaptées à votre profil de risque et vos objectifs
+                            financiers.
+                        </p>
+                        <a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                            class="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+                            En savoir plus <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div
+                        class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
+                        <div class="w-16 h-16 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-user-tie text-cyan-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Conseil Personnalisé</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            Accompagnement sur mesure pour définir et atteindre vos objectifs patrimoniaux à court et
+                            long terme.
+                        </p>
+                        <a href="/services" hx-get="/services" hx-target="#main-content" hx-push-url="true"
+                            class="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">
+                            En savoir plus <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-24 bg-gradient-to-r from-cyan-500 to-cyan-400">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-black mb-6">
+                    Prêt à Faire Fructifier Votre Capital ?
+                </h2>
+                <p class="text-xl text-black/80 mb-10 max-w-2xl mx-auto">
+                    Bénéficiez d'une consultation gratuite avec nos experts en investissement
+                </p>
+                <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                    class="inline-block px-10 py-4 bg-black text-cyan-400 font-bold rounded-lg hover:bg-gray-900 transition-all shadow-2xl text-lg">
+                    <i class="fas fa-phone-alt mr-2"></i>
+                    Réserver ma Consultation
+                </a>
+            </div>
+        </section>
+
+        <!-- Latest Articles Section -->
+        <section class="py-24 bg-gradient-to-b from-black to-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <div id="latest-articles-section" class="mb-16">
+                        <h3 class="text-3xl font-display font-bold mb-8 text-center">
+                            <span class="gradient-gold">Dernières Analyses</span>
+                        </h3>
+                        <div id="latest-articles-container" class="grid grid-cols-1 md:grid-cols-3 gap-8"
+                            hx-get="/publications" hx-target="this"
+                            hx-select="#publications-container > *:nth-child(-n+3)" hx-trigger="load"
+                            hx-swap="innerHTML"
+                            hx-on::after-swap="var container = event.target; setTimeout(function() { htmx.process(container); console.log('HTMX processed latest articles'); }, 100);">
+                        </div>
+                        <div class="text-center mt-8">
+                            <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                                class="inline-block px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
+                                <i class="fas fa-newspaper mr-2"></i> Voir toutes les analyses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-list">
+        <section class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">
+                        Analyses <span class="gradient-gold">Financières</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">Insights et stratégies pour optimiser vos investissements</p>
+                </div>
+
+                <div id="publications-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {{items}}
+                </div>
+
+                <!-- Load More Button -->
+                <div id="load-more-posts" class="text-center mt-12">
+                    <button hx-get="/api/posts?offset=6&limit=6" hx-target="#publications-container"
+                        hx-swap="none scroll:false" hx-indicator="#posts-loading"
+                        hx-on::before-request="event.target.disabled = true;"
+                        hx-on::after-request="event.target.disabled = false; try { var response = JSON.parse(event.detail.xhr.response); console.log('Posts:', response); if (!response.hasMore) { document.getElementById('load-more-posts').innerHTML = '<div class=&quot;text-center py-8&quot;><i class=&quot;fas fa-check-circle text-cyan-400 text-3xl mb-3&quot;></i><p class=&quot;text-gray-400 text-lg font-semibold&quot;>Vous avez tout vu !</p><p class=&quot;text-gray-500 text-sm mt-2&quot;>Toutes les analyses ont été chargées</p></div>'; } else { var btn = event.target; var currentUrl = btn.getAttribute('hx-get'); var currentOffset = parseInt(new URL(currentUrl, window.location.href).searchParams.get('offset')); var newOffset = currentOffset + 6; btn.setAttribute('hx-get', '/api/posts?offset=' + newOffset + '&amp;limit=6'); } if (response.posts && response.posts.length > 0) { var container = document.getElementById('publications-container'); response.posts.forEach(function(post) { var cardTemplate = document.getElementById('tpl-blog-card').innerHTML; var date = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }); var card = cardTemplate.replace(/\{\{slug\}\}/g, post.slug).replace(/\{\{image\}\}/g, post.image || 'https://via.placeholder.com/800x400?text=Article').replace(/\{\{title\}\}/g, post.title).replace(/\{\{description\}\}/g, post.description).replace(/\{\{date\}\}/g, date); container.insertAdjacentHTML('beforeend', card); }); } } catch (e) { console.error('Error:', e); }"
+                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
+                        <i class="fas fa-plus-circle mr-2"></i> Charger plus d'analyses
+                    </button>
+
+                    <!-- Loading Spinner -->
+                    <div id="posts-loading" class="htmx-indicator mt-4">
+                        <div class="flex items-center justify-center gap-3 text-cyan-400">
+                            <i class="fas fa-spinner fa-spin text-2xl"></i>
+                            <span class="font-semibold">Chargement en cours...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-blog-card">
+        <a href="/post/{{slug}}" hx-get="/post/{{slug}}" hx-target="#main-content" hx-select="article"
+            hx-swap="innerHTML show:window:top" hx-push-url="true"
+            class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden border border-gray-700 block">
+            <img src="{{image}}" alt="{{title}}" class="w-full h-56 object-cover">
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider">{{date}}</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-white hover:text-cyan-400 transition-colors">{{title}}</h3>
+                <p class="text-gray-400 line-clamp-2 mb-4">{{description}}</p>
+                <span class="text-cyan-400 font-semibold text-sm">
+                    Lire l'analyse <i class="fas fa-arrow-right ml-1"></i>
+                </span>
+            </div>
+        </a>
+    </template>
+
+    <template id="tpl-contact">
+        <section class="py-20 bg-dark-pattern min-h-screen">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">
+                            Contactez <span class="gradient-gold">Nos Experts</span>
+                        </h2>
+                        <p class="text-gray-400 text-lg">Première consultation gratuite et sans engagement</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-10 rounded-2xl border border-gray-700">
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-2">Nom Complet</label>
+                                    <input type="text" required
+                                        class="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 outline-none text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-2">Email</label>
+                                    <input type="email" required
+                                        class="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 outline-none text-white">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-300 mb-2">Téléphone</label>
+                                <input type="tel"
+                                    class="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 outline-none text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-300 mb-2">Type de Service</label>
+                                <select
+                                    class="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 outline-none text-white">
+                                    <option>Gestion de Portefeuille</option>
+                                    <option>Placements Sécurisés</option>
+                                    <option>Conseil Personnalisé</option>
+                                    <option>Autre</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-300 mb-2">Message</label>
+                                <textarea rows="5" required
+                                    class="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 outline-none text-white"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-black font-bold rounded-lg hover:from-cyan-400 hover:to-cyan-300 transition-all shadow-lg">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Envoyer ma Demande
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-services">
+        <section class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">
+                        Nos <span class="gradient-gold">Services Premium</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                        Des solutions d'investissement adaptées à chaque profil
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-10 rounded-2xl border border-gray-700">
+                        <div class="w-20 h-20 bg-cyan-500/20 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-chart-line text-cyan-400 text-4xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4">Gestion Active</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            Stratégies d'investissement dynamiques pour maximiser vos rendements. Analyse quotidienne
+                            des marchés et ajustements en temps réel.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Suivi personnalisé de votre portefeuille</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Rapports mensuels détaillés</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Accès à des opportunités exclusives</span>
+                            </li>
+                        </ul>
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="inline-block px-6 py-3 bg-cyan-500 text-black font-bold rounded-lg hover:bg-cyan-400 transition-all">
+                            En savoir plus
+                        </a>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-10 rounded-2xl border border-gray-700">
+                        <div class="w-20 h-20 bg-cyan-500/20 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-shield-alt text-cyan-400 text-4xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4">Placements Sécurisés</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            Solutions d'épargne à capital garanti pour une croissance stable et prévisible de votre
+                            patrimoine.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Produits à faible risque</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Rendements garantis</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">Liquidité optimale</span>
+                            </li>
+                        </ul>
+                        <a href="/contact" hx-get="/contact" hx-target="#main-content" hx-push-url="true"
+                            class="inline-block px-6 py-3 bg-cyan-500 text-black font-bold rounded-lg hover:bg-cyan-400 transition-all">
+                            En savoir plus
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-post-detail">
+        <article class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <a href="/publications" hx-get="/publications" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-400 hover:text-cyan-400 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Analyses
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-gray-400 mb-10 border-b border-gray-800 pb-10">
+                    <span class="font-bold text-cyan-400 mr-2">{{author}}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{date}}</span>
+                </div>
+
+                <img src="{{image}}" alt="{{title}}" class="w-full rounded-xl shadow-2xl mb-12">
+
+                <!-- Share Buttons -->
+                <div class="flex flex-wrap items-center gap-4 mb-12 pb-8 border-b border-gray-800">
+                    <span class="text-gray-400 font-semibold">Partager :</span>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{title}}') + '&url=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-500 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-500">
+                        <i class="fab fa-twitter mr-2"></i> Twitter
+                    </a>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-600 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-600">
+                        <i class="fab fa-facebook-f mr-2"></i> Facebook
+                    </a>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-700 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-700">
+                        <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
+                    </a>
+                    <button
+                        onclick="navigator.clipboard.writeText(window.location.href); this.innerHTML='<i class=\'fas fa-check mr-2\'></i> Copié !'; setTimeout(() => this.innerHTML='<i class=\'fas fa-link mr-2\'></i> Copier le lien', 2000)"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-cyan-500 text-white rounded-lg transition-all border border-gray-700 hover:border-cyan-500">
+                        <i class="fas fa-link mr-2"></i> Copier le lien
+                    </button>
+                </div>
+
+                <!-- Article Content in Styled Box -->
+                <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-12 rounded-2xl border border-gray-700">
+                    <h2 class="text-2xl font-bold text-white mb-6">Article</h2>
+                    <div class="prose prose-lg prose-invert max-w-none leading-relaxed article-content text-gray-300">
+                        {{content}}
+                    </div>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="tpl-video-list">
+        <section class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">
+                        Analyses <span class="gradient-gold">Vidéo</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">Nos dernières analyses de marché en vidéo</p>
+                </div>
+
+                <div id="videos-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {{items}}
+                </div>
+
+                <!-- Load More Button -->
+                <div id="load-more-videos" class="text-center mt-12">
+                    <button hx-get="/api/videos?offset=6&limit=6" hx-target="#videos-container"
+                        hx-swap="none scroll:false" hx-indicator="#videos-loading"
+                        hx-on::before-request="event.target.disabled = true;"
+                        hx-on::after-request="event.target.disabled = false; try { var response = JSON.parse(event.detail.xhr.response); console.log('Videos:', response); if (!response.hasMore) { document.getElementById('load-more-videos').innerHTML = '<div class=&quot;text-center py-8&quot;><i class=&quot;fas fa-check-circle text-cyan-400 text-3xl mb-3&quot;></i><p class=&quot;text-gray-400 text-lg font-semibold&quot;>Vous avez tout vu !</p><p class=&quot;text-gray-500 text-sm mt-2&quot;>Toutes les vidéos ont été chargées</p></div>'; } else { var btn = event.target; var currentUrl = btn.getAttribute('hx-get'); var currentOffset = parseInt(new URL(currentUrl, window.location.href).searchParams.get('offset')); var newOffset = currentOffset + 6; btn.setAttribute('hx-get', '/api/videos?offset=' + newOffset + '&amp;limit=6'); } if (response.videos && response.videos.length > 0) { var container = document.getElementById('videos-container'); response.videos.forEach(function(video) { var cardTemplate = document.getElementById('tpl-video-card').innerHTML; var date = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }); var card = cardTemplate.replace(/\{\{slug\}\}/g, video.slug).replace(/\{\{thumbnail\}\}/g, video.thumbnail || 'https://via.placeholder.com/600x338?text=Vidéo').replace(/\{\{title\}\}/g, video.title).replace(/\{\{description\}\}/g, video.description || '').replace(/\{\{published\}\}/g, date); container.insertAdjacentHTML('beforeend', card); }); } } catch (e) { console.error('Error:', e); }"
+                        class="px-8 py-4 bg-gray-800 text-cyan-400 font-bold rounded-lg hover:bg-gray-700 transition-all border border-gray-700">
+                        <i class="fas fa-plus-circle mr-2"></i> Charger plus de vidéos
+                    </button>
+
+                    <!-- Loading Spinner -->
+                    <div id="videos-loading" class="htmx-indicator mt-4">
+                        <div class="flex items-center justify-center gap-3 text-cyan-400">
+                            <i class="fas fa-spinner fa-spin text-2xl"></i>
+                            <span class="font-semibold">Chargement en cours...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="tpl-video-card">
+        <a href="/video/{{slug}}" hx-get="/video/{{slug}}" hx-target="#main-content" hx-select="article"
+            hx-swap="innerHTML show:window:top" hx-push-url="true"
+            class="card-hover bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden border border-gray-700 cursor-pointer group block">
+            <div class="relative">
+                <img src="{{thumbnail}}" alt="{{title}}" class="w-full h-56 object-cover">
+                <div
+                    class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                    <div
+                        class="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                        <i class="fas fa-play text-black text-xl ml-1"></i>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 right-4 bg-black/80 px-3 py-1 rounded-lg">
+                    <span class="text-cyan-400 text-xs font-bold">VIDÉO</span>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider">{{published}}</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-white group-hover:text-cyan-400 transition-colors line-clamp-2">
+                    {{title}}</h3>
+                <p class="text-gray-400 line-clamp-2 mb-4">{{description}}</p>
+                <span class="text-cyan-400 font-semibold text-sm">
+                    Regarder <i class="fas fa-arrow-right ml-1"></i>
+                </span>
+            </div>
+        </a>
+    </template>
+
+    <template id="tpl-video-detail">
+        <article class="py-20 bg-black min-h-screen">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <a href="/videos" hx-get="/videos" hx-target="#main-content" hx-push-url="true"
+                    class="inline-flex items-center text-gray-400 hover:text-cyan-400 mb-8 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux Vidéos
+                </a>
+
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">{{title}}</h1>
+                <div class="flex items-center text-gray-400 mb-10 border-b border-gray-800 pb-10">
+                    <span class="font-bold text-cyan-400 mr-2"><i class="fab fa-youtube mr-1"></i> YouTube</span>
+                    <span class="mx-2">•</span>
+                    <span>{{published}}</span>
+                </div>
+
+                <!-- Video Player -->
+                <div class="relative w-full rounded-xl overflow-hidden shadow-2xl mb-12"
+                    style="padding-bottom: 56.25%;">
+                    <iframe src="{{embedUrl}}" class="absolute top-0 left-0 w-full h-full" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Share Buttons -->
+                <div class="flex flex-wrap items-center gap-4 mb-12">
+                    <span class="text-gray-400 font-semibold">Partager :</span>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{title}}') + '&url=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-500 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-500">
+                        <i class="fab fa-twitter mr-2"></i> Twitter
+                    </a>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-600 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-600">
+                        <i class="fab fa-facebook-f mr-2"></i> Facebook
+                    </a>
+                    <a href="#"
+                        onclick="event.preventDefault(); window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(window.location.href), '_blank'); return false;"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-blue-700 text-white rounded-lg transition-all border border-gray-700 hover:border-blue-700">
+                        <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
+                    </a>
+                    <button
+                        onclick="navigator.clipboard.writeText(window.location.href); this.innerHTML='<i class=\'fas fa-check mr-2\'></i> Copié !'; setTimeout(() => this.innerHTML='<i class=\'fas fa-link mr-2\'></i> Copier le lien', 2000)"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-cyan-500 text-white rounded-lg transition-all border border-gray-700 hover:border-cyan-500">
+                        <i class="fas fa-link mr-2"></i> Copier le lien
+                    </button>
+                </div>
+
+                <!-- Description -->
+                <div class="prose prose-lg prose-invert max-w-none leading-relaxed">
+                    <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
+                        <h2 class="text-2xl font-bold text-white mb-4">À propos de cette vidéo</h2>
+                        <p class="text-gray-300 leading-relaxed">{{description}}</p>
+                        <div class="mt-6 pt-6 border-t border-gray-700">
+                            <a href="{{link}}" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-all">
+                                <i class="fab fa-youtube mr-2"></i>
+                                Voir sur YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </template>
+
+</body>
+
+</html>

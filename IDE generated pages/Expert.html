@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultant Digital Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c10;
+            /* Very dark background */
+            color: #e2e8f0;
+            /* Light text */
+        }
+
+        .section-gradient-dark {
+            background: linear-gradient(145deg, #0d121c, #1a202c);
+        }
+
+        .section-gradient-light {
+            background: linear-gradient(145deg, #1a202c, #2d3748);
+        }
+
+        .card-hover-effect {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            /* Blue */
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            transition: background-color 0.3s ease-out, transform 0.2s ease-out, box-shadow 0.3s ease-out;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.9s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-enter {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+
+        .modal-leave {
+            animation: modalFadeOut 0.3s ease-out forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes modalFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+        }
+
+        .audio-player-fixed {
+            background-color: #1f2937;
+            /* Darker background for player */
+            box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom scrollbar-hide equivalent for consistent styling */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
+</head>
+
+<body class="antialiased overflow-x-hidden">
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center"
+            style="background-image: url('https://source.unsplash.com/random/1920x1080?abstract,technology,future'); filter: brightness(0.4);">
+        </div>
+        <div class="relative z-10 p-8 max-w-5xl mx-auto">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight text-white mb-8 animate-fade-in">
+                Strategic Digital Transformation for Forward-Thinkers
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto animate-fade-in-up"
+                style="animation-delay: 0.2s;">
+                Empowering businesses to thrive in the digital era with innovative strategies and robust solutions.
+            </p>
+            <a href="#contact-section" class="btn-primary inline-block text-lg animate-fade-in-up"
+                style="animation-delay: 0.4s;">
+                Begin Your Journey
+            </a>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog-section" class="py-24 px-6 md:px-12 section-gradient-dark">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-white mb-16 animate-fade-in">
+                Insights & Thought Leadership
+            </h2>
+            <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="col-span-full text-center py-10 text-xl text-gray-400 animate-pulse">Loading articles...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos-section" class="py-24 px-6 md:px-12 section-gradient-light">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-white mb-16 animate-fade-in">
+                Explore Our Video Content
+            </h2>
+            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="col-span-full text-center py-10 text-xl text-gray-400 animate-pulse">Loading videos...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact-section" class="py-24 px-6 md:px-12 section-gradient-dark">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-12 animate-fade-in">
+                Ready to Elevate Your Business?
+            </h2>
+            <p class="text-lg text-gray-300 mb-10">
+                Let's connect and discuss how we can partner to achieve your strategic objectives and digital ambitions.
+            </p>
+            <form class="grid grid-cols-1 gap-8 text-left max-w-lg mx-auto">
+                <div>
+                    <label for="name" class="block text-gray-300 text-sm font-bold mb-3">Your Name</label>
+                    <input type="text" id="name"
+                        class="shadow-lg appearance-none border border-gray-700 rounded-xl w-full py-4 px-5 text-gray-100 leading-tight focus:outline-none focus:ring-4 focus:ring-blue-600 focus:border-blue-500 bg-gray-800 transition-all duration-300"
+                        placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-300 text-sm font-bold mb-3">Your Email</label>
+                    <input type="email" id="email"
+                        class="shadow-lg appearance-none border border-gray-700 rounded-xl w-full py-4 px-5 text-gray-100 leading-tight focus:outline-none focus:ring-4 focus:ring-blue-600 focus:border-blue-500 bg-gray-800 transition-all duration-300"
+                        placeholder="john.doe@example.com">
+                </div>
+                <div>
+                    <label for="message" class="block text-gray-300 text-sm font-bold mb-3">Your Message</label>
+                    <textarea id="message" rows="6"
+                        class="shadow-lg appearance-none border border-gray-700 rounded-xl w-full py-4 px-5 text-gray-100 leading-tight focus:outline-none focus:ring-4 focus:ring-blue-600 focus:border-blue-500 bg-gray-800 transition-all duration-300"
+                        placeholder="Tell us about your project or inquiry..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full mt-6">
+                    Send My Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Podcast Playlist (Fixed at bottom) -->
+    <div id="podcast-playlist"
+        class="fixed bottom-0 left-0 right-0 z-50 p-4 audio-player-fixed transform translate-y-full transition-transform duration-500 ease-in-out">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <h3 class="text-xl font-bold text-white flex-shrink-0 mr-4">Podcasts</h3>
+            <div id="podcasts-container"
+                class="flex-grow flex items-center overflow-x-auto space-x-4 py-2 scrollbar-hide">
+                <div class="flex-shrink-0 text-gray-400 animate-pulse">Loading podcasts...</div>
+            </div>
+            <button id="toggle-podcast-player"
+                class="ml-4 p-2 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors text-white text-lg shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 transform rotate-180 transition-transform duration-300" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Generic Modal for Blog/Video details -->
+    <div id="modal-backdrop"
+        class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[100] hidden transition-opacity duration-300 opacity-0">
+        <div id="modal-content"
+            class="bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full mx-6 p-8 relative transform scale-95 opacity-0 transition-all duration-300 border border-gray-700">
+            <button onclick="closeModal()"
+                class="absolute top-5 right-5 text-gray-400 hover:text-white text-4xl font-bold transition-colors z-10">
+                &times;
+            </button>
+            <h3 id="modal-title" class="text-3xl md:text-4xl font-extrabold text-white mb-4"></h3>
+            <div id="modal-body"
+                class="text-gray-300 text-lg leading-relaxed mb-8 overflow-y-auto max-h-[70vh] pr-2 scrollbar-hide">
+                <!-- Content will be injected here -->
+            </div>
+            <div class="flex flex-col md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
+                <a id="modal-link" href="#" target="_blank"
+                    class="btn-primary inline-flex items-center justify-center text-base">
+                    View Full Content
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+                <button onclick="closeModal()"
+                    class="px-7 py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors text-base shadow-md">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            loadVideos();
+            loadPodcasts();
+
+            const podcastPlayer = document.getElementById('podcast-playlist');
+            const toggleButton = document.getElementById('toggle-podcast-player');
+            const toggleIcon = toggleButton.querySelector('svg');
+            let isPlayerOpen = false;
+
+            toggleButton.addEventListener('click', () => {
+                isPlayerOpen = !isPlayerOpen;
+                if (isPlayerOpen) {
+                    podcastPlayer.classList.remove('translate-y-full');
+                    toggleIcon.classList.remove('rotate-180');
+                } else {
+                    podcastPlayer.classList.add('translate-y-full');
+                    toggleIcon.classList.add('rotate-180');
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            document.getElementById('modal-backdrop').addEventListener('click', (e) => {
+                if (e.target.id === 'modal-backdrop') {
+                    closeModal();
+                }
+            });
+        });
+
+        async function loadPosts() {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = '<div class="col-span-full text-center py-10 text-xl text-gray-400 animate-pulse">Loading articles...</div>';
+
+            try {
+                const response = await fetch(window.location.origin + '/api/posts');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                postsContainer.innerHTML = '';
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(post => {
+                        const postElement = document.createElement('div');
+                        postElement.className = 'bg-gray-800 rounded-xl shadow-lg overflow-hidden card-hover-effect cursor-pointer group animate-fade-in-up';
+                        postElement.style.animationDelay = `${Math.random() * 0.3}s`; // Stagger animation
+                        postElement.innerHTML = `
+                            <div class="p-7">
+                                <h3 class="text-2xl font-semibold text-white mb-3 group-hover:text-blue-400 transition-colors">${post.title}</h3>
+                                <p class="text-gray-400 text-base mb-5 line-clamp-3">${post.description || post.subtitle || ''}</p>
+                                <div class="flex items-center justify-between text-gray-500 text-sm mt-4">
+                                    <span>${new Date(post.pubDate || post.date).toLocaleDateString()}</span>
+                                    <span>${post.author || 'Admin'}</span>
+                                </div>
+                            </div>
+                        `;
+                        postElement.addEventListener('click', () => openModal('post', post));
+                        postsContainer.appendChild(postElement);
+                    });
+                } else {
+                    postsContainer.innerHTML = '<div class="col-span-full text-center py-10 text-xl text-gray-400">No articles found.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-xl text-red-400">Failed to load articles. Please try again later.</div>`;
+            }
+        }
+
+        async function loadVideos() {
+            const videosContainer = document.getElementById('videos-container');
+            videosContainer.innerHTML = '<div class="col-span-full text-center py-10 text-xl text-gray-400 animate-pulse">Loading videos...</div>';
+
+            try {
+                const response = await fetch(window.location.origin + '/api/videos');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                videosContainer.innerHTML = '';
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(video => {
+                        const videoElement = document.createElement('div');
+                        videoElement.className = 'bg-gray-800 rounded-xl shadow-lg overflow-hidden card-hover-effect cursor-pointer group animate-fade-in-up';
+                        videoElement.style.animationDelay = `${Math.random() * 0.3}s`; // Stagger animation
+                        videoElement.innerHTML = `
+                            <div class="relative pb-[56.25%] h-0">
+                                <img src="${video.thumbnail}" alt="${video.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 group-hover:bg-opacity-30 transition-all">
+                                    <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-opacity transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="p-7">
+                                <h3 class="text-2xl font-semibold text-white mb-3 group-hover:text-blue-400 transition-colors">${video.title}</h3>
+                                <p class="text-gray-400 text-base line-clamp-3">${video.description || ''}</p>
+                                <p class="text-gray-500 text-sm mt-4">Published on ${new Date(video.published || video.publishedAt).toLocaleDateString()}</p>
+                            </div>
+                        `;
+                        videoElement.addEventListener('click', () => openModal('video', video));
+                        videosContainer.appendChild(videoElement);
+                    });
+                } else {
+                    videosContainer.innerHTML = '<div class="col-span-full text-center py-10 text-xl text-gray-400">No videos found.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                videosContainer.innerHTML = `<div class="col-span-full text-center py-10 text-xl text-red-400">Failed to load videos. Please try again later.</div>`;
+            }
+        }
+
+        async function loadPodcasts() {
+            const podcastsContainer = document.getElementById('podcasts-container');
+            podcastsContainer.innerHTML = '<div class="flex-shrink-0 text-gray-400 animate-pulse">Loading podcasts...</div>';
+
+            try {
+                const response = await fetch(window.location.origin + '/api/podcasts');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                podcastsContainer.innerHTML = '';
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(podcast => {
+                        const podcastElement = document.createElement('div');
+                        podcastElement.className = 'flex items-center space-x-3 bg-gray-700 hover:bg-gray-600 rounded-full px-5 py-2 flex-shrink-0 cursor-pointer transition-all card-hover-effect';
+                        podcastElement.innerHTML = `
+                            <audio src="${podcast.audioUrl}" preload="none" class="hidden"></audio>
+                            <button class="text-blue-400 hover:text-blue-300 transition-colors play-pause-btn flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 play-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.121l-3.375 2.151a1 1 0 01-1.627-.85V9.678a1 1 0 011.627-.85l3.375 2.151a1 1 0 010 1.7z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 pause-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                            <span class="text-base font-medium text-white whitespace-nowrap">${podcast.title}</span>
+                        `;
+                        podcastsContainer.appendChild(podcastElement);
+
+                        const audio = podcastElement.querySelector('audio');
+                        const playPauseBtn = podcastElement.querySelector('.play-pause-btn');
+                        const playIcon = playPauseBtn.querySelector('.play-icon');
+                        const pauseIcon = playPauseBtn.querySelector('.pause-icon');
+
+                        playPauseBtn.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            if (audio.paused) {
+                                document.querySelectorAll('#podcasts-container audio').forEach(otherAudio => {
+                                    if (otherAudio !== audio && !otherAudio.paused) {
+                                        otherAudio.pause();
+                                        const parent = otherAudio.closest('.flex');
+                                        if (parent) {
+                                            parent.querySelector('.play-icon').classList.remove('hidden');
+                                            parent.querySelector('.pause-icon').classList.add('hidden');
+                                        }
+                                    }
+                                });
+                                audio.play();
+                                playIcon.classList.add('hidden');
+                                pauseIcon.classList.remove('hidden');
+                            } else {
+                                audio.pause();
+                                playIcon.classList.remove('hidden');
+                                pauseIcon.classList.add('hidden');
+                            }
+                        });
+
+                        audio.addEventListener('ended', () => {
+                            playIcon.classList.remove('hidden');
+                            pauseIcon.classList.add('hidden');
+                        });
+                    });
+                } else {
+                    podcastsContainer.innerHTML = '<div class="flex-shrink-0 text-gray-400">No podcasts found.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading podcasts:', error);
+                podcastsContainer.innerHTML = `<div class="flex-shrink-0 text-red-400">Failed to load podcasts.</div>`;
+            }
+        }
+
+        function openModal(type, data) {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalLink = document.getElementById('modal-link');
+
+            modalTitle.textContent = data.title;
+            // Use link or url, prioritizing link as per worker schema
+            modalLink.href = data.link || data.url;
+
+            if (type === 'post') {
+                // Use full content if available, otherwise description/subtitle
+                const contentHtml = data.content || data.description || data.subtitle || '';
+                const shareUrl = encodeURIComponent(data.link || window.location.href);
+                const shareTitle = encodeURIComponent(data.title);
+
+                modalBody.innerHTML = `
+                    ${data.image ? `<img src="${data.image}" alt="${data.title}" class="w-full h-64 md:h-80 object-cover rounded-xl mb-6 shadow-md">` : ''}
+                    
+                    <div class="prose prose-invert max-w-none">
+                        <p class="text-gray-400 text-sm mb-4">By ${data.author || 'Admin'} on ${new Date(data.pubDate || data.date).toLocaleDateString()}</p>
+                        <div class="mt-4 text-gray-200 leading-relaxed space-y-4">
+                            ${contentHtml}
+                        </div>
+                    </div>
+
+                    <div class="mt-10 pt-6 border-t border-gray-700">
+                        <h4 class="text-white font-semibold mb-4">Share this article</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-600 transition-colors">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            </a>
+                            <a href="https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareTitle}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-700 transition-colors">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                            <a href="mailto:?subject=${shareTitle}&body=Check out this article: ${shareUrl}" class="text-gray-400 hover:text-green-500 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'video') {
+                // Robust embed URL generation
+                let embedUrl = '';
+                const videoUrl = data.link || data.url || '';
+
+                if (videoUrl.includes('watch?v=')) {
+                    embedUrl = videoUrl.replace("watch?v=", "embed/");
+                } else if (videoUrl.includes('youtu.be/')) {
+                    const id = videoUrl.split('youtu.be/')[1];
+                    embedUrl = `https://www.youtube.com/embed/${id}`;
+                } else {
+                    // Fallback or assume it's already an embed url or ID if no other pattern matches
+                    // But prevent empty src which reloads page
+                    embedUrl = videoUrl;
+                }
+
+                // If embedUrl is still empty or just a relative path, don't show iframe or show error
+                const iframeSrc = embedUrl ? `${embedUrl}?autoplay=1` : '';
+
+                modalBody.innerHTML = `
+                    <div class="relative pb-[56.25%] h-0 mb-6 rounded-lg overflow-hidden shadow-xl">
+                        ${iframeSrc ? `<iframe class="absolute inset-0 w-full h-full" src="${iframeSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : '<div class="absolute inset-0 flex items-center justify-center bg-gray-700 text-gray-400">Video URL not available</div>'}
+                    </div>
+                    <p class="text-xl mb-4 text-gray-200">${data.description || ''}</p>
+                    <p class="text-gray-400 text-base">Published on ${new Date(data.published || data.publishedAt).toLocaleDateString()}</p>
+                `;
+            }
+
+            modalBackdrop.classList.remove('hidden');
+            modalBackdrop.classList.add('opacity-100');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100', 'modal-enter');
+            modalContent.classList.remove('modal-leave');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal() {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content');
+
+            modalBackdrop.classList.remove('opacity-100');
+            modalContent.classList.remove('scale-100', 'opacity-100', 'modal-enter');
+            modalContent.classList.add('scale-95', 'opacity-0', 'modal-leave');
+
+            modalContent.addEventListener('animationend', () => {
+                modalBackdrop.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+
+                // Stop video playback on close
+                const iframe = modalContent.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = '';
+                }
+            }, { once: true });
+        }
+    </script>
+</body>
+
+</html>
