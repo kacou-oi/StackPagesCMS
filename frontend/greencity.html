@@ -418,9 +418,11 @@
                                     <li class="flex justify-between border-b border-gray-100 pb-2"><span>Lundi -
                                             Vendredi</span> <span>08h30 - 17h30</span></li>
                                     <li class="flex justify-between border-b border-gray-100 pb-2"><span>Samedi</span>
-                                        <span>09h00 - 12h00</span></li>
+                                        <span>09h00 - 12h00</span>
+                                    </li>
                                     <li class="flex justify-between text-red-500"><span>Dimanche</span>
-                                        <span>Fermé</span></li>
+                                        <span>Fermé</span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="h-64 bg-gray-200 rounded-xl overflow-hidden">
@@ -590,8 +592,9 @@
                     <div class="text-xs text-gray-400 mb-1">{{date}}</div>
                     <h3 class="font-bold text-white line-clamp-2 mb-2 group-hover:text-red-400 transition">{{title}}
                     </h3>
-                    <a href="{{link}}" target="_blank" class="text-sm text-gray-400 hover:text-white">Regarder sur
-                        YouTube <i class="fas fa-external-link-alt ml-1"></i></a>
+                    <a href="{{link}}" hx-get="{{link}}" hx-target="#main-content" hx-push-url="true"
+                        class="text-sm text-gray-400 hover:text-white">Regarder <i
+                            class="fas fa-play-circle ml-1"></i></a>
                 </div>
             </div>
         </template>

@@ -815,7 +815,15 @@ export default {
         if (path === "/api/podcasts") {
             const siteConfig = await fetchSiteConfig(config);
             const podcastUrl = siteConfig?.feeds?.podcast || env.PODCAST_FEED_URL || "";
-            if (!podcastUrl) return new Response(JSON.stringify([]), { headers: corsHeaders });
+
+            // Helper for empty response
+            const emptyResponse = () => {
+                if (isHtmx) return new Response('<p class="text-gray-500 italic">Aucun podcast disponible pour le moment.</p>', { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                return new Response(JSON.stringify([]), { headers: corsHeaders });
+            };
+
+            if (!podcastUrl) return emptyResponse();
+
             try {
                 const res = await fetch(podcastUrl);
                 if (!res.ok) throw new Error("Fetch failed");
@@ -826,11 +834,22 @@ export default {
                 while ((m = itemRe.exec(xml)) !== null) {
                     const block = m[1];
                     const getTag = (t) => { const r = new RegExp(`<${t}[^>]*>((.|[\\r\\n])*?)<\/${t}>`, 'i'); const f = block.match(r); return f ? decodeHTMLEntities(f[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").trim()) : ""; };
-                    const encMatch = block.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/);
+
+                    // Improved Enclosure Regex
+                    let audioUrl = null;
+                    const encMatch = block.match(/<enclosure[^>]*url=["'](.*?)["'][^>]*>/i);
+                    if (encMatch) audioUrl = encMatch[1];
+
+                    // Fallback: try to find link with type audio
+                    if (!audioUrl) {
+                        const linkMatch = block.match(/<link[^>]*href=["'](.*?)["'][^>]*type=["']audio\/.*?["'][^>]*>/i);
+                        if (linkMatch) audioUrl = linkMatch[1];
+                    }
+
                     items.push({
                         title: getTag('title'),
                         pubDate: getTag('pubDate'),
-                        audioUrl: encMatch ? encMatch[1] : null,
+                        audioUrl: audioUrl,
                         link: getTag('link'),
                         description: getTag('description')
                     });
@@ -841,6 +860,8 @@ export default {
                     const cardTpl = extractTemplate(template, 'tpl-podcast-card');
 
                     if (cardTpl) {
+                        if (items.length === 0) return emptyResponse();
+
                         let itemsHtml = '';
                         items.forEach(item => {
                             const pubDate = new Date(item.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -848,9 +869,9 @@ export default {
                                 title: item.title,
                                 pubDate: pubDate,
                                 date: pubDate,
-                                audioUrl: item.audioUrl,
-                                link: item.link,
-                                description: item.description
+                                audioUrl: item.audioUrl || '',
+                                link: item.link || '#',
+                                description: item.description || ''
                             });
                         });
                         return new Response(itemsHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
@@ -859,7 +880,8 @@ export default {
 
                 return new Response(JSON.stringify(items), { headers: corsHeaders });
             } catch (e) {
-                return new Response(JSON.stringify([]), { headers: corsHeaders });
+                console.error("Podcast Error:", e);
+                return emptyResponse();
             }
         }
 
