@@ -306,8 +306,30 @@ function injectContent(template, content, metadata) {
         }
     }
 
-    // 3. Inject Content into Main
-    html = html.replace('<main id="main-content" class="pt-16"></main>', `<main id="main-content" class="pt-16">${content}</main>`);
+    // 3. Inject Meta Keywords
+    if (metadata && metadata.keywords) {
+        if (html.match(/<meta[^>]*name=["']keywords["'][^>]*>/i)) {
+            html = html.replace(/(<meta[^>]*name=["']keywords["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.keywords}$3`);
+        } else {
+            html = html.replace(/<\/head>/i, `<meta name="keywords" id="meta-keywords" content="${metadata.keywords}">\n</head>`);
+        }
+    }
+
+    // 4. Inject Site Name (Header & Footer)
+    if (metadata && metadata.siteName) {
+        html = html.replace(/(<span[^>]*id=["']header-site-name["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
+        html = html.replace(/(<span[^>]*id=["']footer-site-name-copyright["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
+    }
+
+    // 5. Inject Main Content
+    // Use regex to be robust against attributes
+    const mainRegex = /(<main[^>]*id=["']main-content["'][^>]*>)([\s\S]*?)(<\/main>)/i;
+    if (html.match(mainRegex)) {
+        html = html.replace(mainRegex, `$1${content}$3`);
+    } else {
+        // Fallback if regex fails (e.g. simple string replace)
+        html = html.replace('<main id="main-content" class="pt-16"></main>', `<main id="main-content" class="pt-16">${content}</main>`);
+    }
 
     return html;
 }
@@ -317,29 +339,6 @@ function replacePlaceholders(template, data) {
     return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
         return data[key] !== undefined ? data[key] : "";
     });
-}
-
-// 3. Inject Meta Keywords
-if (metadata && metadata.keywords) {
-    if (html.match(/<meta[^>]*name=["']keywords["'][^>]*>/i)) {
-        html = html.replace(/(<meta[^>]*name=["']keywords["'][^>]*content=["'])(.*?)(["'][^>]*>)/i, `$1${metadata.keywords}$3`);
-    } else {
-        html = html.replace(/<\/head>/i, `<meta name="keywords" id="meta-keywords" content="${metadata.keywords}">\n</head>`);
-    }
-}
-
-// 4. Inject Site Name (Header & Footer)
-// We use a regex to be safe, but simple string replacement might work if IDs are unique
-if (metadata && metadata.siteName) {
-    html = html.replace(/(<span[^>]*id=["']header-site-name["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
-    html = html.replace(/(<span[^>]*id=["']footer-site-name-copyright["'][^>]*>)(.*?)(<\/span>)/i, `$1${metadata.siteName}$3`);
-}
-
-// 5. Inject Main Content
-const mainRegex = /(<main[^>]*id=["']main-content["'][^>]*>)([\s\S]*?)(<\/main>)/i;
-html = html.replace(mainRegex, `$1${content}$3`);
-
-return html;
 }
 
 // --- CONTENT GENERATORS (USING TEMPLATES) ---
