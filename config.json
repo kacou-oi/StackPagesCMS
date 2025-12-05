@@ -1,7 +1,7 @@
 {
   "site": {
-    "name": "StackPages",
-    "domain": "https://app.stackpages.net/",
+    "name": "StackPages Cloud",
+    "domain": "https://cloud.stackpages.net/",
     "description": "StackPages est le CMS open source qui transforme votre blog Substack en un site web professionnel et unique, avec une synchronisation automatique du contenu.",
     "author": "Admin",
     "logo": "",
@@ -19,7 +19,7 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "greencity",
+    "activeTemplate": "default",
     "primaryColor": "#FF6B35"
   },
   "feeds": {
