@@ -1,16 +1,16 @@
 {
   "site": {
     "name": "PetStack",
-    "domain": "",
+    "domain": "PetStack.com",
     "description": "",
-    "author": "",
+    "author": "Tytty",
     "logo": "",
     "favicon": ""
   },
   "seo": {
-    "title": "",
-    "metaDescription": "",
-    "keywords": "",
+    "title": "PetStack",
+    "metaDescription": "Blog by Titty",
+    "keywords": "PetStack, Titty",
     "ogImage": ""
   },
   "social": {
@@ -19,7 +19,7 @@
     "github": ""
   },
   "theme": {
-    "activeTemplate": "petfamily",
+    "activeTemplate": "default",
     "primaryColor": "#ff9500"
   },
   "feeds": {
