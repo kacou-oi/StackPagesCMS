@@ -716,6 +716,7 @@ export default {
                 const url = new URL(req.url);
                 const offset = parseInt(url.searchParams.get('offset') || '0');
                 const limit = parseInt(url.searchParams.get('limit') || '6');
+                const isHtmx = req.headers.get("HX-Request") === "true";
 
                 const siteConfig = await fetchSiteConfig(config);
                 const substackUrl = siteConfig?.feeds?.substack || env.SUBSTACK_FEED_URL;
@@ -727,6 +728,27 @@ export default {
                 const data = await getCachedRSSData(substackUrl);
                 const total = data.posts.length;
                 const paginatedPosts = data.posts.slice(offset, offset + limit);
+
+                if (isHtmx) {
+                    const template = await getTemplate(config, siteConfig);
+                    const cardTpl = extractTemplate(template, 'tpl-blog-card');
+
+                    if (cardTpl) {
+                        let itemsHtml = '';
+                        paginatedPosts.forEach(post => {
+                            const postDate = new Date(post.pubDate).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                            itemsHtml += replacePlaceholders(cardTpl, {
+                                title: post.title,
+                                image: post.image || 'https://via.placeholder.com/800x400/edf2f7/4a5568?text=Image+de+Couverture',
+                                description: post.description || '',
+                                date: postDate,
+                                slug: post.slug,
+                                author: post.author || 'Inconnu'
+                            });
+                        });
+                        return new Response(itemsHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                    }
+                }
 
                 return new Response(JSON.stringify({
                     posts: paginatedPosts,
@@ -745,6 +767,7 @@ export default {
                 const url = new URL(req.url);
                 const offset = parseInt(url.searchParams.get('offset') || '0');
                 const limit = parseInt(url.searchParams.get('limit') || '6');
+                const isHtmx = req.headers.get("HX-Request") === "true";
 
                 const siteConfig = await fetchSiteConfig(config);
                 const youtubeUrl = siteConfig?.feeds?.youtube || env.YOUTUBE_FEED_URL;
@@ -756,6 +779,26 @@ export default {
                 const videos = await getCachedYoutubeData(youtubeUrl);
                 const total = videos.length;
                 const paginatedVideos = videos.slice(offset, offset + limit);
+
+                if (isHtmx) {
+                    const template = await getTemplate(config, siteConfig);
+                    const cardTpl = extractTemplate(template, 'tpl-video-card');
+
+                    if (cardTpl) {
+                        let itemsHtml = '';
+                        paginatedVideos.forEach(video => {
+                            const pubDate = new Date(video.published).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                            itemsHtml += replacePlaceholders(cardTpl, {
+                                title: video.title,
+                                thumbnail: video.thumbnail,
+                                published: pubDate,
+                                date: pubDate, // Alias for consistency
+                                link: `/video/${video.id || video.link.split('v=')[1] || ''}`
+                            });
+                        });
+                        return new Response(itemsHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                    }
+                }
 
                 return new Response(JSON.stringify({
                     videos: paginatedVideos,
