@@ -24,7 +24,7 @@
   },
   "feeds": {
     "substack": "https://blog.cloudflare.com/rss",
-    "youtube": "",
+    "youtube": "https.//youtube.com/feeds/videos.xml?channel_ud=UCgv3xMy6kECn0boYP9d2o-g",
     "podcast": ""
   }
 }
